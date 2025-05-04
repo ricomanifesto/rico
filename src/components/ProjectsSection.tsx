@@ -18,7 +18,6 @@ export default function NetworkAnimation() {
   
   useEffect(() => {
     const maxNodes = 15; // Increased number of nodes
-    const maxConnections = 25; // Increased connections
     const connectionThreshold = 200; // Only connect nodes within this distance
     
     // Color variations for nodes - blue shades
