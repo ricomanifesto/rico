@@ -4,7 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/', // This tells Vite to use root-relative URLs
+  base: '/', // Correct for custom domains
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
