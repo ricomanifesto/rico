@@ -1,204 +1,102 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect } from "react";
+import NetworkAnimation from "./NetworkAnimation";
+import { motion } from "framer-motion";
 
-interface Node {
-  element: HTMLDivElement;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  opacity: number;
-  color: string;
-}
-
-export default function NetworkAnimation() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const nodesRef = useRef<Node[]>([]);
-  const animationRef = useRef<number | null>(null);
+export default function IntroSection() {
+  const [displayText, setDisplayText] = useState("");
+  const fullText = "Hi, I'm Rico";
+  const typingSpeed = 150; // milliseconds per character
   
   useEffect(() => {
-    const maxNodes = 15; // Increased number of nodes
-    const connectionThreshold = 200; // Only connect nodes within this distance
-    
-    // Color variations for nodes - blue shades
-    const nodeColors = [
-      'rgba(0, 123, 255, 0.7)',
-      'rgba(30, 144, 255, 0.6)',
-      'rgba(65, 105, 225, 0.7)',
-      'rgba(0, 191, 255, 0.6)',
-      'rgba(32, 201, 151, 0.6)', // Adding teal accent color
-    ];
-    
-    // Create nodes
-    const createNodes = () => {
-      if (!containerRef.current) return;
-      
-      // Clear previous nodes
-      nodesRef.current.forEach(node => node.element.remove());
-      nodesRef.current = [];
-      
-      const containerRect = containerRef.current.getBoundingClientRect();
-      
-      for (let i = 0; i < maxNodes; i++) {
-        const node = document.createElement('div');
-        
-        // Random size between 4px and 10px
-        const size = Math.random() * 6 + 4;
-        
-        // Random opacity between 0.3 and 0.9
-        const opacity = Math.random() * 0.6 + 0.3;
-        
-        // Random color from our palette
-        const color = nodeColors[Math.floor(Math.random() * nodeColors.length)];
-        
-        node.classList.add('node');
-        // Apply pulsing animation to some nodes only
-        if (Math.random() > 0.5) {
-          node.classList.add('animate-pulse-slow');
-        }
-        
-        // Set size and style
-        node.style.width = `${size}px`;
-        node.style.height = `${size}px`;
-        node.style.backgroundColor = color;
-        
-        // Random position within the container
-        const x = Math.random() * (containerRect.width - size);
-        const y = Math.random() * (containerRect.height - size);
-        
-        node.style.left = `${x}px`;
-        node.style.top = `${y}px`;
-        
-        // Slower movement for larger nodes
-        const speedFactor = (10 - size/2) / 10;
-        
-        nodesRef.current.push({
-          element: node,
-          x,
-          y,
-          vx: (Math.random() * 0.4 - 0.2) * speedFactor,
-          vy: (Math.random() * 0.4 - 0.2) * speedFactor,
-          size,
-          opacity,
-          color
-        });
-        
-        containerRef.current.appendChild(node);
+    let currentIndex = 0;
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayText(fullText.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
       }
-    };
+    }, typingSpeed);
     
-    // Create connections between nodes
-    const createConnections = () => {
-      if (!containerRef.current) return;
-      
-      // Clear existing connections
-      const existingConnections = containerRef.current.querySelectorAll('.connection');
-      existingConnections.forEach(conn => conn.remove());
-      
-      // Create dynamically calculated connections based on proximity
-      for (let i = 0; i < nodesRef.current.length; i++) {
-        for (let j = i + 1; j < nodesRef.current.length; j++) {
-          const nodeA = nodesRef.current[i];
-          const nodeB = nodesRef.current[j];
-          
-          const dx = nodeB.x - nodeA.x;
-          const dy = nodeB.y - nodeA.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          // Only connect nodes that are within connectionThreshold distance
-          if (distance < connectionThreshold) {
-            const connection = document.createElement('div');
-            connection.classList.add('connection');
-            
-            // Opacity based on distance (farther = more transparent)
-            const opacity = 0.5 * (1 - distance / connectionThreshold);
-            connection.style.backgroundColor = `rgba(0, 123, 255, ${opacity})`;
-            
-            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-            
-            connection.style.width = `${distance}px`;
-            connection.style.left = `${nodeA.x + nodeA.size/2}px`;
-            connection.style.top = `${nodeA.y + nodeA.size/2}px`;
-            connection.style.transform = `rotate(${angle}deg)`;
-            
-            containerRef.current.appendChild(connection);
-          }
-        }
-      }
-    };
-    
-    // Update node positions and connections
-    const updateNodes = () => {
-      if (!containerRef.current) return;
-      
-      const containerRect = containerRef.current.getBoundingClientRect();
-      
-      nodesRef.current.forEach(node => {
-        // Update position based on velocity
-        node.x += node.vx;
-        node.y += node.vy;
-        
-        // Bounce off edges with slight randomness in new velocity
-        if (node.x <= 0 || node.x >= containerRect.width - node.size) {
-          node.vx *= -1 * (0.9 + Math.random() * 0.2); // Add some randomness to bounce
-        }
-        
-        if (node.y <= 0 || node.y >= containerRect.height - node.size) {
-          node.vy *= -1 * (0.9 + Math.random() * 0.2);
-        }
-        
-        // Apply new position
-        node.element.style.left = `${node.x}px`;
-        node.element.style.top = `${node.y}px`;
-      });
-      
-      createConnections();
-      animationRef.current = requestAnimationFrame(updateNodes);
-    };
-    
-    // Initialize animation
-    const initAnimation = () => {
-      createNodes();
-      animationRef.current = requestAnimationFrame(updateNodes);
-    };
-    
-    // Start animation when component mounts
-    initAnimation();
-    
-    // Handle window resize
-    const handleResize = () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      
-      // Re-initialize the animation after a short delay
-      setTimeout(() => {
-        initAnimation();
-      }, 250);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      
-      nodesRef.current.forEach(node => node.element.remove());
-      
-      const existingConnections = containerRef.current?.querySelectorAll('.connection');
-      existingConnections?.forEach(conn => conn.remove());
-    };
+    return () => clearInterval(typingInterval);
   }, []);
   
   return (
-    <div 
-      ref={containerRef} 
-      id="nodes-container" 
-      className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
-    />
+    <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-16 px-4 overflow-hidden">
+      {/* Network Grid Animation Background */}
+      <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
+      
+      {/* Animated Nodes & Connections */}
+      <NetworkAnimation />
+      
+      {/* Hero Content with Animation */}
+      <motion.div 
+        className="relative z-10 max-w-3xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
+          <span className="text-primary inline-flex items-center">
+            {displayText}
+            <span className="animate-blink ml-1 h-8 w-2 bg-primary inline-block"></span>
+          </span>
+        </h1>
+        
+        <motion.p 
+          className="text-xl md:text-2xl mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          I build things when inspiration strikes.
+        </motion.p>
+        
+        <motion.p 
+          className="max-w-2xl text-lg md:text-xl mb-10 mx-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.8 }}
+        >
+          I'm a Sr. Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing intelligent systems that automate incident detection, response, and threat intelligence—fast, accurate, and scalable.
+        </motion.p>
+        
+        {/* Social Links */}
+        <motion.div 
+          className="flex justify-center space-x-6 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+        >
+          <a href="https://github.com/ricomanifesto" target="_blank" rel="noopener noreferrer" aria-label="GitHub" 
+             className="text-primary hover:text-secondary transition duration-300 transform hover:-translate-y-1 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-1-3.46 0 0-1.02-.35-3.36 1.38A13.37 13.37 0 0 0 9 3c-1.03 0-2.14.15-3.36.87C2.35 4.96 1.33 5.31 1.33 5.31A4.8 4.8 0 0 0 0 8.8c0 3.5 3 5.5 6 5.5-.39 1.39-.72 2.69-.72 4.2V22"></path>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/michael-rico-19600314a" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" 
+             className="text-primary hover:text-secondary transition duration-300 transform hover:-translate-y-1 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect width="4" height="12" x="2" y="9"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="https://medium.com/@ricomanifesto" target="_blank" rel="noopener noreferrer" aria-label="Medium" 
+             className="text-primary hover:text-secondary transition duration-300 transform hover:-translate-y-1 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.17 6.6L9.33 20.83M5.5 19.5l-2-2M19.5 4.5l2 2M12.08 12.08l-1.5-1.5M10 5l-2 2M14 17l2-2"></path>
+            </svg>
+          </a>
+          <a href="mailto:michaelrico124@gmail.com" aria-label="Email" 
+             className="text-primary hover:text-secondary transition duration-300 transform hover:-translate-y-1 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+          </a>
+        </motion.div>
+      </motion.div>
+    </section>
   );
 }
