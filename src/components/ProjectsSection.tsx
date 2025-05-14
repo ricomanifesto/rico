@@ -6,9 +6,16 @@ const projects = [
   {
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions and is easily configurable via a JSON feed list. Hosted on GitHub Pages.",
-    technologies: "Technologies: GitHub Actions, GitHub Pages, RSS, JSON, Python",
+    technologies: "Technologies: GitHub Actions, GitHub Pages, RSS, JSON, JavaScript",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/"
+  },
+  {
+    title: "SentryInsight",
+    description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
+    technologies: "Technologies: LangGraph, Model Context Protocol (MCP), LangChain, OpenAI, GitHub Actions, Python",
+    repoUrl: "https://github.com/ricomanifesto/SentryInsight",
+    demoUrl: "https://ricomanifesto.github.io/SentryInsight/"
   }
 ];
 
