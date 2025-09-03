@@ -22,7 +22,7 @@ const projects = [
     description: "AI-Powered Threat Intelligence Platform. SentrySearch leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
     technologies: "Technologies: Gradio, Anthropic Web Search, Hugging Face Spaces, Python, Pydantic",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
-    demoUrl: "https://huggingface.co/spaces/ricomanifesto/SentrySearch"
+    demoUrl: "https://sentry-search.vercel.app/"
   }
 ];
 
