@@ -6,23 +6,26 @@ const projects = [
   {
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions and is easily configurable via a JSON feed list. Hosted on GitHub Pages.",
-    technologies: "Technologies: GitHub Actions, GitHub Pages, RSS, JSON, JavaScript",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/"
   },
   {
     title: "SentryInsight",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
-    technologies: "Technologies: LangGraph, Model Context Protocol (MCP), LangChain, OpenAI, GitHub Actions, Python",
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/"
   },
   {
     title: "SentrySearch",
     description: "AI-Powered Threat Intelligence Platform. SentrySearch leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
-    technologies: "Technologies: Gradio, Anthropic Web Search, Hugging Face Spaces, Python, Pydantic",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/"
+  },
+  {
+    title: "GRCInsight",
+    description: "Automated system that generates fresh GRC intelligence reports to streamline GRC processes and maintain regulatory compliance.",
+    repoUrl: "https://github.com/ricomanifesto/GRCInsight",
+    demoUrl: "https://ricomanifesto.github.io/GRCInsight/"
   }
 ];
 
@@ -78,11 +81,8 @@ export default function ProjectsSection() {
           >
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3">{project.title}</h3>
-              <p className="mb-4">
+              <p className="mb-6">
                 {project.description}
-              </p>
-              <p className="text-sm text-secondary mb-5">
-                {project.technologies}
               </p>
               <div className="flex items-center">
                 <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
