@@ -88,6 +88,12 @@ export default function IntroSection() {
               <path d="M20.17 6.6L9.33 20.83M5.5 19.5l-2-2M19.5 4.5l2 2M12.08 12.08l-1.5-1.5M10 5l-2 2M14 17l2-2"></path>
             </svg>
           </a>
+          <a href="https://x.com/ricomanifesto" target="_blank" rel="noopener noreferrer" aria-label="X" 
+             className="text-primary hover:text-secondary transition duration-300 transform hover:-translate-y-1 hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
           <a href="mailto:michaelrico124@gmail.com" aria-label="Email" 
              className="text-primary hover:text-secondary transition duration-300 transform hover:-translate-y-1 hover:scale-110">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
