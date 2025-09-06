@@ -1,9 +1,12 @@
-<div align="center">
-  <p>
-    <h1>🔍</h1>
-    <h1>ricomanifesto.com</h1>
-  </p>
-  <p>
-    My personal website <a href="https://ricomanifesto.com">ricomanifesto.com</a>
-  </p>
-</div>
+# ricomanifesto.com
+
+Personal portfolio built with React, TypeScript, and Tailwind CSS.
+
+**Live:** [ricomanifesto.com](https://ricomanifesto.com)
+
+## Stack
+
+- React 18 + TypeScript
+- Tailwind CSS + Framer Motion
+- Vite build system
+- GitHub Pages deployment
