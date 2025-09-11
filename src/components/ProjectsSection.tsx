@@ -11,7 +11,7 @@ const projects = [
   },
   {
     title: "Cybersecurity News Aggregator",
-    description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions and is easily configurable via a JSON feed list. Hosted on GitHub Pages.",
+    description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions.",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/"
   },
