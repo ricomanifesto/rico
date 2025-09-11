@@ -4,26 +4,26 @@ import { motion } from "framer-motion";
 // Project data
 const projects = [
   {
+    title: "AI-Powered Threat Intelligence Platform",
+    description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
+    repoUrl: "https://github.com/ricomanifesto/SentrySearch",
+    demoUrl: "https://sentry-search.vercel.app/"
+  },
+  {
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions and is easily configurable via a JSON feed list. Hosted on GitHub Pages.",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/"
   },
   {
-    title: "SentryInsight",
+    title: "Cybersecurity Exploit Reporter",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/"
   },
   {
-    title: "SentrySearch",
-    description: "AI-Powered Threat Intelligence Platform. SentrySearch leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
-    repoUrl: "https://github.com/ricomanifesto/SentrySearch",
-    demoUrl: "https://sentry-search.vercel.app/"
-  },
-  {
-    title: "GRCInsight",
-    description: "Automated system that generates fresh GRC intelligence reports to streamline GRC processes and maintain regulatory compliance.",
+    title: "Cybersecurity GRC Reporter",
+    description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
     demoUrl: "https://ricomanifesto.github.io/GRCInsight/"
   }
