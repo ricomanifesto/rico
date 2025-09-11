@@ -51,6 +51,20 @@ export default function IntroSection() {
         >
           I build things when inspiration strikes.
         </motion.p>
+
+        {/* Profile Image */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        >
+          <img 
+            src="/images/profile.jpg" 
+            alt="Michael Rico Profile" 
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover border-4 border-primary/20 shadow-lg"
+          />
+        </motion.div>
         
         <motion.p 
           className="max-w-2xl text-lg md:text-xl mb-10 mx-auto"
@@ -58,7 +72,7 @@ export default function IntroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
         >
-          I'm a Sr. Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing intelligent systems that automate incident detection, response, and threat intelligence—fast, accurate, and scalable.
+          I'm a Sr. Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.
         </motion.p>
         
         {/* Social Links */}
