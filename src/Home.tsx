@@ -2,6 +2,7 @@
 import Header from "@/components/Header";
 import IntroSection from "@/components/IntroSection";
 import AboutMe from "@/components/AboutMe";
+import Experience from "@/components/Experience";
 import ProjectsSection from "@/components/ProjectsSection";
 import Footer from "@/components/Footer";
 
@@ -12,6 +13,7 @@ export default function Home() {
       <main className="flex-grow">
         <IntroSection />
         <AboutMe />
+        <Experience />
         <ProjectsSection />
       </main>
       <Footer />
