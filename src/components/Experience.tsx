@@ -44,7 +44,7 @@ export default function Experience() {
 
   return (
     <section id="experience" className="py-16 px-4 bg-slate-900 text-white">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <motion.h2 
           className="section-title text-3xl md:text-4xl font-serif font-bold mb-12 text-white"
           initial={{ opacity: 0, x: -20 }}
@@ -101,7 +101,11 @@ export default function Experience() {
               transition={{ duration: 0.6 }}
             >
               <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                {currentExperience.title} @ <span className="text-cyan-400">{currentExperience.company.charAt(0) + currentExperience.company.slice(1).toLowerCase()}</span>
+                {currentExperience.title} @ <span className="text-cyan-400">
+                  {currentExperience.company === "SENTINELONE" ? "SentinelOne" : 
+                   currentExperience.company === "DELL SECUREWORKS" ? "Dell SecureWorks" : 
+                   currentExperience.company.charAt(0) + currentExperience.company.slice(1).toLowerCase()}
+                </span>
               </h4>
               
               <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">

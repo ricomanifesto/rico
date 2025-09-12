@@ -53,7 +53,8 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="pt-0 pb-16 px-4 max-w-4xl mx-auto bg-slate-800 text-white">
+    <section id="projects" className="py-16 px-4 bg-slate-900 text-white">
+      <div className="max-w-4xl mx-auto">
       <motion.h2 
         className="section-title text-3xl md:text-4xl font-serif font-bold mb-8 text-white"
         initial={{ opacity: 0, x: -20 }}
@@ -140,6 +141,7 @@ export default function ProjectsSection() {
             />
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

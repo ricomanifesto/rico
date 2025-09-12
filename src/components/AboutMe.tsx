@@ -14,7 +14,7 @@ export default function AboutMe() {
   const rightColumn = technologies.slice(3, 6);
 
   return (
-    <section id="about" className="py-16 px-4 bg-slate-800 text-white">
+    <section id="about" className="py-16 px-4 bg-slate-900 text-white">
       <div className="max-w-4xl mx-auto">
         <motion.h2 
           className="section-title text-3xl md:text-4xl font-serif font-bold mb-8 text-white"
