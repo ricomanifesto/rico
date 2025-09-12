@@ -62,7 +62,7 @@ export default function IntroSection() {
           <img 
             src="/images/profile.jpg" 
             alt="Michael Rico Profile" 
-            className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover object-[50%_25%] border-4 border-primary/20 shadow-lg"
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover object-[50%_35%] border-4 border-primary/20 shadow-lg"
           />
         </motion.div>
         
