@@ -7,7 +7,7 @@ const projects = [
   {
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
-    tech: "PYTHON (FASTAPI)",
+    tech: "PYTHON, FASTAPI, PYDANTIC, SQLALCHEMY",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/",
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
@@ -16,7 +16,7 @@ const projects = [
   {
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions.",
-    tech: "JAVASCRIPT (REACT)",
+    tech: "NODE.JS (COMMONJS)",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/",
     bgGradient: "from-green-600 via-teal-600 to-blue-600",
@@ -25,7 +25,7 @@ const projects = [
   {
     title: "Cybersecurity Exploit Reporter",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
-    tech: "PYTHON (AI/ML)",
+    tech: "PYTHON, ASYNCIO, LANGGRAPH",
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
     bgGradient: "from-red-600 via-pink-600 to-purple-600",
@@ -34,7 +34,7 @@ const projects = [
   {
     title: "Cybersecurity GRC Reporter",
     description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
-    tech: "PYTHON (AUTOMATION)",
+    tech: "PYTHON, ASYNCIO, LANGGRAPH",
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
     demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
     bgGradient: "from-orange-600 via-red-600 to-pink-600",
