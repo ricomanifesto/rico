@@ -77,14 +77,14 @@ export default function IntroSection() {
               color: '#007bff'
             }}
             onMouseEnter={(e) => {
-              e.target.style.backgroundColor = '#007bff1a';
-              e.target.style.color = '#0056b3';
-              e.target.style.borderColor = '#007bff';
+              (e.target as HTMLElement).style.backgroundColor = '#007bff1a';
+              (e.target as HTMLElement).style.color = '#0056b3';
+              (e.target as HTMLElement).style.borderColor = '#007bff';
             }}
             onMouseLeave={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = '#007bff';
-              e.target.style.borderColor = '#007bff80';
+              (e.target as HTMLElement).style.backgroundColor = 'transparent';
+              (e.target as HTMLElement).style.color = '#007bff';
+              (e.target as HTMLElement).style.borderColor = '#007bff80';
             }}
           >
             <svg 
