@@ -18,6 +18,9 @@ export default function Header() {
         <div className="flex items-center">
           <div className="text-xl font-bold text-cyan-400">rico</div>
           <nav className="flex items-center ml-8">
+            <a href="#intro" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">Home</a>
+            <a href="#about" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">About</a>
+            <a href="#experience" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">Experience</a>
             <a href="#projects" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">Projects</a>
             <a href="mailto:michaelrico124@gmail.com" className="text-gray-200 hover:text-cyan-400 transition duration-300">Contact</a>
           </nav>
