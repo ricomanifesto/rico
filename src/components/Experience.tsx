@@ -65,9 +65,9 @@ export default function Experience() {
                   onClick={() => setSelectedCompany(index)}
                   className={`relative w-full text-left transition-all duration-300 ${
                     selectedCompany === index 
-                      ? 'text-cyan-400' 
-                      : 'text-gray-400 hover:text-gray-200'
+                      ? '' : 'text-gray-400 hover:text-gray-200'
                   }`}
+                  style={selectedCompany === index ? {color: '#007bff'} : {}}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -75,7 +75,8 @@ export default function Experience() {
                 >
                   {/* Selection Bar */}
                   <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
-                    selectedCompany === index ? 'bg-cyan-400' : 'bg-transparent'
+                    selectedCompany === index ? '' : 'bg-transparent'
+                  }}" style={selectedCompany === index ? {backgroundColor: '#007bff'} : {}}
                   }`}></div>
                   
                   {/* Company Name */}
@@ -96,7 +97,7 @@ export default function Experience() {
               transition={{ duration: 0.6 }}
             >
               <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                {currentExperience.title} @ <span className="text-cyan-400">
+                {currentExperience.title} @ <span style={{color: '#007bff'}}>
                   {currentExperience.company === "SENTINELONE" ? "SentinelOne" : 
                    currentExperience.company === "DELL SECUREWORKS" ? "Dell Secureworks" : 
                    currentExperience.company.charAt(0) + currentExperience.company.slice(1).toLowerCase()}
@@ -120,7 +121,7 @@ export default function Experience() {
                     }}
                   >
                     <svg 
-                      className="w-4 h-4 text-cyan-400 mt-1.5 mr-4 flex-shrink-0" 
+                      className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0" style={{color: '#007bff'}} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"

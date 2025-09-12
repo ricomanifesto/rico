@@ -59,7 +59,7 @@ export default function AboutMe() {
                     viewport={{ once: true }}
                   >
                     <svg 
-                      className="w-4 h-4 text-cyan-400 mr-3 flex-shrink-0" 
+                      className="w-4 h-4 mr-3 flex-shrink-0" style={{color: '#007bff'}} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -83,7 +83,7 @@ export default function AboutMe() {
                     viewport={{ once: true }}
                   >
                     <svg 
-                      className="w-4 h-4 text-cyan-400 mr-3 flex-shrink-0" 
+                      className="w-4 h-4 mr-3 flex-shrink-0" style={{color: '#007bff'}} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -119,7 +119,7 @@ export default function AboutMe() {
             <img 
               src="/images/profile.jpg" 
               alt="Michael Rico Profile" 
-              className="w-40 h-40 md:w-48 md:h-48 object-cover object-[50%_35%] border-4 border-cyan-400/20 shadow-lg"
+              className="w-40 h-40 md:w-48 md:h-48 object-cover object-[50%_35%] border-4 shadow-lg" style={{borderColor: '#007bff33'}}
             />
           </motion.div>
         </div>

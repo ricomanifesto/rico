@@ -122,19 +122,19 @@ export default function ProjectsSection() {
                       <p className="text-gray-200 text-sm mb-3 line-clamp-2">
                         {project.description}
                       </p>
-                      <div className="text-cyan-300 text-xs font-semibold tracking-wider mb-4">
+                      <div className="text-xs font-semibold tracking-wider mb-4" style={{color: '#66b3ff'}}>
                         {project.tech}
                       </div>
                       
                       {/* Icons */}
                       <div className="flex items-center space-x-4">
                         <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
-                           className="text-white hover:text-cyan-300 transition duration-300 hover:scale-110">
+                           className="text-white transition duration-300 hover:scale-110" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
                           <Github size={24} />
                         </a>
                         {project.demoUrl && (
                           <a href={project.demoUrl} target="_blank" rel="noopener noreferrer"
-                             className="text-white hover:text-cyan-300 transition duration-300 hover:scale-110">
+                             className="text-white transition duration-300 hover:scale-110" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
                             <ExternalLink size={24} />
                           </a>
                         )}
@@ -153,7 +153,7 @@ export default function ProjectsSection() {
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500"
           aria-label="Previous project"
         >
-          <ChevronLeft size={24} className="text-cyan-400" />
+          <ChevronLeft size={24} style={{color: '#007bff'}} />
         </button>
 
         <button
@@ -161,7 +161,7 @@ export default function ProjectsSection() {
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500"
           aria-label="Next project"
         >
-          <ChevronRight size={24} className="text-cyan-400" />
+          <ChevronRight size={24} style={{color: '#007bff'}} />
         </button>
 
         {/* Dots Indicator */}
@@ -172,9 +172,9 @@ export default function ProjectsSection() {
               onClick={() => setCurrentIndex(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentIndex 
-                  ? 'bg-cyan-400 scale-110' 
-                  : 'bg-gray-500 hover:bg-gray-400'
+                  ? 'scale-110' : 'bg-gray-500 hover:bg-gray-400'
               }`}
+              style={index === currentIndex ? {backgroundColor: '#007bff'} : {}}
               aria-label={`Go to project ${index + 1}`}
             />
           ))}
