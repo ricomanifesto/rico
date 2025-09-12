@@ -7,26 +7,34 @@ const projects = [
   {
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
+    tech: "PYTHON (FASTAPI)",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
-    demoUrl: "https://sentry-search.vercel.app/"
+    demoUrl: "https://sentry-search.vercel.app/",
+    bgGradient: "from-purple-600 via-blue-600 to-cyan-600"
   },
   {
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions.",
+    tech: "JAVASCRIPT (REACT)",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
-    demoUrl: "https://ricomanifesto.github.io/SentryDigest/"
+    demoUrl: "https://ricomanifesto.github.io/SentryDigest/",
+    bgGradient: "from-green-600 via-teal-600 to-blue-600"
   },
   {
     title: "Cybersecurity Exploit Reporter",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
+    tech: "PYTHON (AI/ML)",
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
-    demoUrl: "https://ricomanifesto.github.io/SentryInsight/"
+    demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
+    bgGradient: "from-red-600 via-pink-600 to-purple-600"
   },
   {
     title: "Cybersecurity GRC Reporter",
     description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
+    tech: "PYTHON (AUTOMATION)",
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
-    demoUrl: "https://ricomanifesto.github.io/GRCInsight/"
+    demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
+    bgGradient: "from-orange-600 via-red-600 to-pink-600"
   }
 ];
 
@@ -75,32 +83,47 @@ export default function ProjectsSection() {
             {projects.map((project, index) => (
               <div key={index} className="w-full flex-shrink-0">
                 <motion.div 
-                  className="bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-600 hover:border-cyan-400/30 mx-4"
+                  className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 mx-4 h-96"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ scale: 1.02 }}
                 >
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-cyan-400 mb-3">{project.title}</h3>
-                    <p className="mb-6 text-gray-200">
-                      {project.description}
-                    </p>
-                    <div className="flex items-center">
-                      <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
-                         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition duration-300 hover:scale-105">
-                        <Github className="mr-2" size={20} />
-                        GitHub Repo
-                      </a>
+                  {/* Background Gradient */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.bgGradient} opacity-90`}></div>
+                  
+                  {/* Abstract Pattern Overlay */}
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
+                    <div className="absolute bottom-20 right-16 w-24 h-24 rounded-full bg-white/15 blur-lg"></div>
+                    <div className="absolute top-1/3 right-8 w-16 h-16 rounded-full bg-white/10 blur-md"></div>
+                  </div>
+                  
+                  {/* Content Overlay */}
+                  <div className="absolute inset-0 flex flex-col justify-end">
+                    <div className="bg-black/60 backdrop-blur-sm p-6">
+                      <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
+                      <p className="text-gray-200 text-sm mb-3 line-clamp-2">
+                        {project.description}
+                      </p>
+                      <div className="text-cyan-300 text-xs font-semibold tracking-wider mb-4">
+                        {project.tech}
+                      </div>
                       
-                      {project.demoUrl && (
-                        <a href={project.demoUrl} target="_blank" rel="noopener noreferrer"
-                           className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition duration-300 ml-5 hover:scale-105">
-                          <ExternalLink className="mr-2" size={20} />
-                          Live Demo
+                      {/* Icons */}
+                      <div className="flex items-center space-x-4">
+                        <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
+                           className="text-white hover:text-cyan-300 transition duration-300 hover:scale-110">
+                          <Github size={24} />
                         </a>
-                      )}
+                        {project.demoUrl && (
+                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer"
+                             className="text-white hover:text-cyan-300 transition duration-300 hover:scale-110">
+                            <ExternalLink size={24} />
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
