@@ -10,7 +10,8 @@ const projects = [
     tech: "PYTHON (FASTAPI)",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/",
-    bgGradient: "from-purple-600 via-blue-600 to-cyan-600"
+    bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
+    bgImage: "/images/SentrySearch.jpg"
   },
   {
     title: "Cybersecurity News Aggregator",
@@ -90,8 +91,19 @@ export default function ProjectsSection() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  {/* Background Gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${project.bgGradient} opacity-90`}></div>
+                  {/* Background */}
+                  {project.bgImage ? (
+                    <div className="absolute inset-0">
+                      <img 
+                        src={project.bgImage} 
+                        alt={`${project.title} preview`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/40"></div>
+                    </div>
+                  ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${project.bgGradient} opacity-90`}></div>
+                  )}
                   
                   {/* Abstract Pattern Overlay */}
                   <div className="absolute inset-0 opacity-20">
