@@ -26,37 +26,27 @@ export default function AboutMe() {
           / about me
         </motion.h2>
 
-        <div className="mb-12">
-          <motion.p 
-            className="text-lg md:text-xl mb-8 leading-relaxed"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            I am currently a Sr. Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
-          </motion.p>
-          
-          <motion.p 
-            className="text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            I am currently a Sr. Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
-          </motion.p>
+        <div className="mb-12 flex flex-col md:flex-row gap-8">
+          {/* Content Section */}
+          <div className="flex-1">
+            <motion.p 
+              className="text-lg md:text-xl mb-8 leading-relaxed"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              I am currently a Sr. Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
+            </motion.p>
 
-          {/* Technologies and Profile Picture */}
-          <motion.div 
-            className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            viewport={{ once: true }}
-          >
             {/* Technologies Grid */}
-            <div className="grid grid-cols-2 gap-8 flex-1">
+            <motion.div 
+              className="grid grid-cols-2 gap-8 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
               {/* Left Column */}
               <div className="space-y-3">
                 {leftColumn.map((tech, index) => (
@@ -104,34 +94,34 @@ export default function AboutMe() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
-            {/* Profile Picture */}
-            <motion.div
-              className="flex-shrink-0"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
+            {/* Personal Interests */}
+            <motion.p 
+              className="text-lg md:text-xl leading-relaxed text-gray-700"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1.0, duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <img 
-                src="/images/profile.jpg" 
-                alt="Michael Rico Profile" 
-                className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover object-[50%_35%] border-4 border-primary/20 shadow-lg"
-              />
-            </motion.div>
-          </motion.div>
+              Outside of work I'm interested in keeping tabs on geopolitics and how it shapes our world.
+            </motion.p>
+          </div>
 
-          {/* Personal Interests */}
-          <motion.p 
-            className="text-lg md:text-xl leading-relaxed text-gray-700"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 1.0, duration: 0.8 }}
+          {/* Profile Picture - Right Aligned */}
+          <motion.div
+            className="flex-shrink-0 flex justify-center md:justify-end"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
             viewport={{ once: true }}
           >
-            Outside of work I'm interested in keeping tabs on geopolitics and how it shapes our world.
-          </motion.p>
+            <img 
+              src="/images/profile.jpg" 
+              alt="Michael Rico Profile" 
+              className="w-40 h-40 md:w-48 md:h-48 object-cover object-[50%_35%] border-4 border-primary/20 shadow-lg"
+            />
+          </motion.div>
         </div>
       </div>
     </section>
