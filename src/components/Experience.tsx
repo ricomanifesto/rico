@@ -15,8 +15,8 @@ export default function Experience() {
       title: "Sr. Threat Hunter",
       period: "DECEMBER 2024 - PRESENT",
       highlights: [
-        "Fill me in",
-        "Fill me in"
+        "Conduct proactive threat hunting services",
+        "Build, evolve, and expand hunting tooling, techniques and use-cases"
       ]
     },
     {
@@ -24,8 +24,8 @@ export default function Experience() {
       title: "Threat Detection Engineer II",
       period: "OCTOBER 2023 - JULY 2024",
       highlights: [
-        "Fill me in",
-        "Fill me in"
+        "Used big data and real-time streaming technologies to build and refine threat detections",
+        "Built mechanisms that combined multiple detection signals to create higher fidelity threat detections"
       ]
     },
     {
@@ -33,8 +33,8 @@ export default function Experience() {
       title: "Information Security Researcher",
       period: "AUGUST 2013 - AUGUST 2023",
       highlights: [
-        "Fill me in",
-        "Fill me in"
+        "Tracked threat actors and analyzed anomalous activity, uncovering new attack techniques and threats",
+        "Wrote and deployed new countermeasures rapidly"
       ]
     }
   ];
