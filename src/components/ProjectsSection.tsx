@@ -28,7 +28,8 @@ const projects = [
     tech: "PYTHON (AI/ML)",
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
-    bgGradient: "from-red-600 via-pink-600 to-purple-600"
+    bgGradient: "from-red-600 via-pink-600 to-purple-600",
+    bgImage: "/images/SentryInsight.jpg"
   },
   {
     title: "Cybersecurity GRC Reporter",
@@ -36,7 +37,8 @@ const projects = [
     tech: "PYTHON (AUTOMATION)",
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
     demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
-    bgGradient: "from-orange-600 via-red-600 to-pink-600"
+    bgGradient: "from-orange-600 via-red-600 to-pink-600",
+    bgImage: "/images/GRCInsight.jpg"
   }
 ];
 
