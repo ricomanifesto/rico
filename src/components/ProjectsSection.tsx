@@ -19,7 +19,8 @@ const projects = [
     tech: "JAVASCRIPT (REACT)",
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/",
-    bgGradient: "from-green-600 via-teal-600 to-blue-600"
+    bgGradient: "from-green-600 via-teal-600 to-blue-600",
+    bgImage: "/images/SentryDigest.jpg"
   },
   {
     title: "Cybersecurity Exploit Reporter",
