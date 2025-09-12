@@ -98,7 +98,7 @@ export default function Experience() {
               <h4 className="text-xl md:text-2xl font-semibold mb-2">
                 {currentExperience.title} @ <span className="text-cyan-400">
                   {currentExperience.company === "SENTINELONE" ? "SentinelOne" : 
-                   currentExperience.company === "DELL SECUREWORKS" ? "Dell SecureWorks" : 
+                   currentExperience.company === "DELL SECUREWORKS" ? "Dell Secureworks" : 
                    currentExperience.company.charAt(0) + currentExperience.company.slice(1).toLowerCase()}
                 </span>
               </h4>
