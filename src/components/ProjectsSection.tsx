@@ -53,9 +53,9 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" className="pt-0 pb-16 px-4 max-w-4xl mx-auto">
+    <section id="projects" className="pt-0 pb-16 px-4 max-w-4xl mx-auto bg-slate-800 text-white">
       <motion.h2 
-        className="section-title text-3xl md:text-4xl font-serif font-bold mb-8"
+        className="section-title text-3xl md:text-4xl font-serif font-bold mb-8 text-white"
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
@@ -74,7 +74,7 @@ export default function ProjectsSection() {
             {projects.map((project, index) => (
               <div key={index} className="w-full flex-shrink-0">
                 <motion.div 
-                  className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-border hover:border-primary/30 mx-4"
+                  className="bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-600 hover:border-cyan-400/30 mx-4"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -82,20 +82,20 @@ export default function ProjectsSection() {
                   whileHover={{ y: -5 }}
                 >
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-primary mb-3">{project.title}</h3>
-                    <p className="mb-6">
+                    <h3 className="text-xl font-semibold text-cyan-400 mb-3">{project.title}</h3>
+                    <p className="mb-6 text-gray-200">
                       {project.description}
                     </p>
                     <div className="flex items-center">
                       <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
-                         className="inline-flex items-center text-primary hover:text-secondary transition duration-300 hover:scale-105">
+                         className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition duration-300 hover:scale-105">
                         <Github className="mr-2" size={20} />
                         GitHub Repo
                       </a>
                       
                       {project.demoUrl && (
                         <a href={project.demoUrl} target="_blank" rel="noopener noreferrer"
-                           className="inline-flex items-center text-primary hover:text-secondary transition duration-300 ml-5 hover:scale-105">
+                           className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition duration-300 ml-5 hover:scale-105">
                           <ExternalLink className="mr-2" size={20} />
                           Live Demo
                         </a>
@@ -111,18 +111,18 @@ export default function ProjectsSection() {
         {/* Navigation Buttons */}
         <button
           onClick={goToPrevious}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white border border-gray-200 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-50"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500"
           aria-label="Previous project"
         >
-          <ChevronLeft size={24} className="text-primary" />
+          <ChevronLeft size={24} className="text-cyan-400" />
         </button>
 
         <button
           onClick={goToNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white border border-gray-200 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-50"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500"
           aria-label="Next project"
         >
-          <ChevronRight size={24} className="text-primary" />
+          <ChevronRight size={24} className="text-cyan-400" />
         </button>
 
         {/* Dots Indicator */}
@@ -133,8 +133,8 @@ export default function ProjectsSection() {
               onClick={() => setCurrentIndex(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentIndex 
-                  ? 'bg-primary scale-110' 
-                  : 'bg-gray-300 hover:bg-gray-400'
+                  ? 'bg-cyan-400 scale-110' 
+                  : 'bg-gray-500 hover:bg-gray-400'
               }`}
               aria-label={`Go to project ${index + 1}`}
             />

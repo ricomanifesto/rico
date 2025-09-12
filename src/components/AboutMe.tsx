@@ -14,10 +14,10 @@ export default function AboutMe() {
   const rightColumn = technologies.slice(3, 6);
 
   return (
-    <section id="about" className="py-16 px-4 bg-gray-50">
+    <section id="about" className="py-16 px-4 bg-slate-800 text-white">
       <div className="max-w-4xl mx-auto">
         <motion.h2 
-          className="section-title text-3xl md:text-4xl font-serif font-bold mb-8"
+          className="section-title text-3xl md:text-4xl font-serif font-bold mb-8 text-white"
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
@@ -30,7 +30,7 @@ export default function AboutMe() {
           {/* Content Section */}
           <div className="flex-1">
             <motion.p 
-              className="text-lg md:text-xl mb-8 leading-relaxed"
+              className="text-lg md:text-xl mb-8 leading-relaxed text-gray-200"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
@@ -59,14 +59,14 @@ export default function AboutMe() {
                     viewport={{ once: true }}
                   >
                     <svg 
-                      className="w-4 h-4 text-primary mr-3 flex-shrink-0" 
+                      className="w-4 h-4 text-cyan-400 mr-3 flex-shrink-0" 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    <span className="text-lg text-gray-700">{tech}</span>
+                    <span className="text-lg text-gray-200">{tech}</span>
                   </motion.div>
                 ))}
               </div>
@@ -83,14 +83,14 @@ export default function AboutMe() {
                     viewport={{ once: true }}
                   >
                     <svg 
-                      className="w-4 h-4 text-primary mr-3 flex-shrink-0" 
+                      className="w-4 h-4 text-cyan-400 mr-3 flex-shrink-0" 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    <span className="text-lg text-gray-700">{tech}</span>
+                    <span className="text-lg text-gray-200">{tech}</span>
                   </motion.div>
                 ))}
               </div>
@@ -98,7 +98,7 @@ export default function AboutMe() {
 
             {/* Personal Interests */}
             <motion.p 
-              className="text-lg md:text-xl leading-relaxed text-gray-700"
+              className="text-lg md:text-xl leading-relaxed text-gray-200"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 1.0, duration: 0.8 }}
@@ -119,7 +119,7 @@ export default function AboutMe() {
             <img 
               src="/images/profile.jpg" 
               alt="Michael Rico Profile" 
-              className="w-40 h-40 md:w-48 md:h-48 object-cover object-[50%_35%] border-4 border-primary/20 shadow-lg"
+              className="w-40 h-40 md:w-48 md:h-48 object-cover object-[50%_35%] border-4 border-cyan-400/20 shadow-lg"
             />
           </motion.div>
         </div>

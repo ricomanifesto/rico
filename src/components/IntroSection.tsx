@@ -22,7 +22,7 @@ export default function IntroSection() {
   }, []);
   
   return (
-    <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-16 px-4 overflow-hidden">
+    <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-16 px-4 overflow-hidden bg-slate-900 text-white">
       {/* Network Grid Animation Background */}
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
       
@@ -37,9 +37,9 @@ export default function IntroSection() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
-          <span className="text-primary inline-flex items-center">
+          <span className="text-cyan-400 inline-flex items-center">
             {displayText}
-            <span className="animate-blink ml-1 h-8 w-2 bg-primary inline-block"></span>
+            <span className="animate-blink ml-1 h-8 w-2 bg-cyan-400 inline-block"></span>
           </span>
         </h1>
         
@@ -54,7 +54,7 @@ export default function IntroSection() {
 
         
         <motion.p 
-          className="max-w-2xl text-lg md:text-xl mb-10 mx-auto"
+          className="max-w-2xl text-lg md:text-xl mb-10 mx-auto text-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
