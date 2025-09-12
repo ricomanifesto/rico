@@ -54,13 +54,37 @@ export default function IntroSection() {
 
         
         <motion.p 
-          className="max-w-2xl text-lg md:text-xl mb-10 mx-auto text-gray-200"
+          className="max-w-2xl text-lg md:text-xl mb-12 mx-auto text-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
         >
           I'm a Sr. Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.
         </motion.p>
+
+        {/* Say Hi Button */}
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+        >
+          <a 
+            href="mailto:michaelrico124@gmail.com" 
+            className="inline-flex items-center px-6 py-3 border-2 border-cyan-400/50 rounded-xl bg-transparent hover:bg-cyan-400/10 text-cyan-400 hover:text-cyan-300 transition-all duration-300 hover:scale-105 hover:border-cyan-400"
+          >
+            <svg 
+              className="w-5 h-5 mr-3" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            Say hi!
+          </a>
+        </motion.div>
         
       </motion.div>
     </section>

@@ -18,16 +18,23 @@ export default function Header() {
         <div className="flex items-center">
           <div className="text-xl font-bold text-cyan-400">rico</div>
           <nav className="flex items-center ml-8">
-            <a href="#intro" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">Home</a>
-            <a href="#about" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">About</a>
-            <a href="#experience" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">Experience</a>
-            <a href="#projects" className="mr-6 text-gray-200 hover:text-cyan-400 transition duration-300">Projects</a>
-            <a href="mailto:michaelrico124@gmail.com" className="text-gray-200 hover:text-cyan-400 transition duration-300">Contact</a>
+            <a href="#intro" className="mr-6 text-sm text-gray-200 hover:text-cyan-400 transition duration-300">Home</a>
+            <a href="#about" className="mr-6 text-sm text-gray-200 hover:text-cyan-400 transition duration-300">About</a>
+            <a href="#experience" className="mr-6 text-sm text-gray-200 hover:text-cyan-400 transition duration-300">Experience</a>
+            <a href="#projects" className="mr-6 text-sm text-gray-200 hover:text-cyan-400 transition duration-300">Projects</a>
+            <a href="mailto:michaelrico124@gmail.com" className="text-sm text-gray-200 hover:text-cyan-400 transition duration-300">Contact</a>
           </nav>
         </div>
         
         {/* Social Links */}
         <div className="flex items-center space-x-3">
+          <a href="mailto:michaelrico124@gmail.com" aria-label="Email" 
+             className="text-cyan-400 hover:text-cyan-300 transition duration-300 transform hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+          </a>
           <a href="https://github.com/ricomanifesto" target="_blank" rel="noopener noreferrer" aria-label="GitHub" 
              className="text-cyan-400 hover:text-cyan-300 transition duration-300 transform hover:scale-110">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -44,13 +51,6 @@ export default function Header() {
              className="text-cyan-400 hover:text-cyan-300 transition duration-300 transform hover:scale-110">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/>
-            </svg>
-          </a>
-          <a href="mailto:michaelrico124@gmail.com" aria-label="Email" 
-             className="text-cyan-400 hover:text-cyan-300 transition duration-300 transform hover:scale-110">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
             </svg>
           </a>
         </div>
