@@ -52,19 +52,6 @@ export default function IntroSection() {
           I build things when inspiration strikes.
         </motion.p>
 
-        {/* Profile Image */}
-        <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-        >
-          <img 
-            src="/images/profile.jpg" 
-            alt="Michael Rico Profile" 
-            className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover object-[50%_35%] border-4 border-primary/20 shadow-lg"
-          />
-        </motion.div>
         
         <motion.p 
           className="max-w-2xl text-lg md:text-xl mb-10 mx-auto"

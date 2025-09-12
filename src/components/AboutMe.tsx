@@ -16,14 +16,26 @@ export default function AboutMe() {
   return (
     <section id="about" className="py-16 px-4 bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+        <motion.h2 
+          className="section-title text-3xl md:text-4xl font-serif font-bold mb-8"
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-primary">About Me</h2>
+          / about me
+        </motion.h2>
+
+        <div className="mb-12">
+          <motion.p 
+            className="text-lg md:text-xl mb-8 leading-relaxed"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            I am currently a Sr. Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
+          </motion.p>
           
           <motion.p 
             className="text-lg md:text-xl mb-8 max-w-3xl mx-auto leading-relaxed"
@@ -35,74 +47,92 @@ export default function AboutMe() {
             I am currently a Sr. Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
           </motion.p>
 
-          {/* Technologies Grid */}
+          {/* Technologies and Profile Picture */}
           <motion.div 
-            className="grid grid-cols-2 gap-8 max-w-2xl mx-auto mb-8"
+            className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             viewport={{ once: true }}
           >
-            {/* Left Column */}
-            <div className="space-y-3">
-              {leftColumn.map((tech, index) => (
-                <motion.div
-                  key={tech}
-                  className="flex items-center justify-start"
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  <svg 
-                    className="w-4 h-4 text-primary mr-3 flex-shrink-0" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
+            {/* Technologies Grid */}
+            <div className="grid grid-cols-2 gap-8 flex-1">
+              {/* Left Column */}
+              <div className="space-y-3">
+                {leftColumn.map((tech, index) => (
+                  <motion.div
+                    key={tech}
+                    className="flex items-center justify-start"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
+                    viewport={{ once: true }}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  <span className="text-lg text-gray-700">{tech}</span>
-                </motion.div>
-              ))}
+                    <svg 
+                      className="w-4 h-4 text-primary mr-3 flex-shrink-0" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <span className="text-lg text-gray-700">{tech}</span>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-3">
+                {rightColumn.map((tech, index) => (
+                  <motion.div
+                    key={tech}
+                    className="flex items-center justify-start"
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
+                    viewport={{ once: true }}
+                  >
+                    <svg 
+                      className="w-4 h-4 text-primary mr-3 flex-shrink-0" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <span className="text-lg text-gray-700">{tech}</span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
-            {/* Right Column */}
-            <div className="space-y-3">
-              {rightColumn.map((tech, index) => (
-                <motion.div
-                  key={tech}
-                  className="flex items-center justify-start"
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
-                  viewport={{ once: true }}
-                >
-                  <svg 
-                    className="w-4 h-4 text-primary mr-3 flex-shrink-0" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  <span className="text-lg text-gray-700">{tech}</span>
-                </motion.div>
-              ))}
-            </div>
+            {/* Profile Picture */}
+            <motion.div
+              className="flex-shrink-0"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <img 
+                src="/images/profile.jpg" 
+                alt="Michael Rico Profile" 
+                className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover object-[50%_35%] border-4 border-primary/20 shadow-lg"
+              />
+            </motion.div>
           </motion.div>
 
           {/* Personal Interests */}
           <motion.p 
-            className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed text-gray-700"
+            className="text-lg md:text-xl leading-relaxed text-gray-700"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
+            transition={{ delay: 1.0, duration: 0.8 }}
             viewport={{ once: true }}
           >
             Outside of work I'm interested in keeping tabs on geopolitics and how it shapes our world.
           </motion.p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
