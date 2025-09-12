@@ -1,6 +1,7 @@
 // src/Home.tsx - This should NOT contain any CSS
 import Header from "@/components/Header";
 import IntroSection from "@/components/IntroSection";
+import AboutMe from "@/components/AboutMe";
 import ProjectsSection from "@/components/ProjectsSection";
 import Footer from "@/components/Footer";
 
@@ -10,6 +11,7 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         <IntroSection />
+        <AboutMe />
         <ProjectsSection />
       </main>
       <Footer />
