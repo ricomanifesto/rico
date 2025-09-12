@@ -73,18 +73,13 @@ export default function Experience() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  {/* Timeline Line */}
-                  {index < experiences.length - 1 && (
-                    <div className="hidden lg:block absolute left-0 top-8 w-px h-16 bg-gradient-to-b from-current to-transparent opacity-30"></div>
-                  )}
-                  
-                  {/* Timeline Dot */}
-                  <div className={`hidden lg:block absolute -left-2 top-6 w-4 h-4 rounded-full transition-all duration-300 ${
-                    selectedCompany === index ? 'bg-cyan-400' : 'bg-gray-600'
+                  {/* Selection Bar */}
+                  <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
+                    selectedCompany === index ? 'bg-cyan-400' : 'bg-transparent'
                   }`}></div>
                   
                   {/* Company Name */}
-                  <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-6">
+                  <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
                     {exp.company}
                   </h3>
                 </motion.button>
