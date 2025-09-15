@@ -45,17 +45,17 @@ const projects = [
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-rotation every 10 seconds
+  // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
     }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]); // Reset timer when currentIndex changes
 
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) => 
+    setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? projects.length - 1 : prevIndex - 1
     );
   };
