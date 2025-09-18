@@ -5,7 +5,7 @@ export default function AboutMe() {
     "Python",
     "asyncio", 
     "FastAPI",
-    "SQLAlchemy",
+    "Go",
     "Pydantic",
     "LangGraph"
   ];

@@ -7,7 +7,7 @@ const projects = [
   {
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
-    tech: "PYTHON, FASTAPI, PYDANTIC, SQLALCHEMY",
+    tech: "PYTHON, FASTAPI, PYDANTIC",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/",
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
@@ -25,7 +25,7 @@ const projects = [
   {
     title: "Cybersecurity Exploit Reporter",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
-    tech: "PYTHON, ASYNCIO, LANGGRAPH",
+    tech: "PYTHON, ASYNCIO, LANGGRAPH, MCP",
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
     bgGradient: "from-red-600 via-pink-600 to-purple-600",
@@ -34,7 +34,7 @@ const projects = [
   {
     title: "Cybersecurity GRC Reporter",
     description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
-    tech: "PYTHON, ASYNCIO, LANGGRAPH",
+    tech: "GO, PYTHON, LANGGRAPH, FASTAPI",
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
     demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
     bgGradient: "from-orange-600 via-red-600 to-pink-600",
