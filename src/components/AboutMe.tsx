@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 export default function AboutMe() {
   const technologies = [
     "Python",
-    "asyncio", 
+    "Next.js", 
     "FastAPI",
     "Go",
-    "Pydantic",
+    "LangChain",
     "LangGraph"
   ];
 
