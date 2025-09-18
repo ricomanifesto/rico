@@ -7,7 +7,7 @@ const projects = [
   {
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
-    tech: "PYTHON, FASTAPI, PYDANTIC",
+    tech: "PYTHON, FASTAPI, PYDANTIC, NEXT.JS",
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/",
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
