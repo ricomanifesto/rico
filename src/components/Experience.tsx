@@ -12,7 +12,7 @@ export default function Experience() {
   const experiences: ExperienceItem[] = [
     {
       company: "SENTINELONE",
-      title: "Sr. Threat Hunter",
+      title: "Staff Threat Hunter",
       period: "DECEMBER 2024 - PRESENT",
       highlights: [
         "Conduct proactive threat hunting services",

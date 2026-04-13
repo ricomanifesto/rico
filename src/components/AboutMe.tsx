@@ -36,7 +36,7 @@ export default function AboutMe() {
               transition={{ delay: 0.2, duration: 0.8 }}
               viewport={{ once: true }}
             >
-              I am currently a Sr. Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
+              I am currently a Staff Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
             </motion.p>
 
             {/* Technologies Grid */}
