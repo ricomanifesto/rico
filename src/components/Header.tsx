@@ -17,7 +17,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
           <div className="text-xl font-bold" style={{color: '#007bff'}}>rico</div>
-          <nav className="flex items-center ml-8">
+          <nav className="hidden md:flex items-center ml-8">
             <a href="#intro" className="mr-6 text-sm text-gray-200 transition duration-300" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#007bff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = ''}>Home</a>
             <a href="#about" className="mr-6 text-sm text-gray-200 transition duration-300" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#007bff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = ''}>About</a>
             <a href="#experience" className="mr-6 text-sm text-gray-200 transition duration-300" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#007bff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = ''}>Experience</a>
