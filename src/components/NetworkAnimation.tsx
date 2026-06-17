@@ -178,6 +178,7 @@ export default function NetworkAnimation() {
     };
     
     window.addEventListener('resize', handleResize);
+    const container = containerRef.current;
     
     // Cleanup
     return () => {
@@ -189,7 +190,7 @@ export default function NetworkAnimation() {
       
       nodesRef.current.forEach(node => node.element.remove());
       
-      const existingConnections = containerRef.current?.querySelectorAll('.connection');
+      const existingConnections = container?.querySelectorAll('.connection');
       existingConnections?.forEach(conn => conn.remove());
     };
   }, []);
