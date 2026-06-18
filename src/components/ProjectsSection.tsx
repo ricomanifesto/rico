@@ -89,12 +89,12 @@ export default function ProjectsSection() {
                       
                       {/* Icons */}
                       <div className="flex items-center space-x-4">
-                        <a href={project.repoUrl} target="_blank" rel="noopener noreferrer"
+                        <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository`}
                            className="text-white transition duration-300 hover:scale-110" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
                           <Github size={24} />
                         </a>
                         {project.demoUrl && (
-                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer"
+                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} demo`}
                              className="text-white transition duration-300 hover:scale-110" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
                             <ExternalLink size={24} />
                           </a>
@@ -127,7 +127,7 @@ export default function ProjectsSection() {
 
         {/* Dots Indicator */}
         <div className="flex justify-center mt-6 space-x-2">
-          {projects.map((_, index) => (
+          {projects.map((project, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
@@ -136,7 +136,7 @@ export default function ProjectsSection() {
                   ? 'scale-110' : 'bg-gray-500 hover:bg-gray-400'
               }`}
               style={index === currentIndex ? {backgroundColor: '#007bff'} : {}}
-              aria-label={`Go to project ${index + 1}`}
+              aria-label={`Show ${project.title}`}
             />
           ))}
         </div>
