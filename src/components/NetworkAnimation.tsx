@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-interface Node {
+interface NetworkNode {
   element: HTMLDivElement;
   x: number;
   y: number;
@@ -13,7 +13,7 @@ interface Node {
 
 export default function NetworkAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const nodesRef = useRef<Node[]>([]);
+  const nodesRef = useRef<NetworkNode[]>([]);
   const animationRef = useRef<number | null>(null);
   
   useEffect(() => {

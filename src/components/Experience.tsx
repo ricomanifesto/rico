@@ -1,44 +1,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-
-interface ExperienceItem {
-  company: string;
-  title: string;
-  period: string;
-  highlights: string[];
-}
+import { experiences } from "../content/portfolio";
 
 export default function Experience() {
-  const experiences: ExperienceItem[] = [
-    {
-      company: "SENTINELONE",
-      title: "Staff Threat Hunter",
-      period: "DECEMBER 2024 - PRESENT",
-      highlights: [
-        "Conduct proactive threat hunting services",
-        "Build, evolve, and expand hunting tooling, techniques and use-cases"
-      ]
-    },
-    {
-      company: "UBER",
-      title: "Threat Detection Engineer II",
-      period: "OCTOBER 2023 - JULY 2024",
-      highlights: [
-        "Used big data and real-time streaming technologies to build and refine threat detections",
-        "Built mechanisms that combined multiple detection signals to create higher fidelity threat detections"
-      ]
-    },
-    {
-      company: "DELL SECUREWORKS",
-      title: "Information Security Researcher",
-      period: "AUGUST 2013 - AUGUST 2023",
-      highlights: [
-        "Tracked threat actors and analyzed anomalous activity, uncovering new attack techniques and threats",
-        "Wrote and deployed new countermeasures rapidly"
-      ]
-    }
-  ];
-
   const [selectedCompany, setSelectedCompany] = useState(0); // Default to SentinelOne
   const currentExperience = experiences[selectedCompany];
 
@@ -97,11 +61,7 @@ export default function Experience() {
               transition={{ duration: 0.6 }}
             >
               <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                {currentExperience.title} @ <span style={{color: '#007bff'}}>
-                  {currentExperience.company === "SENTINELONE" ? "SentinelOne" : 
-                   currentExperience.company === "DELL SECUREWORKS" ? "Dell Secureworks" : 
-                   currentExperience.company.charAt(0) + currentExperience.company.slice(1).toLowerCase()}
-                </span>
+                {currentExperience.title} @ <span style={{color: '#007bff'}}>{currentExperience.displayCompany}</span>
               </h4>
               
               <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
