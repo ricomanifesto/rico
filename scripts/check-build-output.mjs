@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -7,6 +7,18 @@ const indexPath = join(dist, "index.html");
 const sourceContentPath = join(root, "src", "content", "portfolio.ts");
 
 const failures = [];
+
+function walkFiles(path) {
+  if (!existsSync(path)) {
+    return [];
+  }
+
+  const entries = readdirSync(path, { withFileTypes: true });
+  return entries.flatMap((entry) => {
+    const entryPath = join(path, entry.name);
+    return entry.isDirectory() ? walkFiles(entryPath) : [entryPath];
+  });
+}
 
 function requireFile(path, label) {
   if (!existsSync(path)) {
@@ -23,6 +35,17 @@ requireFile(indexPath, "built index");
 requireFile(join(dist, "CNAME"), "GitHub Pages CNAME");
 requireFile(join(dist, "favicon.svg"), "favicon");
 requireFile(join(dist, "images", "profile.jpg"), "profile image");
+
+const forbiddenArtifacts = [
+  join(dist, ".github"),
+  ...walkFiles(dist).filter((filePath) => filePath.toLowerCase().endsWith(".heic")),
+];
+
+for (const artifactPath of forbiddenArtifacts) {
+  if (existsSync(artifactPath)) {
+    failures.push(`Forbidden public artifact: ${artifactPath}`);
+  }
+}
 
 if (existsSync(join(dist, "CNAME"))) {
   const cname = readFileSync(join(dist, "CNAME"), "utf8").trim();
