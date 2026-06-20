@@ -60,6 +60,8 @@ export default function AboutMe() {
                   >
                     <svg 
                       className="w-4 h-4 mr-3 flex-shrink-0" style={{color: '#007bff'}} 
+                      aria-hidden="true"
+                      focusable="false"
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -84,6 +86,8 @@ export default function AboutMe() {
                   >
                     <svg 
                       className="w-4 h-4 mr-3 flex-shrink-0" style={{color: '#007bff'}} 
+                      aria-hidden="true"
+                      focusable="false"
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
