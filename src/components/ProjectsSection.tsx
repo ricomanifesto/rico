@@ -61,6 +61,8 @@ export default function ProjectsSection() {
                       <img 
                         src={project.bgImage} 
                         alt={`${project.title} preview`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-black/40"></div>
