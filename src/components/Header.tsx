@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
 import { headerNavItems, socialLinks } from "@/content/navigation";
 
@@ -21,15 +22,11 @@ export default function Header() {
           <div className="text-xl font-bold" style={{color: '#007bff'}}>rico</div>
           <nav className="hidden md:flex items-center ml-8">
             {headerNavItems.map((item, index) => (
-              <a
+              <HeaderNavLink
                 key={item.href}
-                href={item.href}
-                className={`${index < headerNavItems.length - 1 ? "mr-6" : ""} text-sm text-gray-200 transition duration-300`}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#007bff")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "")}
-              >
-                {item.label}
-              </a>
+                item={item}
+                isLast={index === headerNavItems.length - 1}
+              />
             ))}
           </nav>
         </div>

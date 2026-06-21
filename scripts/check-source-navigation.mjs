@@ -5,6 +5,7 @@ const root = process.cwd();
 const srcRoot = path.join(root, "src");
 const navigationPath = path.join(srcRoot, "content/navigation.ts");
 const headerPath = path.join(srcRoot, "components/Header.tsx");
+const headerNavLinkPath = path.join(srcRoot, "components/HeaderNavLink.tsx");
 const socialLinkPath = path.join(srcRoot, "components/SocialLink.tsx");
 
 const failures = [];
@@ -46,10 +47,21 @@ if (!fs.existsSync(navigationPath)) {
   }
 }
 
-if (!fs.existsSync(socialLinkPath)) {
-  failures.push("src/components/SocialLink.tsx renders social links");
-} else if (fs.existsSync(headerPath)) {
+if (fs.existsSync(headerPath)) {
   const headerSource = fs.readFileSync(headerPath, "utf8");
+
+  if (!fs.existsSync(headerNavLinkPath)) {
+    failures.push("src/components/HeaderNavLink.tsx renders header navigation links");
+  }
+
+  if (!/import\s+HeaderNavLink\s+from\s+["']@\/components\/HeaderNavLink["'];/.test(headerSource)) {
+    failures.push("Header uses the shared HeaderNavLink component");
+  }
+
+  if (!fs.existsSync(socialLinkPath)) {
+    failures.push("src/components/SocialLink.tsx renders social links");
+  }
+
   if (!/import\s+SocialLink\s+from\s+["']@\/components\/SocialLink["'];/.test(headerSource)) {
     failures.push("Header uses the shared SocialLink component");
   }
