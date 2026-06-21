@@ -93,12 +93,12 @@ export default function ProjectsSection() {
                       <div className="flex items-center space-x-4">
                         <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository`}
                            className="text-white transition duration-300 hover:scale-110" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
-                          <Github size={24} />
+                          <Github size={24} aria-hidden="true" focusable="false" />
                         </a>
                         {project.demoUrl && (
                           <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} demo`}
                              className="text-white transition duration-300 hover:scale-110" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
-                            <ExternalLink size={24} />
+                            <ExternalLink size={24} aria-hidden="true" focusable="false" />
                           </a>
                         )}
                       </div>
@@ -116,7 +116,7 @@ export default function ProjectsSection() {
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500"
           aria-label="Previous project"
         >
-          <ChevronLeft size={24} style={{color: '#007bff'}} />
+          <ChevronLeft size={24} style={{color: '#007bff'}} aria-hidden="true" focusable="false" />
         </button>
 
         <button
@@ -124,7 +124,7 @@ export default function ProjectsSection() {
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500"
           aria-label="Next project"
         >
-          <ChevronRight size={24} style={{color: '#007bff'}} />
+          <ChevronRight size={24} style={{color: '#007bff'}} aria-hidden="true" focusable="false" />
         </button>
 
         {/* Dots Indicator */}

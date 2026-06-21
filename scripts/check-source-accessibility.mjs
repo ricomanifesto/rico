@@ -38,10 +38,27 @@ function walkFiles(directory) {
 for (const componentPath of walkFiles(componentsRoot)) {
   const source = fs.readFileSync(componentPath, "utf8");
   const svgTags = source.match(/<svg\b[\s\S]*?>/g) ?? [];
+  const lucideNames = Array.from(
+    source.matchAll(/import\s*\{([^}]+)\}\s*from\s*["']lucide-react["'];/g),
+  ).flatMap(([, imports]) =>
+    imports
+      .split(",")
+      .map((specifier) => specifier.trim().split(/\s+as\s+/).at(-1))
+      .filter(Boolean),
+  );
 
   for (const svgTag of svgTags) {
     if (!/aria-hidden="true"/.test(svgTag) || !/focusable="false"/.test(svgTag)) {
       failures.push(`${path.relative(root, componentPath)}: inline SVGs are decorative`);
+    }
+  }
+
+  for (const lucideName of lucideNames) {
+    const iconTags = source.match(new RegExp(`<${lucideName}\\b[\\s\\S]*?>`, "g")) ?? [];
+    for (const iconTag of iconTags) {
+      if (!/aria-hidden="true"/.test(iconTag) || !/focusable="false"/.test(iconTag)) {
+        failures.push(`${path.relative(root, componentPath)}: ${lucideName} icon is decorative`);
+      }
     }
   }
 }
