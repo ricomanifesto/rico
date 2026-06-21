@@ -4,6 +4,8 @@ import path from "node:path";
 const root = process.cwd();
 const srcRoot = path.join(root, "src");
 const navigationPath = path.join(srcRoot, "content/navigation.ts");
+const headerPath = path.join(srcRoot, "components/Header.tsx");
+const socialLinkPath = path.join(srcRoot, "components/SocialLink.tsx");
 
 const failures = [];
 
@@ -29,6 +31,27 @@ if (!fs.existsSync(navigationPath)) {
     if (!idPattern.test(sourceFiles)) {
       failures.push(`Navigation target #${sectionId} has a matching section id`);
     }
+  }
+
+  for (const [, href, external] of navigationSource.matchAll(
+    /href:\s*["']([^"']+)["'][\s\S]*?external:\s*(true|false)/g,
+  )) {
+    if (href.startsWith("https://") && external !== "true") {
+      failures.push(`${href} is marked as an external link`);
+    }
+
+    if (href.startsWith("mailto:") && external !== "false") {
+      failures.push(`${href} is marked as an internal mail link`);
+    }
+  }
+}
+
+if (!fs.existsSync(socialLinkPath)) {
+  failures.push("src/components/SocialLink.tsx renders social links");
+} else if (fs.existsSync(headerPath)) {
+  const headerSource = fs.readFileSync(headerPath, "utf8");
+  if (!/import\s+SocialLink\s+from\s+["']@\/components\/SocialLink["'];/.test(headerSource)) {
+    failures.push("Header uses the shared SocialLink component");
   }
 }
 
