@@ -525,6 +525,7 @@ function projectCardContentUsesInlineAccentStyles(source) {
 for (const componentPath of walkFiles(componentsRoot)) {
   const source = fs.readFileSync(componentPath, "utf8");
   const svgTags = source.match(/<svg\b[\s\S]*?>/g) ?? [];
+  const newTabLinks = source.match(/<a\b(?=[^>]*target=\{?["']_blank["']\}?)[^>]*>/g) ?? [];
   const lucideNames = Array.from(
     source.matchAll(/import\s*\{([^}]+)\}\s*from\s*["']lucide-react["'];/g),
   ).flatMap(([, imports]) =>
@@ -537,6 +538,15 @@ for (const componentPath of walkFiles(componentsRoot)) {
   for (const svgTag of svgTags) {
     if (!/aria-hidden="true"/.test(svgTag) || !/focusable="false"/.test(svgTag)) {
       failures.push(`${path.relative(root, componentPath)}: inline SVGs are decorative`);
+    }
+  }
+
+  for (const linkTag of newTabLinks) {
+    const relValue = linkTag.match(/rel=\{?["']([^"']+)["']\}?/)?.[1] ?? "";
+    const relTokens = relValue.split(/\s+/);
+
+    if (!relTokens.includes("noopener") || !relTokens.includes("noreferrer")) {
+      failures.push(`${path.relative(root, componentPath)}: new-tab links use noopener noreferrer`);
     }
   }
 
