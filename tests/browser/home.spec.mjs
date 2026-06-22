@@ -77,6 +77,8 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
 
   const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
   await expect(mobileNav).toBeVisible();
+  await expect(mobileNav.getByRole("list")).toBeVisible();
+  await expect(mobileNav.getByRole("listitem")).toHaveCount(5);
   await expect(mobileNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "#intro");
   await expect(mobileNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "#about");
   await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");

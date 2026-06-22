@@ -102,6 +102,18 @@ if (fs.existsSync(headerPath)) {
   if (!/aria-label="Mobile primary"[\s\S]*?headerNavItems\.map\(\(item\)\s*=>/.test(headerSource)) {
     failures.push("Header mobile navigation renders from shared typed navigation data");
   }
+
+  if (!/aria-label="Mobile primary"[\s\S]*<ul\b[^>]*className="[^"]*overflow-x-auto/.test(headerSource)) {
+    failures.push("Header mobile navigation exposes the horizontal link rail as a list");
+  }
+
+  if (!/aria-label="Mobile primary"[\s\S]*<ul\b[^>]*role="list"/.test(headerSource)) {
+    failures.push("Header mobile navigation uses an explicit list role");
+  }
+
+  if (!/aria-label="Mobile primary"[\s\S]*headerNavItems\.map\(\(item\)\s*=>\s*\(\s*<li\b[^>]*role="listitem"/.test(headerSource)) {
+    failures.push("Header mobile navigation wraps each shared nav item in a list item");
+  }
 }
 
 for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
