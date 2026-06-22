@@ -216,6 +216,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project action links use class-based hover styles",
+    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*hover:text-\[#66b3ff\][\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*hover:text-\[#66b3ff\]/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel hides inactive slides from assistive technology",
     pattern: /role="group"[\s\S]*aria-roledescription="slide"[\s\S]*aria-hidden=\{index !== currentIndex\}/,
     source: projectsSection,
@@ -244,6 +249,10 @@ const checks = [
 
 const failedChecks = checks.filter(({ pattern, source }) => !pattern.test(source));
 const failures = failedChecks.map(({ label }) => label);
+
+if (projectActionLinksUseMouseHandlers(projectsSection)) {
+  failures.push("project action links avoid mouse-event hover styling");
+}
 
 if (!fs.existsSync(skipLinkPath)) {
   failures.push("src/components/SkipLink.tsx renders the skip link");
@@ -280,6 +289,14 @@ function walkFiles(directory) {
 
 function hasClassToken(className, token) {
   return className.split(/\s+/).includes(token);
+}
+
+function projectActionLinksUseMouseHandlers(source) {
+  const actionLinksMatch = source.match(
+    /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*<\/a>/,
+  );
+
+  return /onMouseEnter|onMouseLeave/.test(actionLinksMatch?.[0] ?? "");
 }
 
 for (const componentPath of walkFiles(componentsRoot)) {
