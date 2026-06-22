@@ -155,6 +155,18 @@ test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
   expect(box.height).toBeGreaterThanOrEqual(44);
 });
 
+test("exposes about technologies as a semantic list", async ({ page }) => {
+  await page.goto("/");
+
+  const technologies = page.getByRole("list", { name: "Technologies" });
+  await expect(technologies).toBeVisible();
+  await expect(technologies.getByRole("listitem")).toHaveCount(6);
+
+  for (const technology of ["Python", "Next.js", "FastAPI", "Go", "scikit-learn", "LangGraph"]) {
+    await expect(technologies.getByText(technology, { exact: true })).toBeVisible();
+  }
+});
+
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");

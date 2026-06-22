@@ -10,9 +10,6 @@ export default function AboutMe() {
     "LangGraph"
   ];
 
-  const leftColumn = technologies.slice(0, 3);
-  const rightColumn = technologies.slice(3, 6);
-
   return (
     <section id="about" className="scroll-mt-36 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
       <div className="max-w-4xl mx-auto">
@@ -40,65 +37,37 @@ export default function AboutMe() {
             </motion.p>
 
             {/* Technologies Grid */}
-            <motion.div 
-              className="grid grid-cols-2 gap-8 mb-8"
+            <motion.ul 
+              aria-label="Technologies"
+              className="grid grid-cols-2 gap-x-8 gap-y-3 mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
               viewport={{ once: true }}
             >
-              {/* Left Column */}
-              <div className="space-y-3">
-                {leftColumn.map((tech, index) => (
-                  <motion.div
-                    key={tech}
-                    className="flex items-center justify-start"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
-                    viewport={{ once: true }}
+              {technologies.map((tech, index) => (
+                <motion.li
+                  key={tech}
+                  className="flex items-center justify-start"
+                  initial={{ opacity: 0, x: index < 3 ? -20 : 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 + (index % 3) * 0.1, duration: 0.6 }}
+                  viewport={{ once: true }}
+                >
+                  <svg
+                    className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
+                    aria-hidden="true"
+                    focusable="false"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
-                      aria-hidden="true"
-                      focusable="false"
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <span className="text-lg text-gray-200">{tech}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Right Column */}
-              <div className="space-y-3">
-                {rightColumn.map((tech, index) => (
-                  <motion.div
-                    key={tech}
-                    className="flex items-center justify-start"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
-                    viewport={{ once: true }}
-                  >
-                    <svg
-                      className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
-                      aria-hidden="true"
-                      focusable="false"
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <span className="text-lg text-gray-200">{tech}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                  <span className="text-lg text-gray-200">{tech}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
 
             {/* Personal Interests */}
             <motion.p 
