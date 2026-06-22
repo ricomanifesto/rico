@@ -91,6 +91,11 @@ const checks = [
     pattern: /shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*x:/,
     source: projectsSection,
   },
+  {
+    label: "project cards disable hover scale for reduced motion",
+    pattern: /whileHover=\{shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*1\.02\s*\}\}/,
+    source: projectsSection,
+  },
 ];
 
 const failedChecks = checks.filter(({ pattern, source }) => !pattern.test(source));
