@@ -16,6 +16,7 @@ const checks = [
 ];
 
 const failures = [];
+const projectsSectionPath = path.join(componentsRoot, "ProjectsSection.tsx");
 
 function walkFiles(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -33,6 +34,14 @@ for (const componentPath of walkFiles(componentsRoot)) {
   const imageTags = source.match(/<img\b[\s\S]*?\/>/g) ?? [];
 
   for (const imageTag of imageTags) {
+    if (
+      componentPath === projectsSectionPath
+      && /src=\{project\.bgImage\}/.test(imageTag)
+      && !(/alt=""/.test(imageTag) && /aria-hidden="true"/.test(imageTag))
+    ) {
+      failures.push(`${path.relative(root, componentPath)}: project carousel background images are decorative`);
+    }
+
     for (const { label, pattern } of checks) {
       if (!pattern.test(imageTag)) {
         failures.push(`${path.relative(root, componentPath)}: ${label}`);

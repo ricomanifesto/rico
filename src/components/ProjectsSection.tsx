@@ -99,7 +99,8 @@ export default function ProjectsSection() {
                     <div className="absolute inset-0">
                       <img 
                         src={project.bgImage} 
-                        alt={`${project.title} preview`}
+                        alt=""
+                        aria-hidden="true"
                         loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover"

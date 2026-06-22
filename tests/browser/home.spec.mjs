@@ -206,6 +206,20 @@ test("exposes the project carousel as a named region", async ({ page }) => {
   await expect(carousel.getByRole("button", { name: "Next project" })).toBeVisible();
 });
 
+test("treats project carousel background images as decorative", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const carousel = page.getByRole("region", { name: "Featured projects" });
+
+  await expect(carousel.getByRole("img", { name: /AI-Powered Threat Intelligence Platform/ })).toHaveCount(0);
+  await expect(carousel.getByRole("heading", { name: "AI-Powered Threat Intelligence Platform" })).toBeVisible();
+  await expect(
+    carousel.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }),
+  ).toBeVisible();
+});
+
 test("updates the current project dot after manual navigation", async ({ page }) => {
   await installReducedMotionController(page, true);
   await page.goto("/");
