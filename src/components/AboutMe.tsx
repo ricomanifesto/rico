@@ -39,6 +39,7 @@ export default function AboutMe() {
             {/* Technologies Grid */}
             <motion.ul 
               aria-label="Technologies"
+              role="list"
               className="grid grid-cols-2 gap-x-8 gap-y-3 mb-8"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
