@@ -3,6 +3,7 @@ import path from "node:path";
 import ts from "typescript";
 
 const root = process.cwd();
+const srcRoot = path.join(root, "src");
 const componentsRoot = path.join(root, "src/components");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
@@ -678,7 +679,7 @@ for (const { label, source, expected } of newTabRelGuardExamples) {
   }
 }
 
-for (const componentPath of walkFiles(componentsRoot)) {
+for (const componentPath of walkFiles(srcRoot)) {
   const source = fs.readFileSync(componentPath, "utf8");
   const svgTags = source.match(/<svg\b[\s\S]*?>/g) ?? [];
   const unsafeNewTabLinks = findUnsafeNewTabAnchors(source, componentPath);
