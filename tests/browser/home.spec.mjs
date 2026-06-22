@@ -257,6 +257,17 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await expect(nextProjectButton).toHaveCSS("outline-style", "solid");
 });
 
+test("moves focus to main content when the skip link is activated", async ({ page }) => {
+  await page.goto("/");
+
+  const skipLink = page.getByRole("link", { name: "Skip to main content" });
+  await page.keyboard.press("Tab");
+  await expect(skipLink).toBeFocused();
+
+  await page.keyboard.press("Enter");
+  await expect(page.locator("main#main-content")).toBeFocused();
+});
+
 test("keeps inactive project slide links out of keyboard order", async ({ page }) => {
   await installReducedMotionController(page, true);
   await page.goto("/");
