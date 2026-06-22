@@ -2,7 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
+const packagePath = path.join(root, "package.json");
 const workflowPath = path.join(root, ".github/workflows/deploy.yml");
+const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
 
 const checks = [
@@ -29,11 +31,17 @@ const checks = [
   {
     label: "workflow installs Chromium for browser interaction checks",
     pattern: /npx playwright install --with-deps chromium/,
+    source: workflow,
+  },
+  {
+    label: "package browser check installs Chromium before running tests",
+    pattern: /"browser":\s*"playwright install chromium && playwright test"/,
+    source: packageJson,
   },
 ];
 
 const failures = checks
-  .filter(({ pattern }) => !pattern.test(workflow))
+  .filter(({ pattern, source = workflow }) => !pattern.test(source))
   .map(({ label }) => label);
 
 if (failures.length > 0) {

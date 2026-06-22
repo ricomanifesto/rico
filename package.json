@@ -12,7 +12,7 @@
       "images": "node scripts/check-source-images.mjs",
       "nav": "node scripts/check-source-navigation.mjs",
       "workflow": "node scripts/check-source-workflow.mjs",
-      "browser": "playwright test",
+      "browser": "playwright install chromium && playwright test",
       "smoke": "node scripts/check-build-output.mjs",
       "check": "npm run lint && npm run a11y && npm run images && npm run nav && npm run workflow && npm run browser && npm run build && npm run smoke",
       "preview": "vite preview",
