@@ -144,3 +144,24 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await expect(nextProjectButton).toBeFocused();
   await expect(nextProjectButton).toHaveCSS("outline-style", "solid");
 });
+
+test("keeps inactive project slide links out of keyboard order", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
+  await expect(page.locator('[aria-label="Project slide 2 of 4"]')).toHaveAttribute("aria-hidden", "true");
+
+  await page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }).focus();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Open AI-Powered Threat Intelligence Platform demo" })).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Previous project" })).toBeFocused();
+
+  await page.getByRole("button", { name: "Next project" }).click();
+  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator('[aria-label="Project slide 2 of 4"]')).toHaveAttribute("aria-hidden", "false");
+  await expect(
+    page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
+  ).toHaveAttribute("tabindex", "-1");
+});

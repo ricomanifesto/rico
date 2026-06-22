@@ -211,6 +211,21 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel hides inactive slides from assistive technology",
+    pattern: /role="group"[\s\S]*aria-roledescription="slide"[\s\S]*aria-hidden=\{index !== currentIndex\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project repository links are tabbable only on the active slide",
+    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project demo links are tabbable only on the active slide",
+    pattern: /aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel arrow buttons have visible keyboard focus styles",
     pattern: /aria-label="Previous project"[\s\S]*focus-visible:outline[\s\S]*aria-label="Next project"[\s\S]*focus-visible:outline/,
     source: projectsSection,
