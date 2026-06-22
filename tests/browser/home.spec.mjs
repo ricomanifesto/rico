@@ -119,7 +119,12 @@ test("supports keyboard navigation across experience tabs", async ({ page }) => 
   await page.keyboard.press("End");
   await expect(dellSecureworks).toBeFocused();
   await expect(dellSecureworks).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel", { name: "DELL SECUREWORKS" })).toContainText("Information Security Researcher");
+  const selectedPanel = page.getByRole("tabpanel", { name: "DELL SECUREWORKS" });
+  await expect(selectedPanel).toContainText("Information Security Researcher");
+
+  await selectedPanel.focus();
+  await expect(selectedPanel).toBeFocused();
+  await expect(selectedPanel).toHaveCSS("outline-style", "solid");
 });
 
 test("renders visible focus for keyboard navigation controls", async ({ page }) => {

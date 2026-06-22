@@ -104,6 +104,7 @@ export default function Experience() {
                 aria-labelledby={`experience-tab-${index}`}
                 tabIndex={selectedCompany === index ? 0 : -1}
                 hidden={selectedCompany !== index}
+                className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
                 initial={false}
                 animate={selectedCompany === index ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
                 transition={{ duration: 0.6 }}
