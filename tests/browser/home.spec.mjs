@@ -141,6 +141,20 @@ test("exposes desktop primary navigation with an accessible name", async ({ page
   );
 });
 
+test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
+  await page.goto("/");
+
+  const contactLink = page.getByRole("link", { name: "Say hi!" });
+  await expect(contactLink).toBeVisible();
+  await expect(contactLink).toHaveAttribute("href", "mailto:michaelrico124@gmail.com");
+
+  const box = await contactLink.boundingBox();
+
+  expect(box).not.toBeNull();
+  expect(box.width).toBeGreaterThanOrEqual(44);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+});
+
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
