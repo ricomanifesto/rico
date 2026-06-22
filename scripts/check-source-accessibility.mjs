@@ -318,6 +318,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel arrow buttons keep mobile touch targets inside the viewport",
+    pattern: /left-2 md:left-0[\s\S]*md:-translate-x-4[\s\S]*p-3 md:p-2[\s\S]*aria-label="Previous project"[\s\S]*right-2 md:right-0[\s\S]*md:translate-x-4[\s\S]*p-3 md:p-2[\s\S]*aria-label="Next project"/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel arrow icons use class-based accent styles",
     pattern: /<ChevronLeft[^>]*className="[^"]*text-\[#007bff\][^"]*"[\s\S]*<ChevronRight[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
     source: projectsSection,

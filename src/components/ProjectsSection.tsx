@@ -151,7 +151,7 @@ export default function ProjectsSection() {
         {/* Navigation Buttons */}
         <button
           onClick={goToPrevious}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+          className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Previous project"
         >
           <ChevronLeft size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
@@ -159,7 +159,7 @@ export default function ProjectsSection() {
 
         <button
           onClick={goToNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+          className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Next project"
         >
           <ChevronRight size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
