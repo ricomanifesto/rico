@@ -228,6 +228,28 @@ test("keeps mobile project carousel arrows inside the viewport", async ({ page }
   }
 });
 
+test("keeps mobile project carousel dots easy to tap", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+
+  for (const projectName of [
+    "AI-Powered Threat Intelligence Platform",
+    "Cybersecurity News Aggregator",
+    "Cybersecurity Exploit Reporter",
+    "Cybersecurity GRC Reporter",
+  ]) {
+    const dot = page.getByRole("button", { name: `Show ${projectName}` });
+    const box = await dot.boundingBox();
+
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
 test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
   await page.goto("/");
 
