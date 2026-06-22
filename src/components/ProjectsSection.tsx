@@ -48,6 +48,9 @@ export default function ProjectsSection() {
       </motion.h2>
       
       <div
+        role="region"
+        aria-label="Featured projects"
+        aria-roledescription="carousel"
         className="relative"
         onMouseEnter={() => setHasCarouselHover(true)}
         onMouseLeave={() => setHasCarouselHover(false)}

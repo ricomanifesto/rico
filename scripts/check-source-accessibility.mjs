@@ -188,6 +188,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel exposes a named carousel region",
+    pattern: /role="region"[\s\S]*aria-label="Featured projects"[\s\S]*aria-roledescription="carousel"/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel pauses auto-rotation while it contains focus",
     pattern: /hasCarouselFocus[\s\S]*shouldReduceMotion \|\| hasCarouselFocus[\s\S]*onFocusCapture=\{\(\) => setHasCarouselFocus\(true\)\}/,
     source: projectsSection,
