@@ -206,6 +206,31 @@ test("keeps header social links easy to tap on mobile", async ({ page }) => {
   }
 });
 
+test("exposes header social links as semantic navigation", async ({ page }) => {
+  await page.goto("/");
+
+  const socialNav = page.getByRole("navigation", { name: "Social links" });
+  await expect(socialNav).toBeVisible();
+  await expect(socialNav.getByRole("list")).toBeVisible();
+  await expect(socialNav.getByRole("listitem")).toHaveCount(4);
+  await expect(socialNav.getByRole("link", { name: "Email" })).toHaveAttribute(
+    "href",
+    "mailto:michaelrico124@gmail.com",
+  );
+  await expect(socialNav.getByRole("link", { name: "GitHub" })).toHaveAttribute(
+    "href",
+    "https://github.com/ricomanifesto",
+  );
+  await expect(socialNav.getByRole("link", { name: "LinkedIn" })).toHaveAttribute(
+    "href",
+    "https://www.linkedin.com/in/michael-rico-19600314a",
+  );
+  await expect(socialNav.getByRole("link", { name: "Medium" })).toHaveAttribute(
+    "href",
+    "https://medium.com/@ricomanifesto",
+  );
+});
+
 test("keeps the mobile header inside narrow viewports", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto("/");
