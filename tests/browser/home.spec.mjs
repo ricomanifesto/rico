@@ -194,6 +194,21 @@ test("announces the active project slide after manual navigation", async ({ page
   await expect(projectStatus).toHaveText("Project 2 of 4: Cybersecurity News Aggregator");
 });
 
+test("updates the current project dot after manual navigation", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const firstDot = page.getByRole("button", { name: "Show AI-Powered Threat Intelligence Platform" });
+  const secondDot = page.getByRole("button", { name: "Show Cybersecurity News Aggregator" });
+  await expect(firstDot).toHaveAttribute("aria-current", "true");
+  await expect(secondDot).not.toHaveAttribute("aria-current", "true");
+
+  await secondDot.click();
+  await expect(firstDot).not.toHaveAttribute("aria-current", "true");
+  await expect(secondDot).toHaveAttribute("aria-current", "true");
+});
+
 test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
   await page.goto("/");
 

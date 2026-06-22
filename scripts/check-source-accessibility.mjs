@@ -63,6 +63,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel dot buttons expose current slide state",
+    pattern: /aria-current=\{index === currentIndex \? "true" : undefined\}/,
+    source: projectsSection,
+  },
+  {
     label: "app configures Framer Motion to honor user reduced motion",
     pattern: /<MotionConfig[^>]*reducedMotion="user"/,
     source: appSource,
