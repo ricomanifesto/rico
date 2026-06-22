@@ -293,11 +293,6 @@ const checks = [
     source: socialLinkSource,
   },
   {
-    label: "header social links pair external new-tab targets with noopener noreferrer",
-    pattern: /target=\{link\.external \? "_blank" : undefined\}[\s\S]*rel=\{link\.external \? "noopener noreferrer" : undefined\}/,
-    source: socialLinkSource,
-  },
-  {
     label: "project action links have visible keyboard focus styles",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
     source: projectsSection,
@@ -527,10 +522,25 @@ function projectCardContentUsesInlineAccentStyles(source) {
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(contentMatch?.[0] ?? "");
 }
 
+function anchorOpensNewTab(linkTag) {
+  return (
+    /target=\{?["']_blank["']\}?/.test(linkTag) ||
+    /target=\{[^}]*["']_blank["'][^}]*\}/.test(linkTag)
+  );
+}
+
+function anchorRelUsesNewTabSafety(linkTag) {
+  const literalRelValue = linkTag.match(/rel=["']([^"']+)["']/)?.[1];
+  const expressionRelValue = linkTag.match(/rel=\{([^}]+)\}/)?.[1] ?? "";
+  const relValue = literalRelValue ?? expressionRelValue;
+
+  return /\bnoopener\b/.test(relValue) && /\bnoreferrer\b/.test(relValue);
+}
+
 for (const componentPath of walkFiles(componentsRoot)) {
   const source = fs.readFileSync(componentPath, "utf8");
   const svgTags = source.match(/<svg\b[\s\S]*?>/g) ?? [];
-  const newTabLinks = source.match(/<a\b(?=[^>]*target=\{?["']_blank["']\}?)[^>]*>/g) ?? [];
+  const newTabLinks = (source.match(/<a\b[\s\S]*?>/g) ?? []).filter(anchorOpensNewTab);
   const lucideNames = Array.from(
     source.matchAll(/import\s*\{([^}]+)\}\s*from\s*["']lucide-react["'];/g),
   ).flatMap(([, imports]) =>
@@ -547,10 +557,7 @@ for (const componentPath of walkFiles(componentsRoot)) {
   }
 
   for (const linkTag of newTabLinks) {
-    const relValue = linkTag.match(/rel=\{?["']([^"']+)["']\}?/)?.[1] ?? "";
-    const relTokens = relValue.split(/\s+/);
-
-    if (!relTokens.includes("noopener") || !relTokens.includes("noreferrer")) {
+    if (!anchorRelUsesNewTabSafety(linkTag)) {
       failures.push(`${path.relative(root, componentPath)}: new-tab links use noopener noreferrer`);
     }
   }
