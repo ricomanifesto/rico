@@ -179,12 +179,17 @@ const checks = [
   },
   {
     label: "project carousel skips auto-rotation for reduced motion",
-    pattern: /if\s*\(\s*shouldReduceMotion\s*\|\|\s*hasCarouselFocus\s*\)\s*\{\s*return;/,
+    pattern: /if\s*\(\s*shouldReduceMotion\s*\|\|\s*hasCarouselFocus\s*\|\|\s*hasCarouselHover\s*\)\s*\{\s*return;/,
     source: projectsSection,
   },
   {
     label: "project carousel pauses auto-rotation while it contains focus",
     pattern: /hasCarouselFocus[\s\S]*shouldReduceMotion \|\| hasCarouselFocus[\s\S]*onFocusCapture=\{\(\) => setHasCarouselFocus\(true\)\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel pauses auto-rotation while hovered",
+    pattern: /hasCarouselHover[\s\S]*shouldReduceMotion \|\| hasCarouselFocus \|\| hasCarouselHover[\s\S]*onMouseEnter=\{\(\) => setHasCarouselHover\(true\)\}[\s\S]*onMouseLeave=\{\(\) => setHasCarouselHover\(false\)\}/,
     source: projectsSection,
   },
   {

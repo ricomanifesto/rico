@@ -7,11 +7,12 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
+  const [hasCarouselHover, setHasCarouselHover] = useState(false);
   const shouldReduceMotion = usePrefersReducedMotion();
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
-    if (shouldReduceMotion || hasCarouselFocus) {
+    if (shouldReduceMotion || hasCarouselFocus || hasCarouselHover) {
       return;
     }
 
@@ -20,7 +21,7 @@ export default function ProjectsSection() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentIndex, hasCarouselFocus, shouldReduceMotion]); // Reset timer when currentIndex changes
+  }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]); // Reset timer when currentIndex changes
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -47,6 +48,8 @@ export default function ProjectsSection() {
       
       <div
         className="relative"
+        onMouseEnter={() => setHasCarouselHover(true)}
+        onMouseLeave={() => setHasCarouselHover(false)}
         onFocusCapture={() => setHasCarouselFocus(true)}
         onBlurCapture={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget)) {
