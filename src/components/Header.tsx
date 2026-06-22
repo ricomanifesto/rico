@@ -25,7 +25,7 @@ export default function Header() {
           >
             rico
           </a>
-          <nav className="hidden md:flex items-center ml-8">
+          <nav aria-label="Primary" className="hidden md:flex items-center ml-8">
             {headerNavItems.map((item, index) => (
               <HeaderNavLink
                 key={item.href}

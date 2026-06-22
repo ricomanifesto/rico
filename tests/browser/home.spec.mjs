@@ -125,6 +125,22 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   }
 });
 
+test("exposes desktop primary navigation with an accessible name", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/");
+
+  const desktopNav = page.getByRole("navigation", { name: "Primary" });
+  await expect(desktopNav).toBeVisible();
+  await expect(desktopNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "#intro");
+  await expect(desktopNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "#about");
+  await expect(desktopNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");
+  await expect(desktopNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+  await expect(desktopNav.getByRole("link", { name: "Contact" })).toHaveAttribute(
+    "href",
+    "mailto:michaelrico124@gmail.com",
+  );
+});
+
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
