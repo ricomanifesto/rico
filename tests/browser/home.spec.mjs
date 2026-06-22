@@ -83,6 +83,46 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   await expect(mobileNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "#about");
   await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");
   await expect(mobileNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Contact"]) {
+    const box = await mobileNav.getByRole("link", { name: linkName }).boundingBox();
+
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+
+  await mobileNav.getByRole("link", { name: "Home" }).click();
+  const introPositions = await page.evaluate(() => {
+    const header = document.querySelector("header");
+    const introHeading = document.querySelector("#intro h1");
+
+    return {
+      headerBottom: header?.getBoundingClientRect().bottom ?? 0,
+      headingTop: introHeading?.getBoundingClientRect().top ?? 0,
+    };
+  });
+  expect(introPositions.headingTop).toBeGreaterThanOrEqual(introPositions.headerBottom - 1);
+
+  for (const { linkName, sectionId } of [
+    { linkName: "About", sectionId: "about" },
+    { linkName: "Experience", sectionId: "experience" },
+    { linkName: "Projects", sectionId: "projects" },
+  ]) {
+    await mobileNav.getByRole("link", { name: linkName }).click();
+
+    const positions = await page.evaluate((sectionId) => {
+      const header = document.querySelector("header");
+      const section = document.getElementById(sectionId);
+
+      return {
+        headerBottom: header?.getBoundingClientRect().bottom ?? 0,
+        sectionTop: section?.getBoundingClientRect().top ?? 0,
+      };
+    }, sectionId);
+
+    expect(positions.sectionTop).toBeGreaterThanOrEqual(positions.headerBottom - 1);
+  }
 });
 
 test("supports keyboard navigation across experience tabs", async ({ page }) => {

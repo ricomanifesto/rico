@@ -41,12 +41,12 @@ if (!fs.existsSync(navigationPath)) {
     if (sectionId === "intro") {
       if (
         !sectionClassName ||
-        !sectionClassName.includes("pt-28") ||
+        !sectionClassName.includes("pt-32") ||
         !sectionClassName.includes("md:pt-16")
       ) {
         failures.push("Navigation target #intro reserves mobile header space");
       }
-    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-28")) {
+    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-32")) {
         failures.push(`Navigation target #${sectionId} preserves mobile scroll offset`);
     }
   }
@@ -113,6 +113,10 @@ if (fs.existsSync(headerPath)) {
 
   if (!/aria-label="Mobile primary"[\s\S]*headerNavItems\.map\(\(item\)\s*=>\s*\(\s*<li\b[^>]*role="listitem"/.test(headerSource)) {
     failures.push("Header mobile navigation wraps each shared nav item in a list item");
+  }
+
+  if (!/aria-label="Mobile primary"[\s\S]*<a\b[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b/.test(headerSource)) {
+    failures.push("Header mobile navigation links use mobile-friendly touch targets");
   }
 }
 
