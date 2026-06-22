@@ -35,6 +35,15 @@ if (!fs.existsSync(navigationPath)) {
     if (!idPattern.test(sourceFiles)) {
       failures.push(`Navigation target #${sectionId} has a matching section id`);
     }
+
+    if (sectionId !== "intro") {
+      const sectionPattern = new RegExp(
+        `id=["']${escapeRegExp(sectionId)}["'][\\s\\S]*?className=["'][^"']*scroll-mt-28`,
+      );
+      if (!sectionPattern.test(sourceFiles)) {
+        failures.push(`Navigation target #${sectionId} preserves mobile scroll offset`);
+      }
+    }
   }
 
   for (const [, href, external] of navigationSource.matchAll(
