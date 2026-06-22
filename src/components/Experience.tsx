@@ -109,7 +109,7 @@ export default function Experience() {
                 transition={{ duration: 0.6 }}
               >
                 <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                  {exp.title} @ <span style={{color: '#007bff'}}>{exp.displayCompany}</span>
+                  {exp.title} @ <span className="text-[#007bff]">{exp.displayCompany}</span>
                 </h4>
 
                 <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
