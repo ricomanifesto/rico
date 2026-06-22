@@ -532,9 +532,44 @@ function anchorOpensNewTab(linkTag) {
 function anchorRelUsesNewTabSafety(linkTag) {
   const literalRelValue = linkTag.match(/rel=["']([^"']+)["']/)?.[1];
   const expressionRelValue = linkTag.match(/rel=\{([^}]+)\}/)?.[1] ?? "";
-  const relValue = literalRelValue ?? expressionRelValue;
+  const relValues = literalRelValue
+    ? [literalRelValue]
+    : Array.from(expressionRelValue.matchAll(/["']([^"']+)["']/g), ([, relValue]) => relValue);
 
-  return /\bnoopener\b/.test(relValue) && /\bnoreferrer\b/.test(relValue);
+  return relValues.some((relValue) => {
+    const relTokens = relValue.split(/\s+/);
+
+    return relTokens.includes("noopener") && relTokens.includes("noreferrer");
+  });
+}
+
+const newTabRelGuardExamples = [
+  {
+    label: "accepts whitespace-separated literal rel tokens",
+    linkTag: '<a target="_blank" rel="noopener noreferrer">',
+    expected: true,
+  },
+  {
+    label: "rejects comma-separated literal rel tokens",
+    linkTag: '<a target="_blank" rel="noopener,noreferrer">',
+    expected: false,
+  },
+  {
+    label: "accepts whitespace-separated expression rel tokens",
+    linkTag: '<a target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined}>',
+    expected: true,
+  },
+  {
+    label: "rejects comma-separated expression rel tokens",
+    linkTag: '<a target={link.external ? "_blank" : undefined} rel={link.external ? "noopener,noreferrer" : undefined}>',
+    expected: false,
+  },
+];
+
+for (const { label, linkTag, expected } of newTabRelGuardExamples) {
+  if (anchorRelUsesNewTabSafety(linkTag) !== expected) {
+    failures.push(`new-tab rel guard ${label}`);
+  }
 }
 
 for (const componentPath of walkFiles(componentsRoot)) {
