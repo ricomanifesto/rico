@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface NetworkNode {
   element: HTMLDivElement;
@@ -12,12 +12,29 @@ interface NetworkNode {
 }
 
 export default function NetworkAnimation() {
+  const [shouldReduceMotion, setShouldReduceMotion] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<NetworkNode[]>([]);
   const animationRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionPreferenceChange = () => {
+      setShouldReduceMotion(motionQuery.matches);
+    };
+
+    handleMotionPreferenceChange();
+    motionQuery.addEventListener("change", handleMotionPreferenceChange);
+
+    return () => {
+      motionQuery.removeEventListener("change", handleMotionPreferenceChange);
+    };
+  }, []);
   
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (shouldReduceMotion) {
       return;
     }
 
@@ -197,7 +214,7 @@ export default function NetworkAnimation() {
       const existingConnections = container?.querySelectorAll('.connection');
       existingConnections?.forEach(conn => conn.remove());
     };
-  }, []);
+  }, [shouldReduceMotion]);
   
   return (
     <div 

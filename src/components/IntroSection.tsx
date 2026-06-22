@@ -4,9 +4,32 @@ import { motion, useReducedMotion } from "framer-motion";
 
 export default function IntroSection() {
   const fullText = "Hi, I'm Rico";
-  const shouldReduceMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
+  const [shouldReduceMotion, setShouldReduceMotion] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? fullText : "");
   const typingSpeed = 150; // milliseconds per character
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionPreferenceChange = () => {
+      setShouldReduceMotion(motionQuery.matches);
+    };
+
+    handleMotionPreferenceChange();
+    motionQuery.addEventListener("change", handleMotionPreferenceChange);
+
+    return () => {
+      motionQuery.removeEventListener("change", handleMotionPreferenceChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion !== null) {
+      setShouldReduceMotion(prefersReducedMotion);
+    }
+  }, [prefersReducedMotion]);
   
   useEffect(() => {
     if (shouldReduceMotion) {

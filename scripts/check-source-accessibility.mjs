@@ -74,13 +74,28 @@ const checks = [
     source: networkAnimation,
   },
   {
+    label: "network animation tracks reduced motion preference changes",
+    pattern: /addEventListener\("change"/,
+    source: networkAnimation,
+  },
+  {
+    label: "network animation removes reduced motion preference listener",
+    pattern: /removeEventListener\("change"/,
+    source: networkAnimation,
+  },
+  {
     label: "network animation skips moving nodes for reduced motion",
-    pattern: /matches\)\s*\{\s*return;/,
+    pattern: /shouldReduceMotion\)\s*\{\s*return;/,
     source: networkAnimation,
   },
   {
     label: "intro typewriter reads reduced motion preference",
     pattern: /useReducedMotion\(\)/,
+    source: introSection,
+  },
+  {
+    label: "intro typewriter tracks reduced motion preference changes",
+    pattern: /addEventListener\("change"/,
     source: introSection,
   },
   {
