@@ -1,10 +1,11 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { projects } from "../content/portfolio";
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const shouldReduceMotion = useReducedMotion();
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
@@ -47,7 +48,8 @@ export default function ProjectsSection() {
         <div className="overflow-hidden">
           <motion.div 
             className="flex transition-transform duration-500 ease-in-out"
-            animate={{ x: `${-currentIndex * 100}%` }}
+            animate={shouldReduceMotion ? undefined : { x: `${-currentIndex * 100}%` }}
+            style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * 100}%)` } : undefined}
           >
             {projects.map((project, index) => (
               <div key={index} className="w-full flex-shrink-0">

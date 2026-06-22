@@ -1,11 +1,14 @@
 import Home from "./Home";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { MotionConfig } from "framer-motion";
 
 function App() {
   return (
-    <ErrorBoundary>
-      <Home />
-    </ErrorBoundary>
+    <MotionConfig reducedMotion="user">
+      <ErrorBoundary>
+        <Home />
+      </ErrorBoundary>
+    </MotionConfig>
   );
 }
 
