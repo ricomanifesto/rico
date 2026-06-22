@@ -6,8 +6,12 @@ const componentsRoot = path.join(root, "src/components");
 const homePath = path.join(root, "src/Home.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
+const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
+const indexCssPath = path.join(root, "src/index.css");
 const homeSource = fs.readFileSync(homePath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
+const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
+const indexCss = fs.readFileSync(indexCssPath, "utf8");
 
 const checks = [
   {
@@ -38,6 +42,41 @@ const checks = [
   {
     label: "carousel dot buttons include project names",
     pattern: /aria-label=\{`Show \$\{project\.title\}`\}/,
+    source: projectsSection,
+  },
+  {
+    label: "global styles honor reduced motion preferences",
+    pattern: /@media\s*\(\s*prefers-reduced-motion:\s*reduce\s*\)/,
+    source: indexCss,
+  },
+  {
+    label: "smooth scrolling is disabled for reduced motion",
+    pattern: /scroll-behavior:\s*auto/,
+    source: indexCss,
+  },
+  {
+    label: "decorative CSS animations are disabled for reduced motion",
+    pattern: /animation:\s*none\s*!important/,
+    source: indexCss,
+  },
+  {
+    label: "network animation reads reduced motion preference",
+    pattern: /prefers-reduced-motion:\s*reduce/,
+    source: networkAnimation,
+  },
+  {
+    label: "network animation skips moving nodes for reduced motion",
+    pattern: /matches\)\s*\{\s*return;/,
+    source: networkAnimation,
+  },
+  {
+    label: "project carousel reads reduced motion preference",
+    pattern: /prefers-reduced-motion:\s*reduce/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel skips auto-rotation for reduced motion",
+    pattern: /matches\)\s*\{\s*return;/,
     source: projectsSection,
   },
 ];

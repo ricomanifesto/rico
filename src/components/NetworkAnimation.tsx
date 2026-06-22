@@ -17,6 +17,10 @@ export default function NetworkAnimation() {
   const animationRef = useRef<number | null>(null);
   
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     const maxNodes = 15; // Increased number of nodes
     const connectionThreshold = 200; // Only connect nodes within this distance
     

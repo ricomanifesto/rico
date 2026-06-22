@@ -8,6 +8,10 @@ export default function ProjectsSection() {
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
     }, 10000);
