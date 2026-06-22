@@ -3,26 +3,60 @@ import path from "node:path";
 
 const root = process.cwd();
 const componentsRoot = path.join(root, "src/components");
+const homePath = path.join(root, "src/Home.tsx");
+const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
+const homeSource = fs.readFileSync(homePath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 
 const checks = [
   {
+    label: "home renders a skip link before the fixed header",
+    pattern: /<SkipLink\s*\/>\s*<Header\s*\/>/,
+    source: homeSource,
+  },
+  {
+    label: "main content exposes a skip-link target",
+    pattern: /<main[^>]*id="main-content"/,
+    source: homeSource,
+  },
+  {
     label: "project repository links include accessible names",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}/,
+    source: projectsSection,
   },
   {
     label: "project demo links include accessible names",
     pattern: /aria-label=\{`Open \$\{project\.title\} demo`\}/,
+    source: projectsSection,
   },
   {
     label: "carousel dot buttons include project names",
     pattern: /aria-label=\{`Show \$\{project\.title\}`\}/,
+    source: projectsSection,
   },
 ];
 
-const failedChecks = checks.filter(({ pattern }) => !pattern.test(projectsSection));
+const failedChecks = checks.filter(({ pattern, source }) => !pattern.test(source));
 const failures = failedChecks.map(({ label }) => label);
+
+if (!fs.existsSync(skipLinkPath)) {
+  failures.push("src/components/SkipLink.tsx renders the skip link");
+} else {
+  const skipLinkSource = fs.readFileSync(skipLinkPath, "utf8");
+
+  if (!/href="#main-content"/.test(skipLinkSource)) {
+    failures.push("Skip link targets the main content landmark");
+  }
+
+  if (!/Skip to main content/.test(skipLinkSource)) {
+    failures.push("Skip link has a clear accessible name");
+  }
+
+  if (!/sr-only/.test(skipLinkSource) || !/focus:not-sr-only/.test(skipLinkSource)) {
+    failures.push("Skip link stays hidden until focused");
+  }
+}
 
 function walkFiles(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
