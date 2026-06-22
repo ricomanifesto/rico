@@ -231,6 +231,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project tech labels use class-based accent styles",
+    pattern: /className="[^"]*text-\[#66b3ff\][^"]*"[^>]*>\s*\{project\.tech\}\s*<\/div>/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel hides inactive slides from assistive technology",
     pattern: /role="group"[\s\S]*aria-roledescription="slide"[\s\S]*aria-hidden=\{index !== currentIndex\}/,
     source: projectsSection,
@@ -280,6 +285,10 @@ if (introCtaUsesMouseHandlers(introSection)) {
 
 if (projectCarouselControlsUseInlineAccentStyles(projectsSection)) {
   failures.push("project carousel controls avoid inline accent styles");
+}
+
+if (projectCardContentUsesInlineAccentStyles(projectsSection)) {
+  failures.push("project card content avoids inline accent styles");
 }
 
 if (!fs.existsSync(skipLinkPath)) {
@@ -339,6 +348,14 @@ function projectCarouselControlsUseInlineAccentStyles(source) {
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(controlsMatch?.[0] ?? "");
+}
+
+function projectCardContentUsesInlineAccentStyles(source) {
+  const contentMatch = source.match(
+    /<h3 className="text-2xl font-bold text-white mb-2">[\s\S]*?<div className="flex items-center space-x-4">/,
+  );
+
+  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(contentMatch?.[0] ?? "");
 }
 
 for (const componentPath of walkFiles(componentsRoot)) {
