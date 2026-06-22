@@ -9,6 +9,7 @@ export default function ProjectsSection() {
   const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
   const [hasCarouselHover, setHasCarouselHover] = useState(false);
   const shouldReduceMotion = usePrefersReducedMotion();
+  const shouldAnnounceCarouselStatus = shouldReduceMotion || hasCarouselFocus || hasCarouselHover;
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
@@ -57,6 +58,15 @@ export default function ProjectsSection() {
           }
         }}
       >
+        <div
+          role="status"
+          aria-label="Current project"
+          aria-live={shouldAnnounceCarouselStatus ? "polite" : "off"}
+          aria-atomic="true"
+          className="sr-only"
+        >
+          {`Project ${currentIndex + 1} of ${projects.length}: ${projects[currentIndex].title}`}
+        </div>
         {/* Carousel Container */}
         <div className="overflow-hidden">
           <motion.div 

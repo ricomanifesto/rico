@@ -293,6 +293,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel exposes active slide status politely",
+    pattern: /shouldAnnounceCarouselStatus[\s\S]*role="status"[\s\S]*aria-live=\{shouldAnnounceCarouselStatus \? "polite" : "off"\}[\s\S]*aria-atomic="true"[\s\S]*projects\[currentIndex\]\.title/,
+    source: projectsSection,
+  },
+  {
     label: "project repository links are tabbable only on the active slide",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
     source: projectsSection,
