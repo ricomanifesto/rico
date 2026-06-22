@@ -158,6 +158,11 @@ const checks = [
     source: introSection,
   },
   {
+    label: "intro CTA has a visible keyboard focus style",
+    pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
+    source: introSection,
+  },
+  {
     label: "about technology chevrons use class-based accent styles",
     pattern: /<svg\s+className="[^"]*text-\[#007bff\][^"]*"[\s\S]*?<span className="text-lg text-gray-200">\{tech\}<\/span>/,
     source: aboutMeSource,
