@@ -76,6 +76,18 @@ if (fs.existsSync(headerPath)) {
   if (!/import\s+SocialLink\s+from\s+["']@\/components\/SocialLink["'];/.test(headerSource)) {
     failures.push("Header uses the shared SocialLink component");
   }
+
+  if (!/aria-label="Mobile primary"/.test(headerSource)) {
+    failures.push("Header exposes mobile primary navigation");
+  }
+
+  if (!/md:hidden/.test(headerSource)) {
+    failures.push("Header keeps mobile navigation scoped below the desktop breakpoint");
+  }
+
+  if (!/aria-label="Mobile primary"[\s\S]*?headerNavItems\.map\(\(item\)\s*=>/.test(headerSource)) {
+    failures.push("Header mobile navigation renders from shared typed navigation data");
+  }
 }
 
 for (const componentPath of [headerNavLinkPath, socialLinkPath]) {

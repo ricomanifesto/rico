@@ -43,6 +43,22 @@ export default function Header() {
           ))}
         </div>
       </div>
+      <nav
+        aria-label="Mobile primary"
+        className="md:hidden border-t border-white/10 px-4 pb-3"
+      >
+        <div className="flex gap-4 overflow-x-auto whitespace-nowrap pt-3">
+          {headerNavItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium text-gray-200 transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </nav>
     </header>
   );
 }
