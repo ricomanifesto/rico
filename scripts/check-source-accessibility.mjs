@@ -142,7 +142,12 @@ const checks = [
   },
   {
     label: "project carousel skips auto-rotation for reduced motion",
-    pattern: /shouldReduceMotion\)\s*\{\s*return;/,
+    pattern: /if\s*\(\s*shouldReduceMotion\s*\|\|\s*hasCarouselFocus\s*\)\s*\{\s*return;/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel pauses auto-rotation while it contains focus",
+    pattern: /hasCarouselFocus[\s\S]*shouldReduceMotion \|\| hasCarouselFocus[\s\S]*onFocusCapture=\{\(\) => setHasCarouselFocus\(true\)\}/,
     source: projectsSection,
   },
   {
@@ -208,6 +213,21 @@ const checks = [
   {
     label: "project action links have visible keyboard focus styles",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel hides inactive slides from assistive technology",
+    pattern: /role="group"[\s\S]*aria-roledescription="slide"[\s\S]*aria-hidden=\{index !== currentIndex\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project repository links are tabbable only on the active slide",
+    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project demo links are tabbable only on the active slide",
+    pattern: /aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
     source: projectsSection,
   },
   {

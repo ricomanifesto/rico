@@ -6,11 +6,12 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
   const shouldReduceMotion = usePrefersReducedMotion();
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
-    if (shouldReduceMotion) {
+    if (shouldReduceMotion || hasCarouselFocus) {
       return;
     }
 
@@ -19,7 +20,7 @@ export default function ProjectsSection() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentIndex, shouldReduceMotion]); // Reset timer when currentIndex changes
+  }, [currentIndex, hasCarouselFocus, shouldReduceMotion]); // Reset timer when currentIndex changes
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -44,7 +45,15 @@ export default function ProjectsSection() {
         / projects
       </motion.h2>
       
-      <div className="relative">
+      <div
+        className="relative"
+        onFocusCapture={() => setHasCarouselFocus(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            setHasCarouselFocus(false);
+          }
+        }}
+      >
         {/* Carousel Container */}
         <div className="overflow-hidden">
           <motion.div 
@@ -53,7 +62,14 @@ export default function ProjectsSection() {
             style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * 100}%)` } : undefined}
           >
             {projects.map((project, index) => (
-              <div key={index} className="w-full flex-shrink-0">
+              <div
+                key={index}
+                role="group"
+                aria-roledescription="slide"
+                aria-hidden={index !== currentIndex}
+                aria-label={`Project slide ${index + 1} of ${projects.length}`}
+                className="w-full flex-shrink-0"
+              >
                 <motion.div 
                   className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 mx-4 h-96"
                   initial={{ opacity: 0, y: 20 }}
@@ -99,11 +115,13 @@ export default function ProjectsSection() {
                       {/* Icons */}
                       <div className="flex items-center space-x-4">
                         <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository`}
+                           tabIndex={index === currentIndex ? 0 : -1}
                            className="text-white transition duration-300 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
                           <Github size={24} aria-hidden="true" focusable="false" />
                         </a>
                         {project.demoUrl && (
                           <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} demo`}
+                             tabIndex={index === currentIndex ? 0 : -1}
                              className="text-white transition duration-300 hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]" onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#66b3ff'} onMouseLeave={(e) => (e.target as HTMLElement).style.color = 'white'}>
                             <ExternalLink size={24} aria-hidden="true" focusable="false" />
                           </a>
