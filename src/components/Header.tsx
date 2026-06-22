@@ -19,7 +19,12 @@ export default function Header() {
     <header className={`fixed top-0 left-0 right-0 bg-slate-900 bg-opacity-95 backdrop-blur-sm z-50 ${isScrolled ? 'shadow-sm' : ''} transition-shadow duration-300`}>
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
-          <div className="text-xl font-bold" style={{color: '#007bff'}}>rico</div>
+          <a
+            href="#intro"
+            className="text-xl font-bold text-[#007bff] transition-colors duration-300 hover:text-[#66b2ff]"
+          >
+            rico
+          </a>
           <nav className="hidden md:flex items-center ml-8">
             {headerNavItems.map((item, index) => (
               <HeaderNavLink
