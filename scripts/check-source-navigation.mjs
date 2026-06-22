@@ -107,7 +107,11 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header mobile navigation exposes the horizontal link rail as a list");
   }
 
-  if (!/aria-label="Mobile primary"[\s\S]*headerNavItems\.map\(\(item\)\s*=>\s*\(\s*<li\b/.test(headerSource)) {
+  if (!/aria-label="Mobile primary"[\s\S]*<ul\b[^>]*role="list"/.test(headerSource)) {
+    failures.push("Header mobile navigation uses an explicit list role");
+  }
+
+  if (!/aria-label="Mobile primary"[\s\S]*headerNavItems\.map\(\(item\)\s*=>\s*\(\s*<li\b[^>]*role="listitem"/.test(headerSource)) {
     failures.push("Header mobile navigation wraps each shared nav item in a list item");
   }
 }

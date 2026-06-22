@@ -47,9 +47,9 @@ export default function Header() {
         aria-label="Mobile primary"
         className="md:hidden border-t border-white/10 px-4 pb-3"
       >
-        <ul className="flex gap-4 overflow-x-auto whitespace-nowrap pt-3">
+        <ul role="list" className="flex gap-4 overflow-x-auto whitespace-nowrap pt-3">
           {headerNavItems.map((item) => (
-            <li key={item.href} className="flex-shrink-0">
+            <li key={item.href} role="listitem" className="flex-shrink-0">
               <a
                 href={item.href}
                 className="text-sm font-medium text-gray-200 transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
