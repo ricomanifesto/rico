@@ -298,6 +298,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project action links use mobile-friendly touch targets",
+    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"/,
+    source: projectsSection,
+  },
+  {
     label: "project action links use class-based hover styles",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*hover:text-\[#66b3ff\][\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*hover:text-\[#66b3ff\]/,
     source: projectsSection,

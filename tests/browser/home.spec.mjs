@@ -329,6 +329,27 @@ test("treats project carousel background images as decorative", async ({ page })
   ).toBeVisible();
 });
 
+test("keeps active project action links easy to tap", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+
+  for (const linkName of [
+    "View AI-Powered Threat Intelligence Platform repository",
+    "Open AI-Powered Threat Intelligence Platform demo",
+  ]) {
+    const link = page.getByRole("link", { name: linkName });
+    const box = await link.boundingBox();
+
+    await expect(link).toBeVisible();
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
 test("updates the current project dot after manual navigation", async ({ page }) => {
   await installReducedMotionController(page, true);
   await page.goto("/");

@@ -133,13 +133,13 @@ export default function ProjectsSection() {
                       <div className="flex items-center space-x-4">
                         <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository`}
                            tabIndex={index === currentIndex ? 0 : -1}
-                           className="text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
+                           className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
                           <Github size={24} aria-hidden="true" focusable="false" />
                         </a>
                         {project.demoUrl && (
                           <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} demo`}
                              tabIndex={index === currentIndex ? 0 : -1}
-                             className="text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
+                             className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
                             <ExternalLink size={24} aria-hidden="true" focusable="false" />
                           </a>
                         )}
