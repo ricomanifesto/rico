@@ -125,6 +125,21 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   }
 });
 
+test("keeps header social links easy to tap on mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
+    const link = page.getByRole("link", { name: linkName });
+    const box = await link.boundingBox();
+
+    await expect(link).toBeVisible();
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+});
+
 test("supports keyboard navigation across experience tabs", async ({ page }) => {
   await page.goto("/");
 

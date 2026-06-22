@@ -137,6 +137,13 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
   if (componentPath === socialLinkPath && !source.includes(socialBaseAccentClass)) {
     failures.push(`${path.relative(root, componentPath)} uses the social accent text class`);
   }
+
+  if (
+    componentPath === socialLinkPath &&
+    !/className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} uses mobile-friendly touch targets`);
+  }
 }
 
 function walkFiles(directory) {
