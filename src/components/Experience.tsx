@@ -36,7 +36,7 @@ export default function Experience() {
   };
 
   return (
-    <section id="experience" className="scroll-mt-32 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
+    <section id="experience" className="scroll-mt-36 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
       <div className="max-w-4xl mx-auto">
         <motion.h2 
           className="section-title text-3xl md:text-4xl font-serif font-bold mb-12 text-white"

@@ -41,12 +41,12 @@ if (!fs.existsSync(navigationPath)) {
     if (sectionId === "intro") {
       if (
         !sectionClassName ||
-        !sectionClassName.includes("pt-32") ||
+        !sectionClassName.includes("pt-36") ||
         !sectionClassName.includes("md:pt-16")
       ) {
         failures.push("Navigation target #intro reserves mobile header space");
       }
-    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-32")) {
+    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-36")) {
         failures.push(`Navigation target #${sectionId} preserves mobile scroll offset`);
     }
   }
