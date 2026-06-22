@@ -78,21 +78,7 @@ export default function IntroSection() {
         >
           <a 
             href="mailto:michaelrico124@gmail.com" 
-            className="inline-flex items-center px-6 py-3 border-2 rounded-xl bg-transparent transition-all duration-300 hover:scale-105"
-            style={{
-              borderColor: '#007bff80',
-              color: '#007bff'
-            }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.backgroundColor = '#007bff1a';
-              (e.target as HTMLElement).style.color = '#0056b3';
-              (e.target as HTMLElement).style.borderColor = '#007bff';
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.backgroundColor = 'transparent';
-              (e.target as HTMLElement).style.color = '#007bff';
-              (e.target as HTMLElement).style.borderColor = '#007bff80';
-            }}
+            className="inline-flex items-center px-6 py-3 border-2 border-[#007bff80] rounded-xl bg-transparent text-[#007bff] transition-all duration-300 hover:scale-105 hover:border-[#007bff] hover:bg-[#007bff1a] hover:text-[#0056b3]"
           >
             <svg 
               className="w-5 h-5 mr-3" 

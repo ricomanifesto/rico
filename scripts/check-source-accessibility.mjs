@@ -136,6 +136,16 @@ const checks = [
     source: introSection,
   },
   {
+    label: "intro CTA uses class-based hover styles",
+    pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:bg-\[#007bff1a\][^"]*"/,
+    source: introSection,
+  },
+  {
+    label: "intro CTA hover styles include text and border states",
+    pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:text-\[#0056b3\][^"]*hover:border-\[#007bff\][^"]*|href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:border-\[#007bff\][^"]*hover:text-\[#0056b3\][^"]*"/,
+    source: introSection,
+  },
+  {
     label: "project carousel uses shared reduced-motion preference hook",
     pattern: /usePrefersReducedMotion\(\)/,
     source: projectsSection,
@@ -254,6 +264,10 @@ if (projectActionLinksUseMouseHandlers(projectsSection)) {
   failures.push("project action links avoid mouse-event hover styling");
 }
 
+if (introCtaUsesMouseHandlers(introSection)) {
+  failures.push("intro CTA avoids mouse-event hover styling");
+}
+
 if (!fs.existsSync(skipLinkPath)) {
   failures.push("src/components/SkipLink.tsx renders the skip link");
 } else {
@@ -297,6 +311,12 @@ function projectActionLinksUseMouseHandlers(source) {
   );
 
   return /onMouseEnter|onMouseLeave/.test(actionLinksMatch?.[0] ?? "");
+}
+
+function introCtaUsesMouseHandlers(source) {
+  const introCtaMatch = source.match(/href="mailto:michaelrico124@gmail\.com"[\s\S]*?<\/a>/);
+
+  return /onMouseEnter|onMouseLeave/.test(introCtaMatch?.[0] ?? "");
 }
 
 for (const componentPath of walkFiles(componentsRoot)) {
