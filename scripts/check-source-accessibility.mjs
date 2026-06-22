@@ -161,7 +161,12 @@ const checks = [
   },
   {
     label: "experience tabpanel is labelled by the selected tab",
-    pattern: /role="tabpanel"[\s\S]*aria-labelledby=\{`experience-tab-\$\{selectedCompany\}`\}/,
+    pattern: /role="tabpanel"[\s\S]*aria-labelledby=\{`experience-tab-\$\{index\}`\}/,
+    source: experienceSource,
+  },
+  {
+    label: "experience renders persistent panels for tab controls",
+    pattern: /id=\{`experience-panel-\$\{index\}`\}[\s\S]*hidden=\{selectedCompany !== index\}/,
     source: experienceSource,
   },
   {

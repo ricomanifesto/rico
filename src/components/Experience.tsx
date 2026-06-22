@@ -5,7 +5,6 @@ import { experiences } from "../content/portfolio";
 export default function Experience() {
   const [selectedCompany, setSelectedCompany] = useState(0); // Default to SentinelOne
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const currentExperience = experiences[selectedCompany];
 
   const selectCompany = (index: number) => {
     setSelectedCompany(index);
@@ -98,53 +97,56 @@ export default function Experience() {
 
           {/* Selected Experience Details */}
           <div className="lg:w-3/4 flex-1">
-            <motion.div
-              key={selectedCompany}
-              id={`experience-panel-${selectedCompany}`}
-              role="tabpanel"
-              aria-labelledby={`experience-tab-${selectedCompany}`}
-              tabIndex={0}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                {currentExperience.title} @ <span style={{color: '#007bff'}}>{currentExperience.displayCompany}</span>
-              </h4>
-              
-              <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
-                {currentExperience.period}
-              </p>
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={exp.company}
+                id={`experience-panel-${index}`}
+                role="tabpanel"
+                aria-labelledby={`experience-tab-${index}`}
+                tabIndex={selectedCompany === index ? 0 : -1}
+                hidden={selectedCompany !== index}
+                initial={false}
+                animate={selectedCompany === index ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h4 className="text-xl md:text-2xl font-semibold mb-2">
+                  {exp.title} @ <span style={{color: '#007bff'}}>{exp.displayCompany}</span>
+                </h4>
 
-              <ul className="space-y-4">
-                {currentExperience.highlights.map((highlight, highlightIndex) => (
-                  <motion.li
-                    key={highlightIndex}
-                    className="flex items-start"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ 
-                      duration: 0.6, 
-                      delay: highlightIndex * 0.1 + 0.2 
-                    }}
-                  >
-                    <svg 
-                      className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0" style={{color: '#007bff'}} 
-                      aria-hidden="true"
-                      focusable="false"
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
+                <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
+                  {exp.period}
+                </p>
+
+                <ul className="space-y-4">
+                  {exp.highlights.map((highlight, highlightIndex) => (
+                    <motion.li
+                      key={highlightIndex}
+                      className="flex items-start"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        duration: 0.6,
+                        delay: highlightIndex * 0.1 + 0.2
+                      }}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <p className="text-gray-200 leading-relaxed">
-                      {highlight}
-                    </p>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
+                      <svg
+                        className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0" style={{color: '#007bff'}}
+                        aria-hidden="true"
+                        focusable="false"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      <p className="text-gray-200 leading-relaxed">
+                        {highlight}
+                      </p>
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>

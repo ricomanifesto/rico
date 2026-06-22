@@ -90,8 +90,18 @@ test("supports keyboard navigation across experience tabs", async ({ page }) => 
   const sentinelOne = page.getByRole("tab", { name: "SENTINELONE" });
   const uber = page.getByRole("tab", { name: "UBER" });
   const dellSecureworks = page.getByRole("tab", { name: "DELL SECUREWORKS" });
+  const tabs = [sentinelOne, uber, dellSecureworks];
+
+  await expect(page.locator('[role="tabpanel"]')).toHaveCount(3);
+
+  for (const tab of tabs) {
+    const panelId = await tab.getAttribute("aria-controls");
+
+    await expect(page.locator(`#${panelId}`)).toHaveCount(1);
+  }
 
   await expect(sentinelOne).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator("#experience-panel-1")).toBeHidden();
   await expect(page.getByRole("tabpanel", { name: "SENTINELONE" })).toContainText("Staff Threat Hunter");
 
   await sentinelOne.focus();
