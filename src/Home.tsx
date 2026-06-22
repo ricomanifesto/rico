@@ -12,7 +12,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <SkipLink />
       <Header />
-      <main id="main-content" className="flex-grow">
+      <main id="main-content" tabIndex={-1} className="flex-grow">
         <IntroSection />
         <AboutMe />
         <Experience />

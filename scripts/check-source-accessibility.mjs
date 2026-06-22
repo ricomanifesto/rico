@@ -21,6 +21,11 @@ const checks = [
     source: homeSource,
   },
   {
+    label: "main content skip-link target is programmatically focusable",
+    pattern: /<main[^>]*id="main-content"[^>]*tabIndex=\{-1\}/,
+    source: homeSource,
+  },
+  {
     label: "project repository links include accessible names",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}/,
     source: projectsSection,
