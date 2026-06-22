@@ -191,3 +191,13 @@ test("pauses project auto-rotation while carousel has keyboard focus", async ({ 
   await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
   await expect(page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" })).toBeFocused();
 });
+
+test("pauses project auto-rotation while carousel is hovered", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  await page.locator('[aria-label="Project slide 1 of 4"]').hover();
+  await page.waitForTimeout(10500);
+
+  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
+});
