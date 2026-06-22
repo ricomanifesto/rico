@@ -87,6 +87,10 @@ test("supports keyboard navigation across experience tabs", async ({ page }) => 
   await page.goto("/");
 
   await page.getByRole("link", { name: "Experience" }).click();
+  await expect(page.getByRole("tablist", { name: "Experience companies" })).toHaveAttribute(
+    "aria-orientation",
+    "vertical",
+  );
   const sentinelOne = page.getByRole("tab", { name: "SENTINELONE" });
   const uber = page.getByRole("tab", { name: "UBER" });
   const dellSecureworks = page.getByRole("tab", { name: "DELL SECUREWORKS" });

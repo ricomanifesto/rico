@@ -155,6 +155,11 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience tablist declares vertical orientation",
+    pattern: /aria-orientation="vertical"/,
+    source: experienceSource,
+  },
+  {
     label: "experience company controls expose tab semantics",
     pattern: /role="tab"/,
     source: experienceSource,

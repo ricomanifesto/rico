@@ -54,6 +54,7 @@ export default function Experience() {
             <div
               role="tablist"
               aria-label="Experience companies"
+              aria-orientation="vertical"
               className="space-y-8"
             >
               {experiences.map((exp, index) => (
