@@ -36,20 +36,18 @@ if (!fs.existsSync(navigationPath)) {
       failures.push(`Navigation target #${sectionId} has a matching section id`);
     }
 
+    const sectionClassName = findSectionClassName(sourceFiles, sectionId);
+
     if (sectionId === "intro") {
-      const introPattern = new RegExp(
-        `id=["']${escapeRegExp(sectionId)}["'][\\s\\S]*?className=["'][^"']*pt-28[^"']*md:pt-16`,
-      );
-      if (!introPattern.test(sourceFiles)) {
+      if (
+        !sectionClassName ||
+        !sectionClassName.includes("pt-28") ||
+        !sectionClassName.includes("md:pt-16")
+      ) {
         failures.push("Navigation target #intro reserves mobile header space");
       }
-    } else {
-      const sectionPattern = new RegExp(
-        `id=["']${escapeRegExp(sectionId)}["'][\\s\\S]*?className=["'][^"']*scroll-mt-28`,
-      );
-      if (!sectionPattern.test(sourceFiles)) {
+    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-28")) {
         failures.push(`Navigation target #${sectionId} preserves mobile scroll offset`);
-      }
     }
   }
 
@@ -138,6 +136,14 @@ function walkFiles(directory) {
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function findSectionClassName(source, sectionId) {
+  const sectionPattern = new RegExp(
+    `<section\\b(?=[^>]*\\bid=["']${escapeRegExp(sectionId)}["'])(?=[^>]*\\bclassName=["']([^"']*)["'])[^>]*>`,
+  );
+  const match = source.match(sectionPattern);
+  return match?.[1] ?? null;
 }
 
 if (failures.length > 0) {
