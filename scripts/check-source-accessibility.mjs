@@ -8,8 +8,11 @@ const homePath = path.join(root, "src/Home.tsx");
 const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
+const headerPath = path.join(root, "src/components/Header.tsx");
+const headerNavLinkPath = path.join(root, "src/components/HeaderNavLink.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
+const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
 const indexCssPath = path.join(root, "src/index.css");
 const appSource = fs.readFileSync(appPath, "utf8");
@@ -18,8 +21,11 @@ const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
   ? fs.readFileSync(reducedMotionHookPath, "utf8")
   : "";
 const experienceSource = fs.readFileSync(experiencePath, "utf8");
+const headerSource = fs.readFileSync(headerPath, "utf8");
+const headerNavLinkSource = fs.readFileSync(headerNavLinkPath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
+const socialLinkSource = fs.readFileSync(socialLinkPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
 const indexCss = fs.readFileSync(indexCssPath, "utf8");
 
@@ -183,6 +189,36 @@ const checks = [
     label: "experience tabs support arrow-key navigation",
     pattern: /onKeyDown=\{\(event\)\s*=>\s*handleCompanyKeyDown\(event,\s*index\)\}/,
     source: experienceSource,
+  },
+  {
+    label: "header brand link has a visible keyboard focus style",
+    pattern: /href="#intro"[\s\S]*className="[^"]*focus-visible:outline[^"]*"[\s\S]*>\s*rico\s*<\/a>/,
+    source: headerSource,
+  },
+  {
+    label: "desktop header navigation links have visible keyboard focus styles",
+    pattern: /focus-visible:outline/,
+    source: headerNavLinkSource,
+  },
+  {
+    label: "header social links have visible keyboard focus styles",
+    pattern: /focus-visible:outline/,
+    source: socialLinkSource,
+  },
+  {
+    label: "project action links have visible keyboard focus styles",
+    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel arrow buttons have visible keyboard focus styles",
+    pattern: /aria-label="Previous project"[\s\S]*focus-visible:outline[\s\S]*aria-label="Next project"[\s\S]*focus-visible:outline/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel dot buttons have visible keyboard focus styles",
+    pattern: /focus-visible:outline[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}/,
+    source: projectsSection,
   },
 ];
 
