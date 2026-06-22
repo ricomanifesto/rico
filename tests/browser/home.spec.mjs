@@ -83,6 +83,14 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   await expect(mobileNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "#about");
   await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");
   await expect(mobileNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Contact"]) {
+    const box = await mobileNav.getByRole("link", { name: linkName }).boundingBox();
+
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
 });
 
 test("supports keyboard navigation across experience tabs", async ({ page }) => {

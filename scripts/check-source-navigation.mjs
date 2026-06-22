@@ -114,6 +114,10 @@ if (fs.existsSync(headerPath)) {
   if (!/aria-label="Mobile primary"[\s\S]*headerNavItems\.map\(\(item\)\s*=>\s*\(\s*<li\b[^>]*role="listitem"/.test(headerSource)) {
     failures.push("Header mobile navigation wraps each shared nav item in a list item");
   }
+
+  if (!/aria-label="Mobile primary"[\s\S]*<a\b[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b/.test(headerSource)) {
+    failures.push("Header mobile navigation links use mobile-friendly touch targets");
+  }
 }
 
 for (const componentPath of [headerNavLinkPath, socialLinkPath]) {

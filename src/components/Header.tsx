@@ -52,7 +52,7 @@ export default function Header() {
             <li key={item.href} role="listitem" className="flex-shrink-0">
               <a
                 href={item.href}
-                className="text-sm font-medium text-gray-200 transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm font-medium text-gray-200 transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
               >
                 {item.label}
               </a>
