@@ -11,10 +11,7 @@ export default function SocialLink({ link }: SocialLinkProps) {
       target={link.external ? "_blank" : undefined}
       rel={link.external ? "noopener noreferrer" : undefined}
       aria-label={link.label}
-      className="transition duration-300 transform hover:scale-110"
-      style={{ color: "#007bff" }}
-      onMouseEnter={(event) => (event.currentTarget.style.color = "#0056b3")}
-      onMouseLeave={(event) => (event.currentTarget.style.color = "#007bff")}
+      className="text-[#007bff] transition duration-300 transform hover:scale-110 hover:text-[#0056b3]"
     >
       <SocialIcon kind={link.kind} />
     </a>
