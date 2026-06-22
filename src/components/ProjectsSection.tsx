@@ -176,6 +176,7 @@ export default function ProjectsSection() {
                   ? 'scale-110 bg-[#007bff]' : 'bg-gray-500 hover:bg-gray-400'
               }`}
               aria-label={`Show ${project.title}`}
+              aria-current={index === currentIndex ? "true" : undefined}
             />
           ))}
         </div>
