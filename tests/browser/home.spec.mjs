@@ -133,6 +133,18 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await expect(brandLink).toBeFocused();
   await expect(brandLink).toHaveCSS("outline-style", "solid");
 
+  const sayHiLink = page.getByRole("link", { name: "Say hi!" });
+  for (let index = 0; index < 30; index++) {
+    if (await sayHiLink.evaluate((element) => document.activeElement === element).catch(() => false)) {
+      break;
+    }
+
+    await page.keyboard.press("Tab");
+  }
+
+  await expect(sayHiLink).toBeFocused();
+  await expect(sayHiLink).toHaveCSS("outline-style", "solid");
+
   await page.getByRole("link", { name: "Projects" }).click();
   const nextProjectButton = page.getByRole("button", { name: "Next project" });
   for (let index = 0; index < 30; index++) {
