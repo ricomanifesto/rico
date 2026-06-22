@@ -140,6 +140,26 @@ test("keeps header social links easy to tap on mobile", async ({ page }) => {
   }
 });
 
+test("keeps the mobile header inside narrow viewports", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto("/");
+
+  const viewportMetrics = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+
+  expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
+
+  for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
+    const box = await page.getByRole("link", { name: linkName }).boundingBox();
+
+    expect(box).not.toBeNull();
+    expect(box.x).toBeGreaterThanOrEqual(-0.5);
+    expect(box.x + box.width).toBeLessThanOrEqual(viewportMetrics.clientWidth + 0.5);
+  }
+});
+
 test("supports keyboard navigation across experience tabs", async ({ page }) => {
   await page.goto("/");
 
