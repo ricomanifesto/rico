@@ -238,6 +238,11 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience tabs have visible keyboard focus styles",
+    pattern: /role="tab"[\s\S]*className=\{`[^`]*focus-visible:outline[^`]*`\}/,
+    source: experienceSource,
+  },
+  {
     label: "experience renders persistent panels for tab controls",
     pattern: /id=\{`experience-panel-\$\{index\}`\}[\s\S]*hidden=\{selectedCompany !== index\}/,
     source: experienceSource,

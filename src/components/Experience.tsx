@@ -71,7 +71,7 @@ export default function Experience() {
                   tabIndex={selectedCompany === index ? 0 : -1}
                   onClick={() => selectCompany(index)}
                   onKeyDown={(event) => handleCompanyKeyDown(event, index)}
-                  className={`relative w-full text-left transition-all duration-300 ${
+                  className={`relative w-full text-left transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
                     selectedCompany === index 
                       ? 'text-[#007bff]' : 'text-gray-400 hover:text-gray-200'
                   }`}

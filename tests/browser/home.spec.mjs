@@ -202,6 +202,24 @@ test("supports keyboard navigation across experience tabs", async ({ page }) => 
   await expect(selectedPanel).toHaveCSS("outline-style", "solid");
 });
 
+test("renders visible focus for experience tabs", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Experience" }).click();
+  const firstTab = page.getByRole("tab", { name: "SENTINELONE" });
+
+  for (let index = 0; index < 30; index++) {
+    if (await firstTab.evaluate((element) => document.activeElement === element).catch(() => false)) {
+      break;
+    }
+
+    await page.keyboard.press("Tab");
+  }
+
+  await expect(firstTab).toBeFocused();
+  await expect(firstTab).toHaveCSS("outline-style", "solid");
+});
+
 test("renders visible focus for keyboard navigation controls", async ({ page }) => {
   await page.goto("/");
 
