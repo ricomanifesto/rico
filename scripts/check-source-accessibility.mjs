@@ -49,6 +49,7 @@ if (!fs.existsSync(skipLinkPath)) {
   failures.push("src/components/SkipLink.tsx renders the skip link");
 } else {
   const skipLinkSource = fs.readFileSync(skipLinkPath, "utf8");
+  const skipLinkClassName = skipLinkSource.match(/className="([^"]+)"/)?.[1] ?? "";
 
   if (!/href="#main-content"/.test(skipLinkSource)) {
     failures.push("Skip link targets the main content landmark");
@@ -58,7 +59,10 @@ if (!fs.existsSync(skipLinkPath)) {
     failures.push("Skip link has a clear accessible name");
   }
 
-  if (!/sr-only/.test(skipLinkSource) || !/focus:not-sr-only/.test(skipLinkSource)) {
+  if (
+    !hasClassToken(skipLinkClassName, "sr-only") ||
+    !hasClassToken(skipLinkClassName, "focus:not-sr-only")
+  ) {
     failures.push("Skip link stays hidden until focused");
   }
 }
@@ -72,6 +76,10 @@ function walkFiles(directory) {
 
     return entry.isFile() && entry.name.endsWith(".tsx") ? [entryPath] : [];
   });
+}
+
+function hasClassToken(className, token) {
+  return className.split(/\s+/).includes(token);
 }
 
 for (const componentPath of walkFiles(componentsRoot)) {
