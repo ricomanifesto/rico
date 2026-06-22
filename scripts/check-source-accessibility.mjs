@@ -5,12 +5,14 @@ const root = process.cwd();
 const componentsRoot = path.join(root, "src/components");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
+const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
 const indexCssPath = path.join(root, "src/index.css");
 const appSource = fs.readFileSync(appPath, "utf8");
 const homeSource = fs.readFileSync(homePath, "utf8");
+const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
 const indexCss = fs.readFileSync(indexCssPath, "utf8");
@@ -75,6 +77,16 @@ const checks = [
     label: "network animation skips moving nodes for reduced motion",
     pattern: /matches\)\s*\{\s*return;/,
     source: networkAnimation,
+  },
+  {
+    label: "intro typewriter reads reduced motion preference",
+    pattern: /useReducedMotion\(\)/,
+    source: introSection,
+  },
+  {
+    label: "intro typewriter renders full text for reduced motion",
+    pattern: /shouldReduceMotion\)\s*\{\s*setDisplayText\(fullText\);\s*return;/,
+    source: introSection,
   },
   {
     label: "project carousel reads reduced motion preference",
