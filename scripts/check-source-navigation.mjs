@@ -7,6 +7,8 @@ const navigationPath = path.join(srcRoot, "content/navigation.ts");
 const headerPath = path.join(srcRoot, "components/Header.tsx");
 const headerNavLinkPath = path.join(srcRoot, "components/HeaderNavLink.tsx");
 const socialLinkPath = path.join(srcRoot, "components/SocialLink.tsx");
+const navHoverAccentClass = "hover:text-[#007bff]";
+const socialBaseAccentClass = "text-[#007bff]";
 
 const failures = [];
 
@@ -64,6 +66,25 @@ if (fs.existsSync(headerPath)) {
 
   if (!/import\s+SocialLink\s+from\s+["']@\/components\/SocialLink["'];/.test(headerSource)) {
     failures.push("Header uses the shared SocialLink component");
+  }
+}
+
+for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
+  if (!fs.existsSync(componentPath)) {
+    continue;
+  }
+
+  const source = fs.readFileSync(componentPath, "utf8");
+  if (/onMouseEnter|onMouseLeave/.test(source)) {
+    failures.push(`${path.relative(root, componentPath)} uses class-based hover styles`);
+  }
+
+  if (componentPath === headerNavLinkPath && !source.includes(navHoverAccentClass)) {
+    failures.push(`${path.relative(root, componentPath)} uses the header accent hover class`);
+  }
+
+  if (componentPath === socialLinkPath && !source.includes(socialBaseAccentClass)) {
+    failures.push(`${path.relative(root, componentPath)} uses the social accent text class`);
   }
 }
 
