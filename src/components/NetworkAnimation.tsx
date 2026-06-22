@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 interface NetworkNode {
   element: HTMLDivElement;
@@ -12,26 +13,21 @@ interface NetworkNode {
 }
 
 export default function NetworkAnimation() {
-  const [shouldReduceMotion, setShouldReduceMotion] = useState(() =>
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
+  const shouldReduceMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<NetworkNode[]>([]);
   const animationRef = useRef<number | null>(null);
+  const resizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shouldReduceMotionRef = useRef(shouldReduceMotion);
 
   useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleMotionPreferenceChange = () => {
-      setShouldReduceMotion(motionQuery.matches);
-    };
+    shouldReduceMotionRef.current = shouldReduceMotion;
 
-    handleMotionPreferenceChange();
-    motionQuery.addEventListener("change", handleMotionPreferenceChange);
-
-    return () => {
-      motionQuery.removeEventListener("change", handleMotionPreferenceChange);
-    };
-  }, []);
+    if (shouldReduceMotion && resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+      resizeTimeoutRef.current = null;
+    }
+  }, [shouldReduceMotion]);
   
   useEffect(() => {
     if (shouldReduceMotion) {
@@ -191,9 +187,18 @@ export default function NetworkAnimation() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
       
       // Re-initialize the animation after a short delay
-      setTimeout(() => {
+      resizeTimeoutRef.current = setTimeout(() => {
+        resizeTimeoutRef.current = null;
+        if (shouldReduceMotionRef.current) {
+          return;
+        }
+
         initAnimation();
       }, 250);
     };
@@ -207,6 +212,11 @@ export default function NetworkAnimation() {
       
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+      }
+
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+        resizeTimeoutRef.current = null;
       }
       
       nodesRef.current.forEach(node => node.element.remove());

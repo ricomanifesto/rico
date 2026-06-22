@@ -1,34 +1,12 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { projects } from "../content/portfolio";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
-  const [shouldReduceMotion, setShouldReduceMotion] = useState(() =>
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleMotionPreferenceChange = () => {
-      setShouldReduceMotion(motionQuery.matches);
-    };
-
-    handleMotionPreferenceChange();
-    motionQuery.addEventListener("change", handleMotionPreferenceChange);
-
-    return () => {
-      motionQuery.removeEventListener("change", handleMotionPreferenceChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (prefersReducedMotion !== null) {
-      setShouldReduceMotion(prefersReducedMotion);
-    }
-  }, [prefersReducedMotion]);
+  const shouldReduceMotion = usePrefersReducedMotion();
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {

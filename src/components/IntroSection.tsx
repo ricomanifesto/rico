@@ -1,36 +1,14 @@
 import { useState, useEffect } from "react";
 import NetworkAnimation from "./NetworkAnimation";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function IntroSection() {
   const fullText = "Hi, I'm Rico";
-  const prefersReducedMotion = useReducedMotion();
-  const [shouldReduceMotion, setShouldReduceMotion] = useState(() =>
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
+  const shouldReduceMotion = usePrefersReducedMotion();
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? fullText : "");
   const typingSpeed = 150; // milliseconds per character
 
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleMotionPreferenceChange = () => {
-      setShouldReduceMotion(motionQuery.matches);
-    };
-
-    handleMotionPreferenceChange();
-    motionQuery.addEventListener("change", handleMotionPreferenceChange);
-
-    return () => {
-      motionQuery.removeEventListener("change", handleMotionPreferenceChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (prefersReducedMotion !== null) {
-      setShouldReduceMotion(prefersReducedMotion);
-    }
-  }, [prefersReducedMotion]);
-  
   useEffect(() => {
     if (shouldReduceMotion) {
       setDisplayText(fullText);

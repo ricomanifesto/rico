@@ -5,6 +5,7 @@ const root = process.cwd();
 const componentsRoot = path.join(root, "src/components");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
+const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
@@ -12,6 +13,9 @@ const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.ts
 const indexCssPath = path.join(root, "src/index.css");
 const appSource = fs.readFileSync(appPath, "utf8");
 const homeSource = fs.readFileSync(homePath, "utf8");
+const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
+  ? fs.readFileSync(reducedMotionHookPath, "utf8")
+  : "";
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
@@ -69,18 +73,38 @@ const checks = [
     source: indexCss,
   },
   {
-    label: "network animation reads reduced motion preference",
+    label: "reduced-motion preference hook reads reduced motion preference",
     pattern: /prefers-reduced-motion:\s*reduce/,
-    source: networkAnimation,
+    source: reducedMotionHook,
   },
   {
-    label: "network animation tracks reduced motion preference changes",
+    label: "reduced-motion preference hook tracks preference changes",
     pattern: /addEventListener\("change"/,
+    source: reducedMotionHook,
+  },
+  {
+    label: "reduced-motion preference hook removes preference listener",
+    pattern: /removeEventListener\("change"/,
+    source: reducedMotionHook,
+  },
+  {
+    label: "network animation uses shared reduced-motion preference hook",
+    pattern: /usePrefersReducedMotion\(\)/,
     source: networkAnimation,
   },
   {
-    label: "network animation removes reduced motion preference listener",
-    pattern: /removeEventListener\("change"/,
+    label: "network animation tracks pending resize restart timeout",
+    pattern: /resizeTimeoutRef/,
+    source: networkAnimation,
+  },
+  {
+    label: "network animation clears pending resize restart timeout",
+    pattern: /clearTimeout\(resizeTimeoutRef\.current\)/,
+    source: networkAnimation,
+  },
+  {
+    label: "network animation guards delayed resize restart against reduced motion",
+    pattern: /if\s*\(\s*shouldReduceMotionRef\.current\s*\)\s*\{\s*return;\s*\}/,
     source: networkAnimation,
   },
   {
@@ -89,13 +113,8 @@ const checks = [
     source: networkAnimation,
   },
   {
-    label: "intro typewriter reads reduced motion preference",
-    pattern: /useReducedMotion\(\)/,
-    source: introSection,
-  },
-  {
-    label: "intro typewriter tracks reduced motion preference changes",
-    pattern: /addEventListener\("change"/,
+    label: "intro typewriter uses shared reduced-motion preference hook",
+    pattern: /usePrefersReducedMotion\(\)/,
     source: introSection,
   },
   {
@@ -104,18 +123,8 @@ const checks = [
     source: introSection,
   },
   {
-    label: "project carousel reads reduced motion preference",
-    pattern: /useReducedMotion\(\)/,
-    source: projectsSection,
-  },
-  {
-    label: "project carousel tracks reduced motion preference changes",
-    pattern: /addEventListener\("change"/,
-    source: projectsSection,
-  },
-  {
-    label: "project carousel removes reduced motion preference listener",
-    pattern: /removeEventListener\("change"/,
+    label: "project carousel uses shared reduced-motion preference hook",
+    pattern: /usePrefersReducedMotion\(\)/,
     source: projectsSection,
   },
   {
