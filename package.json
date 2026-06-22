@@ -12,8 +12,9 @@
       "images": "node scripts/check-source-images.mjs",
       "nav": "node scripts/check-source-navigation.mjs",
       "workflow": "node scripts/check-source-workflow.mjs",
+      "browser": "playwright install chromium && playwright test",
       "smoke": "node scripts/check-build-output.mjs",
-      "check": "npm run lint && npm run a11y && npm run images && npm run nav && npm run workflow && npm run build && npm run smoke",
+      "check": "npm run lint && npm run a11y && npm run images && npm run nav && npm run workflow && npm run browser && npm run build && npm run smoke",
       "preview": "vite preview",
       "predeploy": "npm run check",
       "deploy": "gh-pages -d dist"
@@ -25,6 +26,7 @@
       "react-dom": "^18.2.0"
     },
     "devDependencies": {
+      "@playwright/test": "^1.61.0",
       "@tailwindcss/typography": "^0.5.9",
       "@types/node": "^20.4.5",
       "@types/react": "^18.2.15",
