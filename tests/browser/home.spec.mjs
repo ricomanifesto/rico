@@ -209,6 +209,25 @@ test("updates the current project dot after manual navigation", async ({ page })
   await expect(secondDot).toHaveAttribute("aria-current", "true");
 });
 
+test("keeps mobile project carousel arrows inside the viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+
+  for (const buttonName of ["Previous project", "Next project"]) {
+    const button = page.getByRole("button", { name: buttonName });
+    const box = await button.boundingBox();
+
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(box.x).toBeGreaterThanOrEqual(-0.5);
+    expect(box.x + box.width).toBeLessThanOrEqual(390.5);
+  }
+});
+
 test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
   await page.goto("/");
 
