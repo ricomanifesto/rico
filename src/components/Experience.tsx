@@ -129,7 +129,7 @@ export default function Experience() {
                       }}
                     >
                       <svg
-                        className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0" style={{color: '#007bff'}}
+                        className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0 text-[#007bff]"
                         aria-hidden="true"
                         focusable="false"
                         fill="none"
