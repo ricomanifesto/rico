@@ -1,10 +1,40 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { KeyboardEvent, useRef, useState } from "react";
 import { experiences } from "../content/portfolio";
 
 export default function Experience() {
   const [selectedCompany, setSelectedCompany] = useState(0); // Default to SentinelOne
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const currentExperience = experiences[selectedCompany];
+
+  const selectCompany = (index: number) => {
+    setSelectedCompany(index);
+    tabRefs.current[index]?.focus();
+  };
+
+  const handleCompanyKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const lastIndex = experiences.length - 1;
+
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      event.preventDefault();
+      selectCompany(index === lastIndex ? 0 : index + 1);
+    }
+
+    if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      event.preventDefault();
+      selectCompany(index === 0 ? lastIndex : index - 1);
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      selectCompany(0);
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      selectCompany(lastIndex);
+    }
+  };
 
   return (
     <section id="experience" className="scroll-mt-28 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
@@ -22,11 +52,25 @@ export default function Experience() {
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
           {/* Company Selection Timeline */}
           <div className="lg:w-1/4 flex-shrink-0">
-            <div className="space-y-8">
+            <div
+              role="tablist"
+              aria-label="Experience companies"
+              className="space-y-8"
+            >
               {experiences.map((exp, index) => (
                 <motion.button
                   key={index}
-                  onClick={() => setSelectedCompany(index)}
+                  id={`experience-tab-${index}`}
+                  ref={(element) => {
+                    tabRefs.current[index] = element;
+                  }}
+                  role="tab"
+                  type="button"
+                  aria-selected={selectedCompany === index}
+                  aria-controls={`experience-panel-${index}`}
+                  tabIndex={selectedCompany === index ? 0 : -1}
+                  onClick={() => selectCompany(index)}
+                  onKeyDown={(event) => handleCompanyKeyDown(event, index)}
                   className={`relative w-full text-left transition-all duration-300 ${
                     selectedCompany === index 
                       ? '' : 'text-gray-400 hover:text-gray-200'
@@ -56,6 +100,10 @@ export default function Experience() {
           <div className="lg:w-3/4 flex-1">
             <motion.div
               key={selectedCompany}
+              id={`experience-panel-${selectedCompany}`}
+              role="tabpanel"
+              aria-labelledby={`experience-tab-${selectedCompany}`}
+              tabIndex={0}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}

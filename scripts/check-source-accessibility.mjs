@@ -7,6 +7,7 @@ const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
 const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
+const experiencePath = path.join(root, "src/components/Experience.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
@@ -16,6 +17,7 @@ const homeSource = fs.readFileSync(homePath, "utf8");
 const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
   ? fs.readFileSync(reducedMotionHookPath, "utf8")
   : "";
+const experienceSource = fs.readFileSync(experiencePath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
@@ -146,6 +148,31 @@ const checks = [
     label: "project cards disable hover scale for reduced motion",
     pattern: /whileHover=\{shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*1\.02\s*\}\}/,
     source: projectsSection,
+  },
+  {
+    label: "experience selector exposes a tablist",
+    pattern: /role="tablist"/,
+    source: experienceSource,
+  },
+  {
+    label: "experience company controls expose tab semantics",
+    pattern: /role="tab"/,
+    source: experienceSource,
+  },
+  {
+    label: "experience tabpanel is labelled by the selected tab",
+    pattern: /role="tabpanel"[\s\S]*aria-labelledby=\{`experience-tab-\$\{selectedCompany\}`\}/,
+    source: experienceSource,
+  },
+  {
+    label: "experience tabs expose selected state",
+    pattern: /aria-selected=\{selectedCompany === index\}/,
+    source: experienceSource,
+  },
+  {
+    label: "experience tabs support arrow-key navigation",
+    pattern: /onKeyDown=\{\(event\)\s*=>\s*handleCompanyKeyDown\(event,\s*index\)\}/,
+    source: experienceSource,
   },
 ];
 

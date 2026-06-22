@@ -82,3 +82,26 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");
   await expect(mobileNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
 });
+
+test("supports keyboard navigation across experience tabs", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Experience" }).click();
+  const sentinelOne = page.getByRole("tab", { name: "SENTINELONE" });
+  const uber = page.getByRole("tab", { name: "UBER" });
+  const dellSecureworks = page.getByRole("tab", { name: "DELL SECUREWORKS" });
+
+  await expect(sentinelOne).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel", { name: "SENTINELONE" })).toContainText("Staff Threat Hunter");
+
+  await sentinelOne.focus();
+  await page.keyboard.press("ArrowDown");
+  await expect(uber).toBeFocused();
+  await expect(uber).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel", { name: "UBER" })).toContainText("Threat Detection Engineer II");
+
+  await page.keyboard.press("End");
+  await expect(dellSecureworks).toBeFocused();
+  await expect(dellSecureworks).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel", { name: "DELL SECUREWORKS" })).toContainText("Information Security Researcher");
+});
