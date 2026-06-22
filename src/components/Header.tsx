@@ -21,7 +21,6 @@ export default function Header() {
         <div className="flex items-center">
           <a
             href="#intro"
-            aria-label="Back to home"
             className="text-xl font-bold text-[#007bff] transition-colors duration-300 hover:text-[#0056b3]"
           >
             rico
