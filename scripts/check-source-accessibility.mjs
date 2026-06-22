@@ -109,8 +109,18 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel tracks reduced motion preference changes",
+    pattern: /addEventListener\("change"/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel removes reduced motion preference listener",
+    pattern: /removeEventListener\("change"/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel skips auto-rotation for reduced motion",
-    pattern: /matches\)\s*\{\s*return;/,
+    pattern: /shouldReduceMotion\)\s*\{\s*return;/,
     source: projectsSection,
   },
   {

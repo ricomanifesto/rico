@@ -5,11 +5,34 @@ import { projects } from "../content/portfolio";
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const shouldReduceMotion = useReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
+  const [shouldReduceMotion, setShouldReduceMotion] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleMotionPreferenceChange = () => {
+      setShouldReduceMotion(motionQuery.matches);
+    };
+
+    handleMotionPreferenceChange();
+    motionQuery.addEventListener("change", handleMotionPreferenceChange);
+
+    return () => {
+      motionQuery.removeEventListener("change", handleMotionPreferenceChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion !== null) {
+      setShouldReduceMotion(prefersReducedMotion);
+    }
+  }, [prefersReducedMotion]);
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (shouldReduceMotion) {
       return;
     }
 
@@ -18,7 +41,7 @@ export default function ProjectsSection() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentIndex]); // Reset timer when currentIndex changes
+  }, [currentIndex, shouldReduceMotion]); // Reset timer when currentIndex changes
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
