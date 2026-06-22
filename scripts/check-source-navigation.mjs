@@ -36,7 +36,14 @@ if (!fs.existsSync(navigationPath)) {
       failures.push(`Navigation target #${sectionId} has a matching section id`);
     }
 
-    if (sectionId !== "intro") {
+    if (sectionId === "intro") {
+      const introPattern = new RegExp(
+        `id=["']${escapeRegExp(sectionId)}["'][\\s\\S]*?className=["'][^"']*pt-28[^"']*md:pt-16`,
+      );
+      if (!introPattern.test(sourceFiles)) {
+        failures.push("Navigation target #intro reserves mobile header space");
+      }
+    } else {
       const sectionPattern = new RegExp(
         `id=["']${escapeRegExp(sectionId)}["'][\\s\\S]*?className=["'][^"']*scroll-mt-28`,
       );
