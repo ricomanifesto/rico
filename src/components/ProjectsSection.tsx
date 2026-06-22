@@ -6,11 +6,12 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
   const shouldReduceMotion = usePrefersReducedMotion();
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
-    if (shouldReduceMotion) {
+    if (shouldReduceMotion || hasCarouselFocus) {
       return;
     }
 
@@ -19,7 +20,7 @@ export default function ProjectsSection() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentIndex, shouldReduceMotion]); // Reset timer when currentIndex changes
+  }, [currentIndex, hasCarouselFocus, shouldReduceMotion]); // Reset timer when currentIndex changes
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -44,7 +45,15 @@ export default function ProjectsSection() {
         / projects
       </motion.h2>
       
-      <div className="relative">
+      <div
+        className="relative"
+        onFocusCapture={() => setHasCarouselFocus(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            setHasCarouselFocus(false);
+          }
+        }}
+      >
         {/* Carousel Container */}
         <div className="overflow-hidden">
           <motion.div 

@@ -165,3 +165,14 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
     page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
   ).toHaveAttribute("tabindex", "-1");
 });
+
+test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  await page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }).focus();
+  await page.waitForTimeout(10500);
+
+  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
+  await expect(page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" })).toBeFocused();
+});
