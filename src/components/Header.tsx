@@ -36,12 +36,15 @@ export default function Header() {
           </nav>
         </div>
         
-        {/* Social Links */}
-        <div className="flex items-center space-x-3">
-          {socialLinks.map((link) => (
-            <SocialLink key={link.href} link={link} />
-          ))}
-        </div>
+        <nav aria-label="Social links">
+          <ul role="list" className="flex items-center space-x-3">
+            {socialLinks.map((link) => (
+              <li key={link.href} role="listitem">
+                <SocialLink link={link} />
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
       <nav
         aria-label="Mobile primary"
