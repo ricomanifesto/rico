@@ -194,6 +194,18 @@ test("announces the active project slide after manual navigation", async ({ page
   await expect(projectStatus).toHaveText("Project 2 of 4: Cybersecurity News Aggregator");
 });
 
+test("exposes the project carousel as a named region", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const carousel = page.getByRole("region", { name: "Featured projects" });
+
+  await expect(carousel).toHaveAttribute("aria-roledescription", "carousel");
+  await expect(carousel.getByRole("status", { name: "Current project" })).toBeAttached();
+  await expect(carousel.getByRole("button", { name: "Previous project" })).toBeVisible();
+  await expect(carousel.getByRole("button", { name: "Next project" })).toBeVisible();
+});
+
 test("updates the current project dot after manual navigation", async ({ page }) => {
   await installReducedMotionController(page, true);
   await page.goto("/");
