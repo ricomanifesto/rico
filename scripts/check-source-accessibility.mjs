@@ -138,6 +138,16 @@ const checks = [
     source: introSection,
   },
   {
+    label: "intro typewriter text uses a class-based accent style",
+    pattern: /<span className="[^"]*text-\[#007bff\][^"]*">\s*\{displayText\}/,
+    source: introSection,
+  },
+  {
+    label: "intro typewriter cursor uses a class-based accent style",
+    pattern: /<span className="[^"]*bg-\[#007bff\][^"]*"><\/span>/,
+    source: introSection,
+  },
+  {
     label: "intro CTA uses class-based hover styles",
     pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:bg-\[#007bff1a\][^"]*"/,
     source: introSection,
@@ -310,6 +320,10 @@ if (introCtaUsesMouseHandlers(introSection)) {
   failures.push("intro CTA avoids mouse-event hover styling");
 }
 
+if (introTypewriterUsesInlineAccentStyles(introSection)) {
+  failures.push("intro typewriter avoids inline accent styles");
+}
+
 if (aboutTechnologyChevronsUseInlineAccentStyles(aboutMeSource)) {
   failures.push("about technology chevrons avoid inline accent styles");
 }
@@ -383,6 +397,14 @@ function introCtaUsesMouseHandlers(source) {
   const introCtaMatch = source.match(/href="mailto:michaelrico124@gmail\.com"[\s\S]*?<\/a>/);
 
   return /onMouseEnter|onMouseLeave/.test(introCtaMatch?.[0] ?? "");
+}
+
+function introTypewriterUsesInlineAccentStyles(source) {
+  const headingMatch = source.match(
+    /<h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">[\s\S]*?<\/h1>/,
+  );
+
+  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(headingMatch?.[0] ?? "");
 }
 
 function aboutTechnologyChevronsUseInlineAccentStyles(source) {

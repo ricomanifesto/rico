@@ -44,9 +44,9 @@ export default function IntroSection() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
-          <span className="inline-flex items-center" style={{color: '#007bff'}}>
+          <span className="inline-flex items-center text-[#007bff]">
             {displayText}
-            <span className="animate-blink ml-1 h-8 w-2 inline-block" style={{backgroundColor: '#007bff'}}></span>
+            <span className="animate-blink ml-1 h-8 w-2 inline-block bg-[#007bff]"></span>
           </span>
         </h1>
         
