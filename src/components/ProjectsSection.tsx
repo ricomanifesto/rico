@@ -171,13 +171,17 @@ export default function ProjectsSection() {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
-                index === currentIndex 
-                  ? 'scale-110 bg-[#007bff]' : 'bg-gray-500 hover:bg-gray-400'
-              }`}
+              className="group flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
               aria-label={`Show ${project.title}`}
               aria-current={index === currentIndex ? "true" : undefined}
-            />
+            >
+              <span
+                className={`h-3 w-3 rounded-full transition-all duration-300 ${
+                  index === currentIndex
+                    ? 'scale-110 bg-[#007bff]' : 'bg-gray-500 group-hover:bg-gray-400'
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>

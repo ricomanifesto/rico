@@ -333,6 +333,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel dot buttons use mobile-friendly touch targets",
+    pattern: /className="[^"]*h-11[^"]*w-11[^"]*"[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}[\s\S]*<span[\s\S]*className=\{`h-3 w-3 rounded-full/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel active dot uses a class-based accent style",
     pattern: /index === currentIndex\s*\?\s*'[^']*bg-\[#007bff\][^']*scale-110[^']*'|index === currentIndex\s*\?\s*'[^']*scale-110[^']*bg-\[#007bff\][^']*'/,
     source: projectsSection,
