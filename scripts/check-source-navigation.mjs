@@ -52,6 +52,10 @@ if (!fs.existsSync(navigationPath)) {
 if (fs.existsSync(headerPath)) {
   const headerSource = fs.readFileSync(headerPath, "utf8");
 
+  if (!/href="#intro"/.test(headerSource) || !/aria-label="Back to home"/.test(headerSource)) {
+    failures.push("Header brand links back to the intro section");
+  }
+
   if (!fs.existsSync(headerNavLinkPath)) {
     failures.push("src/components/HeaderNavLink.tsx renders header navigation links");
   }
