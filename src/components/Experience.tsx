@@ -7,7 +7,7 @@ export default function Experience() {
   const currentExperience = experiences[selectedCompany];
 
   return (
-    <section id="experience" className="py-16 px-4 bg-slate-900 text-white">
+    <section id="experience" className="scroll-mt-28 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
       <div className="max-w-4xl mx-auto">
         <motion.h2 
           className="section-title text-3xl md:text-4xl font-serif font-bold mb-12 text-white"

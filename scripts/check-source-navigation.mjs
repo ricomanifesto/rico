@@ -35,6 +35,20 @@ if (!fs.existsSync(navigationPath)) {
     if (!idPattern.test(sourceFiles)) {
       failures.push(`Navigation target #${sectionId} has a matching section id`);
     }
+
+    const sectionClassName = findSectionClassName(sourceFiles, sectionId);
+
+    if (sectionId === "intro") {
+      if (
+        !sectionClassName ||
+        !sectionClassName.includes("pt-28") ||
+        !sectionClassName.includes("md:pt-16")
+      ) {
+        failures.push("Navigation target #intro reserves mobile header space");
+      }
+    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-28")) {
+        failures.push(`Navigation target #${sectionId} preserves mobile scroll offset`);
+    }
   }
 
   for (const [, href, external] of navigationSource.matchAll(
@@ -76,6 +90,18 @@ if (fs.existsSync(headerPath)) {
   if (!/import\s+SocialLink\s+from\s+["']@\/components\/SocialLink["'];/.test(headerSource)) {
     failures.push("Header uses the shared SocialLink component");
   }
+
+  if (!/aria-label="Mobile primary"/.test(headerSource)) {
+    failures.push("Header exposes mobile primary navigation");
+  }
+
+  if (!/md:hidden/.test(headerSource)) {
+    failures.push("Header keeps mobile navigation scoped below the desktop breakpoint");
+  }
+
+  if (!/aria-label="Mobile primary"[\s\S]*?headerNavItems\.map\(\(item\)\s*=>/.test(headerSource)) {
+    failures.push("Header mobile navigation renders from shared typed navigation data");
+  }
 }
 
 for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
@@ -110,6 +136,14 @@ function walkFiles(directory) {
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function findSectionClassName(source, sectionId) {
+  const sectionPattern = new RegExp(
+    `<section\\b(?=[^>]*\\bid=["']${escapeRegExp(sectionId)}["'])(?=[^>]*\\bclassName=["']([^"']*)["'])[^>]*>`,
+  );
+  const match = source.match(sectionPattern);
+  return match?.[1] ?? null;
 }
 
 if (failures.length > 0) {

@@ -22,7 +22,7 @@ export default function IntroSection() {
   }, []);
   
   return (
-    <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-16 px-4 overflow-hidden bg-slate-900 text-white">
+    <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-28 px-4 overflow-hidden bg-slate-900 text-white md:pt-16">
       {/* Network Grid Animation Background */}
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
       
