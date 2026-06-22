@@ -119,3 +119,28 @@ test("supports keyboard navigation across experience tabs", async ({ page }) => 
   await expect(dellSecureworks).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tabpanel", { name: "DELL SECUREWORKS" })).toContainText("Information Security Researcher");
 });
+
+test("renders visible focus for keyboard navigation controls", async ({ page }) => {
+  await page.goto("/");
+
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to main content" })).toBeFocused();
+
+  await page.keyboard.press("Tab");
+  const brandLink = page.getByRole("link", { name: "rico" });
+  await expect(brandLink).toBeFocused();
+  await expect(brandLink).toHaveCSS("outline-style", "solid");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+  for (let index = 0; index < 30; index++) {
+    if (await nextProjectButton.evaluate((element) => document.activeElement === element).catch(() => false)) {
+      break;
+    }
+
+    await page.keyboard.press("Tab");
+  }
+
+  await expect(nextProjectButton).toBeFocused();
+  await expect(nextProjectButton).toHaveCSS("outline-style", "solid");
+});
