@@ -223,6 +223,11 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience panel company names use class-based accent styles",
+    pattern: /<span\s+className="[^"]*text-\[#007bff\][^"]*">\{exp\.displayCompany\}<\/span>/,
+    source: experienceSource,
+  },
+  {
     label: "header brand link has a visible keyboard focus style",
     pattern: /href="#intro"[\s\S]*className="[^"]*focus-visible:outline[^"]*"[\s\S]*>\s*rico\s*<\/a>/,
     source: headerSource,
@@ -308,6 +313,10 @@ if (experienceTabsUseInlineAccentStyles(experienceSource)) {
   failures.push("experience tabs avoid inline accent styles");
 }
 
+if (experiencePanelHeadingUsesInlineAccentStyles(experienceSource)) {
+  failures.push("experience panel heading avoids inline accent styles");
+}
+
 if (projectCarouselControlsUseInlineAccentStyles(projectsSection)) {
   failures.push("project carousel controls avoid inline accent styles");
 }
@@ -381,6 +390,14 @@ function experienceTabsUseInlineAccentStyles(source) {
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(tablistMatch?.[0] ?? "");
+}
+
+function experiencePanelHeadingUsesInlineAccentStyles(source) {
+  const headingMatch = source.match(
+    /<h4 className="text-xl md:text-2xl font-semibold mb-2">[\s\S]*?<\/h4>/,
+  );
+
+  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(headingMatch?.[0] ?? "");
 }
 
 function projectCarouselControlsUseInlineAccentStyles(source) {
