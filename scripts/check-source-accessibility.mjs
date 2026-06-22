@@ -228,6 +228,11 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience highlight chevrons use class-based accent styles",
+    pattern: /<svg\s+className="[^"]*text-\[#007bff\][^"]*"[\s\S]*?<p className="text-gray-200 leading-relaxed">\s*\{highlight\}\s*<\/p>/,
+    source: experienceSource,
+  },
+  {
     label: "header brand link has a visible keyboard focus style",
     pattern: /href="#intro"[\s\S]*className="[^"]*focus-visible:outline[^"]*"[\s\S]*>\s*rico\s*<\/a>/,
     source: headerSource,
@@ -317,6 +322,10 @@ if (experiencePanelHeadingUsesInlineAccentStyles(experienceSource)) {
   failures.push("experience panel heading avoids inline accent styles");
 }
 
+if (experienceHighlightChevronsUseInlineAccentStyles(experienceSource)) {
+  failures.push("experience highlight chevrons avoid inline accent styles");
+}
+
 if (projectCarouselControlsUseInlineAccentStyles(projectsSection)) {
   failures.push("project carousel controls avoid inline accent styles");
 }
@@ -398,6 +407,14 @@ function experiencePanelHeadingUsesInlineAccentStyles(source) {
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(headingMatch?.[0] ?? "");
+}
+
+function experienceHighlightChevronsUseInlineAccentStyles(source) {
+  const highlightsMatch = source.match(
+    /<ul className="space-y-4">[\s\S]*?<\/ul>/,
+  );
+
+  return /<svg\b[^>]*style=\{[^}]*#[0-9a-fA-F]{6}/.test(highlightsMatch?.[0] ?? "");
 }
 
 function projectCarouselControlsUseInlineAccentStyles(source) {
