@@ -181,6 +181,19 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
   ).toHaveAttribute("tabindex", "-1");
 });
 
+test("announces the active project slide after manual navigation", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const projectStatus = page.getByRole("status", { name: "Current project" });
+  await expect(projectStatus).toHaveAttribute("aria-live", "off");
+  await expect(projectStatus).toHaveText("Project 1 of 4: AI-Powered Threat Intelligence Platform");
+
+  await page.getByRole("button", { name: "Next project" }).click();
+  await expect(projectStatus).toHaveAttribute("aria-live", "polite");
+  await expect(projectStatus).toHaveText("Project 2 of 4: Cybersecurity News Aggregator");
+});
+
 test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
   await page.goto("/");
 
