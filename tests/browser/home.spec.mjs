@@ -2,10 +2,10 @@ import { expect, test } from "@playwright/test";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
-async function installReducedMotionController(page) {
-  await page.addInitScript((query) => {
+async function installReducedMotionController(page, initialPrefersReducedMotion = false) {
+  await page.addInitScript(({ query, initialPrefersReducedMotion }) => {
     const nativeMatchMedia = window.matchMedia.bind(window);
-    let prefersReducedMotion = false;
+    let prefersReducedMotion = initialPrefersReducedMotion;
     const listeners = new Set();
     const mediaQueryLists = new Set();
 
@@ -52,7 +52,7 @@ async function installReducedMotionController(page) {
       mediaQueryLists.add(mediaQueryList);
       return mediaQueryList;
     };
-  }, reducedMotionQuery);
+  }, { query: reducedMotionQuery, initialPrefersReducedMotion });
 }
 
 test("stops decorative motion when reduced motion is enabled after resize", async ({ page }) => {
@@ -148,6 +148,7 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
 });
 
 test("keeps inactive project slide links out of keyboard order", async ({ page }) => {
+  await installReducedMotionController(page, true);
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
