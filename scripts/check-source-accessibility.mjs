@@ -163,6 +163,11 @@ const checks = [
     source: aboutMeSource,
   },
   {
+    label: "about profile image border uses a class-based accent style",
+    pattern: /alt="Michael Rico Profile"[\s\S]*className="[^"]*border-\[#007bff33\][^"]*"/,
+    source: aboutMeSource,
+  },
+  {
     label: "project carousel uses shared reduced-motion preference hook",
     pattern: /usePrefersReducedMotion\(\)/,
     source: projectsSection,
@@ -328,6 +333,10 @@ if (aboutTechnologyChevronsUseInlineAccentStyles(aboutMeSource)) {
   failures.push("about technology chevrons avoid inline accent styles");
 }
 
+if (aboutProfileImageUsesInlineAccentStyles(aboutMeSource)) {
+  failures.push("about profile image border avoids inline accent styles");
+}
+
 if (experienceTabsUseInlineAccentStyles(experienceSource)) {
   failures.push("experience tabs avoid inline accent styles");
 }
@@ -413,6 +422,14 @@ function aboutTechnologyChevronsUseInlineAccentStyles(source) {
   );
 
   return /<svg\b[^>]*style=\{[^}]*#[0-9a-fA-F]{6}/.test(technologyGridMatch?.[0] ?? "");
+}
+
+function aboutProfileImageUsesInlineAccentStyles(source) {
+  const profileImageMatch = source.match(
+    /alt="Michael Rico Profile"[\s\S]*?\/>/,
+  );
+
+  return /style=\{[^}]*#[0-9a-fA-F]{6,8}/.test(profileImageMatch?.[0] ?? "");
 }
 
 function experienceTabsUseInlineAccentStyles(source) {
