@@ -7,6 +7,7 @@ const navigationPath = path.join(srcRoot, "content/navigation.ts");
 const headerPath = path.join(srcRoot, "components/Header.tsx");
 const headerNavLinkPath = path.join(srcRoot, "components/HeaderNavLink.tsx");
 const socialLinkPath = path.join(srcRoot, "components/SocialLink.tsx");
+const headerBrandHoverAccentClass = "hover:text-[#66b2ff]";
 const navHoverAccentClass = "hover:text-[#007bff]";
 const socialBaseAccentClass = "text-[#007bff]";
 
@@ -54,6 +55,10 @@ if (fs.existsSync(headerPath)) {
 
   if (!/<a[\s\S]*href="#intro"[\s\S]*>\s*rico\s*<\/a>/.test(headerSource)) {
     failures.push("Header brand text links back to the intro section");
+  }
+
+  if (!headerSource.includes(headerBrandHoverAccentClass)) {
+    failures.push("Header brand link keeps a readable hover color on the dark header");
   }
 
   if (!fs.existsSync(headerNavLinkPath)) {
