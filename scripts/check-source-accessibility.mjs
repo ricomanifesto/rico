@@ -251,8 +251,18 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel arrow icons use class-based accent styles",
+    pattern: /<ChevronLeft[^>]*className="[^"]*text-\[#007bff\][^"]*"[\s\S]*<ChevronRight[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel dot buttons have visible keyboard focus styles",
     pattern: /focus-visible:outline[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project carousel active dot uses a class-based accent style",
+    pattern: /index === currentIndex\s*\?\s*'[^']*bg-\[#007bff\][^']*scale-110[^']*'|index === currentIndex\s*\?\s*'[^']*scale-110[^']*bg-\[#007bff\][^']*'/,
     source: projectsSection,
   },
 ];
@@ -266,6 +276,10 @@ if (projectActionLinksUseMouseHandlers(projectsSection)) {
 
 if (introCtaUsesMouseHandlers(introSection)) {
   failures.push("intro CTA avoids mouse-event hover styling");
+}
+
+if (projectCarouselControlsUseInlineAccentStyles(projectsSection)) {
+  failures.push("project carousel controls avoid inline accent styles");
 }
 
 if (!fs.existsSync(skipLinkPath)) {
@@ -317,6 +331,14 @@ function introCtaUsesMouseHandlers(source) {
   const introCtaMatch = source.match(/href="mailto:michaelrico124@gmail\.com"[\s\S]*?<\/a>/);
 
   return /onMouseEnter|onMouseLeave/.test(introCtaMatch?.[0] ?? "");
+}
+
+function projectCarouselControlsUseInlineAccentStyles(source) {
+  const controlsMatch = source.match(
+    /aria-label="Previous project"[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}[\s\S]*<\/div>/,
+  );
+
+  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(controlsMatch?.[0] ?? "");
 }
 
 for (const componentPath of walkFiles(componentsRoot)) {

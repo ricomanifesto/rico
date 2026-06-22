@@ -141,7 +141,7 @@ export default function ProjectsSection() {
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Previous project"
         >
-          <ChevronLeft size={24} style={{color: '#007bff'}} aria-hidden="true" focusable="false" />
+          <ChevronLeft size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
         </button>
 
         <button
@@ -149,7 +149,7 @@ export default function ProjectsSection() {
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Next project"
         >
-          <ChevronRight size={24} style={{color: '#007bff'}} aria-hidden="true" focusable="false" />
+          <ChevronRight size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
         </button>
 
         {/* Dots Indicator */}
@@ -160,9 +160,8 @@ export default function ProjectsSection() {
               onClick={() => setCurrentIndex(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
                 index === currentIndex 
-                  ? 'scale-110' : 'bg-gray-500 hover:bg-gray-400'
+                  ? 'scale-110 bg-[#007bff]' : 'bg-gray-500 hover:bg-gray-400'
               }`}
-              style={index === currentIndex ? {backgroundColor: '#007bff'} : {}}
               aria-label={`Show ${project.title}`}
             />
           ))}
