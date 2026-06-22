@@ -2,18 +2,24 @@ import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { projects } from "../content/portfolio";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const shouldReduceMotion = usePrefersReducedMotion();
 
   // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
+    if (shouldReduceMotion) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentIndex]); // Reset timer when currentIndex changes
+  }, [currentIndex, shouldReduceMotion]); // Reset timer when currentIndex changes
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -43,7 +49,8 @@ export default function ProjectsSection() {
         <div className="overflow-hidden">
           <motion.div 
             className="flex transition-transform duration-500 ease-in-out"
-            animate={{ x: `${-currentIndex * 100}%` }}
+            animate={shouldReduceMotion ? undefined : { x: `${-currentIndex * 100}%` }}
+            style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * 100}%)` } : undefined}
           >
             {projects.map((project, index) => (
               <div key={index} className="w-full flex-shrink-0">
@@ -53,7 +60,7 @@ export default function ProjectsSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
                 >
                   {/* Background */}
                   {project.bgImage ? (

@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 import NetworkAnimation from "./NetworkAnimation";
 import { motion } from "framer-motion";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function IntroSection() {
-  const [displayText, setDisplayText] = useState("");
   const fullText = "Hi, I'm Rico";
+  const shouldReduceMotion = usePrefersReducedMotion();
+  const [displayText, setDisplayText] = useState(shouldReduceMotion ? fullText : "");
   const typingSpeed = 150; // milliseconds per character
-  
+
   useEffect(() => {
+    if (shouldReduceMotion) {
+      setDisplayText(fullText);
+      return;
+    }
+
     let currentIndex = 0;
     const typingInterval = setInterval(() => {
       if (currentIndex <= fullText.length) {
@@ -19,7 +26,7 @@ export default function IntroSection() {
     }, typingSpeed);
     
     return () => clearInterval(typingInterval);
-  }, []);
+  }, [shouldReduceMotion]);
   
   return (
     <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-28 px-4 overflow-hidden bg-slate-900 text-white md:pt-16">

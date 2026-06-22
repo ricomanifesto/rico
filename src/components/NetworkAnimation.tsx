@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 interface NetworkNode {
   element: HTMLDivElement;
@@ -12,11 +13,27 @@ interface NetworkNode {
 }
 
 export default function NetworkAnimation() {
+  const shouldReduceMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const nodesRef = useRef<NetworkNode[]>([]);
   const animationRef = useRef<number | null>(null);
+  const resizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const shouldReduceMotionRef = useRef(shouldReduceMotion);
+
+  useEffect(() => {
+    shouldReduceMotionRef.current = shouldReduceMotion;
+
+    if (shouldReduceMotion && resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+      resizeTimeoutRef.current = null;
+    }
+  }, [shouldReduceMotion]);
   
   useEffect(() => {
+    if (shouldReduceMotion) {
+      return;
+    }
+
     const maxNodes = 15; // Increased number of nodes
     const connectionThreshold = 200; // Only connect nodes within this distance
     
@@ -170,9 +187,18 @@ export default function NetworkAnimation() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
       
       // Re-initialize the animation after a short delay
-      setTimeout(() => {
+      resizeTimeoutRef.current = setTimeout(() => {
+        resizeTimeoutRef.current = null;
+        if (shouldReduceMotionRef.current) {
+          return;
+        }
+
         initAnimation();
       }, 250);
     };
@@ -187,13 +213,18 @@ export default function NetworkAnimation() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+        resizeTimeoutRef.current = null;
+      }
       
       nodesRef.current.forEach(node => node.element.remove());
       
       const existingConnections = container?.querySelectorAll('.connection');
       existingConnections?.forEach(conn => conn.remove());
     };
-  }, []);
+  }, [shouldReduceMotion]);
   
   return (
     <div 
