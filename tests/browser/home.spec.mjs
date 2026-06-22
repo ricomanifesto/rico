@@ -161,10 +161,34 @@ test("exposes about technologies as a semantic list", async ({ page }) => {
   const technologies = page.getByRole("list", { name: "Technologies" });
   await expect(technologies).toBeVisible();
   await expect(technologies.getByRole("listitem")).toHaveCount(6);
+  await expect(technologies.getByRole("listitem")).toHaveText([
+    "Python",
+    "Next.js",
+    "FastAPI",
+    "Go",
+    "scikit-learn",
+    "LangGraph",
+  ]);
 
   for (const technology of ["Python", "Next.js", "FastAPI", "Go", "scikit-learn", "LangGraph"]) {
     await expect(technologies.getByText(technology, { exact: true })).toBeVisible();
   }
+
+  const itemBoxes = await technologies.getByRole("listitem").evaluateAll((items) =>
+    items.map((item) => {
+      const box = item.getBoundingClientRect();
+
+      return { left: box.left, top: box.top };
+    }),
+  );
+
+  expect(itemBoxes[0].left).toBeCloseTo(itemBoxes[1].left, 0);
+  expect(itemBoxes[1].left).toBeCloseTo(itemBoxes[2].left, 0);
+  expect(itemBoxes[3].left).toBeGreaterThan(itemBoxes[0].left);
+  expect(itemBoxes[4].left).toBeCloseTo(itemBoxes[3].left, 0);
+  expect(itemBoxes[5].left).toBeCloseTo(itemBoxes[3].left, 0);
+  expect(itemBoxes[1].top).toBeGreaterThan(itemBoxes[0].top);
+  expect(itemBoxes[2].top).toBeGreaterThan(itemBoxes[1].top);
 });
 
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
