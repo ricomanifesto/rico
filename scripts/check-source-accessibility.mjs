@@ -208,6 +208,16 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience selected tabs use class-based accent styles",
+    pattern: /selectedCompany === index\s*\?\s*'[^']*text-\[#007bff\][^']*'/,
+    source: experienceSource,
+  },
+  {
+    label: "experience selected tab bars use class-based accent styles",
+    pattern: /selectedCompany === index\s*\?\s*'[^']*bg-\[#007bff\][^']*'/,
+    source: experienceSource,
+  },
+  {
     label: "experience tabs support arrow-key navigation",
     pattern: /onKeyDown=\{\(event\)\s*=>\s*handleCompanyKeyDown\(event,\s*index\)\}/,
     source: experienceSource,
@@ -294,6 +304,10 @@ if (aboutTechnologyChevronsUseInlineAccentStyles(aboutMeSource)) {
   failures.push("about technology chevrons avoid inline accent styles");
 }
 
+if (experienceTabsUseInlineAccentStyles(experienceSource)) {
+  failures.push("experience tabs avoid inline accent styles");
+}
+
 if (projectCarouselControlsUseInlineAccentStyles(projectsSection)) {
   failures.push("project carousel controls avoid inline accent styles");
 }
@@ -359,6 +373,14 @@ function aboutTechnologyChevronsUseInlineAccentStyles(source) {
   );
 
   return /<svg\b[^>]*style=\{[^}]*#[0-9a-fA-F]{6}/.test(technologyGridMatch?.[0] ?? "");
+}
+
+function experienceTabsUseInlineAccentStyles(source) {
+  const tablistMatch = source.match(
+    /role="tablist"[\s\S]*?<\/motion\.button>\s*\)\)}/,
+  );
+
+  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(tablistMatch?.[0] ?? "");
 }
 
 function projectCarouselControlsUseInlineAccentStyles(source) {

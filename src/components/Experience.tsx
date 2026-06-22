@@ -73,9 +73,8 @@ export default function Experience() {
                   onKeyDown={(event) => handleCompanyKeyDown(event, index)}
                   className={`relative w-full text-left transition-all duration-300 ${
                     selectedCompany === index 
-                      ? '' : 'text-gray-400 hover:text-gray-200'
+                      ? 'text-[#007bff]' : 'text-gray-400 hover:text-gray-200'
                   }`}
-                  style={selectedCompany === index ? {color: '#007bff'} : {}}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -83,8 +82,7 @@ export default function Experience() {
                 >
                   {/* Selection Bar */}
                   <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
-                    selectedCompany === index ? '' : 'bg-transparent'
-                  }}" style={selectedCompany === index ? {backgroundColor: '#007bff'} : {}}
+                    selectedCompany === index ? 'bg-[#007bff]' : 'bg-transparent'
                   }`}></div>
                   
                   {/* Company Name */}
