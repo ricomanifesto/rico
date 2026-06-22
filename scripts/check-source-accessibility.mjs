@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import ts from "typescript";
 
 const root = process.cwd();
 const componentsRoot = path.join(root, "src/components");
@@ -522,52 +523,157 @@ function projectCardContentUsesInlineAccentStyles(source) {
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(contentMatch?.[0] ?? "");
 }
 
-function anchorOpensNewTab(linkTag) {
-  return (
-    /target=\{?["']_blank["']\}?/.test(linkTag) ||
-    /target=\{[^}]*["']_blank["'][^}]*\}/.test(linkTag)
+function sourceFilePosition(source, index) {
+  const lines = source.slice(0, index).split("\n");
+
+  return {
+    line: lines.length,
+    column: lines.at(-1).length + 1,
+  };
+}
+
+function getJsxAttribute(openingElement, name) {
+  return openingElement.attributes.properties.find(
+    (attribute) => ts.isJsxAttribute(attribute) && attribute.name.getText() === name,
   );
 }
 
-function anchorRelUsesNewTabSafety(linkTag) {
-  const literalRelValue = linkTag.match(/rel=["']([^"']+)["']/)?.[1];
-  const expressionRelValue = linkTag.match(/rel=\{([^}]+)\}/)?.[1] ?? "";
-  const relValues = literalRelValue
-    ? [literalRelValue]
-    : Array.from(expressionRelValue.matchAll(/["']([^"']+)["']/g), ([, relValue]) => relValue);
+function getJsxAttributeExpression(attribute) {
+  if (!attribute?.initializer) {
+    return undefined;
+  }
 
-  return relValues.some((relValue) => {
-    const relTokens = relValue.split(/\s+/);
+  if (ts.isStringLiteral(attribute.initializer)) {
+    return attribute.initializer;
+  }
 
-    return relTokens.includes("noopener") && relTokens.includes("noreferrer");
-  });
+  return ts.isJsxExpression(attribute.initializer) ? attribute.initializer.expression : undefined;
+}
+
+function stringLiteralValue(node) {
+  return ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) ? node.text : undefined;
+}
+
+function relValueUsesNewTabSafety(node) {
+  const relValue = stringLiteralValue(node);
+
+  if (!relValue) {
+    return false;
+  }
+
+  const relTokens = relValue.split(/\s+/);
+
+  return relTokens.includes("noopener") && relTokens.includes("noreferrer");
+}
+
+function relExpressionMatchesTargetBranch(sourceFile, relExpression, conditionText, branch) {
+  if (!relExpression) {
+    return false;
+  }
+
+  if (relValueUsesNewTabSafety(relExpression)) {
+    return true;
+  }
+
+  if (!ts.isConditionalExpression(relExpression)) {
+    return false;
+  }
+
+  if (relExpression.condition.getText(sourceFile) !== conditionText) {
+    return false;
+  }
+
+  const relBranch = branch === "whenTrue" ? relExpression.whenTrue : relExpression.whenFalse;
+
+  return relValueUsesNewTabSafety(relBranch);
+}
+
+function anchorUsesNewTabSafety(sourceFile, openingElement) {
+  const targetExpression = getJsxAttributeExpression(getJsxAttribute(openingElement, "target"));
+  const relExpression = getJsxAttributeExpression(getJsxAttribute(openingElement, "rel"));
+
+  if (!targetExpression) {
+    return true;
+  }
+
+  if (stringLiteralValue(targetExpression) === "_blank") {
+    return relExpressionMatchesTargetBranch(sourceFile, relExpression, "", "whenTrue");
+  }
+
+  if (!ts.isConditionalExpression(targetExpression)) {
+    return true;
+  }
+
+  const conditionText = targetExpression.condition.getText(sourceFile);
+
+  if (
+    stringLiteralValue(targetExpression.whenTrue) === "_blank" &&
+    !relExpressionMatchesTargetBranch(sourceFile, relExpression, conditionText, "whenTrue")
+  ) {
+    return false;
+  }
+
+  if (
+    stringLiteralValue(targetExpression.whenFalse) === "_blank" &&
+    !relExpressionMatchesTargetBranch(sourceFile, relExpression, conditionText, "whenFalse")
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function findUnsafeNewTabAnchors(source, componentPath) {
+  const sourceFile = ts.createSourceFile(componentPath, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const unsafeAnchors = [];
+
+  function visit(node) {
+    if (
+      (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) &&
+      node.tagName.getText(sourceFile) === "a" &&
+      !anchorUsesNewTabSafety(sourceFile, node)
+    ) {
+      unsafeAnchors.push(node);
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+
+  return unsafeAnchors;
 }
 
 const newTabRelGuardExamples = [
   {
     label: "accepts whitespace-separated literal rel tokens",
-    linkTag: '<a target="_blank" rel="noopener noreferrer">',
-    expected: true,
+    source: 'const Example = () => <a target="_blank" rel="noopener noreferrer">link</a>;',
+    expected: 0,
   },
   {
     label: "rejects comma-separated literal rel tokens",
-    linkTag: '<a target="_blank" rel="noopener,noreferrer">',
-    expected: false,
+    source: 'const Example = () => <a target="_blank" rel="noopener,noreferrer">link</a>;',
+    expected: 1,
   },
   {
     label: "accepts whitespace-separated expression rel tokens",
-    linkTag: '<a target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined}>',
-    expected: true,
+    source: 'const Example = () => <a target={link.external ? "_blank" : undefined} rel={link.external ? "noopener noreferrer" : undefined}>link</a>;',
+    expected: 0,
   },
   {
     label: "rejects comma-separated expression rel tokens",
-    linkTag: '<a target={link.external ? "_blank" : undefined} rel={link.external ? "noopener,noreferrer" : undefined}>',
-    expected: false,
+    source: 'const Example = () => <a target={link.external ? "_blank" : undefined} rel={link.external ? "noopener,noreferrer" : undefined}>link</a>;',
+    expected: 1,
+  },
+  {
+    label: "rejects rel tokens on the opposite conditional branch",
+    source: 'const Example = () => <a target={link.external ? "_blank" : undefined} rel={link.external ? undefined : "noopener noreferrer"}>link</a>;',
+    expected: 1,
   },
 ];
 
-for (const { label, linkTag, expected } of newTabRelGuardExamples) {
-  if (anchorRelUsesNewTabSafety(linkTag) !== expected) {
+for (const { label, source, expected } of newTabRelGuardExamples) {
+  if (findUnsafeNewTabAnchors(source, `${label}.tsx`).length !== expected) {
     failures.push(`new-tab rel guard ${label}`);
   }
 }
@@ -575,7 +681,7 @@ for (const { label, linkTag, expected } of newTabRelGuardExamples) {
 for (const componentPath of walkFiles(componentsRoot)) {
   const source = fs.readFileSync(componentPath, "utf8");
   const svgTags = source.match(/<svg\b[\s\S]*?>/g) ?? [];
-  const newTabLinks = (source.match(/<a\b[\s\S]*?>/g) ?? []).filter(anchorOpensNewTab);
+  const unsafeNewTabLinks = findUnsafeNewTabAnchors(source, componentPath);
   const lucideNames = Array.from(
     source.matchAll(/import\s*\{([^}]+)\}\s*from\s*["']lucide-react["'];/g),
   ).flatMap(([, imports]) =>
@@ -591,10 +697,12 @@ for (const componentPath of walkFiles(componentsRoot)) {
     }
   }
 
-  for (const linkTag of newTabLinks) {
-    if (!anchorRelUsesNewTabSafety(linkTag)) {
-      failures.push(`${path.relative(root, componentPath)}: new-tab links use noopener noreferrer`);
-    }
+  for (const link of unsafeNewTabLinks) {
+    const position = sourceFilePosition(source, link.getStart());
+
+    failures.push(
+      `${path.relative(root, componentPath)}:${position.line}:${position.column}: new-tab links use noopener noreferrer`,
+    );
   }
 
   for (const lucideName of lucideNames) {
