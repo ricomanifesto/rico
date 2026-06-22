@@ -58,8 +58,8 @@ export default function AboutMe() {
                     transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
                     viewport={{ once: true }}
                   >
-                    <svg 
-                      className="w-4 h-4 mr-3 flex-shrink-0" style={{color: '#007bff'}} 
+                    <svg
+                      className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
                       aria-hidden="true"
                       focusable="false"
                       fill="none" 
@@ -84,8 +84,8 @@ export default function AboutMe() {
                     transition={{ delay: 0.6 + index * 0.1, duration: 0.6 }}
                     viewport={{ once: true }}
                   >
-                    <svg 
-                      className="w-4 h-4 mr-3 flex-shrink-0" style={{color: '#007bff'}} 
+                    <svg
+                      className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
                       aria-hidden="true"
                       focusable="false"
                       fill="none" 

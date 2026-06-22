@@ -6,6 +6,7 @@ const componentsRoot = path.join(root, "src/components");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
 const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
+const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
 const headerPath = path.join(root, "src/components/Header.tsx");
@@ -20,6 +21,7 @@ const homeSource = fs.readFileSync(homePath, "utf8");
 const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
   ? fs.readFileSync(reducedMotionHookPath, "utf8")
   : "";
+const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
 const experienceSource = fs.readFileSync(experiencePath, "utf8");
 const headerSource = fs.readFileSync(headerPath, "utf8");
 const headerNavLinkSource = fs.readFileSync(headerNavLinkPath, "utf8");
@@ -144,6 +146,11 @@ const checks = [
     label: "intro CTA hover styles include text and border states",
     pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:text-\[#0056b3\][^"]*hover:border-\[#007bff\][^"]*|href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:border-\[#007bff\][^"]*hover:text-\[#0056b3\][^"]*"/,
     source: introSection,
+  },
+  {
+    label: "about technology chevrons use class-based accent styles",
+    pattern: /<svg\s+className="[^"]*text-\[#007bff\][^"]*"[\s\S]*?<span className="text-lg text-gray-200">\{tech\}<\/span>/,
+    source: aboutMeSource,
   },
   {
     label: "project carousel uses shared reduced-motion preference hook",
@@ -283,6 +290,10 @@ if (introCtaUsesMouseHandlers(introSection)) {
   failures.push("intro CTA avoids mouse-event hover styling");
 }
 
+if (aboutTechnologyChevronsUseInlineAccentStyles(aboutMeSource)) {
+  failures.push("about technology chevrons avoid inline accent styles");
+}
+
 if (projectCarouselControlsUseInlineAccentStyles(projectsSection)) {
   failures.push("project carousel controls avoid inline accent styles");
 }
@@ -340,6 +351,14 @@ function introCtaUsesMouseHandlers(source) {
   const introCtaMatch = source.match(/href="mailto:michaelrico124@gmail\.com"[\s\S]*?<\/a>/);
 
   return /onMouseEnter|onMouseLeave/.test(introCtaMatch?.[0] ?? "");
+}
+
+function aboutTechnologyChevronsUseInlineAccentStyles(source) {
+  const technologyGridMatch = source.match(
+    /\{leftColumn\.map\(\(tech, index\) => \([\s\S]*?\{rightColumn\.map\(\(tech, index\) => \([\s\S]*?<\/motion\.div>\s*\)\)}/,
+  );
+
+  return /<svg\b[^>]*style=\{[^}]*#[0-9a-fA-F]{6}/.test(technologyGridMatch?.[0] ?? "");
 }
 
 function projectCarouselControlsUseInlineAccentStyles(source) {
