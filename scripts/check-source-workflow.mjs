@@ -26,6 +26,10 @@ const checks = [
     label: "site build still runs on the pinned project Node version",
     pattern: /node-version:\s*['"]18['"]/,
   },
+  {
+    label: "workflow installs Chromium for browser interaction checks",
+    pattern: /npx playwright install --with-deps chromium/,
+  },
 ];
 
 const failures = checks
