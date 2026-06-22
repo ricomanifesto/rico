@@ -293,6 +293,11 @@ const checks = [
     source: socialLinkSource,
   },
   {
+    label: "header social links pair external new-tab targets with noopener noreferrer",
+    pattern: /target=\{link\.external \? "_blank" : undefined\}[\s\S]*rel=\{link\.external \? "noopener noreferrer" : undefined\}/,
+    source: socialLinkSource,
+  },
+  {
     label: "project action links have visible keyboard focus styles",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
     source: projectsSection,
