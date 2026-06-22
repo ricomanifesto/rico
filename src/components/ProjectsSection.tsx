@@ -108,7 +108,7 @@ export default function ProjectsSection() {
                       <p className="text-gray-200 text-sm mb-3 line-clamp-2">
                         {project.description}
                       </p>
-                      <div className="text-xs font-semibold tracking-wider mb-4" style={{color: '#66b3ff'}}>
+                      <div className="text-xs font-semibold tracking-wider mb-4 text-[#66b3ff]">
                         {project.tech}
                       </div>
                       
