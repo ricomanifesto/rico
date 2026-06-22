@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useReducedMotion } from "framer-motion";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
@@ -8,7 +7,6 @@ function getReducedMotionPreference() {
 }
 
 export function usePrefersReducedMotion() {
-  const framerReducedMotion = useReducedMotion();
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(getReducedMotionPreference);
 
   useEffect(() => {
@@ -25,5 +23,5 @@ export function usePrefersReducedMotion() {
     };
   }, []);
 
-  return framerReducedMotion ?? prefersReducedMotion;
+  return prefersReducedMotion;
 }

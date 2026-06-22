@@ -88,6 +88,11 @@ const checks = [
     source: reducedMotionHook,
   },
   {
+    label: "reduced-motion preference hook returns the live media-query state",
+    pattern: /return prefersReducedMotion;/,
+    source: reducedMotionHook,
+  },
+  {
     label: "network animation uses shared reduced-motion preference hook",
     pattern: /usePrefersReducedMotion\(\)/,
     source: networkAnimation,
