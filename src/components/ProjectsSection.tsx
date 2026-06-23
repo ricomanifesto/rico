@@ -115,7 +115,7 @@ export default function ProjectsSection() {
                         {project.description}
                       </p>
                       <div className="text-xs font-semibold tracking-wider mb-4 text-[#66b3ff]">
-                        {project.tech}
+                        {project.techStack.join(", ")}
                       </div>
                       
                       <div className="flex items-center space-x-4">

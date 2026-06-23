@@ -5,9 +5,11 @@ const root = process.cwd();
 const packagePath = path.join(root, "package.json");
 const workflowPath = path.join(root, ".github/workflows/deploy.yml");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
+const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
+const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 
 const checks = [
   {
@@ -54,6 +56,21 @@ const checks = [
     label: "experience highlights are typed as readonly content",
     pattern: /readonly highlights:\s*readonly string\[\];/,
     source: portfolio,
+  },
+  {
+    label: "project technologies are typed as readonly content",
+    pattern: /readonly techStack:\s*readonly string\[\];/,
+    source: portfolio,
+  },
+  {
+    label: "project data uses technology lists instead of comma-separated strings",
+    pattern: /^(?![\s\S]*\n\s*tech:\s*")[\s\S]*techStack:\s*\[/,
+    source: portfolio,
+  },
+  {
+    label: "project cards render technology lists with stable separator text",
+    pattern: /project\.techStack\.join\(", "\)/,
+    source: projectsSection,
   },
 ];
 
