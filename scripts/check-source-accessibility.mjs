@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
+import React from "react";
 import ts from "typescript";
+import { createServer } from "vite";
 
 const root = process.cwd();
 const srcRoot = path.join(root, "src");
@@ -11,6 +13,7 @@ const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
+const errorBoundaryPath = path.join(root, "src/components/ErrorBoundary.tsx");
 const footerPath = path.join(root, "src/components/Footer.tsx");
 const headerPath = path.join(root, "src/components/Header.tsx");
 const headerNavLinkPath = path.join(root, "src/components/HeaderNavLink.tsx");
@@ -26,6 +29,7 @@ const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
   : "";
 const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
 const experienceSource = fs.readFileSync(experiencePath, "utf8");
+const errorBoundarySource = fs.readFileSync(errorBoundaryPath, "utf8");
 const footerSource = fs.readFileSync(footerPath, "utf8");
 const headerSource = fs.readFileSync(headerPath, "utf8");
 const headerNavLinkSource = fs.readFileSync(headerNavLinkPath, "utf8");
@@ -80,6 +84,16 @@ const checks = [
     label: "app configures Framer Motion to honor user reduced motion",
     pattern: /<MotionConfig[^>]*reducedMotion="user"/,
     source: appSource,
+  },
+  {
+    label: "app wraps the portfolio in the top-level error boundary",
+    pattern: /<MotionConfig[^>]*reducedMotion="user"[\s\S]*<ErrorBoundary>\s*<Home\s*\/>\s*<\/ErrorBoundary>[\s\S]*<\/MotionConfig>/,
+    source: appSource,
+  },
+  {
+    label: "error boundary records render failures",
+    pattern: /componentDidCatch\(error:\s*Error,\s*errorInfo:\s*ErrorInfo\)[\s\S]*console\.error\("Portfolio render failed"/,
+    source: errorBoundarySource,
   },
   {
     label: "global styles honor reduced motion preferences",
@@ -480,6 +494,10 @@ if (projectCardsUseDecorativeBlurOverlays(projectsSection)) {
   failures.push("project cards avoid decorative blurred orb overlays");
 }
 
+if (!(await errorBoundaryFallbackReturnsAccessibleShell())) {
+  failures.push("error boundary fallback returns a visible main landmark and failure heading");
+}
+
 if (!fs.existsSync(skipLinkPath)) {
   failures.push("src/components/SkipLink.tsx renders the skip link");
 } else {
@@ -726,6 +744,172 @@ function findUnsafeNewTabAnchors(source, componentPath) {
   return unsafeAnchors;
 }
 
+async function importTsxDefaultExport(componentPath) {
+  const server = await createServer({
+    appType: "custom",
+    configFile: path.join(root, "vite.config.ts"),
+    logLevel: "silent",
+    root,
+    server: { middlewareMode: true },
+  });
+  const modulePath = `/${path.relative(root, componentPath).split(path.sep).join("/")}`;
+
+  try {
+    const module = await server.ssrLoadModule(modulePath);
+
+    return module.default;
+  } finally {
+    await server.close();
+  }
+}
+
+function elementPropsAreHidden(props = {}) {
+  const classNames = typeof props.className === "string" ? props.className.split(/\s+/) : [];
+  const style = props.style && typeof props.style === "object" ? props.style : {};
+
+  return (
+    props.hidden === true ||
+    props.hidden === "" ||
+    props["aria-hidden"] === true ||
+    props["aria-hidden"] === "true" ||
+    classNames.some((className) => ["hidden", "sr-only", "invisible", "opacity-0"].includes(className)) ||
+    style.display === "none" ||
+    style.visibility === "hidden" ||
+    style.opacity === 0 ||
+    style.opacity === "0"
+  );
+}
+
+function visibleTextContent(node, ancestorsHidden = false) {
+  if (node === null || node === undefined || typeof node === "boolean") {
+    return "";
+  }
+
+  if (typeof node === "string" || typeof node === "number") {
+    return ancestorsHidden ? "" : String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map((child) => visibleTextContent(child, ancestorsHidden)).join("");
+  }
+
+  if (!React.isValidElement(node)) {
+    return "";
+  }
+
+  const hidden = ancestorsHidden || elementPropsAreHidden(node.props);
+
+  return React.Children.toArray(node.props.children)
+    .map((child) => visibleTextContent(child, hidden))
+    .join("");
+}
+
+function elementTreeHasVisibleHeading(node, text, ancestorsHidden = false) {
+  if (Array.isArray(node)) {
+    return node.some((child) => elementTreeHasVisibleHeading(child, text, ancestorsHidden));
+  }
+
+  if (!React.isValidElement(node)) {
+    return false;
+  }
+
+  const hidden = ancestorsHidden || elementPropsAreHidden(node.props);
+
+  if (!hidden && node.type === "h1" && visibleTextContent(node).replace(/\s+/g, " ").trim() === text) {
+    return true;
+  }
+
+  return React.Children.toArray(node.props.children).some((child) =>
+    elementTreeHasVisibleHeading(child, text, hidden),
+  );
+}
+
+function elementTreeHasVisibleMainWithHeading(node, text, ancestorsHidden = false) {
+  if (Array.isArray(node)) {
+    return node.some((child) => elementTreeHasVisibleMainWithHeading(child, text, ancestorsHidden));
+  }
+
+  if (!React.isValidElement(node)) {
+    return false;
+  }
+
+  const hidden = ancestorsHidden || elementPropsAreHidden(node.props);
+
+  if (!hidden && node.type === "main" && elementTreeHasVisibleHeading(node, text)) {
+    return true;
+  }
+
+  return React.Children.toArray(node.props.children).some((child) =>
+    elementTreeHasVisibleMainWithHeading(child, text, hidden),
+  );
+}
+
+async function errorBoundaryFallbackReturnsAccessibleShell() {
+  const ErrorBoundary = await importTsxDefaultExport(errorBoundaryPath);
+  const derivedErrorState = ErrorBoundary.getDerivedStateFromError?.(new Error("Render failed during accessibility check"));
+  const boundary = new ErrorBoundary({
+    children: React.createElement("div", null, "Portfolio content"),
+  });
+
+  if (!derivedErrorState?.hasError) {
+    return false;
+  }
+
+  boundary.state = derivedErrorState;
+
+  return elementTreeHasVisibleMainWithHeading(boundary.render(), "Something failed while loading.");
+}
+
+const fallbackTreeGuardExamples = [
+  {
+    label: "rejects hidden main landmarks",
+    element: React.createElement("main", { hidden: true }, React.createElement("h1", null, "Something failed while loading.")),
+    expected: false,
+  },
+  {
+    label: "rejects aria-hidden headings",
+    element: React.createElement("main", null, React.createElement("h1", { "aria-hidden": true }, "Something failed while loading.")),
+    expected: false,
+  },
+  {
+    label: "rejects class-hidden fallback headings",
+    element: React.createElement("main", null, React.createElement("h1", { className: "sr-only" }, "Something failed while loading.")),
+    expected: false,
+  },
+  {
+    label: "rejects style-hidden main landmarks",
+    element: React.createElement(
+      "main",
+      { style: { display: "none" } },
+      React.createElement("h1", null, "Something failed while loading."),
+    ),
+    expected: false,
+  },
+  {
+    label: "rejects style-hidden fallback headings",
+    element: React.createElement(
+      "main",
+      null,
+      React.createElement("h1", { style: { visibility: "hidden" } }, "Something failed while loading."),
+    ),
+    expected: false,
+  },
+  {
+    label: "rejects hidden descendant heading text",
+    element: React.createElement(
+      "main",
+      null,
+      React.createElement("h1", null, React.createElement("span", { className: "hidden" }, "Something failed while loading.")),
+    ),
+    expected: false,
+  },
+  {
+    label: "accepts visible main landmarks with visible headings",
+    element: React.createElement("main", { "aria-hidden": false }, React.createElement("h1", null, "Something failed while loading.")),
+    expected: true,
+  },
+];
+
 const newTabRelGuardExamples = [
   {
     label: "accepts whitespace-separated literal rel tokens",
@@ -757,6 +941,12 @@ const newTabRelGuardExamples = [
 for (const { label, source, expected } of newTabRelGuardExamples) {
   if (findUnsafeNewTabAnchors(source, `${label}.tsx`).length !== expected) {
     failures.push(`new-tab rel guard ${label}`);
+  }
+}
+
+for (const { label, element, expected } of fallbackTreeGuardExamples) {
+  if (elementTreeHasVisibleMainWithHeading(element, "Something failed while loading.") !== expected) {
+    failures.push(`fallback element-tree guard ${label}`);
   }
 }
 
