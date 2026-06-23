@@ -8,7 +8,6 @@ export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
   const [hasCarouselHover, setHasCarouselHover] = useState(false);
-  const shouldFocusActiveActionRef = useRef(false);
   const activeActionRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const shouldReduceMotion = usePrefersReducedMotion();
   const shouldAnnounceCarouselStatus = shouldReduceMotion || hasCarouselFocus || hasCarouselHover;
@@ -25,15 +24,6 @@ export default function ProjectsSection() {
     return () => clearInterval(interval);
   }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]);
 
-  useEffect(() => {
-    if (!shouldFocusActiveActionRef.current) {
-      return;
-    }
-
-    shouldFocusActiveActionRef.current = false;
-    activeActionRefs.current[currentIndex]?.focus();
-  }, [currentIndex]);
-
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? projects.length - 1 : prevIndex - 1
@@ -44,9 +34,15 @@ export default function ProjectsSection() {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
   };
 
-  const handleCarouselButtonKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+  const handleCarouselButtonKeyUp = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === "Enter" || event.key === " ") {
-      shouldFocusActiveActionRef.current = true;
+      activeActionRefs.current[currentIndex]?.focus();
+    }
+  };
+
+  const handleCarouselButtonKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if ((event.key === "Enter" || event.key === " ") && event.repeat) {
+      event.preventDefault();
     }
   };
 
@@ -175,6 +171,7 @@ export default function ProjectsSection() {
         <button
           onClick={goToPrevious}
           onKeyDown={handleCarouselButtonKeyDown}
+          onKeyUp={handleCarouselButtonKeyUp}
           className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Previous project"
         >
@@ -184,6 +181,7 @@ export default function ProjectsSection() {
         <button
           onClick={goToNext}
           onKeyDown={handleCarouselButtonKeyDown}
+          onKeyUp={handleCarouselButtonKeyUp}
           className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Next project"
         >

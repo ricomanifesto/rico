@@ -458,6 +458,25 @@ test("moves keyboard focus to the active project action after arrow navigation",
   ).toBeFocused();
 });
 
+test("keeps repeated carousel Enter activation on the arrow control", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+
+  await nextProjectButton.focus();
+  await page.keyboard.down("Enter");
+  await page.keyboard.down("Enter");
+
+  await expect(nextProjectButton).toBeFocused();
+
+  await page.keyboard.up("Enter");
+  await expect(
+    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+  ).toBeFocused();
+});
+
 test("announces the active project slide after manual navigation", async ({ page }) => {
   await page.goto("/");
 
