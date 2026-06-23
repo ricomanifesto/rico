@@ -3,6 +3,11 @@ export interface HeaderNavItem {
   readonly href: string;
 }
 
+export interface SiteBrand {
+  readonly label: string;
+  readonly href: string;
+}
+
 export type SocialLinkKind = "email" | "github" | "linkedin" | "medium";
 
 export interface SocialLink {
@@ -19,6 +24,11 @@ export const headerNavItems: readonly HeaderNavItem[] = [
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "mailto:michaelrico124@gmail.com" },
 ];
+
+export const siteBrand: SiteBrand = {
+  label: "rico",
+  href: "#intro",
+};
 
 export const socialLinks: readonly SocialLink[] = [
   {

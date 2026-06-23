@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
-import { headerNavItems, socialLinks } from "@/content/navigation";
+import { headerNavItems, siteBrand, socialLinks } from "@/content/navigation";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,10 +20,10 @@ export default function Header() {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
           <a
-            href="#intro"
+            href={siteBrand.href}
             className="text-xl font-bold text-[#007bff] transition-colors duration-300 hover:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           >
-            rico
+            {siteBrand.label}
           </a>
           <nav aria-label="Primary" className="hidden md:flex items-center ml-8">
             {headerNavItems.map((item, index) => (
