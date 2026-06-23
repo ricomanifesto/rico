@@ -49,6 +49,16 @@ if (!fs.existsSync(navigationPath)) {
     failures.push("Social links expose readonly fields");
   }
 
+  if (
+    !/export const contactLink:\s*SocialLink\s*=\s*\{[\s\S]*label:\s*["']Email["'][\s\S]*href:\s*["']mailto:michaelrico124@gmail\.com["'][\s\S]*kind:\s*["']email["'][\s\S]*external:\s*false[\s\S]*\};/.test(navigationSource)
+  ) {
+    failures.push("Contact link metadata preserves the email action");
+  }
+
+  if (!/export const socialLinks:\s*readonly SocialLink\[\]\s*=\s*\[\s*contactLink,/.test(navigationSource)) {
+    failures.push("Social links reuse the typed contact link metadata");
+  }
+
   const sourceFiles = walkFiles(srcRoot)
     .filter((filePath) => filePath.endsWith(".tsx"))
     .map((filePath) => fs.readFileSync(filePath, "utf8"))

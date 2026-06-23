@@ -163,22 +163,22 @@ const checks = [
   },
   {
     label: "intro CTA uses class-based hover styles",
-    pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:bg-\[#007bff1a\][^"]*"/,
+    pattern: /href=\{contactLink\.href\}[\s\S]*className="[^"]*hover:bg-\[#007bff1a\][^"]*"/,
     source: introSection,
   },
   {
     label: "intro CTA hover styles include text and border states",
-    pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:text-\[#0056b3\][^"]*hover:border-\[#007bff\][^"]*|href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*hover:border-\[#007bff\][^"]*hover:text-\[#0056b3\][^"]*"/,
+    pattern: /href=\{contactLink\.href\}[\s\S]*className="[^"]*hover:text-\[#0056b3\][^"]*hover:border-\[#007bff\][^"]*|href=\{contactLink\.href\}[\s\S]*className="[^"]*hover:border-\[#007bff\][^"]*hover:text-\[#0056b3\][^"]*"/,
     source: introSection,
   },
   {
     label: "intro CTA has a visible keyboard focus style",
-    pattern: /href="mailto:michaelrico124@gmail\.com"[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
+    pattern: /href=\{contactLink\.href\}[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
     source: introSection,
   },
   {
     label: "intro CTA uses the shared mail icon component",
-    pattern: /import\s*\{\s*Mail\s*\}\s*from\s*"lucide-react";[\s\S]*href="mailto:michaelrico124@gmail\.com"[\s\S]*<Mail\b[\s\S]*aria-hidden="true"[\s\S]*focusable="false"/,
+    pattern: /import\s*\{\s*Mail\s*\}\s*from\s*"lucide-react";[\s\S]*href=\{contactLink\.href\}[\s\S]*<Mail\b[\s\S]*aria-hidden="true"[\s\S]*focusable="false"/,
     source: introSection,
   },
   {
@@ -511,7 +511,7 @@ function projectActionLinksUseMouseHandlers(source) {
 }
 
 function introCtaUsesMouseHandlers(source) {
-  const introCtaMatch = source.match(/href="mailto:michaelrico124@gmail\.com"[\s\S]*?<\/a>/);
+  const introCtaMatch = source.match(/href=\{contactLink\.href\}[\s\S]*?<\/a>/);
 
   return /onMouseEnter|onMouseLeave/.test(introCtaMatch?.[0] ?? "");
 }

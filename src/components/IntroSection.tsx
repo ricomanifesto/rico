@@ -3,6 +3,7 @@ import NetworkAnimation from "./NetworkAnimation";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { contactLink } from "../content/navigation";
 
 export default function IntroSection() {
   const fullText = "Hi, I'm Rico";
@@ -74,7 +75,7 @@ export default function IntroSection() {
           transition={{ delay: 0.9, duration: 0.8 }}
         >
           <a 
-            href="mailto:michaelrico124@gmail.com" 
+            href={contactLink.href}
             className="inline-flex items-center px-6 py-3 border-2 border-[#007bff80] rounded-xl bg-transparent text-[#007bff] transition-all duration-300 hover:scale-105 hover:border-[#007bff] hover:bg-[#007bff1a] hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           >
             <Mail className="mr-3 h-5 w-5" aria-hidden="true" focusable="false" />
