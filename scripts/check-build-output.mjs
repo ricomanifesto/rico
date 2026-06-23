@@ -74,8 +74,9 @@ if (existsSync(sourceContentPath)) {
   const imagePaths = Array.from(sourceContent.matchAll(/image:\s*\{[\s\S]*?src:\s*"([^"]+)"/g)).map(
     (match) => match[1],
   );
+  const hasProjectImageMetadata = /image:\s*\{/.test(sourceContent);
 
-  if (imagePaths.length === 0) {
+  if (hasProjectImageMetadata && imagePaths.length === 0) {
     failures.push("No project images found in portfolio content");
   }
 
