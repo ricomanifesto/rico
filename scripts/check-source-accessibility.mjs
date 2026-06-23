@@ -282,6 +282,11 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience lists use stable content keys",
+    pattern: /experiences\.map\(\(exp, index\) => \(\s*<motion\.button[\s\S]*key=\{exp\.company\}[\s\S]*exp\.highlights\.map\(\(highlight, highlightIndex\) => \(\s*<motion\.li[\s\S]*key=\{highlight\}/,
+    source: experienceSource,
+  },
+  {
     label: "experience panel company names use class-based accent styles",
     pattern: /<span\s+className="[^"]*text-\[#007bff\][^"]*">\{exp\.displayCompany\}<\/span>/,
     source: experienceSource,
