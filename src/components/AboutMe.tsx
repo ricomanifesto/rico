@@ -25,7 +25,6 @@ export default function AboutMe() {
         </motion.h2>
 
         <div className="mb-12 flex flex-col md:flex-row gap-8">
-          {/* Content Section */}
           <div className="flex-1">
             <motion.p 
               className="text-lg md:text-xl mb-8 leading-relaxed text-gray-200"
@@ -37,7 +36,6 @@ export default function AboutMe() {
               I am currently a Staff Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
             </motion.p>
 
-            {/* Technologies Grid */}
             <motion.ul 
               aria-label="Technologies"
               role="list"
@@ -66,7 +64,6 @@ export default function AboutMe() {
               ))}
             </motion.ul>
 
-            {/* Personal Interests */}
             <motion.p 
               className="text-lg md:text-xl leading-relaxed text-gray-200"
               initial={{ opacity: 0 }}
@@ -78,7 +75,6 @@ export default function AboutMe() {
             </motion.p>
           </div>
 
-          {/* Profile Picture - Right Aligned */}
           <motion.div
             className="flex-shrink-0 flex justify-center md:justify-end"
             initial={{ opacity: 0, scale: 0.8 }}

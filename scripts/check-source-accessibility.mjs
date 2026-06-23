@@ -192,6 +192,11 @@ const checks = [
     source: aboutMeSource,
   },
   {
+    label: "about section avoids narration-only JSX comments",
+    pattern: /^(?![\s\S]*\{\/\*\s*(Content Section|Technologies Grid|Personal Interests|Profile Picture - Right Aligned)\s*\*\/\})[\s\S]*$/,
+    source: aboutMeSource,
+  },
+  {
     label: "about profile image border uses a class-based accent style",
     pattern: /alt="Michael Rico Profile"[\s\S]*className="[^"]*border-\[#007bff33\][^"]*"/,
     source: aboutMeSource,
