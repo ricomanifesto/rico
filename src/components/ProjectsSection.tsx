@@ -164,6 +164,8 @@ export default function ProjectsSection() {
                     <div className="absolute inset-0">
                       <img 
                         src={project.image.src} 
+                        width={project.image.width}
+                        height={project.image.height}
                         alt=""
                         aria-hidden="true"
                         loading="lazy"

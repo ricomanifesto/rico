@@ -1,5 +1,7 @@
 export interface ProjectImage {
   readonly src: string;
+  readonly width: number;
+  readonly height: number;
   readonly decorative: true;
 }
 
@@ -166,6 +168,8 @@ export const projects: readonly ProjectSummary[] = [
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
     image: {
       src: "/images/SentrySearch.jpg",
+      width: 1898,
+      height: 1210,
       decorative: true,
     },
   },
@@ -186,6 +190,8 @@ export const projects: readonly ProjectSummary[] = [
     bgGradient: "from-green-600 via-teal-600 to-blue-600",
     image: {
       src: "/images/SentryDigest.jpg",
+      width: 2444,
+      height: 1454,
       decorative: true,
     },
   },
@@ -206,6 +212,8 @@ export const projects: readonly ProjectSummary[] = [
     bgGradient: "from-red-600 via-pink-600 to-purple-600",
     image: {
       src: "/images/SentryInsight.jpg",
+      width: 2366,
+      height: 1434,
       decorative: true,
     },
   },
@@ -226,6 +234,8 @@ export const projects: readonly ProjectSummary[] = [
     bgGradient: "from-orange-600 via-red-600 to-pink-600",
     image: {
       src: "/images/GRCInsight.jpg",
+      width: 2104,
+      height: 1360,
       decorative: true,
     },
   }

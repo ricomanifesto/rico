@@ -94,6 +94,8 @@ export default function AboutMe() {
           >
             <img 
               src="/images/profile.jpg" 
+              width="369"
+              height="800"
               alt="Michael Rico Profile" 
               loading="lazy"
               decoding="async"
