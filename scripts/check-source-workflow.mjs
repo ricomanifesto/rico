@@ -4,8 +4,10 @@ import path from "node:path";
 const root = process.cwd();
 const packagePath = path.join(root, "package.json");
 const workflowPath = path.join(root, ".github/workflows/deploy.yml");
+const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
+const portfolio = fs.readFileSync(portfolioPath, "utf8");
 
 const checks = [
   {
@@ -37,6 +39,21 @@ const checks = [
     label: "package browser check installs Chromium before running tests",
     pattern: /"browser":\s*"playwright install chromium && playwright test"/,
     source: packageJson,
+  },
+  {
+    label: "portfolio project data exports as a readonly collection",
+    pattern: /export const projects:\s*readonly ProjectSummary\[\]\s*=/,
+    source: portfolio,
+  },
+  {
+    label: "portfolio experience data exports as a readonly collection",
+    pattern: /export const experiences:\s*readonly ExperienceItem\[\]\s*=/,
+    source: portfolio,
+  },
+  {
+    label: "experience highlights are typed as readonly content",
+    pattern: /readonly highlights:\s*readonly string\[\];/,
+    source: portfolio,
   },
 ];
 
