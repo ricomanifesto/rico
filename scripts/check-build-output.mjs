@@ -68,6 +68,39 @@ if (existsSync(indexPath)) {
   if (!index.includes('<div id="root"></div>')) {
     failures.push("Built index is missing the React root element");
   }
+
+  const htmlMetadataChecks = [
+    {
+      label: "HTML language",
+      pattern: /<html\s+lang="en">/,
+    },
+    {
+      label: "viewport metadata",
+      pattern: /<meta\s+name="viewport"\s+content="width=device-width,\s*initial-scale=1\.0"\s*\/?>/,
+    },
+    {
+      label: "description metadata",
+      pattern: /<meta\s+name="description"\s+content="Rico's Personal Portfolio \| Staff Threat Hunter"\s*\/?>/,
+    },
+    {
+      label: "document title",
+      pattern: /<title>Rico Manifesto \| Personal Portfolio<\/title>/,
+    },
+    {
+      label: "favicon link",
+      pattern: /<link\s+rel="icon"\s+type="image\/svg\+xml"\s+href="\/favicon\.svg"\s*\/?>/,
+    },
+    {
+      label: "module entry",
+      pattern: /<script\s+type="module"\s+crossorigin\s+src="\/assets\/[^"]+\.js"><\/script>/,
+    },
+  ];
+
+  for (const { label, pattern } of htmlMetadataChecks) {
+    if (!pattern.test(index)) {
+      failures.push(`Built index is missing ${label}`);
+    }
+  }
 }
 
 if (existsSync(sourceContentPath)) {
