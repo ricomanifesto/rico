@@ -252,6 +252,14 @@ test("exposes about technologies as a semantic list", async ({ page }) => {
   expect(itemBoxes[2].top).toBeGreaterThan(itemBoxes[1].top);
 });
 
+test("names main portfolio sections from their visible headings", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.getByRole("region", { name: "/ about me" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "/ experience" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "/ projects" })).toBeVisible();
+});
+
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");

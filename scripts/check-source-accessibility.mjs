@@ -197,6 +197,11 @@ const checks = [
     source: aboutMeSource,
   },
   {
+    label: "about section is named by its visible heading",
+    pattern: /<section[^>]*id="about"[^>]*aria-labelledby="about-heading"[\s\S]*<motion\.h2[^>]*id="about-heading"/,
+    source: aboutMeSource,
+  },
+  {
     label: "about profile image border uses a class-based accent style",
     pattern: /alt="Michael Rico Profile"[\s\S]*className="[^"]*border-\[#007bff33\][^"]*"/,
     source: aboutMeSource,
@@ -214,6 +219,11 @@ const checks = [
   {
     label: "project carousel exposes a named carousel region",
     pattern: /role="region"[\s\S]*aria-label="Featured projects"[\s\S]*aria-roledescription="carousel"/,
+    source: projectsSection,
+  },
+  {
+    label: "projects section is named by its visible heading",
+    pattern: /<section[^>]*id="projects"[^>]*aria-labelledby="projects-heading"[\s\S]*<motion\.h2[^>]*id="projects-heading"/,
     source: projectsSection,
   },
   {
@@ -249,6 +259,11 @@ const checks = [
   {
     label: "experience section avoids narration-only comments",
     pattern: /^(?![\s\S]*(\{\/\*\s*(Company Selection Timeline|Selection Bar|Company Name|Selected Experience Details)\s*\*\/\}|\/\/\s*Default to SentinelOne))[\s\S]*$/,
+    source: experienceSource,
+  },
+  {
+    label: "experience section is named by its visible heading",
+    pattern: /<section[^>]*id="experience"[^>]*aria-labelledby="experience-heading"[\s\S]*<motion\.h2[^>]*id="experience-heading"/,
     source: experienceSource,
   },
   {
