@@ -3,6 +3,8 @@ import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
 import { headerNavItems, siteBrand, socialLinks } from "@/content/navigation";
 
+const activeSectionOffsetPx = 160;
+
 function getSectionElement(hash: string) {
   if (!hash.startsWith("#")) {
     return null;
@@ -29,7 +31,7 @@ export default function Header() {
 
         const { top } = section.getBoundingClientRect();
 
-        return top <= 140 ? item.href : current;
+        return top <= activeSectionOffsetPx ? item.href : current;
       }, sectionLinks[0]?.href ?? "#intro");
 
       setActiveHref(activeSection);
@@ -98,8 +100,8 @@ export default function Header() {
               <a
                 href={item.href}
                 aria-current={item.href === activeHref ? "location" : undefined}
-                className={`inline-flex min-h-11 min-w-11 items-center justify-center text-sm font-medium transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
-                  item.href === activeHref ? "text-[#66b2ff]" : "text-gray-200"
+                className={`inline-flex min-h-11 min-w-11 items-center justify-center text-sm transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
+                  item.href === activeHref ? "font-semibold text-[#66b2ff]" : "font-medium text-gray-200"
                 }`}
               >
                 {item.label}

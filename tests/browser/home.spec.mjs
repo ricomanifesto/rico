@@ -163,6 +163,23 @@ test("marks the active desktop section in primary navigation", async ({ page }) 
   await expect(experienceLink).toHaveCSS("font-weight", "600");
 });
 
+test("marks the active mobile section in primary navigation", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
+  const homeLink = mobileNav.getByRole("link", { name: "Home" });
+  const aboutLink = mobileNav.getByRole("link", { name: "About" });
+
+  await expect(homeLink).toHaveAttribute("aria-current", "location");
+  await expect(aboutLink).not.toHaveAttribute("aria-current", "location");
+
+  await aboutLink.click();
+  await expect(aboutLink).toHaveAttribute("aria-current", "location");
+  await expect(homeLink).not.toHaveAttribute("aria-current", "location");
+  await expect(aboutLink).toHaveCSS("font-weight", "600");
+});
+
 test("marks direct section links as active after page load", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto("/#about");
