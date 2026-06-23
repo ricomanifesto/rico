@@ -3,6 +3,14 @@ import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
 import { headerNavItems, siteBrand, socialLinks } from "@/content/navigation";
 
+function getSectionElement(hash: string) {
+  if (!hash.startsWith("#")) {
+    return null;
+  }
+
+  return document.getElementById(hash.slice(1));
+}
+
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("#intro");
@@ -13,7 +21,7 @@ export default function Header() {
 
       const sectionLinks = headerNavItems.filter((item) => item.href.startsWith("#"));
       const activeSection = sectionLinks.reduce((current, item) => {
-        const section = document.querySelector(item.href);
+        const section = getSectionElement(item.href);
 
         if (!section) {
           return current;
@@ -33,7 +41,7 @@ export default function Header() {
         return;
       }
 
-      const target = document.querySelector(window.location.hash);
+      const target = getSectionElement(window.location.hash);
 
       if (target) {
         target.scrollIntoView();

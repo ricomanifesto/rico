@@ -175,6 +175,16 @@ test("marks direct section links as active after page load", async ({ page }) =>
   await expect(homeLink).not.toHaveAttribute("aria-current", "location");
 });
 
+test("ignores malformed section fragments without crashing the header", async ({ page }) => {
+  const pageErrors = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+
+  await page.goto("/#foo%5D");
+
+  await expect(page.getByRole("banner")).toBeVisible();
+  expect(pageErrors).toEqual([]);
+});
+
 test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
   await page.goto("/");
 
