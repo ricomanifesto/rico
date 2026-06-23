@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { footerBehavior } from "../content/portfolio";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,7 +10,7 @@ export default function Footer() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: footerBehavior.containerMotion.duration }}
     >
       <div className="max-w-4xl mx-auto text-center">
         <p className="text-gray-300">
