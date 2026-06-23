@@ -141,6 +141,50 @@ test("exposes desktop primary navigation with an accessible name", async ({ page
   );
 });
 
+test("marks the active desktop section in primary navigation", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/");
+
+  const desktopNav = page.getByRole("navigation", { name: "Primary" });
+  const homeLink = desktopNav.getByRole("link", { name: "Home" });
+  const aboutLink = desktopNav.getByRole("link", { name: "About" });
+  const experienceLink = desktopNav.getByRole("link", { name: "Experience" });
+
+  await expect(homeLink).toHaveAttribute("aria-current", "location");
+  await expect(aboutLink).not.toHaveAttribute("aria-current", "location");
+
+  await aboutLink.click();
+  await expect(aboutLink).toHaveAttribute("aria-current", "location");
+  await expect(homeLink).not.toHaveAttribute("aria-current", "location");
+
+  await experienceLink.click();
+  await expect(experienceLink).toHaveAttribute("aria-current", "location");
+  await expect(aboutLink).not.toHaveAttribute("aria-current", "location");
+  await expect(experienceLink).toHaveCSS("font-weight", "600");
+});
+
+test("marks direct section links as active after page load", async ({ page }) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/#about");
+
+  const desktopNav = page.getByRole("navigation", { name: "Primary" });
+  const homeLink = desktopNav.getByRole("link", { name: "Home" });
+  const aboutLink = desktopNav.getByRole("link", { name: "About" });
+
+  await expect(aboutLink).toHaveAttribute("aria-current", "location");
+  await expect(homeLink).not.toHaveAttribute("aria-current", "location");
+});
+
+test("ignores malformed section fragments without crashing the header", async ({ page }) => {
+  const pageErrors = [];
+  page.on("pageerror", (error) => pageErrors.push(error.message));
+
+  await page.goto("/#foo%5D");
+
+  await expect(page.getByRole("banner")).toBeVisible();
+  expect(pageErrors).toEqual([]);
+});
+
 test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
   await page.goto("/");
 
