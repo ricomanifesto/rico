@@ -153,7 +153,7 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header mobile navigation wraps each shared nav item in a list item");
   }
 
-  if (!/aria-label="Mobile primary"[\s\S]*<a\b[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b/.test(headerSource)) {
+  if (!/aria-label="Mobile primary"[\s\S]*<a\b[\s\S]*className=\{?`?["']?[\s\S]*\bmin-h-11\b[\s\S]*\bmin-w-11\b/.test(headerSource)) {
     failures.push("Header mobile navigation links use mobile-friendly touch targets");
   }
 

@@ -5,14 +5,47 @@ import { headerNavItems, siteBrand, socialLinks } from "@/content/navigation";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeHref, setActiveHref] = useState("#intro");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
+
+      const sectionLinks = headerNavItems.filter((item) => item.href.startsWith("#"));
+      const activeSection = sectionLinks.reduce((current, item) => {
+        const section = document.querySelector(item.href);
+
+        if (!section) {
+          return current;
+        }
+
+        const { top } = section.getBoundingClientRect();
+
+        return top <= 140 ? item.href : current;
+      }, sectionLinks[0]?.href ?? "#intro");
+
+      setActiveHref(activeSection);
     };
 
+    handleScroll();
+    const alignInitialHash = window.requestAnimationFrame(() => {
+      if (!window.location.hash) {
+        return;
+      }
+
+      const target = document.querySelector(window.location.hash);
+
+      if (target) {
+        target.scrollIntoView();
+        handleScroll();
+      }
+    });
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.cancelAnimationFrame(alignInitialHash);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (
@@ -31,6 +64,7 @@ export default function Header() {
                 key={item.href}
                 item={item}
                 isLast={index === headerNavItems.length - 1}
+                isActive={item.href === activeHref}
               />
             ))}
           </nav>
@@ -55,7 +89,10 @@ export default function Header() {
             <li key={item.href} role="listitem" className="flex-shrink-0">
               <a
                 href={item.href}
-                className="inline-flex min-h-11 min-w-11 items-center justify-center text-sm font-medium text-gray-200 transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+                aria-current={item.href === activeHref ? "location" : undefined}
+                className={`inline-flex min-h-11 min-w-11 items-center justify-center text-sm font-medium transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
+                  item.href === activeHref ? "text-[#66b2ff]" : "text-gray-200"
+                }`}
               >
                 {item.label}
               </a>
