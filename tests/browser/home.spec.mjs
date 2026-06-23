@@ -477,6 +477,24 @@ test("keeps repeated carousel Enter activation on the arrow control", async ({ p
   ).toBeFocused();
 });
 
+test("moves Space-activated carousel focus to the new active project action", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+
+  await nextProjectButton.focus();
+  await page.keyboard.press("Space");
+
+  await expect(
+    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+  ).toBeFocused();
+  await expect(
+    page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
+  ).toHaveAttribute("tabindex", "-1");
+});
+
 test("announces the active project slide after manual navigation", async ({ page }) => {
   await page.goto("/");
 

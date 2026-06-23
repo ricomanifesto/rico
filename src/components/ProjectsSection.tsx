@@ -9,6 +9,7 @@ export default function ProjectsSection() {
   const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
   const [hasCarouselHover, setHasCarouselHover] = useState(false);
   const activeActionRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const pendingFocusIndexRef = useRef<number | null>(null);
   const shouldReduceMotion = usePrefersReducedMotion();
   const shouldAnnounceCarouselStatus = shouldReduceMotion || hasCarouselFocus || hasCarouselHover;
 
@@ -24,26 +25,68 @@ export default function ProjectsSection() {
     return () => clearInterval(interval);
   }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]);
 
+  const focusProjectAction = (index: number) => {
+    window.requestAnimationFrame(() => {
+      activeActionRefs.current[index]?.focus();
+    });
+  };
+
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? projects.length - 1 : prevIndex - 1
-    );
+    const nextIndex = currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
+
+    setCurrentIndex(nextIndex);
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
+    const nextIndex = (currentIndex + 1) % projects.length;
+
+    setCurrentIndex(nextIndex);
+  };
+
+  const handleCarouselButtonKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    activate: () => number,
+  ) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (event.repeat) {
+      return;
+    }
+
+    const nextIndex = activate();
+
+    pendingFocusIndexRef.current = nextIndex;
   };
 
   const handleCarouselButtonKeyUp = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "Enter" || event.key === " ") {
-      activeActionRefs.current[currentIndex]?.focus();
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (pendingFocusIndexRef.current !== null) {
+      focusProjectAction(pendingFocusIndexRef.current);
+      pendingFocusIndexRef.current = null;
     }
   };
 
-  const handleCarouselButtonKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if ((event.key === "Enter" || event.key === " ") && event.repeat) {
-      event.preventDefault();
-    }
+  const activatePreviousProjectFromKeyboard = () => {
+    const nextIndex = currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
+
+    setCurrentIndex(nextIndex);
+    return nextIndex;
+  };
+
+  const activateNextProjectFromKeyboard = () => {
+    const nextIndex = (currentIndex + 1) % projects.length;
+
+    setCurrentIndex(nextIndex);
+    return nextIndex;
   };
 
   return (
@@ -169,8 +212,8 @@ export default function ProjectsSection() {
         </div>
 
         <button
-          onClick={goToPrevious}
-          onKeyDown={handleCarouselButtonKeyDown}
+          onClick={() => goToPrevious()}
+          onKeyDown={(event) => handleCarouselButtonKeyDown(event, activatePreviousProjectFromKeyboard)}
           onKeyUp={handleCarouselButtonKeyUp}
           className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Previous project"
@@ -179,8 +222,8 @@ export default function ProjectsSection() {
         </button>
 
         <button
-          onClick={goToNext}
-          onKeyDown={handleCarouselButtonKeyDown}
+          onClick={() => goToNext()}
+          onKeyDown={(event) => handleCarouselButtonKeyDown(event, activateNextProjectFromKeyboard)}
           onKeyUp={handleCarouselButtonKeyUp}
           className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Next project"
