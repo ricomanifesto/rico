@@ -1,7 +1,7 @@
 export interface ProjectSummary {
   readonly title: string;
   readonly description: string;
-  readonly tech: string;
+  readonly techStack: readonly string[];
   readonly repoUrl: string;
   readonly demoUrl: string;
   readonly bgGradient: string;
@@ -20,7 +20,7 @@ export const projects: readonly ProjectSummary[] = [
   {
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
-    tech: "PYTHON, FASTAPI, NEXT.JS",
+    techStack: ["PYTHON", "FASTAPI", "NEXT.JS"],
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/",
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
@@ -29,7 +29,7 @@ export const projects: readonly ProjectSummary[] = [
   {
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions.",
-    tech: "NODE.JS",
+    techStack: ["NODE.JS"],
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/",
     bgGradient: "from-green-600 via-teal-600 to-blue-600",
@@ -38,7 +38,7 @@ export const projects: readonly ProjectSummary[] = [
   {
     title: "Cybersecurity Exploit Reporter",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
-    tech: "PYTHON, LANGGRAPH, LANGCHAIN, FASTMCP",
+    techStack: ["PYTHON", "LANGGRAPH", "LANGCHAIN", "FASTMCP"],
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
     bgGradient: "from-red-600 via-pink-600 to-purple-600",
@@ -47,7 +47,7 @@ export const projects: readonly ProjectSummary[] = [
   {
     title: "Cybersecurity GRC Reporter",
     description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
-    tech: "GO, PYTHON, LANGGRAPH, FASTAPI",
+    techStack: ["GO", "PYTHON", "LANGGRAPH", "FASTAPI"],
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
     demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
     bgGradient: "from-orange-600 via-red-600 to-pink-600",

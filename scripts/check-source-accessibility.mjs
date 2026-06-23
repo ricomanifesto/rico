@@ -353,7 +353,7 @@ const checks = [
   },
   {
     label: "project tech labels use class-based accent styles",
-    pattern: /className="[^"]*text-\[#66b3ff\][^"]*"[^>]*>\s*\{project\.tech\}\s*<\/div>/,
+    pattern: /className="[^"]*text-\[#66b3ff\][^"]*"[^>]*>\s*\{project\.techStack\.join\(", "\)\}\s*<\/div>/,
     source: projectsSection,
   },
   {
