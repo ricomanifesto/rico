@@ -11,6 +11,7 @@ const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
+const footerPath = path.join(root, "src/components/Footer.tsx");
 const headerPath = path.join(root, "src/components/Header.tsx");
 const headerNavLinkPath = path.join(root, "src/components/HeaderNavLink.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
@@ -25,6 +26,7 @@ const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
   : "";
 const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
 const experienceSource = fs.readFileSync(experiencePath, "utf8");
+const footerSource = fs.readFileSync(footerPath, "utf8");
 const headerSource = fs.readFileSync(headerPath, "utf8");
 const headerNavLinkSource = fs.readFileSync(headerNavLinkPath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
@@ -48,6 +50,11 @@ const checks = [
     label: "main content skip-link target is programmatically focusable",
     pattern: /<main[^>]*id="main-content"[^>]*tabIndex=\{-1\}/,
     source: homeSource,
+  },
+  {
+    label: "footer copyright year uses machine-readable time markup",
+    pattern: /<time\s+dateTime=\{String\(currentYear\)\}>\{currentYear\}<\/time>/,
+    source: footerSource,
   },
   {
     label: "project repository links include accessible names",
