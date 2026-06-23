@@ -111,13 +111,6 @@ export default function ProjectsSection() {
                     <div className={`absolute inset-0 bg-gradient-to-br ${project.bgGradient} opacity-90`}></div>
                   )}
                   
-                  {/* Abstract Pattern Overlay */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
-                    <div className="absolute bottom-20 right-16 w-24 h-24 rounded-full bg-white/15 blur-lg"></div>
-                    <div className="absolute top-1/3 right-8 w-16 h-16 rounded-full bg-white/10 blur-md"></div>
-                  </div>
-                  
                   {/* Content Overlay */}
                   <div className="absolute inset-0 flex flex-col justify-end">
                     <div className="bg-black/60 backdrop-blur-sm p-6">
