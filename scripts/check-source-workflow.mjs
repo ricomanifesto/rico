@@ -9,6 +9,7 @@ const heroPath = path.join(root, "src/content/hero.ts");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
+const footerPath = path.join(root, "src/components/Footer.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
@@ -17,6 +18,7 @@ const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
+const footerSection = fs.readFileSync(footerPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 
 const checks = [
@@ -54,6 +56,21 @@ const checks = [
     label: "portfolio project data exports as a readonly collection",
     pattern: /export const projects:\s*readonly ProjectSummary\[\]\s*=/,
     source: portfolio,
+  },
+  {
+    label: "footer behavior is typed as readonly metadata",
+    pattern: /export interface FooterBehavior \{[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "footer behavior preserves current motion timing",
+    pattern: /export const footerBehavior:\s*FooterBehavior\s*=\s*\{[\s\S]*containerMotion:\s*\{[\s\S]*duration:\s*0\.5[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "footer uses behavior metadata for motion timing",
+    pattern: /import\s*\{\s*footerBehavior\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: footerBehavior\.containerMotion\.duration \}\}/,
+    source: footerSection,
   },
   {
     label: "project carousel behavior is typed as readonly metadata",

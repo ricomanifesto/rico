@@ -20,6 +20,12 @@ export interface ProjectSummary {
   readonly image: ProjectImage | null;
 }
 
+export interface FooterBehavior {
+  readonly containerMotion: {
+    readonly duration: number;
+  };
+}
+
 export interface ProjectCarouselBehavior {
   readonly autoRotationIntervalMs: number;
   readonly sectionHeadingMotion: {
@@ -119,6 +125,12 @@ export const aboutBehavior: AboutBehavior = {
   imageMotion: {
     delay: 0.8,
     duration: 0.8,
+  },
+};
+
+export const footerBehavior: FooterBehavior = {
+  containerMotion: {
+    duration: 0.5,
   },
 };
 
