@@ -70,7 +70,6 @@ export default function ProjectsSection() {
         >
           {`Project ${currentIndex + 1} of ${projects.length}: ${projects[currentIndex].title}`}
         </div>
-        {/* Carousel Container */}
         <div className="overflow-hidden">
           <motion.div 
             className="flex transition-transform duration-500 ease-in-out"
@@ -94,7 +93,6 @@ export default function ProjectsSection() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
                 >
-                  {/* Background */}
                   {project.bgImage ? (
                     <div className="absolute inset-0">
                       <img 
@@ -111,7 +109,6 @@ export default function ProjectsSection() {
                     <div className={`absolute inset-0 bg-gradient-to-br ${project.bgGradient} opacity-90`}></div>
                   )}
                   
-                  {/* Content Overlay */}
                   <div className="absolute inset-0 flex flex-col justify-end">
                     <div className="bg-black/60 backdrop-blur-sm p-6">
                       <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
@@ -122,7 +119,6 @@ export default function ProjectsSection() {
                         {project.tech}
                       </div>
                       
-                      {/* Icons */}
                       <div className="flex items-center space-x-4">
                         <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository`}
                            tabIndex={index === currentIndex ? 0 : -1}
@@ -145,7 +141,6 @@ export default function ProjectsSection() {
           </motion.div>
         </div>
 
-        {/* Navigation Buttons */}
         <button
           onClick={goToPrevious}
           className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
@@ -162,7 +157,6 @@ export default function ProjectsSection() {
           <ChevronRight size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
         </button>
 
-        {/* Dots Indicator */}
         <div className="flex justify-center mt-6 space-x-2">
           {projects.map((project, index) => (
             <button

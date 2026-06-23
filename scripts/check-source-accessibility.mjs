@@ -217,6 +217,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project section avoids narration-only JSX comments",
+    pattern: /^(?![\s\S]*\{\/\*\s*(Carousel Container|Background|Content Overlay|Icons|Navigation Buttons|Dots Indicator)\s*\*\/\})[\s\S]*$/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel pauses auto-rotation while it contains focus",
     pattern: /hasCarouselFocus[\s\S]*shouldReduceMotion \|\| hasCarouselFocus[\s\S]*onFocusCapture=\{\(\) => setHasCarouselFocus\(true\)\}/,
     source: projectsSection,
