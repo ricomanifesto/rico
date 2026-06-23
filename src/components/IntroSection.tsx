@@ -3,13 +3,12 @@ import NetworkAnimation from "./NetworkAnimation";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-import { heroContent } from "../content/hero";
+import { heroBehavior, heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
-  const typingSpeed = 150; // milliseconds per character
 
   useEffect(() => {
     if (shouldReduceMotion) {
@@ -25,7 +24,7 @@ export default function IntroSection() {
       } else {
         clearInterval(typingInterval);
       }
-    }, typingSpeed);
+    }, heroBehavior.typewriterIntervalMs);
     
     return () => clearInterval(typingInterval);
   }, [shouldReduceMotion]);

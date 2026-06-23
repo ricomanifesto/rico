@@ -82,13 +82,28 @@ const checks = [
     source: hero,
   },
   {
+    label: "hero behavior is typed as readonly metadata",
+    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*\}/,
+    source: hero,
+  },
+  {
     label: "hero content preserves current public copy",
     pattern: /export const heroContent:\s*HeroContent\s*=\s*\{[\s\S]*headline:\s*"Hi, I'm Rico"[\s\S]*subtitle:\s*"I build things when inspiration strikes\."[\s\S]*body:\s*"I'm a Staff Threat Hunter from Chicago, Illinois\. I'm passionate about sharpening my skills in high-stake environments\. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable\."[\s\S]*ctaLabel:\s*"Say hi!"[\s\S]*\}/,
     source: hero,
   },
   {
+    label: "hero behavior preserves current typewriter timing",
+    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*typewriterIntervalMs:\s*150[\s\S]*\}/,
+    source: hero,
+  },
+  {
     label: "intro section renders hero copy from metadata",
-    pattern: /import\s*\{\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useState\(shouldReduceMotion \? heroContent\.headline : ""\)[\s\S]*setDisplayText\(heroContent\.headline\)[\s\S]*heroContent\.headline\.slice\(0, currentIndex\)[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
+    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useState\(shouldReduceMotion \? heroContent\.headline : ""\)[\s\S]*setDisplayText\(heroContent\.headline\)[\s\S]*heroContent\.headline\.slice\(0, currentIndex\)[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
+    source: introSection,
+  },
+  {
+    label: "intro section uses hero behavior metadata for typewriter timing",
+    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);/,
     source: introSection,
   },
   {
