@@ -30,13 +30,15 @@ export const siteBrand: SiteBrand = {
   href: "#intro",
 };
 
+export const contactLink: SocialLink = {
+  label: "Email",
+  href: "mailto:michaelrico124@gmail.com",
+  kind: "email",
+  external: false,
+};
+
 export const socialLinks: readonly SocialLink[] = [
-  {
-    label: "Email",
-    href: "mailto:michaelrico124@gmail.com",
-    kind: "email",
-    external: false,
-  },
+  contactLink,
   {
     label: "GitHub",
     href: "https://github.com/ricomanifesto",
