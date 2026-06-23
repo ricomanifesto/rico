@@ -118,6 +118,24 @@ if (fs.existsSync(headerPath)) {
   if (!/aria-label="Mobile primary"[\s\S]*<a\b[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b/.test(headerSource)) {
     failures.push("Header mobile navigation links use mobile-friendly touch targets");
   }
+
+  const socialNavSource = findNamedNavBlock(headerSource, "Social links");
+
+  if (!socialNavSource) {
+    failures.push("Header exposes social links as named navigation");
+  }
+
+  if (socialNavSource && !/socialLinks\.map\(\(link\)\s*=>/.test(socialNavSource)) {
+    failures.push("Header social navigation renders from shared typed social link data");
+  }
+
+  if (socialNavSource && !/<ul\b[^>]*role="list"/.test(socialNavSource)) {
+    failures.push("Header social navigation uses an explicit list role");
+  }
+
+  if (socialNavSource && !/socialLinks\.map\(\(link\)\s*=>\s*\(\s*<li\b[^>]*role="listitem"/.test(socialNavSource)) {
+    failures.push("Header social navigation wraps each shared social link in a list item");
+  }
 }
 
 for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
@@ -167,6 +185,13 @@ function findSectionClassName(source, sectionId) {
   );
   const match = source.match(sectionPattern);
   return match?.[1] ?? null;
+}
+
+function findNamedNavBlock(source, label) {
+  const navPattern = new RegExp(
+    `<nav\\b(?=[^>]*\\baria-label=["']${escapeRegExp(label)}["'])[^>]*>[\\s\\S]*?<\\/nav>`,
+  );
+  return source.match(navPattern)?.[0] ?? null;
 }
 
 if (failures.length > 0) {
