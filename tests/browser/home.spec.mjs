@@ -216,6 +216,61 @@ test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
   expect(box.height).toBeGreaterThanOrEqual(44);
 });
 
+test("keeps mobile hero content visible before the next section", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const heading = page.getByRole("heading", { name: "Hi, I'm Rico" });
+  const subtitle = page.getByText("I build things when inspiration strikes.");
+  const body = page.getByText("I'm a Staff Threat Hunter from Chicago, Illinois.");
+  const contactLink = page.getByRole("link", { name: "Say hi!" });
+
+  await expect(heading).toBeVisible();
+  await expect(subtitle).toBeVisible();
+  await expect(body).toBeVisible();
+  await expect(contactLink).toBeVisible();
+  await expect(body).toHaveCSS("opacity", "1");
+
+  const layout = await page.evaluate(() => {
+    const heading = document.querySelector("#intro h1");
+    const paragraphs = Array.from(document.querySelectorAll("#intro p"));
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
+    const aboutSection = document.getElementById("about");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          top: rect.top,
+          bottom: rect.bottom,
+        }
+        : null;
+    };
+
+    return {
+      viewportHeight: window.innerHeight,
+      heading: toBox(heading),
+      subtitle: toBox(paragraphs[0]),
+      body: toBox(paragraphs[1]),
+      contactLink: toBox(contactLink),
+      aboutSection: toBox(aboutSection),
+    };
+  });
+
+  expect(layout.heading).not.toBeNull();
+  expect(layout.subtitle).not.toBeNull();
+  expect(layout.body).not.toBeNull();
+  expect(layout.contactLink).not.toBeNull();
+  expect(layout.aboutSection).not.toBeNull();
+  expect(layout.heading.top).toBeGreaterThanOrEqual(0);
+  expect(layout.heading.bottom).toBeLessThan(layout.subtitle.top);
+  expect(layout.subtitle.bottom).toBeLessThan(layout.body.top);
+  expect(layout.body.bottom).toBeLessThan(layout.contactLink.top);
+  expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.viewportHeight);
+  expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.aboutSection.top);
+});
+
 test("exposes about technologies as a semantic list", async ({ page }) => {
   await page.goto("/");
 
