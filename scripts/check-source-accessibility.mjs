@@ -148,7 +148,7 @@ const checks = [
   },
   {
     label: "intro typewriter renders full text for reduced motion",
-    pattern: /shouldReduceMotion\)\s*\{\s*setDisplayText\(fullText\);\s*return;/,
+    pattern: /shouldReduceMotion\)\s*\{\s*setDisplayText\(heroContent\.headline\);\s*return;/,
     source: introSection,
   },
   {

@@ -3,24 +3,24 @@ import NetworkAnimation from "./NetworkAnimation";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
 export default function IntroSection() {
-  const fullText = "Hi, I'm Rico";
   const shouldReduceMotion = usePrefersReducedMotion();
-  const [displayText, setDisplayText] = useState(shouldReduceMotion ? fullText : "");
+  const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
   const typingSpeed = 150; // milliseconds per character
 
   useEffect(() => {
     if (shouldReduceMotion) {
-      setDisplayText(fullText);
+      setDisplayText(heroContent.headline);
       return;
     }
 
     let currentIndex = 0;
     const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setDisplayText(fullText.slice(0, currentIndex));
+      if (currentIndex <= heroContent.headline.length) {
+        setDisplayText(heroContent.headline.slice(0, currentIndex));
         currentIndex++;
       } else {
         clearInterval(typingInterval);
@@ -55,7 +55,7 @@ export default function IntroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          I build things when inspiration strikes.
+          {heroContent.subtitle}
         </motion.p>
 
         
@@ -65,7 +65,7 @@ export default function IntroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
         >
-          I'm a Staff Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.
+          {heroContent.body}
         </motion.p>
 
         <motion.div
@@ -79,7 +79,7 @@ export default function IntroSection() {
             className="inline-flex items-center px-6 py-3 border-2 border-[#007bff80] rounded-xl bg-transparent text-[#007bff] transition-all duration-300 hover:scale-105 hover:border-[#007bff] hover:bg-[#007bff1a] hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           >
             <Mail className="mr-3 h-5 w-5" aria-hidden="true" focusable="false" />
-            Say hi!
+            {heroContent.ctaLabel}
           </a>
         </motion.div>
         
