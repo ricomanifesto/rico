@@ -28,7 +28,7 @@ export interface HeroBehavior {
 export const heroContent: HeroContent = {
   headline: "Hi, I'm Rico",
   subtitle: "I build things when inspiration strikes.",
-  body: "I'm a Staff Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.",
+  body: "I'm a Staff Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stakes environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.",
   ctaLabel: "Say hi!",
 };
 
