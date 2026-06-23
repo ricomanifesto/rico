@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 
 export default function AboutMe() {
   const technologies = [
@@ -55,16 +56,11 @@ export default function AboutMe() {
                   transition={{ delay: 0.6 + (index % 3) * 0.1, duration: 0.6 }}
                   viewport={{ once: true }}
                 >
-                  <svg
+                  <ChevronRight
                     className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
                     aria-hidden="true"
                     focusable="false"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                  />
                   <span className="text-lg text-gray-200">{tech}</span>
                 </motion.li>
               ))}
