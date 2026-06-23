@@ -374,8 +374,12 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
-  await expect(page.locator('[aria-label="Project slide 2 of 4"]')).toHaveAttribute("aria-hidden", "true");
+  await expect(
+    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+  ).toHaveAttribute("aria-hidden", "false");
+  await expect(
+    page.locator('[aria-label="Cybersecurity News Aggregator, project slide 2 of 4"]'),
+  ).toHaveAttribute("aria-hidden", "true");
 
   await page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }).focus();
   await page.keyboard.press("Tab");
@@ -384,8 +388,12 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
   await expect(page.getByRole("button", { name: "Previous project" })).toBeFocused();
 
   await page.getByRole("button", { name: "Next project" }).click();
-  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "true");
-  await expect(page.locator('[aria-label="Project slide 2 of 4"]')).toHaveAttribute("aria-hidden", "false");
+  await expect(
+    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+  ).toHaveAttribute("aria-hidden", "true");
+  await expect(
+    page.locator('[aria-label="Cybersecurity News Aggregator, project slide 2 of 4"]'),
+  ).toHaveAttribute("aria-hidden", "false");
   await expect(
     page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
   ).toHaveAttribute("tabindex", "-1");
@@ -414,6 +422,24 @@ test("exposes the project carousel as a named region", async ({ page }) => {
   await expect(carousel.getByRole("status", { name: "Current project" })).toBeAttached();
   await expect(carousel.getByRole("button", { name: "Previous project" })).toBeVisible();
   await expect(carousel.getByRole("button", { name: "Next project" })).toBeVisible();
+});
+
+test("names project carousel slides by project title", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  await expect(
+    page.getByRole("group", {
+      name: "AI-Powered Threat Intelligence Platform, project slide 1 of 4",
+    }),
+  ).toHaveAttribute("aria-hidden", "false");
+  await expect(
+    page.getByRole("group", {
+      name: "Cybersecurity News Aggregator, project slide 2 of 4",
+      includeHidden: true,
+    }),
+  ).toHaveAttribute("aria-hidden", "true");
 });
 
 test("treats project carousel background images as decorative", async ({ page }) => {
@@ -514,7 +540,9 @@ test("pauses project auto-rotation while carousel has keyboard focus", async ({ 
   await page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }).focus();
   await page.waitForTimeout(10500);
 
-  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
+  await expect(
+    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+  ).toHaveAttribute("aria-hidden", "false");
   await expect(page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" })).toBeFocused();
 });
 
@@ -522,8 +550,10 @@ test("pauses project auto-rotation while carousel is hovered", async ({ page }) 
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  await page.locator('[aria-label="Project slide 1 of 4"]').hover();
+  await page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]').hover();
   await page.waitForTimeout(10500);
 
-  await expect(page.locator('[aria-label="Project slide 1 of 4"]')).toHaveAttribute("aria-hidden", "false");
+  await expect(
+    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+  ).toHaveAttribute("aria-hidden", "false");
 });
