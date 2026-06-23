@@ -32,6 +32,18 @@ if (!fs.existsSync(navigationPath)) {
   }
 
   if (
+    !/export interface SiteBrand \{[^}]*readonly label:\s*string;[^}]*readonly href:\s*string;[^}]*\}/.test(navigationSource)
+  ) {
+    failures.push("Header brand metadata exposes readonly fields");
+  }
+
+  if (
+    !/export const siteBrand:\s*SiteBrand\s*=\s*\{[\s\S]*label:\s*["']rico["'][\s\S]*href:\s*["']#intro["'][\s\S]*\}/.test(navigationSource)
+  ) {
+    failures.push("Header brand metadata keeps the intro link target");
+  }
+
+  if (
     !/export interface SocialLink \{[^}]*readonly label:\s*string;[^}]*readonly href:\s*string;[^}]*readonly kind:\s*SocialLinkKind;[^}]*readonly external:\s*boolean;[^}]*\}/.test(navigationSource)
   ) {
     failures.push("Social links expose readonly fields");
@@ -79,8 +91,12 @@ if (!fs.existsSync(navigationPath)) {
 if (fs.existsSync(headerPath)) {
   const headerSource = fs.readFileSync(headerPath, "utf8");
 
-  if (!/<a[\s\S]*href="#intro"[\s\S]*>\s*rico\s*<\/a>/.test(headerSource)) {
-    failures.push("Header brand text links back to the intro section");
+  if (!/import\s+\{\s*headerNavItems,\s*siteBrand,\s*socialLinks\s*\}\s+from\s+["']@\/content\/navigation["'];/.test(headerSource)) {
+    failures.push("Header imports the typed brand metadata");
+  }
+
+  if (!/<a[\s\S]*href=\{siteBrand\.href\}[\s\S]*>\s*\{siteBrand\.label\}\s*<\/a>/.test(headerSource)) {
+    failures.push("Header brand text links back to the intro section from metadata");
   }
 
   if (!headerSource.includes(headerBrandHoverAccentClass)) {

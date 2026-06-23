@@ -318,7 +318,7 @@ const checks = [
   },
   {
     label: "header brand link has a visible keyboard focus style",
-    pattern: /href="#intro"[\s\S]*className="[^"]*focus-visible:outline[^"]*"[\s\S]*>\s*rico\s*<\/a>/,
+    pattern: /href=\{siteBrand\.href\}[\s\S]*className="[^"]*focus-visible:outline[^"]*"[\s\S]*>\s*\{siteBrand\.label\}\s*<\/a>/,
     source: headerSource,
   },
   {
