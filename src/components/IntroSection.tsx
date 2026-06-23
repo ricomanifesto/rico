@@ -31,13 +31,10 @@ export default function IntroSection() {
   
   return (
     <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-36 px-4 overflow-hidden bg-slate-900 text-white md:pt-16">
-      {/* Network Grid Animation Background */}
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
       
-      {/* Animated Nodes & Connections */}
       <NetworkAnimation />
       
-      {/* Hero Content with Animation */}
       <motion.div 
         className="relative z-10 max-w-3xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
@@ -70,7 +67,6 @@ export default function IntroSection() {
           I'm a Staff Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stake environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.
         </motion.p>
 
-        {/* Say Hi Button */}
         <motion.div
           className="flex justify-center"
           initial={{ opacity: 0, y: 20 }}
