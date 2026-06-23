@@ -176,7 +176,7 @@ const checks = [
   },
   {
     label: "hero content preserves current public copy",
-    pattern: /export const heroContent:\s*HeroContent\s*=\s*\{[\s\S]*headline:\s*"Hi, I'm Rico"[\s\S]*subtitle:\s*"I build things when inspiration strikes\."[\s\S]*body:\s*"I'm a Staff Threat Hunter from Chicago, Illinois\. I'm passionate about sharpening my skills in high-stake environments\. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable\."[\s\S]*ctaLabel:\s*"Say hi!"[\s\S]*\}/,
+    pattern: /export const heroContent:\s*HeroContent\s*=\s*\{[\s\S]*headline:\s*"Hi, I'm Rico"[\s\S]*subtitle:\s*"I build things when inspiration strikes\."[\s\S]*body:\s*"I'm a Staff Threat Hunter from Chicago, Illinois\. I'm passionate about sharpening my skills in high-stakes environments\. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable\."[\s\S]*ctaLabel:\s*"Say hi!"[\s\S]*\}/,
     source: hero,
   },
   {
