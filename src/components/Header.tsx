@@ -4,6 +4,7 @@ import SocialLink from "@/components/SocialLink";
 import { headerNavItems, siteBrand, socialLinks } from "@/content/navigation";
 
 const activeSectionOffsetPx = 160;
+const scrollListenerOptions: AddEventListenerOptions = { passive: true };
 
 function getSectionElement(hash: string) {
   if (!hash.startsWith("#")) {
@@ -51,10 +52,10 @@ export default function Header() {
       }
     });
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, scrollListenerOptions);
     return () => {
       window.cancelAnimationFrame(alignInitialHash);
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll, scrollListenerOptions);
     };
   }, []);
 

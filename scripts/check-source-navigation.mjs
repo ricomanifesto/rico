@@ -157,6 +157,14 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header mobile navigation links use mobile-friendly touch targets");
   }
 
+  if (
+    !/const\s+scrollListenerOptions(?:\s*:\s*AddEventListenerOptions)?\s*=\s*\{\s*passive:\s*true\s*\}/.test(headerSource) ||
+    !/window\.addEventListener\("scroll",\s*handleScroll,\s*scrollListenerOptions\);/.test(headerSource) ||
+    !/window\.removeEventListener\("scroll",\s*handleScroll,\s*scrollListenerOptions\);/.test(headerSource)
+  ) {
+    failures.push("Header uses a passive scroll listener");
+  }
+
   const socialNavSource = findNamedNavBlock(headerSource, "Social links");
 
   if (!socialNavSource) {
