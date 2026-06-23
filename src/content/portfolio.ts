@@ -3,12 +3,19 @@ export interface ProjectImage {
   readonly decorative: true;
 }
 
+export interface ProjectActionLink {
+  readonly href: string;
+  readonly external: true;
+}
+
 export interface ProjectSummary {
   readonly title: string;
   readonly description: string;
   readonly techStack: readonly string[];
-  readonly repoUrl: string;
-  readonly demoUrl: string;
+  readonly links: {
+    readonly repository: ProjectActionLink;
+    readonly demo: ProjectActionLink | null;
+  };
   readonly bgGradient: string;
   readonly image: ProjectImage | null;
 }
@@ -26,8 +33,16 @@ export const projects: readonly ProjectSummary[] = [
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
     techStack: ["PYTHON", "FASTAPI", "NEXT.JS"],
-    repoUrl: "https://github.com/ricomanifesto/SentrySearch",
-    demoUrl: "https://sentry-search.vercel.app/",
+    links: {
+      repository: {
+        href: "https://github.com/ricomanifesto/SentrySearch",
+        external: true,
+      },
+      demo: {
+        href: "https://sentry-search.vercel.app/",
+        external: true,
+      },
+    },
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
     image: {
       src: "/images/SentrySearch.jpg",
@@ -38,8 +53,16 @@ export const projects: readonly ProjectSummary[] = [
     title: "Cybersecurity News Aggregator",
     description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions.",
     techStack: ["NODE.JS"],
-    repoUrl: "https://github.com/ricomanifesto/SentryDigest",
-    demoUrl: "https://ricomanifesto.github.io/SentryDigest/",
+    links: {
+      repository: {
+        href: "https://github.com/ricomanifesto/SentryDigest",
+        external: true,
+      },
+      demo: {
+        href: "https://ricomanifesto.github.io/SentryDigest/",
+        external: true,
+      },
+    },
     bgGradient: "from-green-600 via-teal-600 to-blue-600",
     image: {
       src: "/images/SentryDigest.jpg",
@@ -50,8 +73,16 @@ export const projects: readonly ProjectSummary[] = [
     title: "Cybersecurity Exploit Reporter",
     description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
     techStack: ["PYTHON", "LANGGRAPH", "LANGCHAIN", "FASTMCP"],
-    repoUrl: "https://github.com/ricomanifesto/SentryInsight",
-    demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
+    links: {
+      repository: {
+        href: "https://github.com/ricomanifesto/SentryInsight",
+        external: true,
+      },
+      demo: {
+        href: "https://ricomanifesto.github.io/SentryInsight/",
+        external: true,
+      },
+    },
     bgGradient: "from-red-600 via-pink-600 to-purple-600",
     image: {
       src: "/images/SentryInsight.jpg",
@@ -62,8 +93,16 @@ export const projects: readonly ProjectSummary[] = [
     title: "Cybersecurity GRC Reporter",
     description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
     techStack: ["GO", "PYTHON", "LANGGRAPH", "FASTAPI"],
-    repoUrl: "https://github.com/ricomanifesto/GRCInsight",
-    demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
+    links: {
+      repository: {
+        href: "https://github.com/ricomanifesto/GRCInsight",
+        external: true,
+      },
+      demo: {
+        href: "https://ricomanifesto.github.io/GRCInsight/",
+        external: true,
+      },
+    },
     bgGradient: "from-orange-600 via-red-600 to-pink-600",
     image: {
       src: "/images/GRCInsight.jpg",

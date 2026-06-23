@@ -72,6 +72,31 @@ const checks = [
     pattern: /project\.techStack\.join\(", "\)/,
     source: projectsSection,
   },
+  {
+    label: "project action links are typed as readonly metadata",
+    pattern: /export interface ProjectActionLink \{[\s\S]*readonly href:\s*string;[\s\S]*readonly external:\s*true;[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "project data groups action links by purpose",
+    pattern: /readonly links:\s*\{[\s\S]*readonly repository:\s*ProjectActionLink;[\s\S]*readonly demo:\s*ProjectActionLink \| null;[\s\S]*\};/,
+    source: portfolio,
+  },
+  {
+    label: "project data avoids loose action URL fields",
+    pattern: /^(?![\s\S]*(readonly repoUrl:\s*string;|readonly demoUrl:\s*string;|\n\s*repoUrl:\s*"|\n\s*demoUrl:\s*"))[\s\S]*links:\s*\{/,
+    source: portfolio,
+  },
+  {
+    label: "project cards render action links from metadata",
+    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*href=\{project\.links\.demo\.href\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project cards apply external action link metadata",
+    pattern: /const repositoryTarget = project\.links\.repository\.external \? "_blank" : undefined;[\s\S]*const repositoryRel = project\.links\.repository\.external \? "noopener noreferrer" : undefined;[\s\S]*const demoTarget = project\.links\.demo\?\.external \? "_blank" : undefined;[\s\S]*const demoRel = project\.links\.demo\?\.external \? "noopener noreferrer" : undefined;[\s\S]*target=\{repositoryTarget\}[\s\S]*rel=\{repositoryRel\}[\s\S]*target=\{demoTarget\}[\s\S]*rel=\{demoRel\}/,
+    source: projectsSection,
+  },
 ];
 
 const failures = checks
