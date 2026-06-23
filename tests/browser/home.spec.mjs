@@ -588,6 +588,28 @@ test("updates the current project dot after manual navigation", async ({ page })
   await expect(secondDot).toHaveAttribute("aria-current", "true");
 });
 
+test("updates the current project dot after keyboard activation", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const firstDot = page.getByRole("button", { name: "Show AI-Powered Threat Intelligence Platform" });
+  const secondDot = page.getByRole("button", { name: "Show Cybersecurity News Aggregator" });
+  const thirdDot = page.getByRole("button", { name: "Show Cybersecurity Exploit Reporter" });
+
+  await secondDot.focus();
+  await page.keyboard.press("Enter");
+  await expect(firstDot).not.toHaveAttribute("aria-current", "true");
+  await expect(secondDot).toHaveAttribute("aria-current", "true");
+  await expect(secondDot).toBeFocused();
+
+  await thirdDot.focus();
+  await page.keyboard.press("Space");
+  await expect(secondDot).not.toHaveAttribute("aria-current", "true");
+  await expect(thirdDot).toHaveAttribute("aria-current", "true");
+  await expect(thirdDot).toBeFocused();
+});
+
 test("keeps mobile project carousel arrows inside the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await installReducedMotionController(page, true);
