@@ -33,6 +33,7 @@ function requireFile(path, label) {
 
 requireFile(indexPath, "built index");
 requireFile(join(dist, "CNAME"), "GitHub Pages CNAME");
+requireFile(join(dist, ".nojekyll"), "GitHub Pages nojekyll marker");
 requireFile(join(dist, "favicon.svg"), "favicon");
 requireFile(join(dist, "images", "profile.jpg"), "profile image");
 
