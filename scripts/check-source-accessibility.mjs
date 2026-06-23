@@ -327,6 +327,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel slide groups include project titles in accessible names",
+    pattern: /aria-label=\{`\$\{project\.title\}, project slide \$\{index \+ 1\} of \$\{projects\.length\}`\}/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel exposes active slide status politely",
     pattern: /shouldAnnounceCarouselStatus[\s\S]*role="status"[\s\S]*aria-live=\{shouldAnnounceCarouselStatus \? "polite" : "off"\}[\s\S]*aria-atomic="true"[\s\S]*projects\[currentIndex\]\.title/,
     source: projectsSection,

@@ -83,7 +83,7 @@ export default function ProjectsSection() {
                 role="group"
                 aria-roledescription="slide"
                 aria-hidden={index !== currentIndex}
-                aria-label={`Project slide ${index + 1} of ${projects.length}`}
+                aria-label={`${project.title}, project slide ${index + 1} of ${projects.length}`}
                 className="w-full flex-shrink-0"
               >
                 <motion.div 
