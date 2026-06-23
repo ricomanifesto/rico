@@ -162,6 +162,34 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
   ) {
     failures.push(`${path.relative(root, componentPath)} uses mobile-friendly touch targets`);
   }
+
+  if (
+    componentPath === socialLinkPath &&
+    !/import\s+\{\s*Github,\s*Linkedin,\s*Mail/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} uses shared icon components for supported social links`);
+  }
+
+  if (
+    componentPath === socialLinkPath &&
+    !/kind === "email"[\s\S]*<Mail\b/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} renders the email social link with the shared mail icon`);
+  }
+
+  if (
+    componentPath === socialLinkPath &&
+    !/kind === "github"[\s\S]*<Github\b/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} renders the GitHub social link with the shared GitHub icon`);
+  }
+
+  if (
+    componentPath === socialLinkPath &&
+    !/kind === "linkedin"[\s\S]*<Linkedin\b/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} renders the LinkedIn social link with the shared LinkedIn icon`);
+  }
 }
 
 function walkFiles(directory) {
