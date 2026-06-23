@@ -50,7 +50,6 @@ export default function Experience() {
         </motion.h2>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          {/* Company Selection Timeline */}
           <div className="lg:w-1/4 flex-shrink-0">
             <div
               role="tablist"
@@ -81,12 +80,10 @@ export default function Experience() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  {/* Selection Bar */}
                   <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
                     selectedCompany === index ? 'bg-[#007bff]' : 'bg-transparent'
                   }`}></div>
                   
-                  {/* Company Name */}
                   <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
                     {exp.company}
                   </h3>
@@ -95,7 +92,6 @@ export default function Experience() {
             </div>
           </div>
 
-          {/* Selected Experience Details */}
           <div className="lg:w-3/4 flex-1">
             {experiences.map((exp, index) => (
               <motion.div

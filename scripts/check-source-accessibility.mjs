@@ -242,6 +242,11 @@ const checks = [
     source: experienceSource,
   },
   {
+    label: "experience section avoids narration-only JSX comments",
+    pattern: /^(?![\s\S]*\{\/\*\s*(Company Selection Timeline|Selection Bar|Company Name|Selected Experience Details)\s*\*\/\})[\s\S]*$/,
+    source: experienceSource,
+  },
+  {
     label: "experience tablist declares vertical orientation",
     pattern: /aria-orientation="vertical"/,
     source: experienceSource,
