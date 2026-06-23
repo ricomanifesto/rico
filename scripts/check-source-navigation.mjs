@@ -25,7 +25,9 @@ if (!fs.existsSync(navigationPath)) {
     failures.push("src/content/navigation.ts includes internal section hrefs");
   }
 
-  if (!/readonly label:\s*string;[\s\S]*readonly href:\s*string;/.test(navigationSource)) {
+  if (
+    !/export interface HeaderNavItem \{[\s\S]*readonly label:\s*string;[\s\S]*readonly href:\s*string;[\s\S]*\}/.test(navigationSource)
+  ) {
     failures.push("Header navigation items expose readonly fields");
   }
 
