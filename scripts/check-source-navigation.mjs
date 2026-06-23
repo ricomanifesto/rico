@@ -26,13 +26,13 @@ if (!fs.existsSync(navigationPath)) {
   }
 
   if (
-    !/export interface HeaderNavItem \{[\s\S]*readonly label:\s*string;[\s\S]*readonly href:\s*string;[\s\S]*\}/.test(navigationSource)
+    !/export interface HeaderNavItem \{[^}]*readonly label:\s*string;[^}]*readonly href:\s*string;[^}]*\}/.test(navigationSource)
   ) {
     failures.push("Header navigation items expose readonly fields");
   }
 
   if (
-    !/export interface SocialLink \{[\s\S]*readonly label:\s*string;[\s\S]*readonly href:\s*string;[\s\S]*readonly kind:\s*SocialLinkKind;[\s\S]*readonly external:\s*boolean;[\s\S]*\}/.test(navigationSource)
+    !/export interface SocialLink \{[^}]*readonly label:\s*string;[^}]*readonly href:\s*string;[^}]*readonly kind:\s*SocialLinkKind;[^}]*readonly external:\s*boolean;[^}]*\}/.test(navigationSource)
   ) {
     failures.push("Social links expose readonly fields");
   }
