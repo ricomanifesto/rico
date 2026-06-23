@@ -79,7 +79,7 @@ export default function ProjectsSection() {
           >
             {projects.map((project, index) => (
               <div
-                key={index}
+                key={project.title}
                 role="group"
                 aria-roledescription="slide"
                 aria-hidden={index !== currentIndex}
@@ -166,7 +166,7 @@ export default function ProjectsSection() {
         <div className="flex justify-center mt-6 space-x-2">
           {projects.map((project, index) => (
             <button
-              key={index}
+              key={project.title}
               onClick={() => setCurrentIndex(index)}
               className="group flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
               aria-label={`Show ${project.title}`}
