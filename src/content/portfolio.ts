@@ -1,22 +1,22 @@
 export interface ProjectSummary {
-  title: string;
-  description: string;
-  tech: string;
-  repoUrl: string;
-  demoUrl: string;
-  bgGradient: string;
-  bgImage: string;
+  readonly title: string;
+  readonly description: string;
+  readonly tech: string;
+  readonly repoUrl: string;
+  readonly demoUrl: string;
+  readonly bgGradient: string;
+  readonly bgImage: string;
 }
 
 export interface ExperienceItem {
-  company: string;
-  displayCompany: string;
-  title: string;
-  period: string;
-  highlights: string[];
+  readonly company: string;
+  readonly displayCompany: string;
+  readonly title: string;
+  readonly period: string;
+  readonly highlights: readonly string[];
 }
 
-export const projects: ProjectSummary[] = [
+export const projects: readonly ProjectSummary[] = [
   {
     title: "AI-Powered Threat Intelligence Platform",
     description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
@@ -55,7 +55,7 @@ export const projects: ProjectSummary[] = [
   }
 ];
 
-export const experiences: ExperienceItem[] = [
+export const experiences: readonly ExperienceItem[] = [
   {
     company: "SENTINELONE",
     displayCompany: "SentinelOne",
