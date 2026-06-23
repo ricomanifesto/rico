@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { KeyboardEvent, useRef, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { experiences } from "../content/portfolio";
 
 export default function Experience() {
@@ -129,16 +130,11 @@ export default function Experience() {
                         delay: highlightIndex * 0.1 + 0.2
                       }}
                     >
-                      <svg
+                      <ChevronRight
                         className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0 text-[#007bff]"
                         aria-hidden="true"
                         focusable="false"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
+                      />
                       <p className="text-gray-200 leading-relaxed">
                         {highlight}
                       </p>

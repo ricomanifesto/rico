@@ -292,8 +292,8 @@ const checks = [
     source: experienceSource,
   },
   {
-    label: "experience highlight chevrons use class-based accent styles",
-    pattern: /<svg\s+className="[^"]*text-\[#007bff\][^"]*"[\s\S]*?<p className="text-gray-200 leading-relaxed">\s*\{highlight\}\s*<\/p>/,
+    label: "experience highlight chevrons use the shared icon component",
+    pattern: /import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="[^"]*text-\[#007bff\][^"]*"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<p className="text-gray-200 leading-relaxed">\s*\{highlight\}\s*<\/p>/,
     source: experienceSource,
   },
   {
