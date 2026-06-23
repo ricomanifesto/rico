@@ -39,7 +39,7 @@ export default function IntroSection() {
         className="relative z-10 max-w-3xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: heroBehavior.containerMotion.duration, ease: heroBehavior.containerMotion.ease }}
       >
         <h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
           <span className="inline-flex items-center text-[#007bff]">
@@ -52,7 +52,7 @@ export default function IntroSection() {
           className="text-xl md:text-2xl mb-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={{ delay: heroBehavior.subtitleMotion.delay, duration: heroBehavior.subtitleMotion.duration }}
         >
           {heroContent.subtitle}
         </motion.p>
@@ -62,7 +62,7 @@ export default function IntroSection() {
           className="max-w-2xl text-lg md:text-xl mb-12 mx-auto text-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
+          transition={{ delay: heroBehavior.bodyMotion.delay, duration: heroBehavior.bodyMotion.duration }}
         >
           {heroContent.body}
         </motion.p>
@@ -71,7 +71,7 @@ export default function IntroSection() {
           className="flex justify-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
+          transition={{ delay: heroBehavior.ctaMotion.delay, duration: heroBehavior.ctaMotion.duration }}
         >
           <a 
             href={contactLink.href}

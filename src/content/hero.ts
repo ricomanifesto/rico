@@ -7,6 +7,22 @@ export interface HeroContent {
 
 export interface HeroBehavior {
   readonly typewriterIntervalMs: number;
+  readonly containerMotion: {
+    readonly duration: number;
+    readonly ease: "easeOut";
+  };
+  readonly subtitleMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
+  readonly bodyMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
+  readonly ctaMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
 }
 
 export const heroContent: HeroContent = {
@@ -18,4 +34,20 @@ export const heroContent: HeroContent = {
 
 export const heroBehavior: HeroBehavior = {
   typewriterIntervalMs: 150,
+  containerMotion: {
+    duration: 0.8,
+    ease: "easeOut",
+  },
+  subtitleMotion: {
+    delay: 0.5,
+    duration: 0.8,
+  },
+  bodyMotion: {
+    delay: 0.7,
+    duration: 0.8,
+  },
+  ctaMotion: {
+    delay: 0.9,
+    duration: 0.8,
+  },
 };
