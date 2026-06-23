@@ -177,6 +177,11 @@ const checks = [
     source: introSection,
   },
   {
+    label: "intro CTA uses the shared mail icon component",
+    pattern: /import\s*\{\s*Mail\s*\}\s*from\s*"lucide-react";[\s\S]*href="mailto:michaelrico124@gmail\.com"[\s\S]*<Mail\b[\s\S]*aria-hidden="true"[\s\S]*focusable="false"/,
+    source: introSection,
+  },
+  {
     label: "about technology chevrons use class-based accent styles",
     pattern: /<svg\s+className="[^"]*text-\[#007bff\][^"]*"[\s\S]*?<span className="text-lg text-gray-200">\{tech\}<\/span>/,
     source: aboutMeSource,

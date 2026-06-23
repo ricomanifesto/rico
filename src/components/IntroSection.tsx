@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import NetworkAnimation from "./NetworkAnimation";
 import { motion } from "framer-motion";
+import { Mail } from "lucide-react";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function IntroSection() {
@@ -80,17 +81,7 @@ export default function IntroSection() {
             href="mailto:michaelrico124@gmail.com" 
             className="inline-flex items-center px-6 py-3 border-2 border-[#007bff80] rounded-xl bg-transparent text-[#007bff] transition-all duration-300 hover:scale-105 hover:border-[#007bff] hover:bg-[#007bff1a] hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           >
-            <svg 
-              className="w-5 h-5 mr-3" 
-              aria-hidden="true"
-              focusable="false"
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-            </svg>
+            <Mail className="mr-3 h-5 w-5" aria-hidden="true" focusable="false" />
             Say hi!
           </a>
         </motion.div>
