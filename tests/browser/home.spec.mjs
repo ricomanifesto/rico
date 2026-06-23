@@ -231,6 +231,16 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
   );
 });
 
+test("exposes footer copyright year as machine-readable time", async ({ page }) => {
+  await page.goto("/");
+
+  const currentYear = String(new Date().getFullYear());
+  const footer = page.getByRole("contentinfo");
+  await expect(footer).toContainText(`© ${currentYear} Rico. All rights reserved.`);
+  await expect(footer.locator("time")).toHaveAttribute("dateTime", currentYear);
+  await expect(footer.locator("time")).toHaveText(currentYear);
+});
+
 test("keeps the mobile header inside narrow viewports", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto("/");

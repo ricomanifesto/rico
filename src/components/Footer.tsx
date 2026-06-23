@@ -13,7 +13,7 @@ export default function Footer() {
     >
       <div className="max-w-4xl mx-auto text-center">
         <p className="text-gray-300">
-          © {currentYear} Rico. All rights reserved.
+          © <time dateTime={String(currentYear)}>{currentYear}</time> Rico. All rights reserved.
         </p>
       </div>
     </motion.footer>
