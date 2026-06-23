@@ -28,6 +28,24 @@ export interface ExperienceItem {
   readonly highlights: readonly string[];
 }
 
+export interface ExperienceBehavior {
+  readonly sectionHeadingMotion: {
+    readonly duration: number;
+  };
+  readonly tabMotion: {
+    readonly duration: number;
+    readonly staggerDelay: number;
+  };
+  readonly panelMotion: {
+    readonly duration: number;
+  };
+  readonly highlightMotion: {
+    readonly duration: number;
+    readonly staggerDelay: number;
+    readonly baseDelay: number;
+  };
+}
+
 export const projects: readonly ProjectSummary[] = [
   {
     title: "AI-Powered Threat Intelligence Platform",
@@ -143,3 +161,21 @@ export const experiences: readonly ExperienceItem[] = [
     ]
   }
 ];
+
+export const experienceBehavior: ExperienceBehavior = {
+  sectionHeadingMotion: {
+    duration: 0.6,
+  },
+  tabMotion: {
+    duration: 0.6,
+    staggerDelay: 0.1,
+  },
+  panelMotion: {
+    duration: 0.6,
+  },
+  highlightMotion: {
+    duration: 0.6,
+    staggerDelay: 0.1,
+    baseDelay: 0.2,
+  },
+};

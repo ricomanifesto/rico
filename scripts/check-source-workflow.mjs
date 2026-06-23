@@ -7,12 +7,14 @@ const workflowPath = path.join(root, ".github/workflows/deploy.yml");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const heroPath = path.join(root, "src/content/hero.ts");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
+const experiencePath = path.join(root, "src/components/Experience.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
 const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
 const introSection = fs.readFileSync(introSectionPath, "utf8");
+const experienceSection = fs.readFileSync(experiencePath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 
 const checks = [
@@ -55,6 +57,21 @@ const checks = [
     label: "portfolio experience data exports as a readonly collection",
     pattern: /export const experiences:\s*readonly ExperienceItem\[\]\s*=/,
     source: portfolio,
+  },
+  {
+    label: "experience behavior is typed as readonly metadata",
+    pattern: /export interface ExperienceBehavior \{[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly tabMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*\};[\s\S]*readonly panelMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly highlightMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly baseDelay:\s*number;[\s\S]*\};[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "experience behavior preserves current motion timings",
+    pattern: /export const experienceBehavior:\s*ExperienceBehavior\s*=\s*\{[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*tabMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1[\s\S]*\}[\s\S]*panelMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*highlightMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*baseDelay:\s*0\.2[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "experience section uses behavior metadata for motion timing",
+    pattern: /import\s*\{\s*experienceBehavior,\s*experiences\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: experienceBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*duration:\s*experienceBehavior\.tabMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*experienceBehavior\.tabMotion\.staggerDelay,[\s\S]*transition=\{\{ duration: experienceBehavior\.panelMotion\.duration \}\}[\s\S]*duration: experienceBehavior\.highlightMotion\.duration,[\s\S]*delay:\s*highlightIndex\s*\*\s*experienceBehavior\.highlightMotion\.staggerDelay\s*\+\s*experienceBehavior\.highlightMotion\.baseDelay/,
+    source: experienceSection,
   },
   {
     label: "experience highlights are typed as readonly content",

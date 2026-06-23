@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { KeyboardEvent, useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { experiences } from "../content/portfolio";
+import { experienceBehavior, experiences } from "../content/portfolio";
 
 export default function Experience() {
   const [selectedCompany, setSelectedCompany] = useState(0);
@@ -44,7 +44,7 @@ export default function Experience() {
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: experienceBehavior.sectionHeadingMotion.duration }}
         >
           / experience
         </motion.h2>
@@ -78,7 +78,10 @@ export default function Experience() {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{
+                    duration: experienceBehavior.tabMotion.duration,
+                    delay: index * experienceBehavior.tabMotion.staggerDelay,
+                  }}
                 >
                   <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
                     selectedCompany === index ? 'bg-[#007bff]' : 'bg-transparent'
@@ -104,7 +107,7 @@ export default function Experience() {
                 className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
                 initial={false}
                 animate={selectedCompany === index ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: experienceBehavior.panelMotion.duration }}
               >
                 <h4 className="text-xl md:text-2xl font-semibold mb-2">
                   {exp.title} @ <span className="text-[#007bff]">{exp.displayCompany}</span>
@@ -122,8 +125,10 @@ export default function Experience() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{
-                        duration: 0.6,
-                        delay: highlightIndex * 0.1 + 0.2
+                        duration: experienceBehavior.highlightMotion.duration,
+                        delay:
+                          highlightIndex * experienceBehavior.highlightMotion.staggerDelay +
+                          experienceBehavior.highlightMotion.baseDelay,
                       }}
                     >
                       <ChevronRight
