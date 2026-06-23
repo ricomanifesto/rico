@@ -5,10 +5,14 @@ const root = process.cwd();
 const packagePath = path.join(root, "package.json");
 const workflowPath = path.join(root, ".github/workflows/deploy.yml");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
+const heroPath = path.join(root, "src/content/hero.ts");
+const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
+const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
+const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 
 const checks = [
@@ -71,6 +75,21 @@ const checks = [
     label: "project cards render technology lists with stable separator text",
     pattern: /project\.techStack\.join\(", "\)/,
     source: projectsSection,
+  },
+  {
+    label: "hero copy is typed as readonly content",
+    pattern: /export interface HeroContent \{[\s\S]*readonly headline:\s*string;[\s\S]*readonly subtitle:\s*string;[\s\S]*readonly body:\s*string;[\s\S]*readonly ctaLabel:\s*string;[\s\S]*\}/,
+    source: hero,
+  },
+  {
+    label: "hero content preserves current public copy",
+    pattern: /export const heroContent:\s*HeroContent\s*=\s*\{[\s\S]*headline:\s*"Hi, I'm Rico"[\s\S]*subtitle:\s*"I build things when inspiration strikes\."[\s\S]*body:\s*"I'm a Staff Threat Hunter from Chicago, Illinois\. I'm passionate about sharpening my skills in high-stake environments\. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable\."[\s\S]*ctaLabel:\s*"Say hi!"[\s\S]*\}/,
+    source: hero,
+  },
+  {
+    label: "intro section renders hero copy from metadata",
+    pattern: /import\s*\{\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useState\(shouldReduceMotion \? heroContent\.headline : ""\)[\s\S]*setDisplayText\(heroContent\.headline\)[\s\S]*heroContent\.headline\.slice\(0, currentIndex\)[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
+    source: introSection,
   },
   {
     label: "project action links are typed as readonly metadata",
