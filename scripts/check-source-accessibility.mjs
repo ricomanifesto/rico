@@ -416,6 +416,10 @@ if (projectCardContentUsesInlineAccentStyles(projectsSection)) {
   failures.push("project card content avoids inline accent styles");
 }
 
+if (projectCardsUseDecorativeBlurOverlays(projectsSection)) {
+  failures.push("project cards avoid decorative blurred orb overlays");
+}
+
 if (!fs.existsSync(skipLinkPath)) {
   failures.push("src/components/SkipLink.tsx renders the skip link");
 } else {
@@ -529,6 +533,16 @@ function projectCardContentUsesInlineAccentStyles(source) {
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(contentMatch?.[0] ?? "");
+}
+
+function projectCardsUseDecorativeBlurOverlays(source) {
+  const projectCardMatch = source.match(
+    /<motion\.div\s+className="relative rounded-2xl[\s\S]*?<\/motion\.div>/,
+  );
+
+  return /\brounded-full\b[\s\S]*\bbg-white\/\d+\b[\s\S]*\bblur-(?:md|lg|xl)\b/.test(
+    projectCardMatch?.[0] ?? "",
+  );
 }
 
 function sourceFilePosition(source, index) {
