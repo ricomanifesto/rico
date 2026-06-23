@@ -17,6 +17,14 @@ const checks = [
     label: "images use async decoding",
     pattern: /decoding="async"/,
   },
+  {
+    label: "images declare intrinsic dimensions",
+    pattern: /width=(?:\{[^}]+\}|"[\d]+")/,
+  },
+  {
+    label: "images declare intrinsic heights",
+    pattern: /height=(?:\{[^}]+\}|"[\d]+")/,
+  },
 ];
 
 const failures = [];
