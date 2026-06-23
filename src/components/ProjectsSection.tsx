@@ -75,23 +75,29 @@ export default function ProjectsSection() {
             animate={shouldReduceMotion ? undefined : { x: `${-currentIndex * 100}%` }}
             style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * 100}%)` } : undefined}
           >
-            {projects.map((project, index) => (
-              <div
-                key={project.title}
-                role="group"
-                aria-roledescription="slide"
-                aria-hidden={index !== currentIndex}
-                aria-label={`${project.title}, project slide ${index + 1} of ${projects.length}`}
-                className="w-full flex-shrink-0"
-              >
-                <motion.div 
-                  className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 mx-4 h-96"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
+            {projects.map((project, index) => {
+              const repositoryTarget = project.links.repository.external ? "_blank" : undefined;
+              const repositoryRel = project.links.repository.external ? "noopener noreferrer" : undefined;
+              const demoTarget = project.links.demo?.external ? "_blank" : undefined;
+              const demoRel = project.links.demo?.external ? "noopener noreferrer" : undefined;
+
+              return (
+                <div
+                  key={project.title}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-hidden={index !== currentIndex}
+                  aria-label={`${project.title}, project slide ${index + 1} of ${projects.length}`}
+                  className="w-full flex-shrink-0"
                 >
+                  <motion.div
+                    className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 mx-4 h-96"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
+                  >
                   {project.image?.decorative ? (
                     <div className="absolute inset-0">
                       <img 
@@ -119,13 +125,13 @@ export default function ProjectsSection() {
                       </div>
                       
                       <div className="flex items-center space-x-4">
-                        <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository`}
+                        <a href={project.links.repository.href} target={repositoryTarget} rel={repositoryRel} aria-label={`View ${project.title} repository`}
                            tabIndex={index === currentIndex ? 0 : -1}
                            className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
                           <Github size={24} aria-hidden="true" focusable="false" />
                         </a>
-                        {project.demoUrl && (
-                          <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} demo`}
+                        {project.links.demo && (
+                          <a href={project.links.demo.href} target={demoTarget} rel={demoRel} aria-label={`Open ${project.title} demo`}
                              tabIndex={index === currentIndex ? 0 : -1}
                              className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
                             <ExternalLink size={24} aria-hidden="true" focusable="false" />
@@ -134,9 +140,10 @@ export default function ProjectsSection() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              </div>
-            ))}
+                  </motion.div>
+                </div>
+              );
+            })}
           </motion.div>
         </div>
 

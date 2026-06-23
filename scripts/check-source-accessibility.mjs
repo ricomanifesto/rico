@@ -58,12 +58,12 @@ const checks = [
   },
   {
     label: "project repository links include accessible names",
-    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}/,
+    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}/,
     source: projectsSection,
   },
   {
     label: "project demo links include accessible names",
-    pattern: /aria-label=\{`Open \$\{project\.title\} demo`\}/,
+    pattern: /href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}/,
     source: projectsSection,
   },
   {
@@ -338,17 +338,17 @@ const checks = [
   },
   {
     label: "project action links have visible keyboard focus styles",
-    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
+    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
     source: projectsSection,
   },
   {
     label: "project action links use mobile-friendly touch targets",
-    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"/,
+    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"[\s\S]*href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"/,
     source: projectsSection,
   },
   {
     label: "project action links use class-based hover styles",
-    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*hover:text-\[#66b3ff\][\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*hover:text-\[#66b3ff\]/,
+    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*hover:text-\[#66b3ff\][\s\S]*href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*hover:text-\[#66b3ff\]/,
     source: projectsSection,
   },
   {
@@ -368,7 +368,7 @@ const checks = [
   },
   {
     label: "project carousel lists use stable project keys",
-    pattern: /projects\.map\(\(project, index\) => \(\s*<div[\s\S]*key=\{project\.title\}[\s\S]*projects\.map\(\(project, index\) => \(\s*<button[\s\S]*key=\{project\.title\}/,
+    pattern: /projects\.map\(\(project, index\) => \{[\s\S]*return \(\s*<div[\s\S]*key=\{project\.title\}[\s\S]*projects\.map\(\(project, index\) => \(\s*<button[\s\S]*key=\{project\.title\}/,
     source: projectsSection,
   },
   {
@@ -378,12 +378,12 @@ const checks = [
   },
   {
     label: "project repository links are tabbable only on the active slide",
-    pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
     source: projectsSection,
   },
   {
     label: "project demo links are tabbable only on the active slide",
-    pattern: /aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    pattern: /href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
     source: projectsSection,
   },
   {
