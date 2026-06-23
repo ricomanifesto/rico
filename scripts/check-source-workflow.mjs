@@ -7,6 +7,7 @@ const workflowPath = path.join(root, ".github/workflows/deploy.yml");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const heroPath = path.join(root, "src/content/hero.ts");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
+const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const packageJson = fs.readFileSync(packagePath, "utf8");
@@ -14,6 +15,7 @@ const workflow = fs.readFileSync(workflowPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
 const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
 const introSection = fs.readFileSync(introSectionPath, "utf8");
+const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 
@@ -52,6 +54,36 @@ const checks = [
     label: "portfolio project data exports as a readonly collection",
     pattern: /export const projects:\s*readonly ProjectSummary\[\]\s*=/,
     source: portfolio,
+  },
+  {
+    label: "about content is typed as readonly metadata",
+    pattern: /export interface AboutContent \{[\s\S]*readonly technologies:\s*readonly string\[\];[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "about behavior is typed as readonly metadata",
+    pattern: /export interface AboutBehavior \{[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly introMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologiesMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologyItemMotion:\s*\{[\s\S]*readonly baseDelay:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly interestsMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly imageMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "about content preserves current technologies",
+    pattern: /export const aboutContent:\s*AboutContent\s*=\s*\{[\s\S]*technologies:\s*\[\s*"Python",\s*"Next\.js",\s*"FastAPI",\s*"Go",\s*"scikit-learn",\s*"LangGraph",?\s*\][\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "about behavior preserves current motion timings",
+    pattern: /export const aboutBehavior:\s*AboutBehavior\s*=\s*\{[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*introMotion:\s*\{[\s\S]*delay:\s*0\.2,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologiesMotion:\s*\{[\s\S]*delay:\s*0\.4,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologyItemMotion:\s*\{[\s\S]*baseDelay:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*interestsMotion:\s*\{[\s\S]*delay:\s*1\.0,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*imageMotion:\s*\{[\s\S]*delay:\s*0\.8,[\s\S]*duration:\s*0\.8[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "about section renders technologies from metadata",
+    pattern: /import\s*\{\s*aboutBehavior,\s*aboutContent\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*aboutContent\.technologies\.map\(\(tech, index\)/,
+    source: aboutMeSection,
+  },
+  {
+    label: "about section uses behavior metadata for motion timing",
+    pattern: /import\s*\{\s*aboutBehavior,\s*aboutContent\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: aboutBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*delay:\s*aboutBehavior\.introMotion\.delay,\s*duration:\s*aboutBehavior\.introMotion\.duration[\s\S]*delay:\s*aboutBehavior\.technologiesMotion\.delay,[\s\S]*duration:\s*aboutBehavior\.technologiesMotion\.duration[\s\S]*aboutBehavior\.technologyItemMotion\.baseDelay[\s\S]*aboutBehavior\.technologyItemMotion\.staggerDelay[\s\S]*duration:\s*aboutBehavior\.technologyItemMotion\.duration[\s\S]*delay:\s*aboutBehavior\.interestsMotion\.delay,\s*duration:\s*aboutBehavior\.interestsMotion\.duration[\s\S]*delay:\s*aboutBehavior\.imageMotion\.delay,\s*duration:\s*aboutBehavior\.imageMotion\.duration/,
+    source: aboutMeSection,
   },
   {
     label: "portfolio experience data exports as a readonly collection",

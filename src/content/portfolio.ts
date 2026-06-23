@@ -20,6 +20,37 @@ export interface ProjectSummary {
   readonly image: ProjectImage | null;
 }
 
+export interface AboutContent {
+  readonly technologies: readonly string[];
+}
+
+export interface AboutBehavior {
+  readonly sectionHeadingMotion: {
+    readonly duration: number;
+  };
+  readonly introMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
+  readonly technologiesMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
+  readonly technologyItemMotion: {
+    readonly baseDelay: number;
+    readonly staggerDelay: number;
+    readonly duration: number;
+  };
+  readonly interestsMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
+  readonly imageMotion: {
+    readonly delay: number;
+    readonly duration: number;
+  };
+}
+
 export interface ExperienceItem {
   readonly company: string;
   readonly displayCompany: string;
@@ -45,6 +76,37 @@ export interface ExperienceBehavior {
     readonly baseDelay: number;
   };
 }
+
+export const aboutContent: AboutContent = {
+  technologies: ["Python", "Next.js", "FastAPI", "Go", "scikit-learn", "LangGraph"],
+};
+
+export const aboutBehavior: AboutBehavior = {
+  sectionHeadingMotion: {
+    duration: 0.6,
+  },
+  introMotion: {
+    delay: 0.2,
+    duration: 0.8,
+  },
+  technologiesMotion: {
+    delay: 0.4,
+    duration: 0.8,
+  },
+  technologyItemMotion: {
+    baseDelay: 0.6,
+    staggerDelay: 0.1,
+    duration: 0.6,
+  },
+  interestsMotion: {
+    delay: 1.0,
+    duration: 0.8,
+  },
+  imageMotion: {
+    delay: 0.8,
+    duration: 0.8,
+  },
+};
 
 export const projects: readonly ProjectSummary[] = [
   {
