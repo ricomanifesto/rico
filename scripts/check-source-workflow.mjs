@@ -56,6 +56,21 @@ const checks = [
     source: portfolio,
   },
   {
+    label: "project carousel behavior is typed as readonly metadata",
+    pattern: /export interface ProjectCarouselBehavior \{[\s\S]*readonly autoRotationIntervalMs:\s*number;[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly slideMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*\};[\s\S]*readonly hoverMotion:\s*\{[\s\S]*readonly scale:\s*number;[\s\S]*\};[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "project carousel behavior preserves current motion timings",
+    pattern: /export const projectCarouselBehavior:\s*ProjectCarouselBehavior\s*=\s*\{[\s\S]*autoRotationIntervalMs:\s*10000[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*slideMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1[\s\S]*\}[\s\S]*hoverMotion:\s*\{[\s\S]*scale:\s*1\.02[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "project carousel uses behavior metadata for timing",
+    pattern: /import\s*\{\s*projectCarouselBehavior,\s*projects\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*\},\s*projectCarouselBehavior\.autoRotationIntervalMs\);[\s\S]*transition=\{\{ duration: projectCarouselBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*duration:\s*projectCarouselBehavior\.slideMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*projectCarouselBehavior\.slideMotion\.staggerDelay[\s\S]*whileHover=\{[\s\S]*shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*projectCarouselBehavior\.hoverMotion\.scale\s*\}[\s\S]*\}/,
+    source: projectsSection,
+  },
+  {
     label: "about content is typed as readonly metadata",
     pattern: /export interface AboutContent \{[\s\S]*readonly technologies:\s*readonly string\[\];[\s\S]*\}/,
     source: portfolio,
