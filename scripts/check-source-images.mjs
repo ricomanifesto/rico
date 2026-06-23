@@ -1,5 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
+import { imageSize } from "image-size";
+import ts from "typescript";
 
 const root = process.cwd();
 const componentsRoot = path.join(root, "src/components");
@@ -41,6 +43,21 @@ if (!/project\.image\?\.decorative[\s\S]*src=\{project\.image\.src\}[\s\S]*alt="
   failures.push("project cards render decorative image metadata accessibly");
 }
 
+for (const image of findProjectImages(portfolioSource)) {
+  const actualDimensions = readImageDimensions(path.join(root, "public", image.src));
+
+  if (!actualDimensions) {
+    failures.push(`${image.src}: image dimensions can be read`);
+    continue;
+  }
+
+  if (actualDimensions.width !== image.width || actualDimensions.height !== image.height) {
+    failures.push(
+      `${image.src}: metadata dimensions ${image.width}x${image.height} do not match asset dimensions ${actualDimensions.width}x${actualDimensions.height}`,
+    );
+  }
+}
+
 function walkFiles(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const entryPath = path.join(directory, entry.name);
@@ -70,6 +87,23 @@ for (const componentPath of walkFiles(componentsRoot)) {
         failures.push(`${path.relative(root, componentPath)}: ${label}`);
       }
     }
+
+    const literalImage = parseLiteralImageTag(imageTag);
+    if (!literalImage) {
+      continue;
+    }
+
+    const actualDimensions = readImageDimensions(path.join(root, "public", literalImage.src));
+    if (!actualDimensions) {
+      failures.push(`${path.relative(root, componentPath)}: ${literalImage.src} dimensions can be read`);
+      continue;
+    }
+
+    if (literalImage.width !== actualDimensions.width || literalImage.height !== actualDimensions.height) {
+      failures.push(
+        `${path.relative(root, componentPath)}: ${literalImage.src} attributes ${literalImage.width}x${literalImage.height} do not match asset dimensions ${actualDimensions.width}x${actualDimensions.height}`,
+      );
+    }
   }
 }
 
@@ -82,3 +116,123 @@ if (failures.length > 0) {
 }
 
 console.log("Source image check passed.");
+
+function findProjectImages(source) {
+  const sourceFile = ts.createSourceFile(portfolioPath, source, ts.ScriptTarget.Latest, true);
+  const images = [];
+
+  function visit(node) {
+    if (
+      ts.isPropertyAssignment(node) &&
+      propertyNameText(node.name) === "image" &&
+      ts.isObjectLiteralExpression(node.initializer)
+    ) {
+      const src = stringProperty(node.initializer, "src");
+      const width = numberProperty(node.initializer, "width");
+      const height = numberProperty(node.initializer, "height");
+      const decorative = booleanProperty(node.initializer, "decorative");
+
+      if (src && width !== null && height !== null && decorative === true) {
+        images.push({
+          src: src.replace(/^\//, ""),
+          width,
+          height,
+        });
+      }
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return images;
+}
+
+function stringProperty(objectLiteral, propertyName) {
+  const property = findProperty(objectLiteral, propertyName);
+
+  if (!property || !ts.isStringLiteral(property.initializer)) {
+    return null;
+  }
+
+  return property.initializer.text;
+}
+
+function numberProperty(objectLiteral, propertyName) {
+  const property = findProperty(objectLiteral, propertyName);
+
+  if (!property || !ts.isNumericLiteral(property.initializer)) {
+    return null;
+  }
+
+  return Number(property.initializer.text);
+}
+
+function booleanProperty(objectLiteral, propertyName) {
+  const property = findProperty(objectLiteral, propertyName);
+
+  if (!property || property.initializer.kind !== ts.SyntaxKind.TrueKeyword) {
+    return null;
+  }
+
+  return true;
+}
+
+function findProperty(objectLiteral, propertyName) {
+  return objectLiteral.properties.find(
+    (property) =>
+      ts.isPropertyAssignment(property) &&
+      propertyNameText(property.name) === propertyName,
+  );
+}
+
+function propertyNameText(name) {
+  if (ts.isIdentifier(name) || ts.isStringLiteral(name) || ts.isNumericLiteral(name)) {
+    return name.text;
+  }
+
+  return null;
+}
+
+function parseLiteralImageTag(imageTag) {
+  const src = imageTag.match(/\bsrc="([^"]+)"/)?.[1];
+  const width = readNumericJsxAttribute(imageTag, "width");
+  const height = readNumericJsxAttribute(imageTag, "height");
+
+  if (!src || !width || !height || !src.startsWith("/")) {
+    return null;
+  }
+
+  return {
+    src: src.replace(/^\//, ""),
+    width,
+    height,
+  };
+}
+
+function readNumericJsxAttribute(source, attributeName) {
+  const attributeMatch = source.match(new RegExp(`\\b${attributeName}=(?:"(\\d+)"|\\{(\\d+)\\})`));
+  const value = attributeMatch?.[1] ?? attributeMatch?.[2];
+
+  return value ? Number(value) : null;
+}
+
+function readImageDimensions(imagePath) {
+  if (!fs.existsSync(imagePath)) {
+    return null;
+  }
+
+  try {
+    const dimensions = imageSize(fs.readFileSync(imagePath));
+    if (!dimensions.width || !dimensions.height) {
+      return null;
+    }
+
+    return {
+      width: dimensions.width,
+      height: dimensions.height,
+    };
+  } catch {
+    return null;
+  }
+}
