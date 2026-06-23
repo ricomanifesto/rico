@@ -83,7 +83,7 @@ const checks = [
   },
   {
     label: "hero behavior is typed as readonly metadata",
-    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*\}/,
+    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
     source: hero,
   },
   {
@@ -97,6 +97,11 @@ const checks = [
     source: hero,
   },
   {
+    label: "hero behavior preserves current motion timings",
+    pattern: /containerMotion:\s*\{[\s\S]*duration:\s*0\.8,[\s\S]*ease:\s*"easeOut"[\s\S]*\}[\s\S]*subtitleMotion:\s*\{[\s\S]*delay:\s*0\.5,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*bodyMotion:\s*\{[\s\S]*delay:\s*0\.7,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*ctaMotion:\s*\{[\s\S]*delay:\s*0\.9,[\s\S]*duration:\s*0\.8[\s\S]*\}/,
+    source: hero,
+  },
+  {
     label: "intro section renders hero copy from metadata",
     pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useState\(shouldReduceMotion \? heroContent\.headline : ""\)[\s\S]*setDisplayText\(heroContent\.headline\)[\s\S]*heroContent\.headline\.slice\(0, currentIndex\)[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
     source: introSection,
@@ -104,6 +109,11 @@ const checks = [
   {
     label: "intro section uses hero behavior metadata for typewriter timing",
     pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);/,
+    source: introSection,
+  },
+  {
+    label: "intro section uses hero behavior metadata for motion timing",
+    pattern: /transition=\{\{ duration: heroBehavior\.containerMotion\.duration, ease: heroBehavior\.containerMotion\.ease \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.subtitleMotion\.delay, duration: heroBehavior\.subtitleMotion\.duration \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.bodyMotion\.delay, duration: heroBehavior\.bodyMotion\.duration \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.ctaMotion\.delay, duration: heroBehavior\.ctaMotion\.duration \}\}/,
     source: introSection,
   },
   {
