@@ -6,6 +6,7 @@ const packagePath = path.join(root, "package.json");
 const workflowPath = path.join(root, ".github/workflows/deploy.yml");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const heroPath = path.join(root, "src/content/hero.ts");
+const homePath = path.join(root, "src/Home.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
@@ -15,6 +16,7 @@ const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
 const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
+const home = fs.readFileSync(homePath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
@@ -37,6 +39,11 @@ const checks = [
   {
     label: "workflow deploys Pages with a Node 24-compatible action",
     pattern: /uses:\s*actions\/deploy-pages@v5\b/,
+  },
+  {
+    label: "home shell avoids narration-only file comments",
+    pattern: /^(?![\s\S]*\/\/\s*src\/Home\.tsx\s+-\s+This should NOT contain any CSS)[\s\S]*$/,
+    source: home,
   },
   {
     label: "site build still runs on the pinned project Node version",

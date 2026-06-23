@@ -1,4 +1,3 @@
-// src/Home.tsx - This should NOT contain any CSS
 import Header from "@/components/Header";
 import SkipLink from "@/components/SkipLink";
 import IntroSection from "@/components/IntroSection";
