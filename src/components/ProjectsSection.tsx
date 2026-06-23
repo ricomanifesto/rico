@@ -1,7 +1,7 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { projects } from "../content/portfolio";
+import { projectCarouselBehavior, projects } from "../content/portfolio";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function ProjectsSection() {
@@ -18,7 +18,7 @@ export default function ProjectsSection() {
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
-    }, 10000);
+    }, projectCarouselBehavior.autoRotationIntervalMs);
 
     return () => clearInterval(interval);
   }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]);
@@ -41,7 +41,7 @@ export default function ProjectsSection() {
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: projectCarouselBehavior.sectionHeadingMotion.duration }}
       >
         / projects
       </motion.h2>
@@ -95,8 +95,13 @@ export default function ProjectsSection() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
+                    transition={{
+                      duration: projectCarouselBehavior.slideMotion.duration,
+                      delay: index * projectCarouselBehavior.slideMotion.staggerDelay,
+                    }}
+                    whileHover={
+                      shouldReduceMotion ? undefined : { scale: projectCarouselBehavior.hoverMotion.scale }
+                    }
                   >
                   {project.image?.decorative ? (
                     <div className="absolute inset-0">

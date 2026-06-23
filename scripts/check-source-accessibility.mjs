@@ -238,7 +238,7 @@ const checks = [
   },
   {
     label: "project cards disable hover scale for reduced motion",
-    pattern: /whileHover=\{shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*1\.02\s*\}\}/,
+    pattern: /whileHover=\{[\s\S]*shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*projectCarouselBehavior\.hoverMotion\.scale\s*\}[\s\S]*\}/,
     source: projectsSection,
   },
   {

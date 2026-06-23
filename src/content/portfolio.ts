@@ -20,6 +20,20 @@ export interface ProjectSummary {
   readonly image: ProjectImage | null;
 }
 
+export interface ProjectCarouselBehavior {
+  readonly autoRotationIntervalMs: number;
+  readonly sectionHeadingMotion: {
+    readonly duration: number;
+  };
+  readonly slideMotion: {
+    readonly duration: number;
+    readonly staggerDelay: number;
+  };
+  readonly hoverMotion: {
+    readonly scale: number;
+  };
+}
+
 export interface AboutContent {
   readonly technologies: readonly string[];
 }
@@ -105,6 +119,20 @@ export const aboutBehavior: AboutBehavior = {
   imageMotion: {
     delay: 0.8,
     duration: 0.8,
+  },
+};
+
+export const projectCarouselBehavior: ProjectCarouselBehavior = {
+  autoRotationIntervalMs: 10000,
+  sectionHeadingMotion: {
+    duration: 0.6,
+  },
+  slideMotion: {
+    duration: 0.6,
+    staggerDelay: 0.1,
+  },
+  hoverMotion: {
+    scale: 1.02,
   },
 };
 
