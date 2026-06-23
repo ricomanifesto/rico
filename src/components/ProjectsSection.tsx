@@ -11,7 +11,6 @@ export default function ProjectsSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
   const shouldAnnounceCarouselStatus = shouldReduceMotion || hasCarouselFocus || hasCarouselHover;
 
-  // Auto-rotation every 10 seconds with reset capability
   useEffect(() => {
     if (shouldReduceMotion || hasCarouselFocus || hasCarouselHover) {
       return;
@@ -22,7 +21,7 @@ export default function ProjectsSection() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]); // Reset timer when currentIndex changes
+  }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]);
 
   const goToPrevious = () => {
     setCurrentIndex((prevIndex) =>
