@@ -25,6 +25,18 @@ if (!fs.existsSync(navigationPath)) {
     failures.push("src/content/navigation.ts includes internal section hrefs");
   }
 
+  if (
+    !/export interface HeaderNavItem \{[^}]*readonly label:\s*string;[^}]*readonly href:\s*string;[^}]*\}/.test(navigationSource)
+  ) {
+    failures.push("Header navigation items expose readonly fields");
+  }
+
+  if (
+    !/export interface SocialLink \{[^}]*readonly label:\s*string;[^}]*readonly href:\s*string;[^}]*readonly kind:\s*SocialLinkKind;[^}]*readonly external:\s*boolean;[^}]*\}/.test(navigationSource)
+  ) {
+    failures.push("Social links expose readonly fields");
+  }
+
   const sourceFiles = walkFiles(srcRoot)
     .filter((filePath) => filePath.endsWith(".tsx"))
     .map((filePath) => fs.readFileSync(filePath, "utf8"))

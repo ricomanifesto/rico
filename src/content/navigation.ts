@@ -1,15 +1,15 @@
 export interface HeaderNavItem {
-  label: string;
-  href: string;
+  readonly label: string;
+  readonly href: string;
 }
 
 export type SocialLinkKind = "email" | "github" | "linkedin" | "medium";
 
 export interface SocialLink {
-  label: string;
-  href: string;
-  kind: SocialLinkKind;
-  external: boolean;
+  readonly label: string;
+  readonly href: string;
+  readonly kind: SocialLinkKind;
+  readonly external: boolean;
 }
 
 export const headerNavItems: readonly HeaderNavItem[] = [
