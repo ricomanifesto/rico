@@ -1,6 +1,6 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { projectCarouselBehavior, projects } from "../content/portfolio";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
@@ -8,6 +8,8 @@ export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
   const [hasCarouselHover, setHasCarouselHover] = useState(false);
+  const activeActionRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  const pendingFocusIndexRef = useRef<number | null>(null);
   const shouldReduceMotion = usePrefersReducedMotion();
   const shouldAnnounceCarouselStatus = shouldReduceMotion || hasCarouselFocus || hasCarouselHover;
 
@@ -23,14 +25,68 @@ export default function ProjectsSection() {
     return () => clearInterval(interval);
   }, [currentIndex, hasCarouselFocus, hasCarouselHover, shouldReduceMotion]);
 
+  const focusProjectAction = (index: number) => {
+    window.requestAnimationFrame(() => {
+      activeActionRefs.current[index]?.focus();
+    });
+  };
+
   const goToPrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? projects.length - 1 : prevIndex - 1
-    );
+    const nextIndex = currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
+
+    setCurrentIndex(nextIndex);
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
+    const nextIndex = (currentIndex + 1) % projects.length;
+
+    setCurrentIndex(nextIndex);
+  };
+
+  const handleCarouselButtonKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    activate: () => number,
+  ) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (event.repeat) {
+      return;
+    }
+
+    const nextIndex = activate();
+
+    pendingFocusIndexRef.current = nextIndex;
+  };
+
+  const handleCarouselButtonKeyUp = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (pendingFocusIndexRef.current !== null) {
+      focusProjectAction(pendingFocusIndexRef.current);
+      pendingFocusIndexRef.current = null;
+    }
+  };
+
+  const activatePreviousProjectFromKeyboard = () => {
+    const nextIndex = currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
+
+    setCurrentIndex(nextIndex);
+    return nextIndex;
+  };
+
+  const activateNextProjectFromKeyboard = () => {
+    const nextIndex = (currentIndex + 1) % projects.length;
+
+    setCurrentIndex(nextIndex);
+    return nextIndex;
   };
 
   return (
@@ -131,6 +187,9 @@ export default function ProjectsSection() {
                       
                       <div className="flex items-center space-x-4">
                         <a href={project.links.repository.href} target={repositoryTarget} rel={repositoryRel} aria-label={`View ${project.title} repository`}
+                           ref={(element) => {
+                             activeActionRefs.current[index] = element;
+                           }}
                            tabIndex={index === currentIndex ? 0 : -1}
                            className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
                           <Github size={24} aria-hidden="true" focusable="false" />
@@ -153,7 +212,9 @@ export default function ProjectsSection() {
         </div>
 
         <button
-          onClick={goToPrevious}
+          onClick={() => goToPrevious()}
+          onKeyDown={(event) => handleCarouselButtonKeyDown(event, activatePreviousProjectFromKeyboard)}
+          onKeyUp={handleCarouselButtonKeyUp}
           className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Previous project"
         >
@@ -161,7 +222,9 @@ export default function ProjectsSection() {
         </button>
 
         <button
-          onClick={goToNext}
+          onClick={() => goToNext()}
+          onKeyDown={(event) => handleCarouselButtonKeyDown(event, activateNextProjectFromKeyboard)}
+          onKeyUp={handleCarouselButtonKeyUp}
           className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
           aria-label="Next project"
         >

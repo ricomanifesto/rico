@@ -443,6 +443,58 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
   ).toHaveAttribute("tabindex", "-1");
 });
 
+test("moves keyboard focus to the active project action after arrow navigation", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+
+  await nextProjectButton.focus();
+  await page.keyboard.press("Enter");
+
+  await expect(
+    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+  ).toBeFocused();
+});
+
+test("keeps repeated carousel Enter activation on the arrow control", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+
+  await nextProjectButton.focus();
+  await page.keyboard.down("Enter");
+  await page.keyboard.down("Enter");
+
+  await expect(nextProjectButton).toBeFocused();
+
+  await page.keyboard.up("Enter");
+  await expect(
+    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+  ).toBeFocused();
+});
+
+test("moves Space-activated carousel focus to the new active project action", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+
+  await nextProjectButton.focus();
+  await page.keyboard.press("Space");
+
+  await expect(
+    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+  ).toBeFocused();
+  await expect(
+    page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
+  ).toHaveAttribute("tabindex", "-1");
+});
+
 test("announces the active project slide after manual navigation", async ({ page }) => {
   await page.goto("/");
 
