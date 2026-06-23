@@ -1,3 +1,8 @@
+export interface ProjectImage {
+  readonly src: string;
+  readonly decorative: true;
+}
+
 export interface ProjectSummary {
   readonly title: string;
   readonly description: string;
@@ -5,7 +10,7 @@ export interface ProjectSummary {
   readonly repoUrl: string;
   readonly demoUrl: string;
   readonly bgGradient: string;
-  readonly bgImage: string;
+  readonly image: ProjectImage | null;
 }
 
 export interface ExperienceItem {
@@ -24,7 +29,10 @@ export const projects: readonly ProjectSummary[] = [
     repoUrl: "https://github.com/ricomanifesto/SentrySearch",
     demoUrl: "https://sentry-search.vercel.app/",
     bgGradient: "from-purple-600 via-blue-600 to-cyan-600",
-    bgImage: "/images/SentrySearch.jpg"
+    image: {
+      src: "/images/SentrySearch.jpg",
+      decorative: true,
+    },
   },
   {
     title: "Cybersecurity News Aggregator",
@@ -33,7 +41,10 @@ export const projects: readonly ProjectSummary[] = [
     repoUrl: "https://github.com/ricomanifesto/SentryDigest",
     demoUrl: "https://ricomanifesto.github.io/SentryDigest/",
     bgGradient: "from-green-600 via-teal-600 to-blue-600",
-    bgImage: "/images/SentryDigest.jpg"
+    image: {
+      src: "/images/SentryDigest.jpg",
+      decorative: true,
+    },
   },
   {
     title: "Cybersecurity Exploit Reporter",
@@ -42,7 +53,10 @@ export const projects: readonly ProjectSummary[] = [
     repoUrl: "https://github.com/ricomanifesto/SentryInsight",
     demoUrl: "https://ricomanifesto.github.io/SentryInsight/",
     bgGradient: "from-red-600 via-pink-600 to-purple-600",
-    bgImage: "/images/SentryInsight.jpg"
+    image: {
+      src: "/images/SentryInsight.jpg",
+      decorative: true,
+    },
   },
   {
     title: "Cybersecurity GRC Reporter",
@@ -51,7 +65,10 @@ export const projects: readonly ProjectSummary[] = [
     repoUrl: "https://github.com/ricomanifesto/GRCInsight",
     demoUrl: "https://ricomanifesto.github.io/GRCInsight/",
     bgGradient: "from-orange-600 via-red-600 to-pink-600",
-    bgImage: "/images/GRCInsight.jpg"
+    image: {
+      src: "/images/GRCInsight.jpg",
+      decorative: true,
+    },
   }
 ];
 

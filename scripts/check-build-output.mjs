@@ -71,9 +71,14 @@ if (existsSync(indexPath)) {
 
 if (existsSync(sourceContentPath)) {
   const sourceContent = readFileSync(sourceContentPath, "utf8");
-  const imagePaths = Array.from(sourceContent.matchAll(/bgImage:\s*"([^"]+)"/g)).map(
+  const imagePaths = Array.from(sourceContent.matchAll(/image:\s*\{[\s\S]*?src:\s*"([^"]+)"/g)).map(
     (match) => match[1],
   );
+  const hasProjectImageMetadata = /image:\s*\{/.test(sourceContent);
+
+  if (hasProjectImageMetadata && imagePaths.length === 0) {
+    failures.push("No project images found in portfolio content");
+  }
 
   for (const imagePath of imagePaths) {
     requireFile(join(dist, imagePath.replace(/^\//, "")), `project image ${imagePath}`);

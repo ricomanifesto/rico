@@ -92,10 +92,10 @@ export default function ProjectsSection() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={shouldReduceMotion ? undefined : { scale: 1.02 }}
                 >
-                  {project.bgImage ? (
+                  {project.image?.decorative ? (
                     <div className="absolute inset-0">
                       <img 
-                        src={project.bgImage} 
+                        src={project.image.src} 
                         alt=""
                         aria-hidden="true"
                         loading="lazy"
