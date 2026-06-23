@@ -312,6 +312,11 @@ const checks = [
     source: socialLinkSource,
   },
   {
+    label: "medium social icon is handled explicitly",
+    pattern: /if\s*\(\s*kind === "medium"\s*\)\s*\{\s*return <MediumIcon \/>;\s*\}[\s\S]*function MediumIcon\(\)/,
+    source: socialLinkSource,
+  },
+  {
     label: "project action links have visible keyboard focus styles",
     pattern: /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
     source: projectsSection,
