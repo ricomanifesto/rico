@@ -337,6 +337,11 @@ const checks = [
     source: projectsSection,
   },
   {
+    label: "project carousel lists use stable project keys",
+    pattern: /projects\.map\(\(project, index\) => \(\s*<div[\s\S]*key=\{project\.title\}[\s\S]*projects\.map\(\(project, index\) => \(\s*<button[\s\S]*key=\{project\.title\}/,
+    source: projectsSection,
+  },
+  {
     label: "project carousel exposes active slide status politely",
     pattern: /shouldAnnounceCarouselStatus[\s\S]*role="status"[\s\S]*aria-live=\{shouldAnnounceCarouselStatus \? "polite" : "off"\}[\s\S]*aria-atomic="true"[\s\S]*projects\[currentIndex\]\.title/,
     source: projectsSection,
