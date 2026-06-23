@@ -443,6 +443,21 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
   ).toHaveAttribute("tabindex", "-1");
 });
 
+test("moves keyboard focus to the active project action after arrow navigation", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  await page.getByRole("link", { name: "Projects" }).click();
+  const nextProjectButton = page.getByRole("button", { name: "Next project" });
+
+  await nextProjectButton.focus();
+  await page.keyboard.press("Enter");
+
+  await expect(
+    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+  ).toBeFocused();
+});
+
 test("announces the active project slide after manual navigation", async ({ page }) => {
   await page.goto("/");
 
