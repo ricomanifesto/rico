@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { experiences } from "../content/portfolio";
 
 export default function Experience() {
-  const [selectedCompany, setSelectedCompany] = useState(0); // Default to SentinelOne
+  const [selectedCompany, setSelectedCompany] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const selectCompany = (index: number) => {

@@ -217,8 +217,8 @@ const checks = [
     source: projectsSection,
   },
   {
-    label: "project section avoids narration-only JSX comments",
-    pattern: /^(?![\s\S]*\{\/\*\s*(Carousel Container|Background|Content Overlay|Icons|Navigation Buttons|Dots Indicator)\s*\*\/\})[\s\S]*$/,
+    label: "project section avoids narration-only comments",
+    pattern: /^(?![\s\S]*(\{\/\*\s*(Carousel Container|Background|Content Overlay|Icons|Navigation Buttons|Dots Indicator)\s*\*\/\}|\/\/\s*Auto-rotation every 10 seconds with reset capability|\/\/\s*Reset timer when currentIndex changes))[\s\S]*$/,
     source: projectsSection,
   },
   {
@@ -247,8 +247,8 @@ const checks = [
     source: experienceSource,
   },
   {
-    label: "experience section avoids narration-only JSX comments",
-    pattern: /^(?![\s\S]*\{\/\*\s*(Company Selection Timeline|Selection Bar|Company Name|Selected Experience Details)\s*\*\/\})[\s\S]*$/,
+    label: "experience section avoids narration-only comments",
+    pattern: /^(?![\s\S]*(\{\/\*\s*(Company Selection Timeline|Selection Bar|Company Name|Selected Experience Details)\s*\*\/\}|\/\/\s*Default to SentinelOne))[\s\S]*$/,
     source: experienceSource,
   },
   {
