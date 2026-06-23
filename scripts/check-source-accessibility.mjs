@@ -182,6 +182,11 @@ const checks = [
     source: introSection,
   },
   {
+    label: "intro section avoids narration-only JSX comments",
+    pattern: /^(?![\s\S]*\{\/\*\s*(Network Grid Animation Background|Animated Nodes & Connections|Hero Content with Animation|Say Hi Button)\s*\*\/\})[\s\S]*$/,
+    source: introSection,
+  },
+  {
     label: "about technology chevrons use the shared icon component",
     pattern: /import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="[^"]*text-\[#007bff\][^"]*"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<span className="text-lg text-gray-200">\{tech\}<\/span>/,
     source: aboutMeSource,
