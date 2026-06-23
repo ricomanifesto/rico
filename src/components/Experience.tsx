@@ -59,7 +59,7 @@ export default function Experience() {
             >
               {experiences.map((exp, index) => (
                 <motion.button
-                  key={index}
+                  key={exp.company}
                   id={`experience-tab-${index}`}
                   ref={(element) => {
                     tabRefs.current[index] = element;
@@ -120,7 +120,7 @@ export default function Experience() {
                 <ul className="space-y-4">
                   {exp.highlights.map((highlight, highlightIndex) => (
                     <motion.li
-                      key={highlightIndex}
+                      key={highlight}
                       className="flex items-start"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
