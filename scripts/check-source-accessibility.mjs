@@ -116,6 +116,11 @@ const checks = [
     source: reducedMotionHook,
   },
   {
+    label: "reduced-motion preference hook guards browser media query access",
+    pattern: /typeof window !== "undefined"[\s\S]*window\.matchMedia\(reducedMotionQuery\)\.matches/,
+    source: reducedMotionHook,
+  },
+  {
     label: "reduced-motion preference hook tracks preference changes",
     pattern: /addEventListener\("change"/,
     source: reducedMotionHook,
