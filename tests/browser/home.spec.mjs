@@ -348,8 +348,10 @@ test("uses a split hero composition on desktop without crowding short mobile vie
   await page.reload();
 
   const landscapeLayout = await page.evaluate(() => {
+    const header = document.querySelector("header");
     const visual = document.querySelector("[data-testid='hero-visual']");
     const copy = document.querySelector("[data-testid='hero-copy']");
+    const heading = document.querySelector("#intro h1");
     const contactLink = document.querySelector("#intro a[href^='mailto:']");
 
     const toBox = (element) => {
@@ -366,8 +368,10 @@ test("uses a split hero composition on desktop without crowding short mobile vie
     };
 
     return {
+      header: toBox(header),
       visual: toBox(visual),
       copy: toBox(copy),
+      heading: toBox(heading),
       contactLink: toBox(contactLink),
       viewportHeight: window.innerHeight,
       viewportWidth: window.innerWidth,
@@ -375,8 +379,11 @@ test("uses a split hero composition on desktop without crowding short mobile vie
   });
 
   expect(landscapeLayout.visual).toBeNull();
+  expect(landscapeLayout.header).not.toBeNull();
   expect(landscapeLayout.copy).not.toBeNull();
+  expect(landscapeLayout.heading).not.toBeNull();
   expect(landscapeLayout.contactLink).not.toBeNull();
+  expect(landscapeLayout.heading.top).toBeGreaterThanOrEqual(landscapeLayout.header.bottom);
   expect(landscapeLayout.copy.left).toBeGreaterThanOrEqual(0);
   expect(landscapeLayout.copy.right).toBeLessThanOrEqual(landscapeLayout.viewportWidth);
   expect(landscapeLayout.contactLink.bottom).toBeLessThanOrEqual(landscapeLayout.viewportHeight);

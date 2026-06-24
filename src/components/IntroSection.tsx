@@ -44,7 +44,7 @@ export default function IntroSection() {
     <section
       id="intro"
       className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16"
-      style={hasCompactLandscapeHeroViewport ? { paddingTop: "3.5rem" } : undefined}
+      style={hasCompactLandscapeHeroViewport ? { paddingTop: "4.5rem" } : undefined}
     >
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 
@@ -76,7 +76,7 @@ export default function IntroSection() {
             </span>
           </h1>
           <motion.p
-            className={`${hasCompactLandscapeHeroViewport ? "mb-5" : "mb-8"} text-xl ${
+            className={`${hasCompactLandscapeHeroViewport ? "mb-3" : "mb-8"} text-xl ${
               hasRoomyHeroViewport ? "md:text-2xl" : ""
             }`}
             initial={{ opacity: 0 }}
@@ -88,7 +88,7 @@ export default function IntroSection() {
 
           <motion.p
             className={`mx-auto max-w-2xl text-lg text-gray-200 md:mx-0 ${
-              hasCompactLandscapeHeroViewport ? "mb-5" : "mb-12"
+              hasCompactLandscapeHeroViewport ? "mb-3" : "mb-12"
             } ${
               hasRoomyHeroViewport ? "md:text-xl" : ""
             }`}
