@@ -271,7 +271,7 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.aboutSection.top);
 });
 
-test("uses a split hero composition on desktop and stacks it on mobile", async ({ page }) => {
+test("uses a split hero composition on desktop without crowding short mobile viewports", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
 
@@ -305,12 +305,13 @@ test("uses a split hero composition on desktop and stacks it on mobile", async (
   expect(desktopLayout.visual.width).toBeGreaterThan(300);
   expect(desktopLayout.copy.left).toBeGreaterThan(600);
 
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize({ width: 390, height: 667 });
   await page.reload();
 
   const mobileLayout = await page.evaluate(() => {
     const visual = document.querySelector("[data-testid='hero-visual']");
     const copy = document.querySelector("[data-testid='hero-copy']");
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
 
     const toBox = (element) => {
       const rect = element?.getBoundingClientRect();
@@ -328,14 +329,19 @@ test("uses a split hero composition on desktop and stacks it on mobile", async (
     return {
       visual: toBox(visual),
       copy: toBox(copy),
+      contactLink: toBox(contactLink),
+      viewportHeight: window.innerHeight,
+      visualDisplay: visual ? window.getComputedStyle(visual).display : null,
     };
   });
 
   expect(mobileLayout.visual).not.toBeNull();
   expect(mobileLayout.copy).not.toBeNull();
-  expect(mobileLayout.visual.bottom).toBeLessThanOrEqual(mobileLayout.copy.top);
-  expect(mobileLayout.visual.left).toBeGreaterThanOrEqual(0);
+  expect(mobileLayout.contactLink).not.toBeNull();
+  expect(mobileLayout.visualDisplay).toBe("none");
+  expect(mobileLayout.copy.top).toBeGreaterThanOrEqual(0);
   expect(mobileLayout.copy.right).toBeLessThanOrEqual(390);
+  expect(mobileLayout.contactLink.bottom).toBeLessThanOrEqual(mobileLayout.viewportHeight);
 });
 
 test("exposes about technologies as a semantic list", async ({ page }) => {

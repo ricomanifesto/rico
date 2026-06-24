@@ -42,7 +42,7 @@ export default function IntroSection() {
         <div
           aria-hidden="true"
           data-testid="hero-visual"
-          className="relative mx-auto h-24 w-full max-w-sm overflow-hidden md:h-[28rem] md:max-w-none"
+          className="relative mx-auto hidden w-full max-w-sm overflow-hidden md:block md:h-[28rem] md:max-w-none"
         >
           <NetworkAnimation />
         </div>
