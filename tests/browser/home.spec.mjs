@@ -263,12 +263,175 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   expect(layout.body).not.toBeNull();
   expect(layout.contactLink).not.toBeNull();
   expect(layout.aboutSection).not.toBeNull();
-  expect(layout.heading.top).toBeGreaterThanOrEqual(0);
+  expect(layout.heading.top).toBeGreaterThanOrEqual(96);
   expect(layout.heading.bottom).toBeLessThan(layout.subtitle.top);
   expect(layout.subtitle.bottom).toBeLessThan(layout.body.top);
   expect(layout.body.bottom).toBeLessThan(layout.contactLink.top);
   expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.viewportHeight);
   expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.aboutSection.top);
+});
+
+test("uses a split hero composition on desktop without crowding short mobile viewports", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  await expect(page.getByTestId("hero-visual")).toBeVisible();
+
+  const desktopLayout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+        }
+        : null;
+    };
+
+    return {
+      visual: toBox(visual),
+      copy: toBox(copy),
+    };
+  });
+
+  expect(desktopLayout.visual).not.toBeNull();
+  expect(desktopLayout.copy).not.toBeNull();
+  expect(desktopLayout.visual.right).toBeLessThan(desktopLayout.copy.left);
+  expect(desktopLayout.visual.width).toBeGreaterThan(300);
+  expect(desktopLayout.copy.left).toBeGreaterThan(600);
+
+  await page.setViewportSize({ width: 390, height: 667 });
+  await page.reload();
+
+  const mobileLayout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+        }
+        : null;
+    };
+
+    return {
+      visual: toBox(visual),
+      copy: toBox(copy),
+      contactLink: toBox(contactLink),
+      viewportHeight: window.innerHeight,
+      visualDisplay: visual ? window.getComputedStyle(visual).display : null,
+    };
+  });
+
+  expect(mobileLayout.copy).not.toBeNull();
+  expect(mobileLayout.contactLink).not.toBeNull();
+  expect(mobileLayout.visual).toBeNull();
+  expect(mobileLayout.visualDisplay).toBeNull();
+  expect(mobileLayout.copy.top).toBeGreaterThanOrEqual(0);
+  expect(mobileLayout.copy.right).toBeLessThanOrEqual(390);
+  expect(mobileLayout.contactLink.bottom).toBeLessThanOrEqual(mobileLayout.viewportHeight);
+
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.reload();
+
+  const landscapeLayout = await page.evaluate(() => {
+    const header = document.querySelector("header");
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+    const heading = document.querySelector("#intro h1");
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+        }
+        : null;
+    };
+
+    return {
+      header: toBox(header),
+      visual: toBox(visual),
+      copy: toBox(copy),
+      heading: toBox(heading),
+      contactLink: toBox(contactLink),
+      viewportHeight: window.innerHeight,
+      viewportWidth: window.innerWidth,
+    };
+  });
+
+  expect(landscapeLayout.visual).toBeNull();
+  expect(landscapeLayout.header).not.toBeNull();
+  expect(landscapeLayout.copy).not.toBeNull();
+  expect(landscapeLayout.heading).not.toBeNull();
+  expect(landscapeLayout.contactLink).not.toBeNull();
+  expect(landscapeLayout.heading.top).toBeGreaterThanOrEqual(landscapeLayout.header.bottom);
+  expect(landscapeLayout.copy.left).toBeGreaterThanOrEqual(0);
+  expect(landscapeLayout.copy.right).toBeLessThanOrEqual(landscapeLayout.viewportWidth);
+  expect(landscapeLayout.contactLink.bottom).toBeLessThanOrEqual(landscapeLayout.viewportHeight);
+});
+
+test("collapses the desktop hero visual when reduced motion is enabled", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+
+  const layout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+        }
+        : null;
+    };
+
+    return {
+      visualExists: Boolean(visual),
+      copy: toBox(copy),
+      contactLink: toBox(contactLink),
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(layout.visualExists).toBe(false);
+  expect(layout.copy).not.toBeNull();
+  expect(layout.contactLink).not.toBeNull();
+  expect(layout.copy.left).toBeGreaterThan(200);
+  expect(layout.copy.right).toBeLessThan(layout.viewportWidth - 200);
+  expect(layout.contactLink.bottom).toBeLessThan(layout.viewportHeight);
+  expect(Math.abs(
+    (layout.contactLink.left + layout.contactLink.width / 2) -
+      (layout.copy.left + layout.copy.width / 2),
+  )).toBeLessThanOrEqual(2);
 });
 
 test("exposes about technologies as a semantic list", async ({ page }) => {
