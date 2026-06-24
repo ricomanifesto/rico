@@ -344,6 +344,47 @@ test("uses a split hero composition on desktop without crowding short mobile vie
   expect(mobileLayout.contactLink.bottom).toBeLessThanOrEqual(mobileLayout.viewportHeight);
 });
 
+test("collapses the desktop hero visual when reduced motion is enabled", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+
+  const layout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+        }
+        : null;
+    };
+
+    return {
+      visualExists: Boolean(visual),
+      copy: toBox(copy),
+      contactLink: toBox(contactLink),
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+    };
+  });
+
+  expect(layout.visualExists).toBe(false);
+  expect(layout.copy).not.toBeNull();
+  expect(layout.contactLink).not.toBeNull();
+  expect(layout.copy.left).toBeGreaterThan(200);
+  expect(layout.copy.right).toBeLessThan(layout.viewportWidth - 200);
+  expect(layout.contactLink.bottom).toBeLessThan(layout.viewportHeight);
+});
+
 test("exposes about technologies as a semantic list", async ({ page }) => {
   await page.goto("/");
 

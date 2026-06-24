@@ -8,6 +8,7 @@ import { contactLink } from "../content/navigation";
 
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
+  const showHeroVisual = !shouldReduceMotion;
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
   useEffect(() => {
@@ -34,20 +35,26 @@ export default function IntroSection() {
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 
       <motion.div
-        className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-6 md:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.1fr)] md:gap-10 md:text-left"
+        className={`relative z-10 mx-auto grid w-full items-center gap-6 md:gap-10 ${
+          showHeroVisual
+            ? "max-w-6xl md:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.1fr)] md:text-left"
+            : "max-w-3xl"
+        }`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: heroBehavior.containerMotion.duration, ease: heroBehavior.containerMotion.ease }}
       >
-        <div
-          aria-hidden="true"
-          data-testid="hero-visual"
-          className="relative mx-auto hidden w-full max-w-sm overflow-hidden md:block md:h-[28rem] md:max-w-none"
-        >
-          <NetworkAnimation />
-        </div>
+        {showHeroVisual ? (
+          <div
+            aria-hidden="true"
+            data-testid="hero-visual"
+            className="relative mx-auto hidden w-full max-w-sm overflow-hidden md:block md:h-[28rem] md:max-w-none"
+          >
+            <NetworkAnimation />
+          </div>
+        ) : null}
 
-        <div data-testid="hero-copy" className="mx-auto max-w-2xl md:mx-0">
+        <div data-testid="hero-copy" className={`mx-auto max-w-2xl ${showHeroVisual ? "md:mx-0" : ""}`}>
           <h1 className="mb-4 font-mono text-4xl font-bold md:text-6xl">
             <span className="inline-flex items-center text-[#007bff]">
               {displayText}
