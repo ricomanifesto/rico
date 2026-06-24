@@ -271,6 +271,73 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.aboutSection.top);
 });
 
+test("uses a split hero composition on desktop and stacks it on mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+
+  const desktopLayout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+          width: rect.width,
+        }
+        : null;
+    };
+
+    return {
+      visual: toBox(visual),
+      copy: toBox(copy),
+    };
+  });
+
+  expect(desktopLayout.visual).not.toBeNull();
+  expect(desktopLayout.copy).not.toBeNull();
+  expect(desktopLayout.visual.right).toBeLessThan(desktopLayout.copy.left);
+  expect(desktopLayout.visual.width).toBeGreaterThan(300);
+  expect(desktopLayout.copy.left).toBeGreaterThan(600);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+
+  const mobileLayout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+        }
+        : null;
+    };
+
+    return {
+      visual: toBox(visual),
+      copy: toBox(copy),
+    };
+  });
+
+  expect(mobileLayout.visual).not.toBeNull();
+  expect(mobileLayout.copy).not.toBeNull();
+  expect(mobileLayout.visual.bottom).toBeLessThanOrEqual(mobileLayout.copy.top);
+  expect(mobileLayout.visual.left).toBeGreaterThanOrEqual(0);
+  expect(mobileLayout.copy.right).toBeLessThanOrEqual(390);
+});
+
 test("exposes about technologies as a semantic list", async ({ page }) => {
   await page.goto("/");
 

@@ -30,57 +30,63 @@ export default function IntroSection() {
   }, [shouldReduceMotion]);
   
   return (
-    <section id="intro" className="relative flex flex-col items-center justify-center min-h-[80vh] text-center pt-36 px-4 overflow-hidden bg-slate-900 text-white md:pt-16">
+    <section id="intro" className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16">
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
-      
-      <NetworkAnimation />
-      
-      <motion.div 
-        className="relative z-10 max-w-3xl mx-auto"
+
+      <motion.div
+        className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-6 md:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.1fr)] md:gap-10 md:text-left"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: heroBehavior.containerMotion.duration, ease: heroBehavior.containerMotion.ease }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">
-          <span className="inline-flex items-center text-[#007bff]">
-            {displayText}
-            <span aria-hidden="true" className="animate-blink ml-1 h-8 w-2 inline-block bg-[#007bff]"></span>
-          </span>
-        </h1>
-        
-        <motion.p 
-          className="text-xl md:text-2xl mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: heroBehavior.subtitleMotion.delay, duration: heroBehavior.subtitleMotion.duration }}
+        <div
+          aria-hidden="true"
+          data-testid="hero-visual"
+          className="relative mx-auto h-24 w-full max-w-sm overflow-hidden md:h-[28rem] md:max-w-none"
         >
-          {heroContent.subtitle}
-        </motion.p>
+          <NetworkAnimation />
+        </div>
 
-        
-        <motion.p 
-          className="max-w-2xl text-lg md:text-xl mb-12 mx-auto text-gray-200"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: heroBehavior.bodyMotion.delay, duration: heroBehavior.bodyMotion.duration }}
-        >
-          {heroContent.body}
-        </motion.p>
-
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: heroBehavior.ctaMotion.delay, duration: heroBehavior.ctaMotion.duration }}
-        >
-          <a 
-            href={contactLink.href}
-            className="inline-flex items-center px-6 py-3 border-2 border-[#007bff80] rounded-xl bg-transparent text-[#007bff] transition-all duration-300 hover:scale-105 hover:border-[#007bff] hover:bg-[#007bff1a] hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+        <div data-testid="hero-copy" className="mx-auto max-w-2xl md:mx-0">
+          <h1 className="mb-4 font-mono text-4xl font-bold md:text-6xl">
+            <span className="inline-flex items-center text-[#007bff]">
+              {displayText}
+              <span aria-hidden="true" className="animate-blink ml-1 h-8 w-2 inline-block bg-[#007bff] md:h-12"></span>
+            </span>
+          </h1>
+          <motion.p
+            className="mb-8 text-xl md:text-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: heroBehavior.subtitleMotion.delay, duration: heroBehavior.subtitleMotion.duration }}
           >
-            <Mail className="mr-3 h-5 w-5" aria-hidden="true" focusable="false" />
-            {heroContent.ctaLabel}
-          </a>
-        </motion.div>
+            {heroContent.subtitle}
+          </motion.p>
+
+          <motion.p
+            className="mx-auto mb-12 max-w-2xl text-lg text-gray-200 md:mx-0 md:text-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: heroBehavior.bodyMotion.delay, duration: heroBehavior.bodyMotion.duration }}
+          >
+            {heroContent.body}
+          </motion.p>
+
+          <motion.div
+            className="flex justify-center md:justify-start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: heroBehavior.ctaMotion.delay, duration: heroBehavior.ctaMotion.duration }}
+          >
+            <a
+              href={contactLink.href}
+              className="inline-flex items-center px-6 py-3 border-2 border-[#007bff80] rounded-xl bg-transparent text-[#007bff] transition-all duration-300 hover:scale-105 hover:border-[#007bff] hover:bg-[#007bff1a] hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+            >
+              <Mail className="mr-3 h-5 w-5" aria-hidden="true" focusable="false" />
+              {heroContent.ctaLabel}
+            </a>
+          </motion.div>
+        </div>
         
       </motion.div>
     </section>
