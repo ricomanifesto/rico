@@ -2,11 +2,39 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
-const dist = join(root, "dist");
+const dist = process.env.BUILD_OUTPUT_DIR || join(root, "dist");
 const indexPath = join(dist, "index.html");
 const sourceContentPath = join(root, "src", "content", "portfolio.ts");
 
 const failures = [];
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+const localPathPatterns = [
+  {
+    label: "repo root path",
+    pattern: new RegExp(escapeRegExp(root)),
+  },
+  {
+    label: "home directory path",
+    pattern: new RegExp(["/", "(?:Users|home|workspace|workspaces)", "/"].join("")),
+  },
+  {
+    label: "CI workspace path",
+    pattern: new RegExp(["/", "work", "/"].join("")),
+  },
+  {
+    label: "private temp path",
+    pattern: new RegExp(["/", "private", "/", "tmp"].join("")),
+  },
+  {
+    label: "shell path assignment",
+    pattern: /\bPATH=/,
+  },
+];
+const textArtifactExtensions = new Set([".css", ".html", ".js", ".json", ".map", ".svg", ".txt", ".xml"]);
 
 function walkFiles(path) {
   if (!existsSync(path)) {
@@ -31,6 +59,16 @@ function requireFile(path, label) {
   }
 }
 
+function isTextArtifact(path) {
+  const lastDotIndex = path.lastIndexOf(".");
+
+  if (lastDotIndex === -1) {
+    return false;
+  }
+
+  return textArtifactExtensions.has(path.slice(lastDotIndex).toLowerCase());
+}
+
 requireFile(indexPath, "built index");
 requireFile(join(dist, "CNAME"), "GitHub Pages CNAME");
 requireFile(join(dist, ".nojekyll"), "GitHub Pages nojekyll marker");
@@ -45,6 +83,17 @@ const forbiddenArtifacts = [
 for (const artifactPath of forbiddenArtifacts) {
   if (existsSync(artifactPath)) {
     failures.push(`Forbidden public artifact: ${artifactPath}`);
+  }
+}
+
+for (const artifactPath of walkFiles(dist).filter(isTextArtifact)) {
+  const artifact = readFileSync(artifactPath, "utf8");
+  const relativePath = artifactPath.replace(`${dist}/`, "");
+
+  for (const { label, pattern } of localPathPatterns) {
+    if (pattern.test(artifact)) {
+      failures.push(`Public artifact ${relativePath} contains ${label}`);
+    }
   }
 }
 
