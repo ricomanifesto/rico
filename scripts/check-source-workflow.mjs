@@ -4,6 +4,7 @@ import path from "node:path";
 const root = process.cwd();
 const packagePath = path.join(root, "package.json");
 const workflowPath = path.join(root, ".github/workflows/deploy.yml");
+const cleanTestArtifactsPath = path.join(root, "scripts/clean-test-artifacts.mjs");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const heroPath = path.join(root, "src/content/hero.ts");
 const homePath = path.join(root, "src/Home.tsx");
@@ -14,6 +15,7 @@ const footerPath = path.join(root, "src/components/Footer.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
+const cleanTestArtifacts = fs.readFileSync(cleanTestArtifactsPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
 const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
 const home = fs.readFileSync(homePath, "utf8");
@@ -56,8 +58,18 @@ const checks = [
   },
   {
     label: "package browser check installs Chromium before running tests",
-    pattern: /"browser":\s*"playwright install chromium && playwright test"/,
+    pattern: /"browser":\s*"node scripts\/clean-test-artifacts\.mjs && playwright install chromium && playwright test"/,
     source: packageJson,
+  },
+  {
+    label: "package browser check clears stale Playwright artifacts before running tests",
+    pattern: /"browser":\s*"node scripts\/clean-test-artifacts\.mjs && playwright install chromium && playwright test"/,
+    source: packageJson,
+  },
+  {
+    label: "test artifact cleanup removes Playwright output directories",
+    pattern: /const generatedArtifactDirs = \["test-results", "playwright-report", "blob-report"\];[\s\S]*rmSync\(join\(root, artifactDir\), \{ force: true, recursive: true \}\);/,
+    source: cleanTestArtifacts,
   },
   {
     label: "portfolio project data exports as a readonly collection",
