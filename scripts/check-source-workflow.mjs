@@ -13,6 +13,7 @@ const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
 const footerPath = path.join(root, "src/components/Footer.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
+const browserTestPath = path.join(root, "tests/browser/home.spec.mjs");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
 const cleanTestArtifacts = fs.readFileSync(cleanTestArtifactsPath, "utf8");
@@ -24,6 +25,7 @@ const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
 const footerSection = fs.readFileSync(footerPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
+const browserTests = fs.readFileSync(browserTestPath, "utf8");
 
 const checks = [
   {
@@ -70,6 +72,11 @@ const checks = [
     label: "test artifact cleanup removes Playwright output directories",
     pattern: /const generatedArtifactDirs = \["test-results", "playwright-report", "blob-report"\];[\s\S]*rmSync\(join\(root, artifactDir\), \{ force: true, recursive: true \}\);/,
     source: cleanTestArtifacts,
+  },
+  {
+    label: "browser tests guard mobile nav rail overflow behavior",
+    pattern: /test\("keeps every mobile nav rail item reachable without page overflow"[\s\S]*scrollIntoViewIfNeeded\(\)[\s\S]*metrics\.scrollWidth\)\.toBe\(metrics\.clientWidth\)/,
+    source: browserTests,
   },
   {
     label: "portfolio project data exports as a readonly collection",
