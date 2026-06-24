@@ -8,6 +8,7 @@ import { heroBehavior, heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
 const heroVisualViewportQuery = "(min-width: 768px) and (min-height: 640px)";
+const compactLandscapeHeroViewportQuery = "(min-width: 768px) and (max-height: 639px)";
 
 function canShowHeroVisual(hasRoomyHeroViewport: boolean, shouldReduceMotion: boolean) {
   return hasRoomyHeroViewport && !shouldReduceMotion;
@@ -16,6 +17,7 @@ function canShowHeroVisual(hasRoomyHeroViewport: boolean, shouldReduceMotion: bo
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
   const hasRoomyHeroViewport = useMediaQuery(heroVisualViewportQuery);
+  const hasCompactLandscapeHeroViewport = useMediaQuery(compactLandscapeHeroViewportQuery);
   const showHeroVisual = canShowHeroVisual(hasRoomyHeroViewport, shouldReduceMotion);
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
@@ -42,7 +44,7 @@ export default function IntroSection() {
     <section
       id="intro"
       className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16"
-      style={hasRoomyHeroViewport ? undefined : { paddingTop: "3.5rem" }}
+      style={hasCompactLandscapeHeroViewport ? { paddingTop: "3.5rem" } : undefined}
     >
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 
@@ -74,7 +76,9 @@ export default function IntroSection() {
             </span>
           </h1>
           <motion.p
-            className={`${hasRoomyHeroViewport ? "mb-8 md:text-2xl" : "mb-5"} text-xl`}
+            className={`${hasCompactLandscapeHeroViewport ? "mb-5" : "mb-8"} text-xl ${
+              hasRoomyHeroViewport ? "md:text-2xl" : ""
+            }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: heroBehavior.subtitleMotion.delay, duration: heroBehavior.subtitleMotion.duration }}
@@ -84,7 +88,9 @@ export default function IntroSection() {
 
           <motion.p
             className={`mx-auto max-w-2xl text-lg text-gray-200 md:mx-0 ${
-              hasRoomyHeroViewport ? "mb-12 md:text-xl" : "mb-5"
+              hasCompactLandscapeHeroViewport ? "mb-5" : "mb-12"
+            } ${
+              hasRoomyHeroViewport ? "md:text-xl" : ""
             }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

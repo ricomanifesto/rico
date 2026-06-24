@@ -263,7 +263,7 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   expect(layout.body).not.toBeNull();
   expect(layout.contactLink).not.toBeNull();
   expect(layout.aboutSection).not.toBeNull();
-  expect(layout.heading.top).toBeGreaterThanOrEqual(0);
+  expect(layout.heading.top).toBeGreaterThanOrEqual(96);
   expect(layout.heading.bottom).toBeLessThan(layout.subtitle.top);
   expect(layout.subtitle.bottom).toBeLessThan(layout.body.top);
   expect(layout.body.bottom).toBeLessThan(layout.contactLink.top);
