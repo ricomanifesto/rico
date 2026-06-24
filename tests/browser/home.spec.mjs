@@ -343,6 +343,43 @@ test("uses a split hero composition on desktop without crowding short mobile vie
   expect(mobileLayout.copy.top).toBeGreaterThanOrEqual(0);
   expect(mobileLayout.copy.right).toBeLessThanOrEqual(390);
   expect(mobileLayout.contactLink.bottom).toBeLessThanOrEqual(mobileLayout.viewportHeight);
+
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.reload();
+
+  const landscapeLayout = await page.evaluate(() => {
+    const visual = document.querySelector("[data-testid='hero-visual']");
+    const copy = document.querySelector("[data-testid='hero-copy']");
+    const contactLink = document.querySelector("#intro a[href^='mailto:']");
+
+    const toBox = (element) => {
+      const rect = element?.getBoundingClientRect();
+
+      return rect
+        ? {
+          left: rect.left,
+          right: rect.right,
+          top: rect.top,
+          bottom: rect.bottom,
+        }
+        : null;
+    };
+
+    return {
+      visual: toBox(visual),
+      copy: toBox(copy),
+      contactLink: toBox(contactLink),
+      viewportHeight: window.innerHeight,
+      viewportWidth: window.innerWidth,
+    };
+  });
+
+  expect(landscapeLayout.visual).toBeNull();
+  expect(landscapeLayout.copy).not.toBeNull();
+  expect(landscapeLayout.contactLink).not.toBeNull();
+  expect(landscapeLayout.copy.left).toBeGreaterThanOrEqual(0);
+  expect(landscapeLayout.copy.right).toBeLessThanOrEqual(landscapeLayout.viewportWidth);
+  expect(landscapeLayout.contactLink.bottom).toBeLessThanOrEqual(landscapeLayout.viewportHeight);
 });
 
 test("collapses the desktop hero visual when reduced motion is enabled", async ({ page }) => {

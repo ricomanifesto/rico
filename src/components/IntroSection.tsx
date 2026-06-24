@@ -7,10 +7,16 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { heroBehavior, heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
+const heroVisualViewportQuery = "(min-width: 768px) and (min-height: 640px)";
+
+function canShowHeroVisual(hasRoomyHeroViewport: boolean, shouldReduceMotion: boolean) {
+  return hasRoomyHeroViewport && !shouldReduceMotion;
+}
+
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
-  const showHeroVisual = isDesktop && !shouldReduceMotion;
+  const hasRoomyHeroViewport = useMediaQuery(heroVisualViewportQuery);
+  const showHeroVisual = canShowHeroVisual(hasRoomyHeroViewport, shouldReduceMotion);
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
   useEffect(() => {
@@ -33,7 +39,11 @@ export default function IntroSection() {
   }, [shouldReduceMotion]);
   
   return (
-    <section id="intro" className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16">
+    <section
+      id="intro"
+      className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16"
+      style={hasRoomyHeroViewport ? undefined : { paddingTop: "3.5rem" }}
+    >
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 
       <motion.div
@@ -57,14 +67,14 @@ export default function IntroSection() {
         ) : null}
 
         <div data-testid="hero-copy" className={`mx-auto max-w-2xl ${showHeroVisual ? "md:mx-0" : ""}`}>
-          <h1 className="mb-4 font-mono text-4xl font-bold md:text-6xl">
+          <h1 className={`mb-4 font-mono text-4xl font-bold ${hasRoomyHeroViewport ? "md:text-6xl" : ""}`}>
             <span className="inline-flex items-center text-[#007bff]">
               {displayText}
-              <span aria-hidden="true" className="animate-blink ml-1 h-8 w-2 inline-block bg-[#007bff] md:h-12"></span>
+              <span aria-hidden="true" className="animate-blink ml-1 inline-block h-8 w-2 bg-[#007bff]"></span>
             </span>
           </h1>
           <motion.p
-            className="mb-8 text-xl md:text-2xl"
+            className={`${hasRoomyHeroViewport ? "mb-8 md:text-2xl" : "mb-5"} text-xl`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: heroBehavior.subtitleMotion.delay, duration: heroBehavior.subtitleMotion.duration }}
@@ -73,7 +83,9 @@ export default function IntroSection() {
           </motion.p>
 
           <motion.p
-            className="mx-auto mb-12 max-w-2xl text-lg text-gray-200 md:mx-0 md:text-xl"
+            className={`mx-auto max-w-2xl text-lg text-gray-200 md:mx-0 ${
+              hasRoomyHeroViewport ? "mb-12 md:text-xl" : "mb-5"
+            }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: heroBehavior.bodyMotion.delay, duration: heroBehavior.bodyMotion.duration }}
