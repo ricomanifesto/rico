@@ -79,6 +79,11 @@ const checks = [
     source: browserTests,
   },
   {
+    label: "browser tests guard safe external link attributes",
+    pattern: /test\("opens external portfolio links with safe new-tab attributes"[\s\S]*target",\s*"_blank"[\s\S]*rel",\s*"noopener noreferrer"/,
+    source: browserTests,
+  },
+  {
     label: "portfolio project data exports as a readonly collection",
     pattern: /export const projects:\s*readonly ProjectSummary\[\]\s*=/,
     source: portfolio,

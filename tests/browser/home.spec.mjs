@@ -355,6 +355,30 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
   );
 });
 
+test("opens external portfolio links with safe new-tab attributes", async ({ page }) => {
+  await installReducedMotionController(page, true);
+  await page.goto("/");
+
+  for (const linkName of ["GitHub", "LinkedIn", "Medium"]) {
+    const link = page.getByRole("link", { name: linkName });
+
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
+
+  await page.getByRole("link", { name: "Projects" }).click();
+
+  for (const linkName of [
+    "View AI-Powered Threat Intelligence Platform repository",
+    "Open AI-Powered Threat Intelligence Platform demo",
+  ]) {
+    const link = page.getByRole("link", { name: linkName });
+
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  }
+});
+
 test("exposes footer copyright year as machine-readable time", async ({ page }) => {
   await page.goto("/");
 
