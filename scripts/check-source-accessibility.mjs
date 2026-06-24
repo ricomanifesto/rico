@@ -151,6 +151,11 @@ const checks = [
     source: networkAnimation,
   },
   {
+    label: "network animation avoids narration-only source comments",
+    pattern: /^(?![\s\S]*(\/\/\s*(Increased number of nodes|Only connect nodes within this distance|Color variations for nodes - blue shades|Adding teal accent color|Create nodes|Clear previous nodes|Random size between 4px and 10px|Random opacity between 0\.3 and 0\.9|Random color from our palette|Apply pulsing animation to some nodes only|Set size and style|Random position within the container|Slower movement for larger nodes|Create connections between nodes|Clear existing connections|Create dynamically calculated connections based on proximity|Only connect nodes that are within connectionThreshold distance|Opacity based on distance \(farther = more transparent\)|Update node positions and connections|Update position based on velocity|Bounce off edges with slight randomness in new velocity|Add some randomness to bounce|Apply new position|Initialize animation|Start animation when component mounts|Handle window resize|Re-initialize the animation after a short delay|Cleanup)))[\s\S]*$/,
+    source: networkAnimation,
+  },
+  {
     label: "network animation skips moving nodes for reduced motion",
     pattern: /shouldReduceMotion\)\s*\{\s*return;/,
     source: networkAnimation,

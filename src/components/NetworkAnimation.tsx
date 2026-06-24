@@ -34,23 +34,20 @@ export default function NetworkAnimation() {
       return;
     }
 
-    const maxNodes = 15; // Increased number of nodes
-    const connectionThreshold = 200; // Only connect nodes within this distance
+    const maxNodes = 15;
+    const connectionThreshold = 200;
     
-    // Color variations for nodes - blue shades
     const nodeColors = [
       'rgba(0, 123, 255, 0.7)',
       'rgba(30, 144, 255, 0.6)',
       'rgba(65, 105, 225, 0.7)',
       'rgba(0, 191, 255, 0.6)',
-      'rgba(32, 201, 151, 0.6)', // Adding teal accent color
+      'rgba(32, 201, 151, 0.6)',
     ];
     
-    // Create nodes
     const createNodes = () => {
       if (!containerRef.current) return;
       
-      // Clear previous nodes
       nodesRef.current.forEach(node => node.element.remove());
       nodesRef.current = [];
       
@@ -59,34 +56,27 @@ export default function NetworkAnimation() {
       for (let i = 0; i < maxNodes; i++) {
         const node = document.createElement('div');
         
-        // Random size between 4px and 10px
         const size = Math.random() * 6 + 4;
         
-        // Random opacity between 0.3 and 0.9
         const opacity = Math.random() * 0.6 + 0.3;
         
-        // Random color from our palette
         const color = nodeColors[Math.floor(Math.random() * nodeColors.length)];
         
         node.classList.add('node');
-        // Apply pulsing animation to some nodes only
         if (Math.random() > 0.5) {
           node.classList.add('animate-pulse-slow');
         }
         
-        // Set size and style
         node.style.width = `${size}px`;
         node.style.height = `${size}px`;
         node.style.backgroundColor = color;
         
-        // Random position within the container
         const x = Math.random() * (containerRect.width - size);
         const y = Math.random() * (containerRect.height - size);
         
         node.style.left = `${x}px`;
         node.style.top = `${y}px`;
         
-        // Slower movement for larger nodes
         const speedFactor = (10 - size/2) / 10;
         
         nodesRef.current.push({
@@ -104,15 +94,12 @@ export default function NetworkAnimation() {
       }
     };
     
-    // Create connections between nodes
     const createConnections = () => {
       if (!containerRef.current) return;
       
-      // Clear existing connections
       const existingConnections = containerRef.current.querySelectorAll('.connection');
       existingConnections.forEach(conn => conn.remove());
       
-      // Create dynamically calculated connections based on proximity
       for (let i = 0; i < nodesRef.current.length; i++) {
         for (let j = i + 1; j < nodesRef.current.length; j++) {
           const nodeA = nodesRef.current[i];
@@ -122,12 +109,10 @@ export default function NetworkAnimation() {
           const dy = nodeB.y - nodeA.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          // Only connect nodes that are within connectionThreshold distance
           if (distance < connectionThreshold) {
             const connection = document.createElement('div');
             connection.classList.add('connection');
             
-            // Opacity based on distance (farther = more transparent)
             const opacity = 0.5 * (1 - distance / connectionThreshold);
             connection.style.backgroundColor = `rgba(0, 123, 255, ${opacity})`;
             
@@ -144,27 +129,23 @@ export default function NetworkAnimation() {
       }
     };
     
-    // Update node positions and connections
     const updateNodes = () => {
       if (!containerRef.current) return;
       
       const containerRect = containerRef.current.getBoundingClientRect();
       
       nodesRef.current.forEach(node => {
-        // Update position based on velocity
         node.x += node.vx;
         node.y += node.vy;
         
-        // Bounce off edges with slight randomness in new velocity
         if (node.x <= 0 || node.x >= containerRect.width - node.size) {
-          node.vx *= -1 * (0.9 + Math.random() * 0.2); // Add some randomness to bounce
+          node.vx *= -1 * (0.9 + Math.random() * 0.2);
         }
         
         if (node.y <= 0 || node.y >= containerRect.height - node.size) {
           node.vy *= -1 * (0.9 + Math.random() * 0.2);
         }
         
-        // Apply new position
         node.element.style.left = `${node.x}px`;
         node.element.style.top = `${node.y}px`;
       });
@@ -173,16 +154,13 @@ export default function NetworkAnimation() {
       animationRef.current = requestAnimationFrame(updateNodes);
     };
     
-    // Initialize animation
     const initAnimation = () => {
       createNodes();
       animationRef.current = requestAnimationFrame(updateNodes);
     };
     
-    // Start animation when component mounts
     initAnimation();
     
-    // Handle window resize
     const handleResize = () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
@@ -192,7 +170,6 @@ export default function NetworkAnimation() {
         clearTimeout(resizeTimeoutRef.current);
       }
       
-      // Re-initialize the animation after a short delay
       resizeTimeoutRef.current = setTimeout(() => {
         resizeTimeoutRef.current = null;
         if (shouldReduceMotionRef.current) {
@@ -206,7 +183,6 @@ export default function NetworkAnimation() {
     window.addEventListener('resize', handleResize);
     const container = containerRef.current;
     
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
       
