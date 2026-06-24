@@ -384,6 +384,10 @@ test("collapses the desktop hero visual when reduced motion is enabled", async (
   expect(layout.copy.left).toBeGreaterThan(200);
   expect(layout.copy.right).toBeLessThan(layout.viewportWidth - 200);
   expect(layout.contactLink.bottom).toBeLessThan(layout.viewportHeight);
+  expect(Math.abs(
+    (layout.contactLink.left + layout.contactLink.width / 2) -
+      (layout.copy.left + layout.copy.width / 2),
+  )).toBeLessThanOrEqual(2);
 });
 
 test("exposes about technologies as a semantic list", async ({ page }) => {

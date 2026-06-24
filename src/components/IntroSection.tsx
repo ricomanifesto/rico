@@ -82,7 +82,7 @@ export default function IntroSection() {
           </motion.p>
 
           <motion.div
-            className="flex justify-center md:justify-start"
+            className={`flex justify-center ${showHeroVisual ? "md:justify-start" : ""}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: heroBehavior.ctaMotion.delay, duration: heroBehavior.ctaMotion.duration }}
