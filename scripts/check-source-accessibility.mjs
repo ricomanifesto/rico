@@ -172,7 +172,12 @@ const checks = [
   },
   {
     label: "intro typewriter cursor uses a class-based accent style",
-    pattern: /<span className="[^"]*bg-\[#007bff\][^"]*"><\/span>/,
+    pattern: /<span[^>]*className="[^"]*bg-\[#007bff\][^"]*"[^>]*><\/span>/,
+    source: introSection,
+  },
+  {
+    label: "intro typewriter cursor is hidden from assistive technology",
+    pattern: /<span[^>]*aria-hidden="true"[^>]*className="[^"]*bg-\[#007bff\][^"]*"><\/span>/,
     source: introSection,
   },
   {
