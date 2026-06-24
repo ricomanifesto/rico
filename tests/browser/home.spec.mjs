@@ -274,6 +274,7 @@ test("keeps mobile hero content visible before the next section", async ({ page 
 test("uses a split hero composition on desktop without crowding short mobile viewports", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
+  await expect(page.getByTestId("hero-visual")).toBeVisible();
 
   const desktopLayout = await page.evaluate(() => {
     const visual = document.querySelector("[data-testid='hero-visual']");
@@ -335,10 +336,10 @@ test("uses a split hero composition on desktop without crowding short mobile vie
     };
   });
 
-  expect(mobileLayout.visual).not.toBeNull();
   expect(mobileLayout.copy).not.toBeNull();
   expect(mobileLayout.contactLink).not.toBeNull();
-  expect(mobileLayout.visualDisplay).toBe("none");
+  expect(mobileLayout.visual).toBeNull();
+  expect(mobileLayout.visualDisplay).toBeNull();
   expect(mobileLayout.copy.top).toBeGreaterThanOrEqual(0);
   expect(mobileLayout.copy.right).toBeLessThanOrEqual(390);
   expect(mobileLayout.contactLink.bottom).toBeLessThanOrEqual(mobileLayout.viewportHeight);

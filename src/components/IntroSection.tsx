@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import NetworkAnimation from "./NetworkAnimation";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { heroBehavior, heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
-  const showHeroVisual = !shouldReduceMotion;
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const showHeroVisual = isDesktop && !shouldReduceMotion;
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
   useEffect(() => {
