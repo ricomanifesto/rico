@@ -385,6 +385,37 @@ test("keeps the mobile header inside narrow viewports", async ({ page }) => {
   }
 });
 
+test("keeps every mobile nav rail item reachable without page overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto("/");
+
+  const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
+  await expect(mobileNav).toBeVisible();
+
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Contact"]) {
+    const link = mobileNav.getByRole("link", { name: linkName });
+
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeVisible();
+
+    const metrics = await link.evaluate((element) => {
+      const documentElement = document.documentElement;
+      const box = element.getBoundingClientRect();
+
+      return {
+        clientWidth: documentElement.clientWidth,
+        scrollWidth: documentElement.scrollWidth,
+        left: box.left,
+        right: box.right,
+      };
+    });
+
+    expect(metrics.scrollWidth).toBe(metrics.clientWidth);
+    expect(metrics.left).toBeGreaterThanOrEqual(-0.5);
+    expect(metrics.right).toBeLessThanOrEqual(metrics.clientWidth + 0.5);
+  }
+});
+
 test("supports keyboard navigation across experience tabs", async ({ page }) => {
   await page.goto("/");
 
