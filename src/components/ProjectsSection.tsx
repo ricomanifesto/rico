@@ -129,8 +129,8 @@ export default function ProjectsSection() {
         <div className="overflow-hidden">
           <motion.div 
             className="flex transition-transform duration-500 ease-in-out"
-            animate={shouldReduceMotion ? undefined : { x: `${-currentIndex * 100}%` }}
-            style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * 100}%)` } : undefined}
+            animate={shouldReduceMotion ? undefined : { x: `${-currentIndex * projectCarouselBehavior.slideStepPercent}%` }}
+            style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * projectCarouselBehavior.slideStepPercent}%)` } : undefined}
           >
             {projects.map((project, index) => {
               const repositoryTarget = project.links.repository.external ? "_blank" : undefined;
