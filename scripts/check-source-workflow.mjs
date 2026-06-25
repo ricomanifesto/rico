@@ -203,7 +203,7 @@ const checks = [
   },
   {
     label: "hero behavior is typed as readonly metadata",
-    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
+    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*readonly roomyVisualViewportQuery:\s*string;[\s\S]*readonly compactLandscapeViewportQuery:\s*string;[\s\S]*readonly compactLandscapePaddingTop:\s*"4\.5rem";[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
     source: hero,
   },
   {
@@ -213,7 +213,7 @@ const checks = [
   },
   {
     label: "hero behavior preserves current typewriter timing",
-    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*typewriterIntervalMs:\s*150[\s\S]*\}/,
+    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*typewriterIntervalMs:\s*150,[\s\S]*roomyVisualViewportQuery:\s*"\(min-width: 768px\) and \(min-height: 640px\)",[\s\S]*compactLandscapeViewportQuery:\s*"\(min-width: 768px\) and \(max-height: 639px\)",[\s\S]*compactLandscapePaddingTop:\s*"4\.5rem"[\s\S]*\}/,
     source: hero,
   },
   {
@@ -228,7 +228,7 @@ const checks = [
   },
   {
     label: "intro section uses hero behavior metadata for typewriter timing",
-    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);/,
+    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useMediaQuery\(heroBehavior\.roomyVisualViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeViewportQuery\)[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);[\s\S]*paddingTop:\s*heroBehavior\.compactLandscapePaddingTop/,
     source: introSection,
   },
   {

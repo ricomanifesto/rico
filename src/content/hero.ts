@@ -7,6 +7,9 @@ export interface HeroContent {
 
 export interface HeroBehavior {
   readonly typewriterIntervalMs: number;
+  readonly roomyVisualViewportQuery: string;
+  readonly compactLandscapeViewportQuery: string;
+  readonly compactLandscapePaddingTop: "4.5rem";
   readonly containerMotion: {
     readonly duration: number;
     readonly ease: "easeOut";
@@ -57,6 +60,9 @@ export const heroContent: HeroContent = {
 
 export const heroBehavior: HeroBehavior = {
   typewriterIntervalMs: 150,
+  roomyVisualViewportQuery: "(min-width: 768px) and (min-height: 640px)",
+  compactLandscapeViewportQuery: "(min-width: 768px) and (max-height: 639px)",
+  compactLandscapePaddingTop: "4.5rem",
   containerMotion: {
     duration: 0.8,
     ease: "easeOut",
