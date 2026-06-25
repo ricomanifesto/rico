@@ -276,17 +276,17 @@ const checks = [
   },
   {
     label: "header navigation behavior is typed as readonly metadata",
-    pattern: /export interface HeaderNavigationBehavior \{[\s\S]*readonly activeSectionOffsetPx:\s*number;[\s\S]*readonly scrolledShadowThresholdPx:\s*number;[\s\S]*readonly scrollListenerOptions:\s*AddEventListenerOptions;[\s\S]*\}/,
+    pattern: /export interface HeaderNavigationBehavior \{[\s\S]*readonly defaultActiveHref:\s*string;[\s\S]*readonly activeSectionOffsetPx:\s*number;[\s\S]*readonly scrolledShadowThresholdPx:\s*number;[\s\S]*readonly scrollListenerOptions:\s*AddEventListenerOptions;[\s\S]*\}/,
     source: navigation,
   },
   {
     label: "header navigation behavior preserves current scroll thresholds",
-    pattern: /export const headerNavigationBehavior:\s*HeaderNavigationBehavior\s*=\s*\{[\s\S]*activeSectionOffsetPx:\s*160,[\s\S]*scrolledShadowThresholdPx:\s*10,[\s\S]*scrollListenerOptions:\s*\{ passive:\s*true \}[\s\S]*\}/,
+    pattern: /export const headerNavigationBehavior:\s*HeaderNavigationBehavior\s*=\s*\{[\s\S]*defaultActiveHref:\s*"#intro",[\s\S]*activeSectionOffsetPx:\s*160,[\s\S]*scrolledShadowThresholdPx:\s*10,[\s\S]*scrollListenerOptions:\s*\{ passive:\s*true \}[\s\S]*\}/,
     source: navigation,
   },
   {
     label: "header consumes typed navigation behavior metadata",
-    pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)/,
+    pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*useState\(headerNavigationBehavior\.defaultActiveHref\)[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*sectionLinks\[0\]\?\.href \?\? headerNavigationBehavior\.defaultActiveHref[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)/,
     source: header,
   },
 ];

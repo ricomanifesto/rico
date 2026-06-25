@@ -13,7 +13,7 @@ function getSectionElement(hash: string) {
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeHref, setActiveHref] = useState("#intro");
+  const [activeHref, setActiveHref] = useState(headerNavigationBehavior.defaultActiveHref);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +30,7 @@ export default function Header() {
         const { top } = section.getBoundingClientRect();
 
         return top <= headerNavigationBehavior.activeSectionOffsetPx ? item.href : current;
-      }, sectionLinks[0]?.href ?? "#intro");
+      }, sectionLinks[0]?.href ?? headerNavigationBehavior.defaultActiveHref);
 
       setActiveHref(activeSection);
     };
