@@ -236,21 +236,21 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
 
   if (
     componentPath === socialLinkPath &&
-    !/kind === "email"[\s\S]*<Mail\b/.test(source)
+    !/const socialIconRegistry:[\s\S]*email:\s*\(\)\s*=>\s*<Mail\b/.test(source)
   ) {
     failures.push(`${path.relative(root, componentPath)} renders the email social link with the shared mail icon`);
   }
 
   if (
     componentPath === socialLinkPath &&
-    !/kind === "github"[\s\S]*<Github\b/.test(source)
+    !/const socialIconRegistry:[\s\S]*github:\s*\(\)\s*=>\s*<Github\b/.test(source)
   ) {
     failures.push(`${path.relative(root, componentPath)} renders the GitHub social link with the shared GitHub icon`);
   }
 
   if (
     componentPath === socialLinkPath &&
-    !/kind === "linkedin"[\s\S]*<Linkedin\b/.test(source)
+    !/const socialIconRegistry:[\s\S]*linkedin:\s*\(\)\s*=>\s*<Linkedin\b/.test(source)
   ) {
     failures.push(`${path.relative(root, componentPath)} renders the LinkedIn social link with the shared LinkedIn icon`);
   }

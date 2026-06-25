@@ -405,8 +405,8 @@ const checks = [
     source: socialLinkSource,
   },
   {
-    label: "medium social icon is handled explicitly",
-    pattern: /if\s*\(\s*kind === "medium"\s*\)\s*\{\s*return <MediumIcon \/>;\s*\}[\s\S]*function MediumIcon\(\)/,
+    label: "social icons use a typed shared registry",
+    pattern: /type SocialIconRenderer = \(\) => ReactNode;[\s\S]*const socialIconRegistry:\s*Record<SocialLinkKind,\s*SocialIconRenderer>\s*=\s*\{[\s\S]*email:\s*\(\)\s*=>\s*<Mail\b[\s\S]*github:\s*\(\)\s*=>\s*<Github\b[\s\S]*linkedin:\s*\(\)\s*=>\s*<Linkedin\b[\s\S]*medium:\s*MediumIcon[\s\S]*\};[\s\S]*function SocialIcon\([\s\S]*const Icon = socialIconRegistry\[kind\];[\s\S]*return <Icon \/>/,
     source: socialLinkSource,
   },
   {
