@@ -632,11 +632,15 @@ function experienceHighlightChevronsUseInlineAccentStyles(source) {
 }
 
 function projectCarouselControlsUseInlineAccentStyles(source) {
-  const controlsMatch = source.match(
+  const arrowControlsMatch = source.match(
     /function ProjectCarouselArrowButton[\s\S]*?return \([\s\S]*?<\/button>/,
   );
+  const dotControlsMatch = source.match(
+    /<div className="flex justify-center mt-6 space-x-2">[\s\S]*?<\/div>/,
+  );
+  const controlsSource = `${arrowControlsMatch?.[0] ?? ""}\n${dotControlsMatch?.[0] ?? ""}`;
 
-  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(controlsMatch?.[0] ?? "");
+  return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(controlsSource);
 }
 
 function projectCardContentUsesInlineAccentStyles(source) {
