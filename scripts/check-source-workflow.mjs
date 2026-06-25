@@ -7,7 +7,9 @@ const workflowPath = path.join(root, ".github/workflows/deploy.yml");
 const cleanTestArtifactsPath = path.join(root, "scripts/clean-test-artifacts.mjs");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const heroPath = path.join(root, "src/content/hero.ts");
+const navigationPath = path.join(root, "src/content/navigation.ts");
 const homePath = path.join(root, "src/Home.tsx");
+const headerPath = path.join(root, "src/components/Header.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
@@ -20,7 +22,9 @@ const workflow = fs.readFileSync(workflowPath, "utf8");
 const cleanTestArtifacts = fs.readFileSync(cleanTestArtifactsPath, "utf8");
 const portfolio = fs.readFileSync(portfolioPath, "utf8");
 const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
+const navigation = fs.readFileSync(navigationPath, "utf8");
 const home = fs.readFileSync(homePath, "utf8");
+const header = fs.readFileSync(headerPath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
 const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
@@ -269,6 +273,21 @@ const checks = [
     label: "project cards apply external action link metadata",
     pattern: /const repositoryTarget = project\.links\.repository\.external \? "_blank" : undefined;[\s\S]*const repositoryRel = project\.links\.repository\.external \? "noopener noreferrer" : undefined;[\s\S]*const demoTarget = project\.links\.demo\?\.external \? "_blank" : undefined;[\s\S]*const demoRel = project\.links\.demo\?\.external \? "noopener noreferrer" : undefined;[\s\S]*target=\{repositoryTarget\}[\s\S]*rel=\{repositoryRel\}[\s\S]*target=\{demoTarget\}[\s\S]*rel=\{demoRel\}/,
     source: projectsSection,
+  },
+  {
+    label: "header navigation behavior is typed as readonly metadata",
+    pattern: /export interface HeaderNavigationBehavior \{[\s\S]*readonly activeSectionOffsetPx:\s*number;[\s\S]*readonly scrolledShadowThresholdPx:\s*number;[\s\S]*readonly scrollListenerOptions:\s*AddEventListenerOptions;[\s\S]*\}/,
+    source: navigation,
+  },
+  {
+    label: "header navigation behavior preserves current scroll thresholds",
+    pattern: /export const headerNavigationBehavior:\s*HeaderNavigationBehavior\s*=\s*\{[\s\S]*activeSectionOffsetPx:\s*160,[\s\S]*scrolledShadowThresholdPx:\s*10,[\s\S]*scrollListenerOptions:\s*\{ passive:\s*true \}[\s\S]*\}/,
+    source: navigation,
+  },
+  {
+    label: "header consumes typed navigation behavior metadata",
+    pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)/,
+    source: header,
   },
 ];
 
