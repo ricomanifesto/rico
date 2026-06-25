@@ -481,12 +481,12 @@ const checks = [
   },
   {
     label: "project carousel arrow buttons keep mobile touch targets inside the viewport",
-    pattern: /type ProjectCarouselArrowDirection = "previous" \| "next";[\s\S]*direction === "previous"[\s\S]*left-2 md:left-0[\s\S]*md:-translate-x-4[\s\S]*right-2 md:right-0[\s\S]*md:translate-x-4[\s\S]*p-3 md:p-2/,
+    pattern: /interface ProjectCarouselArrowMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly positionClass:\s*string;[\s\S]*\}[\s\S]*const projectCarouselArrowMetadata:\s*Record<ProjectCarouselArrowDirection,\s*ProjectCarouselArrowMetadata>\s*=\s*\{[\s\S]*previous:\s*\{[\s\S]*Icon:\s*ChevronLeft,[\s\S]*positionClass:\s*"left-2 md:left-0 md:-translate-x-4"[\s\S]*next:\s*\{[\s\S]*Icon:\s*ChevronRight,[\s\S]*positionClass:\s*"right-2 md:right-0 md:translate-x-4"[\s\S]*function ProjectCarouselArrowButton\([\s\S]*const \{ Icon, positionClass \} = projectCarouselArrowMetadata\[direction\];[\s\S]*p-3 md:p-2/,
     source: projectsSection,
   },
   {
     label: "project carousel arrow icons use class-based accent styles",
-    pattern: /const Icon = direction === "previous" \? ChevronLeft : ChevronRight;[\s\S]*<Icon[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
+    pattern: /const projectCarouselArrowMetadata:[\s\S]*previous:\s*\{[\s\S]*Icon:\s*ChevronLeft[\s\S]*next:\s*\{[\s\S]*Icon:\s*ChevronRight[\s\S]*function ProjectCarouselArrowButton\([\s\S]*const \{ Icon, positionClass \} = projectCarouselArrowMetadata\[direction\];[\s\S]*<Icon[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
     source: projectsSection,
   },
   {

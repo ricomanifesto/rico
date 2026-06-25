@@ -30,6 +30,11 @@ interface ProjectActionMetadata {
   readonly getLabel: (projectTitle: string) => string;
 }
 
+interface ProjectCarouselArrowMetadata {
+  readonly Icon: LucideIcon;
+  readonly positionClass: string;
+}
+
 const projectActionMetadata: Record<ProjectActionLinkKind, ProjectActionMetadata> = {
   repository: {
     Icon: Github,
@@ -38,6 +43,17 @@ const projectActionMetadata: Record<ProjectActionLinkKind, ProjectActionMetadata
   demo: {
     Icon: ExternalLink,
     getLabel: (projectTitle) => `Open ${projectTitle} demo`,
+  },
+};
+
+const projectCarouselArrowMetadata: Record<ProjectCarouselArrowDirection, ProjectCarouselArrowMetadata> = {
+  previous: {
+    Icon: ChevronLeft,
+    positionClass: "left-2 md:left-0 md:-translate-x-4",
+  },
+  next: {
+    Icon: ChevronRight,
+    positionClass: "right-2 md:right-0 md:translate-x-4",
   },
 };
 
@@ -327,9 +343,7 @@ function ProjectCarouselArrowButton({
   onKeyDown,
   onKeyUp,
 }: ProjectCarouselArrowButtonProps) {
-  const Icon = direction === "previous" ? ChevronLeft : ChevronRight;
-  const positionClass =
-    direction === "previous" ? "left-2 md:left-0 md:-translate-x-4" : "right-2 md:right-0 md:translate-x-4";
+  const { Icon, positionClass } = projectCarouselArrowMetadata[direction];
 
   return (
     <button
