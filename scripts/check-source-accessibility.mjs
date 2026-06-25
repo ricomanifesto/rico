@@ -346,27 +346,37 @@ const checks = [
   },
   {
     label: "experience tabs expose selected state",
-    pattern: /aria-selected=\{selectedCompany === index\}/,
+    pattern: /<ExperienceTab[\s\S]*isSelected=\{selectedCompany === index\}[\s\S]*function ExperienceTab\([\s\S]*aria-selected=\{isSelected\}/,
     source: experienceSource,
   },
   {
     label: "experience selected tabs use class-based accent styles",
-    pattern: /selectedCompany === index\s*\?\s*'[^']*text-\[#007bff\][^']*'/,
+    pattern: /function ExperienceTab\([\s\S]*isSelected \? '[^']*text-\[#007bff\][^']*'/,
     source: experienceSource,
   },
   {
     label: "experience selected tab bars use class-based accent styles",
-    pattern: /selectedCompany === index\s*\?\s*'[^']*bg-\[#007bff\][^']*'/,
+    pattern: /function ExperienceTab\([\s\S]*isSelected \? '[^']*bg-\[#007bff\][^']*'/,
     source: experienceSource,
   },
   {
     label: "experience tabs support arrow-key navigation",
-    pattern: /onKeyDown=\{\(event\)\s*=>\s*handleCompanyKeyDown\(event,\s*index\)\}/,
+    pattern: /<ExperienceTab[\s\S]*onKeyDown=\{handleCompanyKeyDown\}[\s\S]*function ExperienceTab\([\s\S]*onKeyDown=\{\(event\) => onKeyDown\(event, index\)\}/,
+    source: experienceSource,
+  },
+  {
+    label: "experience tabs use a typed shared renderer",
+    pattern: /interface ExperienceTabProps[\s\S]*index:\s*number;[\s\S]*function ExperienceTab\(/,
+    source: experienceSource,
+  },
+  {
+    label: "experience tab renderer owns selected tab semantics",
+    pattern: /function ExperienceTab\([\s\S]*role="tab"[\s\S]*aria-selected=\{isSelected\}[\s\S]*aria-controls=\{`experience-panel-\$\{index\}`\}[\s\S]*tabIndex=\{isSelected \? 0 : -1\}/,
     source: experienceSource,
   },
   {
     label: "experience lists use stable content keys",
-    pattern: /experiences\.map\(\(exp, index\) => \(\s*<motion\.button[\s\S]*key=\{exp\.company\}[\s\S]*exp\.highlights\.map\(\(highlight, highlightIndex\) => \(\s*<motion\.li[\s\S]*key=\{highlight\}/,
+    pattern: /experiences\.map\(\(exp, index\) => \(\s*<ExperienceTab[\s\S]*key=\{exp\.company\}[\s\S]*exp\.highlights\.map\(\(highlight, highlightIndex\) => \(\s*<motion\.li[\s\S]*key=\{highlight\}/,
     source: experienceSource,
   },
   {
