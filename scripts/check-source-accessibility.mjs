@@ -66,12 +66,12 @@ const checks = [
   },
   {
     label: "project repository links include accessible names",
-    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}/,
+    pattern: /<ProjectActionLink[\s\S]*kind="repository"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = kind === "repository" \? `View \$\{projectTitle\} repository` : `Open \$\{projectTitle\} demo`;[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,
   },
   {
     label: "project demo links include accessible names",
-    pattern: /href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}/,
+    pattern: /<ProjectActionLink[\s\S]*kind="demo"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = kind === "repository" \? `View \$\{projectTitle\} repository` : `Open \$\{projectTitle\} demo`;[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,
   },
   {
@@ -401,17 +401,17 @@ const checks = [
   },
   {
     label: "project action links have visible keyboard focus styles",
-    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*focus-visible:outline[\s\S]*href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*focus-visible:outline/,
+    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
     source: projectsSection,
   },
   {
     label: "project action links use mobile-friendly touch targets",
-    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"[\s\S]*href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"/,
+    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"/,
     source: projectsSection,
   },
   {
     label: "project action links use class-based hover styles",
-    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*hover:text-\[#66b3ff\][\s\S]*href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*hover:text-\[#66b3ff\]/,
+    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="[^"]*hover:text-\[#66b3ff\][^"]*"/,
     source: projectsSection,
   },
   {
@@ -441,12 +441,27 @@ const checks = [
   },
   {
     label: "project repository links are tabbable only on the active slide",
-    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    pattern: /<ProjectActionLink[\s\S]*kind="repository"[\s\S]*isActive=\{isActive\}[\s\S]*function ProjectActionLink\([\s\S]*tabIndex=\{isActive \? 0 : -1\}/,
     source: projectsSection,
   },
   {
     label: "project demo links are tabbable only on the active slide",
-    pattern: /href=\{project\.links\.demo\.href\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*tabIndex=\{index === currentIndex \? 0 : -1\}/,
+    pattern: /<ProjectActionLink[\s\S]*kind="demo"[\s\S]*isActive=\{isActive\}[\s\S]*function ProjectActionLink\([\s\S]*tabIndex=\{isActive \? 0 : -1\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project action links use a typed shared renderer",
+    pattern: /type ProjectActionLinkKind = "repository" \| "demo";[\s\S]*interface ProjectActionLinkProps[\s\S]*kind:\s*ProjectActionLinkKind;[\s\S]*function ProjectActionLink\(/,
+    source: projectsSection,
+  },
+  {
+    label: "project action links share icon and accessible label behavior",
+    pattern: /function ProjectActionLink\([\s\S]*const Icon = kind === "repository" \? Github : ExternalLink;[\s\S]*const actionLabel = kind === "repository" \? `View \$\{projectTitle\} repository` : `Open \$\{projectTitle\} demo`;[\s\S]*aria-label=\{actionLabel\}/,
+    source: projectsSection,
+  },
+  {
+    label: "project action links share active slide tab order behavior",
+    pattern: /function ProjectActionLink\([\s\S]*tabIndex=\{isActive \? 0 : -1\}/,
     source: projectsSection,
   },
   {
@@ -571,7 +586,7 @@ function hasClassToken(className, token) {
 
 function projectActionLinksUseMouseHandlers(source) {
   const actionLinksMatch = source.match(
-    /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*<\/a>/,
+    /function ProjectActionLink\([\s\S]*?return \([\s\S]*?<\/a>/,
   );
 
   return /onMouseEnter|onMouseLeave/.test(actionLinksMatch?.[0] ?? "");

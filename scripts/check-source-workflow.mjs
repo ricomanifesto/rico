@@ -278,12 +278,12 @@ const checks = [
   },
   {
     label: "project cards render action links from metadata",
-    pattern: /href=\{project\.links\.repository\.href\}[\s\S]*href=\{project\.links\.demo\.href\}/,
+    pattern: /<ProjectActionLink[\s\S]*kind="repository"[\s\S]*link=\{project\.links\.repository\}[\s\S]*<ProjectActionLink[\s\S]*kind="demo"[\s\S]*link=\{project\.links\.demo\}/,
     source: projectsSection,
   },
   {
     label: "project cards apply external action link metadata",
-    pattern: /import\s*\{\s*projectActionLinkBehavior,\s*projectCarouselBehavior,\s*projects\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*const repositoryTarget = project\.links\.repository\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const repositoryRel = project\.links\.repository\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*const demoTarget = project\.links\.demo\?\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const demoRel = project\.links\.demo\?\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*target=\{repositoryTarget\}[\s\S]*rel=\{repositoryRel\}[\s\S]*target=\{demoTarget\}[\s\S]*rel=\{demoRel\}/,
+    pattern: /import\s*\{[\s\S]*ProjectActionLink\s+as\s+ProjectActionLinkData[\s\S]*projectActionLinkBehavior[\s\S]*projectCarouselBehavior[\s\S]*projects[\s\S]*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*function ProjectActionLink\([\s\S]*const target = link\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const rel = link\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*target=\{target\}[\s\S]*rel=\{rel\}/,
     source: projectsSection,
   },
   {
