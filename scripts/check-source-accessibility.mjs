@@ -586,7 +586,7 @@ function hasClassToken(className, token) {
 
 function projectActionLinksUseMouseHandlers(source) {
   const actionLinksMatch = source.match(
-    /aria-label=\{`View \$\{project\.title\} repository`\}[\s\S]*aria-label=\{`Open \$\{project\.title\} demo`\}[\s\S]*<\/a>/,
+    /function ProjectActionLink\([\s\S]*?return \([\s\S]*?<\/a>/,
   );
 
   return /onMouseEnter|onMouseLeave/.test(actionLinksMatch?.[0] ?? "");
