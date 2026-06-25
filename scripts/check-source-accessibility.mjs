@@ -10,6 +10,7 @@ const componentsRoot = path.join(root, "src/components");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
 const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
+const mediaQueryHookPath = path.join(root, "src/hooks/useMediaQuery.ts");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
@@ -26,6 +27,9 @@ const appSource = fs.readFileSync(appPath, "utf8");
 const homeSource = fs.readFileSync(homePath, "utf8");
 const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
   ? fs.readFileSync(reducedMotionHookPath, "utf8")
+  : "";
+const mediaQueryHook = fs.existsSync(mediaQueryHookPath)
+  ? fs.readFileSync(mediaQueryHookPath, "utf8")
   : "";
 const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
 const experienceSource = fs.readFileSync(experiencePath, "utf8");
@@ -134,6 +138,21 @@ const checks = [
     label: "reduced-motion preference hook returns the live media-query state",
     pattern: /return prefersReducedMotion;/,
     source: reducedMotionHook,
+  },
+  {
+    label: "media query hook guards browser media query access",
+    pattern: /typeof window !== "undefined"[\s\S]*window\.matchMedia\(query\)\.matches/,
+    source: mediaQueryHook,
+  },
+  {
+    label: "media query hook tracks query changes",
+    pattern: /addEventListener\("change"/,
+    source: mediaQueryHook,
+  },
+  {
+    label: "media query hook removes query listener",
+    pattern: /removeEventListener\("change"/,
+    source: mediaQueryHook,
   },
   {
     label: "network animation uses shared reduced-motion preference hook",
