@@ -1,10 +1,20 @@
 import { Github, Linkedin, Mail } from "lucide-react";
+import type { ReactNode } from "react";
 import type { SocialLink as SocialLinkData, SocialLinkKind } from "@/content/navigation";
 import { socialLinkBehavior } from "@/content/navigation";
 
 interface SocialLinkProps {
   link: SocialLinkData;
 }
+
+type SocialIconRenderer = () => ReactNode;
+
+const socialIconRegistry: Record<SocialLinkKind, SocialIconRenderer> = {
+  email: () => <Mail size={20} aria-hidden="true" focusable="false" />,
+  github: () => <Github size={20} aria-hidden="true" focusable="false" />,
+  linkedin: () => <Linkedin size={20} aria-hidden="true" focusable="false" />,
+  medium: MediumIcon,
+};
 
 export default function SocialLink({ link }: SocialLinkProps) {
   return (
@@ -21,23 +31,8 @@ export default function SocialLink({ link }: SocialLinkProps) {
 }
 
 function SocialIcon({ kind }: { kind: SocialLinkKind }) {
-  if (kind === "email") {
-    return <Mail size={20} aria-hidden="true" focusable="false" />;
-  }
-
-  if (kind === "github") {
-    return <Github size={20} aria-hidden="true" focusable="false" />;
-  }
-
-  if (kind === "linkedin") {
-    return <Linkedin size={20} aria-hidden="true" focusable="false" />;
-  }
-
-  if (kind === "medium") {
-    return <MediumIcon />;
-  }
-
-  return null;
+  const Icon = socialIconRegistry[kind];
+  return <Icon />;
 }
 
 function MediumIcon() {

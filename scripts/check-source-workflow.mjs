@@ -316,6 +316,11 @@ const checks = [
     pattern: /import\s+type\s+\{\s*SocialLink as SocialLinkData,\s*SocialLinkKind\s*\}\s+from\s*["']@\/content\/navigation["'];[\s\S]*import\s*\{\s*socialLinkBehavior\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*target=\{link\.external \? socialLinkBehavior\.externalTarget : undefined\}[\s\S]*rel=\{link\.external \? socialLinkBehavior\.externalRel : undefined\}/,
     source: socialLink,
   },
+  {
+    label: "social link icons use a canonical typed registry",
+    pattern: /type SocialIconRenderer = \(\) => ReactNode;[\s\S]*const socialIconRegistry:\s*Record<SocialLinkKind,\s*SocialIconRenderer>\s*=\s*\{[\s\S]*email:\s*\(\)\s*=>\s*<Mail\b[\s\S]*github:\s*\(\)\s*=>\s*<Github\b[\s\S]*linkedin:\s*\(\)\s*=>\s*<Linkedin\b[\s\S]*medium:\s*MediumIcon[\s\S]*\};[\s\S]*const Icon = socialIconRegistry\[kind\];[\s\S]*return <Icon \/>/,
+    source: socialLink,
+  },
 ];
 
 const failures = checks
