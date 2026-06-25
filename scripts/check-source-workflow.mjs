@@ -161,17 +161,17 @@ const checks = [
   },
   {
     label: "experience behavior is typed as readonly metadata",
-    pattern: /export interface ExperienceBehavior \{[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly tabMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*\};[\s\S]*readonly panelMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly highlightMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly baseDelay:\s*number;[\s\S]*\};[\s\S]*\}/,
+    pattern: /export interface ExperienceBehavior \{[\s\S]*readonly keyboardNavigationKeys:\s*\{[\s\S]*readonly next:\s*readonly string\[\];[\s\S]*readonly previous:\s*readonly string\[\];[\s\S]*readonly first:\s*string;[\s\S]*readonly last:\s*string;[\s\S]*\};[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly tabMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*\};[\s\S]*readonly panelMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly highlightMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly baseDelay:\s*number;[\s\S]*\};[\s\S]*\}/,
     source: portfolio,
   },
   {
     label: "experience behavior preserves current motion timings",
-    pattern: /export const experienceBehavior:\s*ExperienceBehavior\s*=\s*\{[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*tabMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1[\s\S]*\}[\s\S]*panelMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*highlightMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*baseDelay:\s*0\.2[\s\S]*\}/,
+    pattern: /export const experienceBehavior:\s*ExperienceBehavior\s*=\s*\{[\s\S]*keyboardNavigationKeys:\s*\{[\s\S]*next:\s*\["ArrowDown",\s*"ArrowRight"\],[\s\S]*previous:\s*\["ArrowUp",\s*"ArrowLeft"\],[\s\S]*first:\s*"Home",[\s\S]*last:\s*"End"[\s\S]*\}[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*tabMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1[\s\S]*\}[\s\S]*panelMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*highlightMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*baseDelay:\s*0\.2[\s\S]*\}/,
     source: portfolio,
   },
   {
     label: "experience section uses behavior metadata for motion timing",
-    pattern: /import\s*\{\s*experienceBehavior,\s*experiences\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: experienceBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*duration:\s*experienceBehavior\.tabMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*experienceBehavior\.tabMotion\.staggerDelay,[\s\S]*transition=\{\{ duration: experienceBehavior\.panelMotion\.duration \}\}[\s\S]*duration: experienceBehavior\.highlightMotion\.duration,[\s\S]*delay:\s*highlightIndex\s*\*\s*experienceBehavior\.highlightMotion\.staggerDelay\s*\+\s*experienceBehavior\.highlightMotion\.baseDelay/,
+    pattern: /import\s*\{\s*experienceBehavior,\s*experiences\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*experienceBehavior\.keyboardNavigationKeys\.next\.includes\(event\.key\)[\s\S]*experienceBehavior\.keyboardNavigationKeys\.previous\.includes\(event\.key\)[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.first[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.last[\s\S]*transition=\{\{ duration: experienceBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*duration:\s*experienceBehavior\.tabMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*experienceBehavior\.tabMotion\.staggerDelay,[\s\S]*transition=\{\{ duration: experienceBehavior\.panelMotion\.duration \}\}[\s\S]*duration: experienceBehavior\.highlightMotion\.duration,[\s\S]*delay:\s*highlightIndex\s*\*\s*experienceBehavior\.highlightMotion\.staggerDelay\s*\+\s*experienceBehavior\.highlightMotion\.baseDelay/,
     source: experienceSection,
   },
   {

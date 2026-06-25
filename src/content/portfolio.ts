@@ -83,6 +83,12 @@ export interface ExperienceItem {
 }
 
 export interface ExperienceBehavior {
+  readonly keyboardNavigationKeys: {
+    readonly next: readonly string[];
+    readonly previous: readonly string[];
+    readonly first: string;
+    readonly last: string;
+  };
   readonly sectionHeadingMotion: {
     readonly duration: number;
   };
@@ -277,6 +283,12 @@ export const experiences: readonly ExperienceItem[] = [
 ];
 
 export const experienceBehavior: ExperienceBehavior = {
+  keyboardNavigationKeys: {
+    next: ["ArrowDown", "ArrowRight"],
+    previous: ["ArrowUp", "ArrowLeft"],
+    first: "Home",
+    last: "End",
+  },
   sectionHeadingMotion: {
     duration: 0.6,
   },
