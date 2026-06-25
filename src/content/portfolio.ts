@@ -10,6 +10,11 @@ export interface ProjectActionLink {
   readonly external: true;
 }
 
+export interface ProjectActionLinkBehavior {
+  readonly externalTarget: "_blank";
+  readonly externalRel: "noopener noreferrer";
+}
+
 export interface ProjectSummary {
   readonly title: string;
   readonly description: string;
@@ -164,6 +169,11 @@ export const projectCarouselBehavior: ProjectCarouselBehavior = {
   hoverMotion: {
     scale: 1.02,
   },
+};
+
+export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
+  externalTarget: "_blank",
+  externalRel: "noopener noreferrer",
 };
 
 export const projects: readonly ProjectSummary[] = [
