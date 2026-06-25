@@ -48,12 +48,12 @@ export default function AboutMe() {
                 <motion.li
                   key={tech}
                   className="flex items-center justify-start"
-                  initial={{ opacity: 0, x: index < 3 ? -20 : 20 }}
+                  initial={{ opacity: 0, x: index < aboutBehavior.technologyGrid.rowCount ? -20 : 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{
                     delay:
                       aboutBehavior.technologyItemMotion.baseDelay +
-                      (index % 3) * aboutBehavior.technologyItemMotion.staggerDelay,
+                      (index % aboutBehavior.technologyGrid.rowCount) * aboutBehavior.technologyItemMotion.staggerDelay,
                     duration: aboutBehavior.technologyItemMotion.duration,
                   }}
                   viewport={{ once: true }}

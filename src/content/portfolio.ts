@@ -48,6 +48,9 @@ export interface AboutContent {
 }
 
 export interface AboutBehavior {
+  readonly technologyGrid: {
+    readonly rowCount: number;
+  };
   readonly sectionHeadingMotion: {
     readonly duration: number;
   };
@@ -111,6 +114,9 @@ export const aboutContent: AboutContent = {
 };
 
 export const aboutBehavior: AboutBehavior = {
+  technologyGrid: {
+    rowCount: 3,
+  },
   sectionHeadingMotion: {
     duration: 0.6,
   },

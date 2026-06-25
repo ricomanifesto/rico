@@ -131,7 +131,7 @@ const checks = [
   },
   {
     label: "about behavior is typed as readonly metadata",
-    pattern: /export interface AboutBehavior \{[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly introMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologiesMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologyItemMotion:\s*\{[\s\S]*readonly baseDelay:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly interestsMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly imageMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
+    pattern: /export interface AboutBehavior \{[\s\S]*readonly technologyGrid:\s*\{[\s\S]*readonly rowCount:\s*number;[\s\S]*\};[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly introMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologiesMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologyItemMotion:\s*\{[\s\S]*readonly baseDelay:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly interestsMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly imageMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
     source: portfolio,
   },
   {
@@ -141,7 +141,7 @@ const checks = [
   },
   {
     label: "about behavior preserves current motion timings",
-    pattern: /export const aboutBehavior:\s*AboutBehavior\s*=\s*\{[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*introMotion:\s*\{[\s\S]*delay:\s*0\.2,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologiesMotion:\s*\{[\s\S]*delay:\s*0\.4,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologyItemMotion:\s*\{[\s\S]*baseDelay:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*interestsMotion:\s*\{[\s\S]*delay:\s*1\.0,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*imageMotion:\s*\{[\s\S]*delay:\s*0\.8,[\s\S]*duration:\s*0\.8[\s\S]*\}/,
+    pattern: /export const aboutBehavior:\s*AboutBehavior\s*=\s*\{[\s\S]*technologyGrid:\s*\{[\s\S]*rowCount:\s*3[\s\S]*\}[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*introMotion:\s*\{[\s\S]*delay:\s*0\.2,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologiesMotion:\s*\{[\s\S]*delay:\s*0\.4,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologyItemMotion:\s*\{[\s\S]*baseDelay:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*interestsMotion:\s*\{[\s\S]*delay:\s*1\.0,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*imageMotion:\s*\{[\s\S]*delay:\s*0\.8,[\s\S]*duration:\s*0\.8[\s\S]*\}/,
     source: portfolio,
   },
   {
@@ -151,7 +151,7 @@ const checks = [
   },
   {
     label: "about section uses behavior metadata for motion timing",
-    pattern: /import\s*\{\s*aboutBehavior,\s*aboutContent\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: aboutBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*delay:\s*aboutBehavior\.introMotion\.delay,\s*duration:\s*aboutBehavior\.introMotion\.duration[\s\S]*delay:\s*aboutBehavior\.technologiesMotion\.delay,[\s\S]*duration:\s*aboutBehavior\.technologiesMotion\.duration[\s\S]*aboutBehavior\.technologyItemMotion\.baseDelay[\s\S]*aboutBehavior\.technologyItemMotion\.staggerDelay[\s\S]*duration:\s*aboutBehavior\.technologyItemMotion\.duration[\s\S]*delay:\s*aboutBehavior\.interestsMotion\.delay,\s*duration:\s*aboutBehavior\.interestsMotion\.duration[\s\S]*delay:\s*aboutBehavior\.imageMotion\.delay,\s*duration:\s*aboutBehavior\.imageMotion\.duration/,
+    pattern: /import\s*\{\s*aboutBehavior,\s*aboutContent\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: aboutBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*delay:\s*aboutBehavior\.introMotion\.delay,\s*duration:\s*aboutBehavior\.introMotion\.duration[\s\S]*delay:\s*aboutBehavior\.technologiesMotion\.delay,[\s\S]*duration:\s*aboutBehavior\.technologiesMotion\.duration[\s\S]*index < aboutBehavior\.technologyGrid\.rowCount[\s\S]*aboutBehavior\.technologyItemMotion\.baseDelay[\s\S]*index % aboutBehavior\.technologyGrid\.rowCount[\s\S]*aboutBehavior\.technologyItemMotion\.staggerDelay[\s\S]*duration:\s*aboutBehavior\.technologyItemMotion\.duration[\s\S]*delay:\s*aboutBehavior\.interestsMotion\.delay,\s*duration:\s*aboutBehavior\.interestsMotion\.duration[\s\S]*delay:\s*aboutBehavior\.imageMotion\.delay,\s*duration:\s*aboutBehavior\.imageMotion\.duration/,
     source: aboutMeSection,
   },
   {
