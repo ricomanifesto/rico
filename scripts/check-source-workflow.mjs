@@ -9,6 +9,7 @@ const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const heroPath = path.join(root, "src/content/hero.ts");
 const homePath = path.join(root, "src/Home.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
+const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
 const footerPath = path.join(root, "src/components/Footer.tsx");
@@ -21,6 +22,7 @@ const portfolio = fs.readFileSync(portfolioPath, "utf8");
 const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
 const home = fs.readFileSync(homePath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
+const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
 const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
 const footerSection = fs.readFileSync(footerPath, "utf8");
@@ -227,6 +229,21 @@ const checks = [
     label: "intro section uses hero behavior metadata for motion timing",
     pattern: /transition=\{\{ duration: heroBehavior\.containerMotion\.duration, ease: heroBehavior\.containerMotion\.ease \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.subtitleMotion\.delay, duration: heroBehavior\.subtitleMotion\.duration \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.bodyMotion\.delay, duration: heroBehavior\.bodyMotion\.duration \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.ctaMotion\.delay, duration: heroBehavior\.ctaMotion\.duration \}\}/,
     source: introSection,
+  },
+  {
+    label: "hero network animation behavior is typed as readonly metadata",
+    pattern: /export interface NetworkAnimationBehavior \{[\s\S]*readonly maxNodes:\s*number;[\s\S]*readonly connectionThresholdPx:\s*number;[\s\S]*readonly resizeDebounceMs:\s*number;[\s\S]*readonly nodeSizePx:\s*\{[\s\S]*readonly min:\s*number;[\s\S]*readonly variance:\s*number;[\s\S]*\};[\s\S]*readonly nodeOpacity:\s*\{[\s\S]*readonly min:\s*number;[\s\S]*readonly variance:\s*number;[\s\S]*\};[\s\S]*readonly nodeVelocity:\s*\{[\s\S]*readonly range:\s*number;[\s\S]*readonly offset:\s*number;[\s\S]*\};[\s\S]*readonly bounceDamping:\s*\{[\s\S]*readonly min:\s*number;[\s\S]*readonly variance:\s*number;[\s\S]*\};[\s\S]*readonly colors:\s*readonly string\[\];[\s\S]*\}/,
+    source: hero,
+  },
+  {
+    label: "hero network animation behavior preserves current visual constants",
+    pattern: /export const networkAnimationBehavior:\s*NetworkAnimationBehavior\s*=\s*\{[\s\S]*maxNodes:\s*15,[\s\S]*connectionThresholdPx:\s*200,[\s\S]*resizeDebounceMs:\s*250,[\s\S]*nodeSizePx:\s*\{[\s\S]*min:\s*4,[\s\S]*variance:\s*6[\s\S]*\}[\s\S]*nodeOpacity:\s*\{[\s\S]*min:\s*0\.3,[\s\S]*variance:\s*0\.6[\s\S]*\}[\s\S]*nodeVelocity:\s*\{[\s\S]*range:\s*0\.4,[\s\S]*offset:\s*0\.2[\s\S]*\}[\s\S]*bounceDamping:\s*\{[\s\S]*min:\s*0\.9,[\s\S]*variance:\s*0\.2[\s\S]*\}[\s\S]*colors:\s*\[[\s\S]*rgba\(0, 123, 255, 0\.7\)[\s\S]*rgba\(32, 201, 151, 0\.6\)[\s\S]*\]/,
+    source: hero,
+  },
+  {
+    label: "network animation consumes typed hero behavior metadata",
+    pattern: /import\s*\{\s*networkAnimationBehavior\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*networkAnimationBehavior\.maxNodes[\s\S]*networkAnimationBehavior\.nodeSizePx\.variance[\s\S]*networkAnimationBehavior\.nodeSizePx\.min[\s\S]*networkAnimationBehavior\.nodeOpacity\.variance[\s\S]*networkAnimationBehavior\.nodeOpacity\.min[\s\S]*networkAnimationBehavior\.colors[\s\S]*networkAnimationBehavior\.nodeVelocity\.range[\s\S]*networkAnimationBehavior\.nodeVelocity\.offset[\s\S]*networkAnimationBehavior\.connectionThresholdPx[\s\S]*networkAnimationBehavior\.bounceDamping\.min[\s\S]*networkAnimationBehavior\.bounceDamping\.variance[\s\S]*networkAnimationBehavior\.resizeDebounceMs/,
+    source: networkAnimation,
   },
   {
     label: "project action links are typed as readonly metadata",

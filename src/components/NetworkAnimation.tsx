@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { networkAnimationBehavior } from '../content/hero';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 interface NetworkNode {
@@ -34,17 +35,6 @@ export default function NetworkAnimation() {
       return;
     }
 
-    const maxNodes = 15;
-    const connectionThreshold = 200;
-    
-    const nodeColors = [
-      'rgba(0, 123, 255, 0.7)',
-      'rgba(30, 144, 255, 0.6)',
-      'rgba(65, 105, 225, 0.7)',
-      'rgba(0, 191, 255, 0.6)',
-      'rgba(32, 201, 151, 0.6)',
-    ];
-    
     const createNodes = () => {
       if (!containerRef.current) return;
       
@@ -53,14 +43,14 @@ export default function NetworkAnimation() {
       
       const containerRect = containerRef.current.getBoundingClientRect();
       
-      for (let i = 0; i < maxNodes; i++) {
+      for (let i = 0; i < networkAnimationBehavior.maxNodes; i++) {
         const node = document.createElement('div');
         
-        const size = Math.random() * 6 + 4;
+        const size = Math.random() * networkAnimationBehavior.nodeSizePx.variance + networkAnimationBehavior.nodeSizePx.min;
         
-        const opacity = Math.random() * 0.6 + 0.3;
+        const opacity = Math.random() * networkAnimationBehavior.nodeOpacity.variance + networkAnimationBehavior.nodeOpacity.min;
         
-        const color = nodeColors[Math.floor(Math.random() * nodeColors.length)];
+        const color = networkAnimationBehavior.colors[Math.floor(Math.random() * networkAnimationBehavior.colors.length)];
         
         node.classList.add('node');
         if (Math.random() > 0.5) {
@@ -83,8 +73,8 @@ export default function NetworkAnimation() {
           element: node,
           x,
           y,
-          vx: (Math.random() * 0.4 - 0.2) * speedFactor,
-          vy: (Math.random() * 0.4 - 0.2) * speedFactor,
+          vx: (Math.random() * networkAnimationBehavior.nodeVelocity.range - networkAnimationBehavior.nodeVelocity.offset) * speedFactor,
+          vy: (Math.random() * networkAnimationBehavior.nodeVelocity.range - networkAnimationBehavior.nodeVelocity.offset) * speedFactor,
           size,
           opacity,
           color
@@ -109,11 +99,11 @@ export default function NetworkAnimation() {
           const dy = nodeB.y - nodeA.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < connectionThreshold) {
+          if (distance < networkAnimationBehavior.connectionThresholdPx) {
             const connection = document.createElement('div');
             connection.classList.add('connection');
             
-            const opacity = 0.5 * (1 - distance / connectionThreshold);
+            const opacity = 0.5 * (1 - distance / networkAnimationBehavior.connectionThresholdPx);
             connection.style.backgroundColor = `rgba(0, 123, 255, ${opacity})`;
             
             const angle = Math.atan2(dy, dx) * 180 / Math.PI;
@@ -139,11 +129,11 @@ export default function NetworkAnimation() {
         node.y += node.vy;
         
         if (node.x <= 0 || node.x >= containerRect.width - node.size) {
-          node.vx *= -1 * (0.9 + Math.random() * 0.2);
+          node.vx *= -1 * (networkAnimationBehavior.bounceDamping.min + Math.random() * networkAnimationBehavior.bounceDamping.variance);
         }
         
         if (node.y <= 0 || node.y >= containerRect.height - node.size) {
-          node.vy *= -1 * (0.9 + Math.random() * 0.2);
+          node.vy *= -1 * (networkAnimationBehavior.bounceDamping.min + Math.random() * networkAnimationBehavior.bounceDamping.variance);
         }
         
         node.element.style.left = `${node.x}px`;
@@ -177,7 +167,7 @@ export default function NetworkAnimation() {
         }
 
         initAnimation();
-      }, 250);
+      }, networkAnimationBehavior.resizeDebounceMs);
     };
     
     window.addEventListener('resize', handleResize);
