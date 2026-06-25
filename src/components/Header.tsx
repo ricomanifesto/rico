@@ -95,15 +95,7 @@ export default function Header() {
         <ul role="list" className="flex gap-4 overflow-x-auto whitespace-nowrap pt-3">
           {headerNavItems.map((item) => (
             <li key={item.href} role="listitem" className="flex-shrink-0">
-              <a
-                href={item.href}
-                aria-current={item.href === activeHref ? "location" : undefined}
-                className={`inline-flex min-h-11 min-w-11 items-center justify-center text-sm transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
-                  item.href === activeHref ? "font-semibold text-[#66b2ff]" : "font-medium text-gray-200"
-                }`}
-              >
-                {item.label}
-              </a>
+              <HeaderNavLink item={item} isActive={item.href === activeHref} variant="mobile" />
             </li>
           ))}
         </ul>
