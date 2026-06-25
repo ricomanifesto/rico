@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
-import { headerNavItems, siteBrand, socialLinks } from "@/content/navigation";
-
-const activeSectionOffsetPx = 160;
-const scrollListenerOptions: AddEventListenerOptions = { passive: true };
+import { headerNavItems, headerNavigationBehavior, siteBrand, socialLinks } from "@/content/navigation";
 
 function getSectionElement(hash: string) {
   if (!hash.startsWith("#")) {
@@ -20,7 +17,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > headerNavigationBehavior.scrolledShadowThresholdPx);
 
       const sectionLinks = headerNavItems.filter((item) => item.href.startsWith("#"));
       const activeSection = sectionLinks.reduce((current, item) => {
@@ -32,7 +29,7 @@ export default function Header() {
 
         const { top } = section.getBoundingClientRect();
 
-        return top <= activeSectionOffsetPx ? item.href : current;
+        return top <= headerNavigationBehavior.activeSectionOffsetPx ? item.href : current;
       }, sectionLinks[0]?.href ?? "#intro");
 
       setActiveHref(activeSection);
@@ -52,10 +49,10 @@ export default function Header() {
       }
     });
 
-    window.addEventListener("scroll", handleScroll, scrollListenerOptions);
+    window.addEventListener("scroll", handleScroll, headerNavigationBehavior.scrollListenerOptions);
     return () => {
       window.cancelAnimationFrame(alignInitialHash);
-      window.removeEventListener("scroll", handleScroll, scrollListenerOptions);
+      window.removeEventListener("scroll", handleScroll, headerNavigationBehavior.scrollListenerOptions);
     };
   }, []);
 

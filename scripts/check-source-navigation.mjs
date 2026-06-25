@@ -12,11 +12,11 @@ const navHoverAccentClass = "hover:text-[#007bff]";
 const socialBaseAccentClass = "text-[#007bff]";
 
 const failures = [];
+const navigationSource = fs.existsSync(navigationPath) ? fs.readFileSync(navigationPath, "utf8") : "";
 
 if (!fs.existsSync(navigationPath)) {
   failures.push("src/content/navigation.ts defines typed navigation data");
 } else {
-  const navigationSource = fs.readFileSync(navigationPath, "utf8");
   const sectionHrefs = Array.from(navigationSource.matchAll(/href:\s*["']#([^"']+)["']/g)).map(
     ([, sectionId]) => sectionId,
   );
@@ -101,7 +101,7 @@ if (!fs.existsSync(navigationPath)) {
 if (fs.existsSync(headerPath)) {
   const headerSource = fs.readFileSync(headerPath, "utf8");
 
-  if (!/import\s+\{\s*headerNavItems,\s*siteBrand,\s*socialLinks\s*\}\s+from\s+["']@\/content\/navigation["'];/.test(headerSource)) {
+  if (!/import\s+\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s+from\s+["']@\/content\/navigation["'];/.test(headerSource)) {
     failures.push("Header imports the typed brand metadata");
   }
 
@@ -158,9 +158,9 @@ if (fs.existsSync(headerPath)) {
   }
 
   if (
-    !/const\s+scrollListenerOptions(?:\s*:\s*AddEventListenerOptions)?\s*=\s*\{\s*passive:\s*true\s*\}/.test(headerSource) ||
-    !/window\.addEventListener\("scroll",\s*handleScroll,\s*scrollListenerOptions\);/.test(headerSource) ||
-    !/window\.removeEventListener\("scroll",\s*handleScroll,\s*scrollListenerOptions\);/.test(headerSource)
+    !/scrollListenerOptions:\s*\{\s*passive:\s*true\s*\}/.test(navigationSource) ||
+    !/window\.addEventListener\("scroll",\s*handleScroll,\s*headerNavigationBehavior\.scrollListenerOptions\);/.test(headerSource) ||
+    !/window\.removeEventListener\("scroll",\s*handleScroll,\s*headerNavigationBehavior\.scrollListenerOptions\);/.test(headerSource)
   ) {
     failures.push("Header uses a passive scroll listener");
   }

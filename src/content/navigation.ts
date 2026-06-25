@@ -8,6 +8,12 @@ export interface SiteBrand {
   readonly href: string;
 }
 
+export interface HeaderNavigationBehavior {
+  readonly activeSectionOffsetPx: number;
+  readonly scrolledShadowThresholdPx: number;
+  readonly scrollListenerOptions: AddEventListenerOptions;
+}
+
 export type SocialLinkKind = "email" | "github" | "linkedin" | "medium";
 
 export interface SocialLink {
@@ -28,6 +34,12 @@ export const headerNavItems: readonly HeaderNavItem[] = [
 export const siteBrand: SiteBrand = {
   label: "rico",
   href: "#intro",
+};
+
+export const headerNavigationBehavior: HeaderNavigationBehavior = {
+  activeSectionOffsetPx: 160,
+  scrolledShadowThresholdPx: 10,
+  scrollListenerOptions: { passive: true },
 };
 
 export const contactLink: SocialLink = {
