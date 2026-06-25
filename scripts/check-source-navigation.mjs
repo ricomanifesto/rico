@@ -153,8 +153,12 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header mobile navigation wraps each shared nav item in a list item");
   }
 
-  if (!/aria-label="Mobile primary"[\s\S]*<a\b[\s\S]*className=\{?`?["']?[\s\S]*\bmin-h-11\b[\s\S]*\bmin-w-11\b/.test(headerSource)) {
-    failures.push("Header mobile navigation links use mobile-friendly touch targets");
+  if (
+    !/aria-label="Mobile primary"[\s\S]*<HeaderNavLink[\s\S]*item=\{item\}[\s\S]*isActive=\{item\.href === activeHref\}[\s\S]*variant="mobile"/.test(
+      headerSource,
+    )
+  ) {
+    failures.push("Header mobile navigation uses the shared HeaderNavLink component");
   }
 
   if (
@@ -196,6 +200,20 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
 
   if (componentPath === headerNavLinkPath && !source.includes(navHoverAccentClass)) {
     failures.push(`${path.relative(root, componentPath)} uses the header accent hover class`);
+  }
+
+  if (
+    componentPath === headerNavLinkPath &&
+    !/type HeaderNavLinkVariant = "desktop" \| "mobile";[\s\S]*variant\?: HeaderNavLinkVariant;/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} exposes a typed desktop/mobile variant`);
+  }
+
+  if (
+    componentPath === headerNavLinkPath &&
+    !/variant === "mobile"[\s\S]*\bmin-h-11\b[\s\S]*\bmin-w-11\b/.test(source)
+  ) {
+    failures.push(`${path.relative(root, componentPath)} keeps mobile nav links touch-friendly`);
   }
 
   if (componentPath === socialLinkPath && !source.includes(socialBaseAccentClass)) {
