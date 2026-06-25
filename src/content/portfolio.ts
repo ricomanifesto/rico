@@ -30,6 +30,7 @@ export interface FooterBehavior {
 
 export interface ProjectCarouselBehavior {
   readonly autoRotationIntervalMs: number;
+  readonly keyboardActivationKeys: readonly string[];
   readonly sectionHeadingMotion: {
     readonly duration: number;
   };
@@ -138,6 +139,7 @@ export const footerBehavior: FooterBehavior = {
 
 export const projectCarouselBehavior: ProjectCarouselBehavior = {
   autoRotationIntervalMs: 10000,
+  keyboardActivationKeys: ["Enter", " "],
   sectionHeadingMotion: {
     duration: 0.6,
   },

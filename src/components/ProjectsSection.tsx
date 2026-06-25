@@ -47,7 +47,7 @@ export default function ProjectsSection() {
     event: KeyboardEvent<HTMLButtonElement>,
     activate: () => number,
   ) => {
-    if (event.key !== "Enter" && event.key !== " ") {
+    if (!projectCarouselBehavior.keyboardActivationKeys.includes(event.key)) {
       return;
     }
 
@@ -63,7 +63,7 @@ export default function ProjectsSection() {
   };
 
   const handleCarouselButtonKeyUp = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key !== "Enter" && event.key !== " ") {
+    if (!projectCarouselBehavior.keyboardActivationKeys.includes(event.key)) {
       return;
     }
 
