@@ -451,17 +451,17 @@ const checks = [
   },
   {
     label: "project carousel arrow buttons have visible keyboard focus styles",
-    pattern: /aria-label="Previous project"[\s\S]*focus-visible:outline[\s\S]*aria-label="Next project"[\s\S]*focus-visible:outline/,
+    pattern: /function ProjectCarouselArrowButton[\s\S]*focus-visible:outline[\s\S]*aria-label=\{label\}/,
     source: projectsSection,
   },
   {
     label: "project carousel arrow buttons keep mobile touch targets inside the viewport",
-    pattern: /left-2 md:left-0[\s\S]*md:-translate-x-4[\s\S]*p-3 md:p-2[\s\S]*aria-label="Previous project"[\s\S]*right-2 md:right-0[\s\S]*md:translate-x-4[\s\S]*p-3 md:p-2[\s\S]*aria-label="Next project"/,
+    pattern: /type ProjectCarouselArrowDirection = "previous" \| "next";[\s\S]*direction === "previous"[\s\S]*left-2 md:left-0[\s\S]*md:-translate-x-4[\s\S]*right-2 md:right-0[\s\S]*md:translate-x-4[\s\S]*p-3 md:p-2/,
     source: projectsSection,
   },
   {
     label: "project carousel arrow icons use class-based accent styles",
-    pattern: /<ChevronLeft[^>]*className="[^"]*text-\[#007bff\][^"]*"[\s\S]*<ChevronRight[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
+    pattern: /const Icon = direction === "previous" \? ChevronLeft : ChevronRight;[\s\S]*<Icon[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
     source: projectsSection,
   },
   {

@@ -4,6 +4,17 @@ import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
+type ProjectCarouselArrowDirection = "previous" | "next";
+
+interface ProjectCarouselArrowButtonProps {
+  direction: ProjectCarouselArrowDirection;
+  label: string;
+  onClick: () => void;
+  onKeyboardActivate: () => number;
+  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>, activate: () => number) => void;
+  onKeyUp: (event: KeyboardEvent<HTMLButtonElement>) => void;
+}
+
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasCarouselFocus, setHasCarouselFocus] = useState(false);
@@ -214,25 +225,23 @@ export default function ProjectsSection() {
           </motion.div>
         </div>
 
-        <button
-          onClick={() => goToPrevious()}
-          onKeyDown={(event) => handleCarouselButtonKeyDown(event, activatePreviousProjectFromKeyboard)}
+        <ProjectCarouselArrowButton
+          direction="previous"
+          label="Previous project"
+          onClick={goToPrevious}
+          onKeyboardActivate={activatePreviousProjectFromKeyboard}
+          onKeyDown={handleCarouselButtonKeyDown}
           onKeyUp={handleCarouselButtonKeyUp}
-          className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
-          aria-label="Previous project"
-        >
-          <ChevronLeft size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
-        </button>
+        />
 
-        <button
-          onClick={() => goToNext()}
-          onKeyDown={(event) => handleCarouselButtonKeyDown(event, activateNextProjectFromKeyboard)}
+        <ProjectCarouselArrowButton
+          direction="next"
+          label="Next project"
+          onClick={goToNext}
+          onKeyboardActivate={activateNextProjectFromKeyboard}
+          onKeyDown={handleCarouselButtonKeyDown}
           onKeyUp={handleCarouselButtonKeyUp}
-          className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
-          aria-label="Next project"
-        >
-          <ChevronRight size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
-        </button>
+        />
 
         <div className="flex justify-center mt-6 space-x-2">
           {projects.map((project, index) => (
@@ -255,5 +264,30 @@ export default function ProjectsSection() {
       </div>
       </div>
     </section>
+  );
+}
+
+function ProjectCarouselArrowButton({
+  direction,
+  label,
+  onClick,
+  onKeyboardActivate,
+  onKeyDown,
+  onKeyUp,
+}: ProjectCarouselArrowButtonProps) {
+  const Icon = direction === "previous" ? ChevronLeft : ChevronRight;
+  const positionClass =
+    direction === "previous" ? "left-2 md:left-0 md:-translate-x-4" : "right-2 md:right-0 md:translate-x-4";
+
+  return (
+    <button
+      onClick={onClick}
+      onKeyDown={(event) => onKeyDown(event, onKeyboardActivate)}
+      onKeyUp={onKeyUp}
+      className={`absolute ${positionClass} top-1/2 -translate-y-1/2 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]`}
+      aria-label={label}
+    >
+      <Icon size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
+    </button>
   );
 }
