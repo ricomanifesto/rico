@@ -15,22 +15,22 @@ export default function Experience() {
   const handleCompanyKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     const lastIndex = experiences.length - 1;
 
-    if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+    if (experienceBehavior.keyboardNavigationKeys.next.includes(event.key)) {
       event.preventDefault();
       selectCompany(index === lastIndex ? 0 : index + 1);
     }
 
-    if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+    if (experienceBehavior.keyboardNavigationKeys.previous.includes(event.key)) {
       event.preventDefault();
       selectCompany(index === 0 ? lastIndex : index - 1);
     }
 
-    if (event.key === "Home") {
+    if (event.key === experienceBehavior.keyboardNavigationKeys.first) {
       event.preventDefault();
       selectCompany(0);
     }
 
-    if (event.key === "End") {
+    if (event.key === experienceBehavior.keyboardNavigationKeys.last) {
       event.preventDefault();
       selectCompany(lastIndex);
     }
