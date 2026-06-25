@@ -7,17 +7,14 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { heroBehavior, heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
-const heroVisualViewportQuery = "(min-width: 768px) and (min-height: 640px)";
-const compactLandscapeHeroViewportQuery = "(min-width: 768px) and (max-height: 639px)";
-
 function canShowHeroVisual(hasRoomyHeroViewport: boolean, shouldReduceMotion: boolean) {
   return hasRoomyHeroViewport && !shouldReduceMotion;
 }
 
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
-  const hasRoomyHeroViewport = useMediaQuery(heroVisualViewportQuery);
-  const hasCompactLandscapeHeroViewport = useMediaQuery(compactLandscapeHeroViewportQuery);
+  const hasRoomyHeroViewport = useMediaQuery(heroBehavior.roomyVisualViewportQuery);
+  const hasCompactLandscapeHeroViewport = useMediaQuery(heroBehavior.compactLandscapeViewportQuery);
   const showHeroVisual = canShowHeroVisual(hasRoomyHeroViewport, shouldReduceMotion);
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
@@ -44,7 +41,7 @@ export default function IntroSection() {
     <section
       id="intro"
       className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16"
-      style={hasCompactLandscapeHeroViewport ? { paddingTop: "4.5rem" } : undefined}
+      style={hasCompactLandscapeHeroViewport ? { paddingTop: heroBehavior.compactLandscapePaddingTop } : undefined}
     >
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 
