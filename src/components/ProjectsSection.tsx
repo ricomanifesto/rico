@@ -1,10 +1,19 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import { projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
+import { ProjectActionLink as ProjectActionLinkData, projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
+type ProjectActionLinkKind = "repository" | "demo";
 type ProjectCarouselArrowDirection = "previous" | "next";
+
+interface ProjectActionLinkProps {
+  kind: ProjectActionLinkKind;
+  link: ProjectActionLinkData;
+  projectTitle: string;
+  isActive: boolean;
+  actionRef?: (element: HTMLAnchorElement | null) => void;
+}
 
 interface ProjectCarouselArrowButtonProps {
   direction: ProjectCarouselArrowDirection;
@@ -144,10 +153,7 @@ export default function ProjectsSection() {
             style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * projectCarouselBehavior.slideStepPercent}%)` } : undefined}
           >
             {projects.map((project, index) => {
-              const repositoryTarget = project.links.repository.external ? projectActionLinkBehavior.externalTarget : undefined;
-              const repositoryRel = project.links.repository.external ? projectActionLinkBehavior.externalRel : undefined;
-              const demoTarget = project.links.demo?.external ? projectActionLinkBehavior.externalTarget : undefined;
-              const demoRel = project.links.demo?.external ? projectActionLinkBehavior.externalRel : undefined;
+              const isActive = index === currentIndex;
 
               return (
                 <div
@@ -200,20 +206,22 @@ export default function ProjectsSection() {
                       </div>
                       
                       <div className="flex items-center space-x-4">
-                        <a href={project.links.repository.href} target={repositoryTarget} rel={repositoryRel} aria-label={`View ${project.title} repository`}
-                           ref={(element) => {
-                             activeActionRefs.current[index] = element;
-                           }}
-                           tabIndex={index === currentIndex ? 0 : -1}
-                           className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
-                          <Github size={24} aria-hidden="true" focusable="false" />
-                        </a>
+                        <ProjectActionLink
+                          kind="repository"
+                          link={project.links.repository}
+                          projectTitle={project.title}
+                          isActive={isActive}
+                          actionRef={(element) => {
+                            activeActionRefs.current[index] = element;
+                          }}
+                        />
                         {project.links.demo && (
-                          <a href={project.links.demo.href} target={demoTarget} rel={demoRel} aria-label={`Open ${project.title} demo`}
-                             tabIndex={index === currentIndex ? 0 : -1}
-                             className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]">
-                            <ExternalLink size={24} aria-hidden="true" focusable="false" />
-                          </a>
+                          <ProjectActionLink
+                            kind="demo"
+                            link={project.links.demo}
+                            projectTitle={project.title}
+                            isActive={isActive}
+                          />
                         )}
                       </div>
                     </div>
@@ -264,6 +272,33 @@ export default function ProjectsSection() {
       </div>
       </div>
     </section>
+  );
+}
+
+function ProjectActionLink({
+  kind,
+  link,
+  projectTitle,
+  isActive,
+  actionRef,
+}: ProjectActionLinkProps) {
+  const Icon = kind === "repository" ? Github : ExternalLink;
+  const actionLabel = kind === "repository" ? `View ${projectTitle} repository` : `Open ${projectTitle} demo`;
+  const target = link.external ? projectActionLinkBehavior.externalTarget : undefined;
+  const rel = link.external ? projectActionLinkBehavior.externalRel : undefined;
+
+  return (
+    <a
+      href={link.href}
+      target={target}
+      rel={rel}
+      aria-label={actionLabel}
+      ref={actionRef}
+      tabIndex={isActive ? 0 : -1}
+      className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+    >
+      <Icon size={24} aria-hidden="true" focusable="false" />
+    </a>
   );
 }
 
