@@ -17,6 +17,11 @@ export interface HeaderNavigationBehavior {
 
 export type SocialLinkKind = "email" | "github" | "linkedin" | "medium";
 
+export interface SocialLinkBehavior {
+  readonly externalTarget: "_blank";
+  readonly externalRel: "noopener noreferrer";
+}
+
 export interface SocialLink {
   readonly label: string;
   readonly href: string;
@@ -49,6 +54,11 @@ export const contactLink: SocialLink = {
   href: "mailto:michaelrico124@gmail.com",
   kind: "email",
   external: false,
+};
+
+export const socialLinkBehavior: SocialLinkBehavior = {
+  externalTarget: "_blank",
+  externalRel: "noopener noreferrer",
 };
 
 export const socialLinks: readonly SocialLink[] = [

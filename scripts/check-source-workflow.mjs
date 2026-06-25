@@ -10,6 +10,7 @@ const heroPath = path.join(root, "src/content/hero.ts");
 const navigationPath = path.join(root, "src/content/navigation.ts");
 const homePath = path.join(root, "src/Home.tsx");
 const headerPath = path.join(root, "src/components/Header.tsx");
+const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
@@ -25,6 +26,7 @@ const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
 const navigation = fs.readFileSync(navigationPath, "utf8");
 const home = fs.readFileSync(homePath, "utf8");
 const header = fs.readFileSync(headerPath, "utf8");
+const socialLink = fs.readFileSync(socialLinkPath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
 const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
@@ -288,6 +290,21 @@ const checks = [
     label: "header consumes typed navigation behavior metadata",
     pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*useState\(headerNavigationBehavior\.defaultActiveHref\)[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*sectionLinks\[0\]\?\.href \?\? headerNavigationBehavior\.defaultActiveHref[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)/,
     source: header,
+  },
+  {
+    label: "social link behavior is typed as readonly metadata",
+    pattern: /export interface SocialLinkBehavior \{[\s\S]*readonly externalTarget:\s*"_blank";[\s\S]*readonly externalRel:\s*"noopener noreferrer";[\s\S]*\}/,
+    source: navigation,
+  },
+  {
+    label: "social link behavior preserves safe external attributes",
+    pattern: /export const socialLinkBehavior:\s*SocialLinkBehavior\s*=\s*\{[\s\S]*externalTarget:\s*"_blank",[\s\S]*externalRel:\s*"noopener noreferrer"[\s\S]*\}/,
+    source: navigation,
+  },
+  {
+    label: "social link component consumes typed external link behavior",
+    pattern: /import\s+type\s+\{\s*SocialLink as SocialLinkData,\s*SocialLinkKind\s*\}\s+from\s*["']@\/content\/navigation["'];[\s\S]*import\s*\{\s*socialLinkBehavior\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*target=\{link\.external \? socialLinkBehavior\.externalTarget : undefined\}[\s\S]*rel=\{link\.external \? socialLinkBehavior\.externalRel : undefined\}/,
+    source: socialLink,
   },
 ];
 
