@@ -1,5 +1,6 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import type { SocialLink as SocialLinkData, SocialLinkKind } from "@/content/navigation";
+import { socialLinkBehavior } from "@/content/navigation";
 
 interface SocialLinkProps {
   link: SocialLinkData;
@@ -9,8 +10,8 @@ export default function SocialLink({ link }: SocialLinkProps) {
   return (
     <a
       href={link.href}
-      target={link.external ? "_blank" : undefined}
-      rel={link.external ? "noopener noreferrer" : undefined}
+      target={link.external ? socialLinkBehavior.externalTarget : undefined}
+      rel={link.external ? socialLinkBehavior.externalRel : undefined}
       aria-label={link.label}
       className="inline-flex min-h-11 min-w-11 items-center justify-center text-[#007bff] transition duration-300 transform hover:scale-110 hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
     >
