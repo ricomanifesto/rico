@@ -283,7 +283,7 @@ const checks = [
   },
   {
     label: "project cards apply external action link metadata",
-    pattern: /import\s*\{[\s\S]*ProjectActionLink\s+as\s+ProjectActionLinkData[\s\S]*projectActionLinkBehavior[\s\S]*projectCarouselBehavior[\s\S]*projects[\s\S]*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*function ProjectActionLink\([\s\S]*const target = link\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const rel = link\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*target=\{target\}[\s\S]*rel=\{rel\}/,
+    pattern: /import\s*\{[\s\S]*ProjectActionLink\s+as\s+ProjectActionLinkData[\s\S]*projectActionLinkBehavior[\s\S]*projectCarouselBehavior[\s\S]*projects[\s\S]*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*interface ProjectActionMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly getLabel:\s*\(projectTitle:\s*string\)\s*=>\s*string;[\s\S]*\}[\s\S]*const projectActionMetadata:\s*Record<ProjectActionLinkKind,\s*ProjectActionMetadata>[\s\S]*function ProjectActionLink\([\s\S]*const \{ Icon, getLabel \} = projectActionMetadata\[kind\];[\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*const target = link\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const rel = link\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*target=\{target\}[\s\S]*rel=\{rel\}/,
     source: projectsSection,
   },
   {

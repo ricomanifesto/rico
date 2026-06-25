@@ -66,12 +66,12 @@ const checks = [
   },
   {
     label: "project repository links include accessible names",
-    pattern: /<ProjectActionLink[\s\S]*kind="repository"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = kind === "repository" \? `View \$\{projectTitle\} repository` : `Open \$\{projectTitle\} demo`;[\s\S]*aria-label=\{actionLabel\}/,
+    pattern: /const projectActionMetadata:[\s\S]*repository:\s*\{[\s\S]*getLabel:\s*\(projectTitle\)\s*=>\s*`View \$\{projectTitle\} repository`[\s\S]*<ProjectActionLink[\s\S]*kind="repository"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,
   },
   {
     label: "project demo links include accessible names",
-    pattern: /<ProjectActionLink[\s\S]*kind="demo"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = kind === "repository" \? `View \$\{projectTitle\} repository` : `Open \$\{projectTitle\} demo`;[\s\S]*aria-label=\{actionLabel\}/,
+    pattern: /const projectActionMetadata:[\s\S]*demo:\s*\{[\s\S]*getLabel:\s*\(projectTitle\)\s*=>\s*`Open \$\{projectTitle\} demo`[\s\S]*<ProjectActionLink[\s\S]*kind="demo"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,
   },
   {
@@ -466,7 +466,7 @@ const checks = [
   },
   {
     label: "project action links share icon and accessible label behavior",
-    pattern: /function ProjectActionLink\([\s\S]*const Icon = kind === "repository" \? Github : ExternalLink;[\s\S]*const actionLabel = kind === "repository" \? `View \$\{projectTitle\} repository` : `Open \$\{projectTitle\} demo`;[\s\S]*aria-label=\{actionLabel\}/,
+    pattern: /interface ProjectActionMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly getLabel:\s*\(projectTitle:\s*string\)\s*=>\s*string;[\s\S]*\}[\s\S]*const projectActionMetadata:\s*Record<ProjectActionLinkKind,\s*ProjectActionMetadata>\s*=\s*\{[\s\S]*repository:\s*\{[\s\S]*Icon:\s*Github,[\s\S]*getLabel:\s*\(projectTitle\)\s*=>\s*`View \$\{projectTitle\} repository`[\s\S]*demo:\s*\{[\s\S]*Icon:\s*ExternalLink,[\s\S]*getLabel:\s*\(projectTitle\)\s*=>\s*`Open \$\{projectTitle\} demo`[\s\S]*function ProjectActionLink\([\s\S]*const \{ Icon, getLabel \} = projectActionMetadata\[kind\];[\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,
   },
   {
