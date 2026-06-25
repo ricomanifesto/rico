@@ -633,7 +633,7 @@ function experienceHighlightChevronsUseInlineAccentStyles(source) {
 
 function projectCarouselControlsUseInlineAccentStyles(source) {
   const controlsMatch = source.match(
-    /aria-label="Previous project"[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}[\s\S]*<\/div>/,
+    /function ProjectCarouselArrowButton[\s\S]*?return \([\s\S]*?<\/button>/,
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(controlsMatch?.[0] ?? "");
