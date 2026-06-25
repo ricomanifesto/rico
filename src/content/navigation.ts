@@ -9,6 +9,7 @@ export interface SiteBrand {
 }
 
 export interface HeaderNavigationBehavior {
+  readonly defaultActiveHref: string;
   readonly activeSectionOffsetPx: number;
   readonly scrolledShadowThresholdPx: number;
   readonly scrollListenerOptions: AddEventListenerOptions;
@@ -37,6 +38,7 @@ export const siteBrand: SiteBrand = {
 };
 
 export const headerNavigationBehavior: HeaderNavigationBehavior = {
+  defaultActiveHref: "#intro",
   activeSectionOffsetPx: 160,
   scrolledShadowThresholdPx: 10,
   scrollListenerOptions: { passive: true },
