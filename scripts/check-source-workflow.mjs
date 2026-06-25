@@ -123,7 +123,7 @@ const checks = [
   },
   {
     label: "project carousel uses behavior metadata for timing",
-    pattern: /import\s*\{\s*projectCarouselBehavior,\s*projects\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*\},\s*projectCarouselBehavior\.autoRotationIntervalMs\);[\s\S]*projectCarouselBehavior\.keyboardActivationKeys\.includes\(event\.key\)[\s\S]*transition=\{\{ duration: projectCarouselBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*currentIndex \* projectCarouselBehavior\.slideStepPercent[\s\S]*duration:\s*projectCarouselBehavior\.slideMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*projectCarouselBehavior\.slideMotion\.staggerDelay[\s\S]*whileHover=\{[\s\S]*shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*projectCarouselBehavior\.hoverMotion\.scale\s*\}[\s\S]*\}/,
+    pattern: /import\s*\{[\s\S]*projectCarouselBehavior,[\s\S]*projects[\s\S]*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*\},\s*projectCarouselBehavior\.autoRotationIntervalMs\);[\s\S]*projectCarouselBehavior\.keyboardActivationKeys\.includes\(event\.key\)[\s\S]*transition=\{\{ duration: projectCarouselBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*currentIndex \* projectCarouselBehavior\.slideStepPercent[\s\S]*duration:\s*projectCarouselBehavior\.slideMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*projectCarouselBehavior\.slideMotion\.staggerDelay[\s\S]*whileHover=\{[\s\S]*shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*projectCarouselBehavior\.hoverMotion\.scale\s*\}[\s\S]*\}/,
     source: projectsSection,
   },
   {
@@ -257,6 +257,16 @@ const checks = [
     source: portfolio,
   },
   {
+    label: "project action link behavior is typed as readonly metadata",
+    pattern: /export interface ProjectActionLinkBehavior \{[\s\S]*readonly externalTarget:\s*"_blank";[\s\S]*readonly externalRel:\s*"noopener noreferrer";[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
+    label: "project action link behavior preserves safe external attributes",
+    pattern: /export const projectActionLinkBehavior:\s*ProjectActionLinkBehavior\s*=\s*\{[\s\S]*externalTarget:\s*"_blank",[\s\S]*externalRel:\s*"noopener noreferrer"[\s\S]*\}/,
+    source: portfolio,
+  },
+  {
     label: "project data groups action links by purpose",
     pattern: /readonly links:\s*\{[\s\S]*readonly repository:\s*ProjectActionLink;[\s\S]*readonly demo:\s*ProjectActionLink \| null;[\s\S]*\};/,
     source: portfolio,
@@ -273,7 +283,7 @@ const checks = [
   },
   {
     label: "project cards apply external action link metadata",
-    pattern: /const repositoryTarget = project\.links\.repository\.external \? "_blank" : undefined;[\s\S]*const repositoryRel = project\.links\.repository\.external \? "noopener noreferrer" : undefined;[\s\S]*const demoTarget = project\.links\.demo\?\.external \? "_blank" : undefined;[\s\S]*const demoRel = project\.links\.demo\?\.external \? "noopener noreferrer" : undefined;[\s\S]*target=\{repositoryTarget\}[\s\S]*rel=\{repositoryRel\}[\s\S]*target=\{demoTarget\}[\s\S]*rel=\{demoRel\}/,
+    pattern: /import\s*\{\s*projectActionLinkBehavior,\s*projectCarouselBehavior,\s*projects\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*const repositoryTarget = project\.links\.repository\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const repositoryRel = project\.links\.repository\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*const demoTarget = project\.links\.demo\?\.external \? projectActionLinkBehavior\.externalTarget : undefined;[\s\S]*const demoRel = project\.links\.demo\?\.external \? projectActionLinkBehavior\.externalRel : undefined;[\s\S]*target=\{repositoryTarget\}[\s\S]*rel=\{repositoryRel\}[\s\S]*target=\{demoTarget\}[\s\S]*rel=\{demoRel\}/,
     source: projectsSection,
   },
   {

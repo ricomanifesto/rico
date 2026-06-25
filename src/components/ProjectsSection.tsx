@@ -1,7 +1,7 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import { projectCarouselBehavior, projects } from "../content/portfolio";
+import { projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export default function ProjectsSection() {
@@ -133,10 +133,10 @@ export default function ProjectsSection() {
             style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * projectCarouselBehavior.slideStepPercent}%)` } : undefined}
           >
             {projects.map((project, index) => {
-              const repositoryTarget = project.links.repository.external ? "_blank" : undefined;
-              const repositoryRel = project.links.repository.external ? "noopener noreferrer" : undefined;
-              const demoTarget = project.links.demo?.external ? "_blank" : undefined;
-              const demoRel = project.links.demo?.external ? "noopener noreferrer" : undefined;
+              const repositoryTarget = project.links.repository.external ? projectActionLinkBehavior.externalTarget : undefined;
+              const repositoryRel = project.links.repository.external ? projectActionLinkBehavior.externalRel : undefined;
+              const demoTarget = project.links.demo?.external ? projectActionLinkBehavior.externalTarget : undefined;
+              const demoRel = project.links.demo?.external ? projectActionLinkBehavior.externalRel : undefined;
 
               return (
                 <div
