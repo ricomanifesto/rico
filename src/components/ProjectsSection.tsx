@@ -1,4 +1,5 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { ProjectActionLink as ProjectActionLinkData, projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
@@ -23,6 +24,22 @@ interface ProjectCarouselArrowButtonProps {
   onKeyDown: (event: KeyboardEvent<HTMLButtonElement>, activate: () => number) => void;
   onKeyUp: (event: KeyboardEvent<HTMLButtonElement>) => void;
 }
+
+interface ProjectActionMetadata {
+  readonly Icon: LucideIcon;
+  readonly getLabel: (projectTitle: string) => string;
+}
+
+const projectActionMetadata: Record<ProjectActionLinkKind, ProjectActionMetadata> = {
+  repository: {
+    Icon: Github,
+    getLabel: (projectTitle) => `View ${projectTitle} repository`,
+  },
+  demo: {
+    Icon: ExternalLink,
+    getLabel: (projectTitle) => `Open ${projectTitle} demo`,
+  },
+};
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -282,8 +299,8 @@ function ProjectActionLink({
   isActive,
   actionRef,
 }: ProjectActionLinkProps) {
-  const Icon = kind === "repository" ? Github : ExternalLink;
-  const actionLabel = kind === "repository" ? `View ${projectTitle} repository` : `Open ${projectTitle} demo`;
+  const { Icon, getLabel } = projectActionMetadata[kind];
+  const actionLabel = getLabel(projectTitle);
   const target = link.external ? projectActionLinkBehavior.externalTarget : undefined;
   const rel = link.external ? projectActionLinkBehavior.externalRel : undefined;
 
