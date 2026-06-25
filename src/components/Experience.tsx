@@ -1,7 +1,16 @@
 import { motion } from "framer-motion";
 import { KeyboardEvent, useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { experienceBehavior, experiences } from "../content/portfolio";
+import { ExperienceItem, experienceBehavior, experiences } from "../content/portfolio";
+
+interface ExperienceTabProps {
+  experience: ExperienceItem;
+  index: number;
+  isSelected: boolean;
+  tabRef: (element: HTMLButtonElement | null) => void;
+  onSelect: (index: number) => void;
+  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>, index: number) => void;
+}
 
 export default function Experience() {
   const [selectedCompany, setSelectedCompany] = useState(0);
@@ -59,39 +68,17 @@ export default function Experience() {
               className="space-y-8"
             >
               {experiences.map((exp, index) => (
-                <motion.button
+                <ExperienceTab
                   key={exp.company}
-                  id={`experience-tab-${index}`}
-                  ref={(element) => {
+                  experience={exp}
+                  index={index}
+                  isSelected={selectedCompany === index}
+                  tabRef={(element) => {
                     tabRefs.current[index] = element;
                   }}
-                  role="tab"
-                  type="button"
-                  aria-selected={selectedCompany === index}
-                  aria-controls={`experience-panel-${index}`}
-                  tabIndex={selectedCompany === index ? 0 : -1}
-                  onClick={() => selectCompany(index)}
-                  onKeyDown={(event) => handleCompanyKeyDown(event, index)}
-                  className={`relative w-full text-left transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
-                    selectedCompany === index 
-                      ? 'text-[#007bff]' : 'text-gray-400 hover:text-gray-200'
-                  }`}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    duration: experienceBehavior.tabMotion.duration,
-                    delay: index * experienceBehavior.tabMotion.staggerDelay,
-                  }}
-                >
-                  <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
-                    selectedCompany === index ? 'bg-[#007bff]' : 'bg-transparent'
-                  }`}></div>
-                  
-                  <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
-                    {exp.company}
-                  </h3>
-                </motion.button>
+                  onSelect={selectCompany}
+                  onKeyDown={handleCompanyKeyDown}
+                />
               ))}
             </div>
           </div>
@@ -149,5 +136,46 @@ export default function Experience() {
         </div>
       </div>
     </section>
+  );
+}
+
+function ExperienceTab({
+  experience,
+  index,
+  isSelected,
+  tabRef,
+  onSelect,
+  onKeyDown,
+}: ExperienceTabProps) {
+  return (
+    <motion.button
+      id={`experience-tab-${index}`}
+      ref={tabRef}
+      role="tab"
+      type="button"
+      aria-selected={isSelected}
+      aria-controls={`experience-panel-${index}`}
+      tabIndex={isSelected ? 0 : -1}
+      onClick={() => onSelect(index)}
+      onKeyDown={(event) => onKeyDown(event, index)}
+      className={`relative w-full text-left transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
+        isSelected ? 'text-[#007bff]' : 'text-gray-400 hover:text-gray-200'
+      }`}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        duration: experienceBehavior.tabMotion.duration,
+        delay: index * experienceBehavior.tabMotion.staggerDelay,
+      }}
+    >
+      <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
+        isSelected ? 'bg-[#007bff]' : 'bg-transparent'
+      }`}></div>
+
+      <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
+        {experience.company}
+      </h3>
+    </motion.button>
   );
 }
