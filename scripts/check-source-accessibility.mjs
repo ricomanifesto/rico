@@ -634,7 +634,7 @@ function aboutProfileImageUsesInlineAccentStyles(source) {
 
 function experienceTabsUseInlineAccentStyles(source) {
   const tablistMatch = source.match(
-    /role="tablist"[\s\S]*?<\/motion\.button>\s*\)\)}/,
+    /function ExperienceTab\([\s\S]*?return \([\s\S]*?<\/motion\.button>/,
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(tablistMatch?.[0] ?? "");
