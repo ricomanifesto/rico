@@ -81,7 +81,7 @@ const checks = [
   },
   {
     label: "project carousel dot buttons expose current slide state",
-    pattern: /aria-current=\{index === currentIndex \? "true" : undefined\}/,
+    pattern: /interface ProjectCarouselDotViewState \{[\s\S]*readonly ariaCurrent\?:\s*"true";[\s\S]*readonly className:\s*string;[\s\S]*\}[\s\S]*const getProjectCarouselDotViewState = \(isCurrent: boolean\): ProjectCarouselDotViewState => \(\{[\s\S]*ariaCurrent:\s*isCurrent \? "true" : undefined[\s\S]*\}\)[\s\S]*const dotViewState = getProjectCarouselDotViewState\(index === currentIndex\);[\s\S]*aria-current=\{dotViewState\.ariaCurrent\}/,
     source: projectsSection,
   },
   {
@@ -441,7 +441,7 @@ const checks = [
   },
   {
     label: "project carousel lists use stable project keys",
-    pattern: /projects\.map\(\(project, index\) => \{[\s\S]*return \(\s*<div[\s\S]*key=\{project\.title\}[\s\S]*projects\.map\(\(project, index\) => \(\s*<button[\s\S]*key=\{project\.title\}/,
+    pattern: /projects\.map\(\(project, index\) => \{[\s\S]*return \(\s*<div[\s\S]*key=\{project\.title\}[\s\S]*projects\.map\(\(project, index\) => \{[\s\S]*return \(\s*<button[\s\S]*key=\{project\.title\}/,
     source: projectsSection,
   },
   {
@@ -501,7 +501,7 @@ const checks = [
   },
   {
     label: "project carousel active dot uses a class-based accent style",
-    pattern: /index === currentIndex\s*\?\s*'[^']*bg-\[#007bff\][^']*scale-110[^']*'|index === currentIndex\s*\?\s*'[^']*scale-110[^']*bg-\[#007bff\][^']*'/,
+    pattern: /const getProjectCarouselDotViewState = \(isCurrent: boolean\): ProjectCarouselDotViewState => \(\{[\s\S]*className:\s*isCurrent \? "scale-110 bg-\[#007bff\]" : "bg-gray-500 group-hover:bg-gray-400"[\s\S]*\}\)[\s\S]*className=\{`h-3 w-3 rounded-full transition-all duration-300 \$\{dotViewState\.className\}`\}/,
     source: projectsSection,
   },
 ];
