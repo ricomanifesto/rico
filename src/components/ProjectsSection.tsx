@@ -59,11 +59,11 @@ const projectActionMetadata: Record<ProjectActionLinkKind, ProjectActionMetadata
 const projectCarouselArrowMetadata: Record<ProjectCarouselArrowDirection, ProjectCarouselArrowMetadata> = {
   previous: {
     Icon: ChevronLeft,
-    positionClass: "left-2 md:left-0 md:-translate-x-4",
+    positionClass: "project-carousel-arrow-previous",
   },
   next: {
     Icon: ChevronRight,
-    positionClass: "right-2 md:right-0 md:translate-x-4",
+    positionClass: "project-carousel-arrow-next",
   },
 };
 
@@ -372,7 +372,7 @@ function ProjectCarouselArrowButton({
       onClick={onClick}
       onKeyDown={(event) => onKeyDown(event, onKeyboardActivate)}
       onKeyUp={onKeyUp}
-      className={`absolute ${positionClass} top-1/2 -translate-y-1/2 project-carousel-arrow-button`}
+      className={`project-carousel-arrow-button ${positionClass}`}
       aria-label={label}
     >
       <Icon size={24} className="project-carousel-arrow-icon" aria-hidden="true" focusable="false" />

@@ -831,7 +831,10 @@
 }
 
 .project-carousel-arrow-button {
+  position: absolute;
+  top: 25%;
   display: inline-flex;
+  transform: translateY(-50%);
   min-height: 44px;
   min-width: 44px;
   align-items: center;
@@ -842,6 +845,14 @@
   background-color: var(--portfolio-control-surface);
   box-shadow: var(--portfolio-control-shadow);
   transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+
+.project-carousel-arrow-previous {
+  left: 0.5rem;
+}
+
+.project-carousel-arrow-next {
+  right: 0.5rem;
 }
 
 .project-carousel-arrow-button:hover {
@@ -894,7 +905,18 @@
 
 @media (min-width: 768px) {
   .project-carousel-arrow-button {
+    top: 50%;
     padding: 0.5rem;
+  }
+
+  .project-carousel-arrow-previous {
+    left: 0;
+    transform: translate(-1rem, -50%);
+  }
+
+  .project-carousel-arrow-next {
+    right: 0;
+    transform: translate(1rem, -50%);
   }
 }
 
