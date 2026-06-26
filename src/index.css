@@ -10,6 +10,7 @@
     --primary-accent: #007bff; 
     --secondary-accent: #20c997;
     --border-color: #ddd;
+    --portfolio-active-accent: #66b2ff;
     --portfolio-heading: #ccd6f6;
     --section-rule: #233554;
     --portfolio-muted: #8892b0;
@@ -30,6 +31,9 @@
     --portfolio-control-shadow-hover: 0 20px 25px rgba(2, 12, 27, 0.28);
     --portfolio-control-dot-idle: #6b7280;
     --portfolio-control-dot-hover: #9ca3af;
+    --portfolio-experience-tab-selected: rgba(17, 34, 64, 0.78);
+    --portfolio-experience-tab-hover: rgba(35, 53, 84, 0.52);
+    --portfolio-experience-tab-rail: rgba(136, 146, 176, 0.22);
     --portfolio-focus-ring: #66b2ff;
 
     /* shadcn color variables */
@@ -541,7 +545,7 @@
 }
 
 .experience-panel:focus-visible {
-  outline: 2px solid #66b2ff;
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
@@ -558,7 +562,7 @@
 
 .experience-period {
   margin-bottom: 1.5rem;
-  color: #9ca3af;
+  color: var(--portfolio-muted);
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.25rem;
@@ -586,32 +590,38 @@
 }
 
 .experience-highlight-copy {
-  color: #e5e7eb;
+  color: var(--portfolio-copy);
   line-height: 1.625;
 }
 
 .experience-tab {
   position: relative;
   width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-left: 1px solid var(--portfolio-experience-tab-rail);
+  border-radius: 0 var(--radius) var(--radius) 0;
   text-align: left;
-  transition: color 300ms ease;
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
 }
 
 .experience-tab:focus-visible {
-  outline: 2px solid #66b2ff;
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
 .experience-tab-selected {
-  color: var(--primary-accent);
+  border-color: var(--primary-accent);
+  background-color: var(--portfolio-experience-tab-selected);
+  color: var(--portfolio-active-accent);
 }
 
 .experience-tab-idle {
-  color: #9ca3af;
+  color: var(--portfolio-muted);
 }
 
 .experience-tab-idle:hover {
-  color: #e5e7eb;
+  background-color: var(--portfolio-experience-tab-hover);
+  color: var(--portfolio-copy);
 }
 
 .experience-tab-indicator {
