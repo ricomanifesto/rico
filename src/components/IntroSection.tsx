@@ -40,16 +40,16 @@ export default function IntroSection() {
   return (
     <section
       id="intro"
-      className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-slate-900 px-4 pt-36 text-center text-white md:px-8 md:pt-16"
+      className="hero-section"
       style={hasCompactLandscapeHeroViewport ? { paddingTop: heroBehavior.compactLandscapePaddingTop } : undefined}
     >
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 
       <motion.div
-        className={`relative z-10 mx-auto grid w-full items-center gap-6 md:gap-10 ${
+        className={`hero-content ${
           showHeroVisual
-            ? "max-w-6xl md:grid-cols-[minmax(260px,0.9fr)_minmax(0,1.1fr)] md:text-left"
-            : "max-w-3xl"
+            ? "hero-content-with-visual"
+            : "hero-content-centered"
         }`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -59,22 +59,22 @@ export default function IntroSection() {
           <div
             aria-hidden="true"
             data-testid="hero-visual"
-            className="relative mx-auto hidden w-full max-w-sm overflow-hidden md:block md:h-[28rem] md:max-w-none"
+            className="hero-visual"
           >
             <NetworkAnimation />
           </div>
         ) : null}
 
-        <div data-testid="hero-copy" className={`mx-auto max-w-2xl ${showHeroVisual ? "md:mx-0" : ""}`}>
-          <h1 className={`mb-4 font-mono text-4xl font-bold ${hasRoomyHeroViewport ? "md:text-6xl" : ""}`}>
-            <span className="inline-flex items-center text-[#007bff]">
+        <div data-testid="hero-copy" className={`hero-copy ${showHeroVisual ? "hero-copy-with-visual" : ""}`}>
+          <h1 className={`hero-headline ${hasRoomyHeroViewport ? "hero-headline-roomy" : ""}`}>
+            <span className="hero-headline-accent">
               {displayText}
-              <span aria-hidden="true" className="animate-blink ml-1 inline-block h-8 w-2 bg-[#007bff]"></span>
+              <span aria-hidden="true" className="hero-typewriter-cursor"></span>
             </span>
           </h1>
           <motion.p
-            className={`${hasCompactLandscapeHeroViewport ? "mb-3" : "mb-8"} text-xl ${
-              hasRoomyHeroViewport ? "md:text-2xl" : ""
+            className={`hero-subtitle ${hasCompactLandscapeHeroViewport ? "hero-copy-compact" : "hero-copy-spacious"} ${
+              hasRoomyHeroViewport ? "hero-subtitle-roomy" : ""
             }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -84,10 +84,10 @@ export default function IntroSection() {
           </motion.p>
 
           <motion.p
-            className={`mx-auto max-w-2xl text-lg text-gray-200 md:mx-0 ${
-              hasCompactLandscapeHeroViewport ? "mb-3" : "mb-12"
+            className={`hero-body ${
+              hasCompactLandscapeHeroViewport ? "hero-copy-compact" : "hero-copy-spacious"
             } ${
-              hasRoomyHeroViewport ? "md:text-xl" : ""
+              hasRoomyHeroViewport ? "hero-body-roomy" : ""
             }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -97,7 +97,7 @@ export default function IntroSection() {
           </motion.p>
 
           <motion.div
-            className={`flex justify-center ${showHeroVisual ? "md:justify-start" : ""}`}
+            className={`hero-cta-row ${showHeroVisual ? "hero-cta-row-with-visual" : ""}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: heroBehavior.ctaMotion.delay, duration: heroBehavior.ctaMotion.duration }}

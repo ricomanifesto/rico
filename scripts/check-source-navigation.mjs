@@ -76,11 +76,7 @@ if (!fs.existsSync(navigationPath)) {
     const sectionClassName = findSectionClassName(sourceFiles, sectionId);
 
     if (sectionId === "intro") {
-      if (
-        !sectionClassName ||
-        !sectionClassName.includes("pt-36") ||
-        !sectionClassName.includes("md:pt-16")
-      ) {
+      if (!introPreservesMobileHeaderSpace(sectionClassName, indexCssSource)) {
         failures.push("Navigation target #intro reserves mobile header space");
       }
     } else if (!sectionPreservesMobileScrollOffset(sectionClassName, indexCssSource)) {
@@ -304,6 +300,24 @@ function sectionPreservesMobileScrollOffset(sectionClassName, cssSource) {
   return (
     sectionClassName.split(/\s+/).includes("portfolio-section") &&
     /\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*9rem;/.test(cssSource)
+  );
+}
+
+function introPreservesMobileHeaderSpace(sectionClassName, cssSource) {
+  if (!sectionClassName) {
+    return false;
+  }
+
+  if (
+    sectionClassName.includes("pt-36") &&
+    sectionClassName.includes("md:pt-16")
+  ) {
+    return true;
+  }
+
+  return (
+    sectionClassName.split(/\s+/).includes("hero-section") &&
+    /\.hero-section\s*\{[\s\S]*padding:\s*9rem 1rem 0;[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.hero-section\s*\{[\s\S]*padding-top:\s*4rem;/.test(cssSource)
   );
 }
 

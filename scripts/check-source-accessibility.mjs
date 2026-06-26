@@ -210,18 +210,23 @@ const checks = [
     source: introSection,
   },
   {
+    label: "intro hero uses the shared hero visual contract",
+    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*#0f172a;[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*72rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-typewriter-cursor\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*0\.9fr\) minmax\(0,\s*1\.1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className="hero-typewriter-cursor"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
+    source: `${indexCss}\n${introSection}`,
+  },
+  {
     label: "intro typewriter text uses a class-based accent style",
-    pattern: /<span className="[^"]*text-\[#007bff\][^"]*">\s*\{displayText\}/,
+    pattern: /<span className="hero-headline-accent">\s*\{displayText\}/,
     source: introSection,
   },
   {
     label: "intro typewriter cursor uses a class-based accent style",
-    pattern: /<span[^>]*className="[^"]*bg-\[#007bff\][^"]*"[^>]*><\/span>/,
+    pattern: /<span[^>]*className="hero-typewriter-cursor"[^>]*><\/span>/,
     source: introSection,
   },
   {
     label: "intro typewriter cursor is hidden from assistive technology",
-    pattern: /<span[^>]*aria-hidden="true"[^>]*className="[^"]*bg-\[#007bff\][^"]*"><\/span>/,
+    pattern: /<span[^>]*aria-hidden="true"[^>]*className="hero-typewriter-cursor"[^>]*><\/span>/,
     source: introSection,
   },
   {
