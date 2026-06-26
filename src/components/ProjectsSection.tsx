@@ -30,6 +30,11 @@ interface ProjectActionMetadata {
   readonly getLabel: (projectTitle: string) => string;
 }
 
+interface ProjectActionLinkAnchorBehavior {
+  readonly target?: "_blank";
+  readonly rel?: "noopener noreferrer";
+}
+
 interface ProjectCarouselArrowMetadata {
   readonly Icon: LucideIcon;
   readonly positionClass: string;
@@ -65,6 +70,13 @@ const projectCarouselArrowMetadata: Record<ProjectCarouselArrowDirection, Projec
 const getProjectCarouselDotViewState = (isCurrent: boolean): ProjectCarouselDotViewState => ({
   ariaCurrent: isCurrent ? "true" : undefined,
   className: isCurrent ? "scale-110 bg-[#007bff]" : "bg-gray-500 group-hover:bg-gray-400",
+});
+
+const getProjectActionLinkAnchorBehavior = (
+  isExternal: boolean,
+): ProjectActionLinkAnchorBehavior => ({
+  target: isExternal ? projectActionLinkBehavior.externalTarget : undefined,
+  rel: isExternal ? projectActionLinkBehavior.externalRel : undefined,
 });
 
 export default function ProjectsSection() {
@@ -328,14 +340,13 @@ function ProjectActionLink({
 }: ProjectActionLinkProps) {
   const { Icon, getLabel } = projectActionMetadata[kind];
   const actionLabel = getLabel(projectTitle);
-  const target = link.external ? projectActionLinkBehavior.externalTarget : undefined;
-  const rel = link.external ? projectActionLinkBehavior.externalRel : undefined;
+  const anchorBehavior = getProjectActionLinkAnchorBehavior(link.external);
 
   return (
     <a
       href={link.href}
-      target={target}
-      rel={rel}
+      target={anchorBehavior.target}
+      rel={anchorBehavior.rel}
       aria-label={actionLabel}
       ref={actionRef}
       tabIndex={isActive ? 0 : -1}
