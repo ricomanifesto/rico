@@ -112,9 +112,44 @@
 }
 
 .project-slide-caption {
+  padding: 1.5rem;
   background: rgba(17, 34, 64, 0.88);
   border-top: 1px solid var(--portfolio-surface-border);
   backdrop-filter: blur(8px);
+}
+
+.project-slide-title {
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 2rem;
+}
+
+.project-slide-description {
+  display: -webkit-box;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.project-slide-tech-stack {
+  margin-bottom: 1rem;
+  color: #66b3ff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.project-slide-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .about-profile-surface {
