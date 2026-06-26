@@ -12,6 +12,20 @@ interface ExperienceTabProps {
   onKeyDown: (event: KeyboardEvent<HTMLButtonElement>, index: number) => void;
 }
 
+type ExperienceTabNavigationDirection = "next" | "previous";
+
+const getWrappedExperienceTabIndex = (
+  index: number,
+  lastIndex: number,
+  direction: ExperienceTabNavigationDirection,
+) => {
+  if (direction === "next") {
+    return index === lastIndex ? 0 : index + 1;
+  }
+
+  return index === 0 ? lastIndex : index - 1;
+};
+
 export default function Experience() {
   const [selectedCompany, setSelectedCompany] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -26,12 +40,12 @@ export default function Experience() {
 
     if (experienceBehavior.keyboardNavigationKeys.next.includes(event.key)) {
       event.preventDefault();
-      selectCompany(index === lastIndex ? 0 : index + 1);
+      selectCompany(getWrappedExperienceTabIndex(index, lastIndex, "next"));
     }
 
     if (experienceBehavior.keyboardNavigationKeys.previous.includes(event.key)) {
       event.preventDefault();
-      selectCompany(index === 0 ? lastIndex : index - 1);
+      selectCompany(getWrappedExperienceTabIndex(index, lastIndex, "previous"));
     }
 
     if (event.key === experienceBehavior.keyboardNavigationKeys.first) {
