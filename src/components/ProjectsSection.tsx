@@ -69,7 +69,7 @@ const projectCarouselArrowMetadata: Record<ProjectCarouselArrowDirection, Projec
 
 const getProjectCarouselDotViewState = (isCurrent: boolean): ProjectCarouselDotViewState => ({
   ariaCurrent: isCurrent ? "true" : undefined,
-  className: isCurrent ? "scale-110 bg-[#007bff]" : "bg-gray-500 group-hover:bg-gray-400",
+  className: isCurrent ? "project-carousel-dot-marker-current" : "project-carousel-dot-marker-idle",
 });
 
 const getProjectActionLinkAnchorBehavior = (
@@ -314,12 +314,12 @@ export default function ProjectsSection() {
               <button
                 key={project.title}
                 onClick={() => setCurrentIndex(index)}
-                className="group flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+                className="project-carousel-dot-button"
                 aria-label={`Show ${project.title}`}
                 aria-current={dotViewState.ariaCurrent}
               >
                 <span
-                  className={`h-3 w-3 rounded-full transition-all duration-300 ${dotViewState.className}`}
+                  className={`project-carousel-dot-marker ${dotViewState.className}`}
                 />
               </button>
             );
@@ -372,10 +372,10 @@ function ProjectCarouselArrowButton({
       onClick={onClick}
       onKeyDown={(event) => onKeyDown(event, onKeyboardActivate)}
       onKeyUp={onKeyUp}
-      className={`absolute ${positionClass} top-1/2 -translate-y-1/2 bg-slate-600 border border-gray-500 rounded-full p-3 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]`}
+      className={`absolute ${positionClass} top-1/2 -translate-y-1/2 project-carousel-arrow-button`}
       aria-label={label}
     >
-      <Icon size={24} className="text-[#007bff]" aria-hidden="true" focusable="false" />
+      <Icon size={24} className="project-carousel-arrow-icon" aria-hidden="true" focusable="false" />
     </button>
   );
 }
