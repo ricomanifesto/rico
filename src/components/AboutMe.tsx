@@ -3,6 +3,11 @@ import { ChevronRight } from "lucide-react";
 import { aboutBehavior, aboutContent } from "../content/portfolio";
 
 export default function AboutMe() {
+  const getTechnologyItemOffsetX = (index: number) =>
+    index < aboutBehavior.technologyGrid.rowCount
+      ? aboutBehavior.technologyItemMotion.leadingColumnOffsetX
+      : aboutBehavior.technologyItemMotion.trailingColumnOffsetX;
+
   return (
     <section id="about" aria-labelledby="about-heading" className="scroll-mt-36 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
       <div className="max-w-4xl mx-auto">
@@ -48,7 +53,7 @@ export default function AboutMe() {
                 <motion.li
                   key={tech}
                   className="flex items-center justify-start"
-                  initial={{ opacity: 0, x: index < aboutBehavior.technologyGrid.rowCount ? -20 : 20 }}
+                  initial={{ opacity: 0, x: getTechnologyItemOffsetX(index) }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{
                     delay:
