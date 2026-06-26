@@ -65,6 +65,11 @@ const checks = [
     source: indexCss,
   },
   {
+    label: "portfolio content sections use the shared section shell visual contract",
+    pattern: /\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*9rem;[\s\S]*padding:\s*4rem 1rem;[\s\S]*background-color:\s*#0f172a;[\s\S]*color:\s*#fff;[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*5rem;[\s\S]*<section id="about"[^>]*className="portfolio-section"[\s\S]*<section id="projects"[^>]*className="portfolio-section"[\s\S]*<section id="experience"[^>]*className="portfolio-section"/,
+    source: `${indexCss}\n${aboutMeSource}\n${projectsSection}\n${experienceSource}`,
+  },
+  {
     label: "project slides use the shared dark surface treatment",
     pattern: /--portfolio-surface:\s*#112240;[\s\S]*--portfolio-surface-strong:\s*#233554;[\s\S]*--portfolio-surface-border:\s*rgba\(136,\s*146,\s*176,\s*0\.24\);[\s\S]*\.project-slide-surface\s*\{[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*background-color:\s*var\(--portfolio-surface\);[\s\S]*box-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.45\);[\s\S]*\.project-slide-caption\s*\{[\s\S]*background:\s*rgba\(17,\s*34,\s*64,\s*0\.88\);[\s\S]*border-top:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*backdrop-filter:\s*blur\(8px\);/,
     source: indexCss,

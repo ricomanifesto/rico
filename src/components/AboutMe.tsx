@@ -9,7 +9,7 @@ export default function AboutMe() {
       : aboutBehavior.technologyItemMotion.trailingColumnOffsetX;
 
   return (
-    <section id="about" aria-labelledby="about-heading" className="scroll-mt-36 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
+    <section id="about" aria-labelledby="about-heading" className="portfolio-section">
       <div className="max-w-4xl mx-auto">
         <motion.h2 
           id="about-heading"
