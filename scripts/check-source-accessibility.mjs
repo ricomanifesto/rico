@@ -298,7 +298,7 @@ const checks = [
   },
   {
     label: "about profile image uses the shared image surface treatment",
-    pattern: /\.about-profile-surface\s*\{[\s\S]*width:\s*10rem;[\s\S]*height:\s*10rem;[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*box-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.36\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.about-profile-surface\s*\{[\s\S]*width:\s*12rem;[\s\S]*height:\s*12rem;[\s\S]*alt="Michael Rico Profile"[\s\S]*className="about-profile-surface"/,
+    pattern: /--portfolio-profile-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.48\);[\s\S]*--portfolio-profile-shadow-hover:\s*0 24px 55px rgba\(2,\s*12,\s*27,\s*0\.62\);[\s\S]*\.about-profile-surface\s*\{[\s\S]*width:\s*10rem;[\s\S]*height:\s*10rem;[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*box-shadow:\s*var\(--portfolio-profile-shadow\);[\s\S]*transition:\s*box-shadow 300ms ease,\s*border-color 300ms ease;[\s\S]*\.about-profile-surface:hover\s*\{[\s\S]*border-color:\s*var\(--portfolio-surface-hover\);[\s\S]*box-shadow:\s*var\(--portfolio-profile-shadow-hover\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.about-profile-surface\s*\{[\s\S]*width:\s*12rem;[\s\S]*height:\s*12rem;[\s\S]*alt="Michael Rico Profile"[\s\S]*className="about-profile-surface"/,
     source: `${indexCss}\n${aboutMeSource}`,
   },
   {
