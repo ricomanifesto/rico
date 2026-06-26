@@ -828,12 +828,12 @@
 
 .hero-cta-link:hover {
   background-color: var(--portfolio-surface-strong);
-  border-color: #66b2ff;
-  color: #66b2ff;
+  border-color: var(--portfolio-active-accent);
+  color: var(--portfolio-active-accent);
 }
 
 .hero-cta-link:focus-visible {
-  outline: 2px solid #66b2ff;
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
@@ -848,12 +848,12 @@
 }
 
 .project-action-link:hover {
-  color: #66b3ff;
+  color: var(--portfolio-active-accent);
   transform: scale(1.1);
 }
 
 .project-action-link:focus-visible {
-  outline: 2px solid #66b2ff;
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
