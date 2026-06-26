@@ -132,7 +132,10 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header exposes mobile primary navigation");
   }
 
-  if (!/md:hidden/.test(headerSource)) {
+  if (
+    !/className="header-mobile-nav"/.test(headerSource) ||
+    !/\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;/.test(indexCssSource)
+  ) {
     failures.push("Header keeps mobile navigation scoped below the desktop breakpoint");
   }
 
@@ -140,7 +143,10 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header mobile navigation renders from shared typed navigation data");
   }
 
-  if (!/aria-label="Mobile primary"[\s\S]*<ul\b[^>]*className="[^"]*overflow-x-auto/.test(headerSource)) {
+  if (
+    !/aria-label="Mobile primary"[\s\S]*<ul\b[^>]*className="header-mobile-list"/.test(headerSource) ||
+    !/\.header-mobile-list\s*\{[\s\S]*display:\s*flex;[\s\S]*gap:\s*1rem;[\s\S]*overflow-x:\s*auto;/.test(indexCssSource)
+  ) {
     failures.push("Header mobile navigation exposes the horizontal link rail as a list");
   }
 
@@ -210,7 +216,7 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
 
   if (
     componentPath === headerNavLinkPath &&
-    !/interface HeaderNavLinkClassContract \{[\s\S]*readonly getLayoutClass:\s*\(isLast:\s*boolean\)\s*=>\s*string;[\s\S]*readonly inactiveClass:\s*string;[\s\S]*\}[\s\S]*const headerNavLinkClassContract:\s*Record<HeaderNavLinkVariant,\s*HeaderNavLinkClassContract>\s*=\s*\{[\s\S]*desktop:\s*\{[\s\S]*getLayoutClass:\s*\(isLast\)\s*=>\s*\(isLast \? "" : "mr-6"\)[\s\S]*inactiveClass:\s*"text-gray-200"[\s\S]*mobile:\s*\{[\s\S]*getLayoutClass:\s*\(\)\s*=>\s*"inline-flex min-h-11 min-w-11 items-center justify-center"[\s\S]*inactiveClass:\s*"font-medium text-gray-200"[\s\S]*export default function HeaderNavLink[\s\S]*const \{ getLayoutClass, inactiveClass \} = headerNavLinkClassContract\[variant\];[\s\S]*const layoutClass = getLayoutClass\(isLast\);[\s\S]*const activeClass = isActive \? activeHeaderNavLinkClass : inactiveClass;/.test(source)
+    !/interface HeaderNavLinkClassContract \{[\s\S]*readonly getLayoutClass:\s*\(isLast:\s*boolean\)\s*=>\s*string;[\s\S]*readonly inactiveClass:\s*string;[\s\S]*\}[\s\S]*const headerNavLinkClassContract:\s*Record<HeaderNavLinkVariant,\s*HeaderNavLinkClassContract>\s*=\s*\{[\s\S]*desktop:\s*\{[\s\S]*getLayoutClass:\s*\(isLast\)\s*=>\s*\(isLast \? "" : "header-nav-link-desktop-spaced"\)[\s\S]*inactiveClass:\s*"header-nav-link-idle"[\s\S]*mobile:\s*\{[\s\S]*getLayoutClass:\s*\(\)\s*=>\s*"header-nav-link-mobile"[\s\S]*inactiveClass:\s*"header-nav-link-idle"[\s\S]*export default function HeaderNavLink[\s\S]*const \{ getLayoutClass, inactiveClass \} = headerNavLinkClassContract\[variant\];[\s\S]*const layoutClass = getLayoutClass\(isLast\);[\s\S]*const activeClass = isActive \? activeHeaderNavLinkClass : inactiveClass;/.test(source)
   ) {
     failures.push(`${path.relative(root, componentPath)} uses the typed nav link class contract`);
   }
@@ -225,7 +231,10 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
 
   if (
     componentPath === socialLinkPath &&
-    !/className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b/.test(source)
+    (
+      !/className="header-social-link"/.test(source) ||
+      !/\.header-social-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-width:\s*2\.75rem;[\s\S]*min-height:\s*2\.75rem;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*center;/.test(indexCssSource)
+    )
   ) {
     failures.push(`${path.relative(root, componentPath)} uses mobile-friendly touch targets`);
   }
