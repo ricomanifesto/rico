@@ -700,7 +700,7 @@ function projectCarouselControlsUseInlineAccentStyles(source) {
 
 function projectCardContentUsesInlineAccentStyles(source) {
   const contentMatch = source.match(
-    /<h3 className="text-2xl font-bold text-white mb-2">[\s\S]*?<div className="flex items-center space-x-4">/,
+    /<div className="project-slide-caption">[\s\S]*?<div className="project-slide-actions">/,
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(contentMatch?.[0] ?? "");
