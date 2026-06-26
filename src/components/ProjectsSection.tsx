@@ -35,6 +35,11 @@ interface ProjectCarouselArrowMetadata {
   readonly positionClass: string;
 }
 
+interface ProjectCarouselDotViewState {
+  readonly ariaCurrent?: "true";
+  readonly className: string;
+}
+
 const projectActionMetadata: Record<ProjectActionLinkKind, ProjectActionMetadata> = {
   repository: {
     Icon: Github,
@@ -56,6 +61,11 @@ const projectCarouselArrowMetadata: Record<ProjectCarouselArrowDirection, Projec
     positionClass: "right-2 md:right-0 md:translate-x-4",
   },
 };
+
+const getProjectCarouselDotViewState = (isCurrent: boolean): ProjectCarouselDotViewState => ({
+  ariaCurrent: isCurrent ? "true" : undefined,
+  className: isCurrent ? "scale-110 bg-[#007bff]" : "bg-gray-500 group-hover:bg-gray-400",
+});
 
 export default function ProjectsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -285,22 +295,23 @@ export default function ProjectsSection() {
         />
 
         <div className="flex justify-center mt-6 space-x-2">
-          {projects.map((project, index) => (
-            <button
-              key={project.title}
-              onClick={() => setCurrentIndex(index)}
-              className="group flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
-              aria-label={`Show ${project.title}`}
-              aria-current={index === currentIndex ? "true" : undefined}
-            >
-              <span
-                className={`h-3 w-3 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? 'scale-110 bg-[#007bff]' : 'bg-gray-500 group-hover:bg-gray-400'
-                }`}
-              />
-            </button>
-          ))}
+          {projects.map((project, index) => {
+            const dotViewState = getProjectCarouselDotViewState(index === currentIndex);
+
+            return (
+              <button
+                key={project.title}
+                onClick={() => setCurrentIndex(index)}
+                className="group flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+                aria-label={`Show ${project.title}`}
+                aria-current={dotViewState.ariaCurrent}
+              >
+                <span
+                  className={`h-3 w-3 rounded-full transition-all duration-300 ${dotViewState.className}`}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
       </div>
