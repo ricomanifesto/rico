@@ -451,7 +451,12 @@ const checks = [
   },
   {
     label: "project tech labels use class-based accent styles",
-    pattern: /className="[^"]*text-\[#66b3ff\][^"]*"[^>]*>\s*\{project\.techStack\.join\(", "\)\}\s*<\/div>/,
+    pattern: /\.project-slide-tech-stack\s*\{[\s\S]*color:\s*#66b3ff;/,
+    source: indexCss,
+  },
+  {
+    label: "project card content uses the shared content visual contract",
+    pattern: /className="project-slide-caption"[\s\S]*<h3 className="project-slide-title">\{project\.title\}<\/h3>[\s\S]*<p className="project-slide-description">[\s\S]*\{project\.description\}[\s\S]*<\/p>[\s\S]*<div className="project-slide-tech-stack">[\s\S]*\{project\.techStack\.join\(", "\)\}[\s\S]*<\/div>[\s\S]*<div className="project-slide-actions">/,
     source: projectsSection,
   },
   {
@@ -695,7 +700,7 @@ function projectCarouselControlsUseInlineAccentStyles(source) {
 
 function projectCardContentUsesInlineAccentStyles(source) {
   const contentMatch = source.match(
-    /<h3 className="text-2xl font-bold text-white mb-2">[\s\S]*?<div className="flex items-center space-x-4">/,
+    /<div className="project-slide-caption">[\s\S]*?<div className="project-slide-actions">/,
   );
 
   return /style=\{[^}]*#[0-9a-fA-F]{6}/.test(contentMatch?.[0] ?? "");

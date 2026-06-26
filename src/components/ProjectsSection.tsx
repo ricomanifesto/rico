@@ -251,16 +251,16 @@ export default function ProjectsSection() {
                   )}
                   
                   <div className="absolute inset-0 flex flex-col justify-end">
-                    <div className="project-slide-caption p-6">
-                      <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-                      <p className="text-gray-200 text-sm mb-3 line-clamp-2">
+                    <div className="project-slide-caption">
+                      <h3 className="project-slide-title">{project.title}</h3>
+                      <p className="project-slide-description">
                         {project.description}
                       </p>
-                      <div className="text-xs font-semibold tracking-wider mb-4 text-[#66b3ff]">
+                      <div className="project-slide-tech-stack">
                         {project.techStack.join(", ")}
                       </div>
                       
-                      <div className="flex items-center space-x-4">
+                      <div className="project-slide-actions">
                         <ProjectActionLink
                           kind="repository"
                           link={project.links.repository}
