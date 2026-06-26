@@ -65,6 +65,11 @@ const checks = [
     source: indexCss,
   },
   {
+    label: "project slides use the shared dark surface treatment",
+    pattern: /--portfolio-surface:\s*#112240;[\s\S]*--portfolio-surface-strong:\s*#233554;[\s\S]*--portfolio-surface-border:\s*rgba\(136,\s*146,\s*176,\s*0\.24\);[\s\S]*\.project-slide-surface\s*\{[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*background-color:\s*var\(--portfolio-surface\);[\s\S]*box-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.45\);[\s\S]*\.project-slide-caption\s*\{[\s\S]*background:\s*rgba\(17,\s*34,\s*64,\s*0\.88\);[\s\S]*border-top:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*backdrop-filter:\s*blur\(8px\);/,
+    source: indexCss,
+  },
+  {
     label: "footer copyright year uses machine-readable time markup",
     pattern: /<time\s+dateTime=\{String\(currentYear\)\}>\{currentYear\}<\/time>/,
     source: footerSource,
@@ -683,7 +688,7 @@ function projectCardContentUsesInlineAccentStyles(source) {
 
 function projectCardsUseDecorativeBlurOverlays(source) {
   const projectCardMatch = source.match(
-    /<motion\.div\s+className="relative rounded-2xl[\s\S]*?<\/motion\.div>/,
+    /<motion\.div\s+className="project-slide-surface[\s\S]*?<\/motion\.div>/,
   );
 
   return /\brounded-full\b[\s\S]*\bbg-white\/\d+\b[\s\S]*\bblur-(?:md|lg|xl)\b/.test(

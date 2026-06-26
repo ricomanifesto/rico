@@ -11,6 +11,9 @@
     --secondary-accent: #20c997;
     --border-color: #ddd;
     --section-rule: #233554;
+    --portfolio-surface: #112240;
+    --portfolio-surface-strong: #233554;
+    --portfolio-surface-border: rgba(136, 146, 176, 0.24);
 
     /* shadcn color variables */
     --background: 180, 14%, 97%;
@@ -95,6 +98,23 @@
   .section-title::after {
     display: none;
   }
+}
+
+.project-slide-surface {
+  border-radius: var(--radius);
+  border: 1px solid var(--portfolio-surface-border);
+  background-color: var(--portfolio-surface);
+  box-shadow: 0 18px 45px rgba(2, 12, 27, 0.45);
+}
+
+.project-slide-surface:hover {
+  border-color: var(--portfolio-surface-strong);
+}
+
+.project-slide-caption {
+  background: rgba(17, 34, 64, 0.88);
+  border-top: 1px solid var(--portfolio-surface-border);
+  backdrop-filter: blur(8px);
 }
 
 .node {

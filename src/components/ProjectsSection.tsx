@@ -220,7 +220,7 @@ export default function ProjectsSection() {
                   className="w-full flex-shrink-0"
                 >
                   <motion.div
-                    className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 mx-4 h-96"
+                    className="project-slide-surface relative mx-4 h-96 overflow-hidden transition-all duration-500"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -251,7 +251,7 @@ export default function ProjectsSection() {
                   )}
                   
                   <div className="absolute inset-0 flex flex-col justify-end">
-                    <div className="bg-black/60 backdrop-blur-sm p-6">
+                    <div className="project-slide-caption p-6">
                       <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
                       <p className="text-gray-200 text-sm mb-3 line-clamp-2">
                         {project.description}
