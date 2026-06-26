@@ -211,9 +211,9 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
 
   if (
     componentPath === headerNavLinkPath &&
-    !/variant === "mobile"[\s\S]*\bmin-h-11\b[\s\S]*\bmin-w-11\b/.test(source)
+    !/interface HeaderNavLinkClassContract \{[\s\S]*readonly getLayoutClass:\s*\(isLast:\s*boolean\)\s*=>\s*string;[\s\S]*readonly inactiveClass:\s*string;[\s\S]*\}[\s\S]*const headerNavLinkClassContract:\s*Record<HeaderNavLinkVariant,\s*HeaderNavLinkClassContract>\s*=\s*\{[\s\S]*desktop:\s*\{[\s\S]*getLayoutClass:\s*\(isLast\)\s*=>\s*\(isLast \? "" : "mr-6"\)[\s\S]*inactiveClass:\s*"text-gray-200"[\s\S]*mobile:\s*\{[\s\S]*getLayoutClass:\s*\(\)\s*=>\s*"inline-flex min-h-11 min-w-11 items-center justify-center"[\s\S]*inactiveClass:\s*"font-medium text-gray-200"[\s\S]*export default function HeaderNavLink[\s\S]*const \{ getLayoutClass, inactiveClass \} = headerNavLinkClassContract\[variant\];[\s\S]*const layoutClass = getLayoutClass\(isLast\);[\s\S]*const activeClass = isActive \? activeHeaderNavLinkClass : inactiveClass;/.test(source)
   ) {
-    failures.push(`${path.relative(root, componentPath)} keeps mobile nav links touch-friendly`);
+    failures.push(`${path.relative(root, componentPath)} uses the typed nav link class contract`);
   }
 
   if (componentPath === socialLinkPath && !source.includes(socialBaseAccentClass)) {
