@@ -166,7 +166,7 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" aria-labelledby="projects-heading" className="portfolio-section">
-      <div className="max-w-4xl mx-auto">
+      <div className="projects-content">
       <motion.h2 
         id="projects-heading"
         className="section-title"
@@ -182,7 +182,7 @@ export default function ProjectsSection() {
         role="region"
         aria-label="Featured projects"
         aria-roledescription="carousel"
-        className="relative"
+        className="project-carousel"
         onMouseEnter={() => setHasCarouselHover(true)}
         onMouseLeave={() => setHasCarouselHover(false)}
         onFocusCapture={() => setHasCarouselFocus(true)}
@@ -201,9 +201,9 @@ export default function ProjectsSection() {
         >
           {`Project ${currentIndex + 1} of ${projects.length}: ${projects[currentIndex].title}`}
         </div>
-        <div className="overflow-hidden">
+        <div className="project-carousel-viewport">
           <motion.div 
-            className="flex transition-transform duration-500 ease-in-out"
+            className="project-carousel-track"
             animate={shouldReduceMotion ? undefined : { x: `${-currentIndex * projectCarouselBehavior.slideStepPercent}%` }}
             style={shouldReduceMotion ? { transform: `translateX(${-currentIndex * projectCarouselBehavior.slideStepPercent}%)` } : undefined}
           >
@@ -217,10 +217,10 @@ export default function ProjectsSection() {
                   aria-roledescription="slide"
                   aria-hidden={index !== currentIndex}
                   aria-label={`${project.title}, project slide ${index + 1} of ${projects.length}`}
-                  className="w-full flex-shrink-0"
+                  className="project-carousel-slide"
                 >
                   <motion.div
-                    className="project-slide-surface relative mx-4 h-96 overflow-hidden transition-all duration-500"
+                    className="project-slide-surface"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -233,7 +233,7 @@ export default function ProjectsSection() {
                     }
                   >
                   {project.image?.decorative ? (
-                    <div className="absolute inset-0">
+                    <div className="project-slide-media">
                       <img 
                         src={project.image.src} 
                         width={project.image.width}
@@ -242,15 +242,15 @@ export default function ProjectsSection() {
                         aria-hidden="true"
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover"
+                        className="project-slide-image"
                       />
-                      <div className="absolute inset-0 bg-black/40"></div>
+                      <div className="project-slide-image-overlay"></div>
                     </div>
                   ) : (
-                    <div className={`absolute inset-0 bg-gradient-to-br ${project.bgGradient} opacity-90`}></div>
+                    <div className={`project-slide-gradient ${project.bgGradient}`}></div>
                   )}
                   
-                  <div className="absolute inset-0 flex flex-col justify-end">
+                  <div className="project-slide-caption-dock">
                     <div className="project-slide-caption">
                       <h3 className="project-slide-title">{project.title}</h3>
                       <p className="project-slide-description">
@@ -306,7 +306,7 @@ export default function ProjectsSection() {
           onKeyUp={handleCarouselButtonKeyUp}
         />
 
-        <div className="flex justify-center mt-6 space-x-2">
+        <div className="project-carousel-dot-list">
           {projects.map((project, index) => {
             const dotViewState = getProjectCarouselDotViewState(index === currentIndex);
 
