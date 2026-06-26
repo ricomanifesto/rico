@@ -718,14 +718,14 @@
 }
 
 .header-brand-link:hover {
-  color: #66b2ff;
+  color: var(--portfolio-active-accent);
 }
 
 .header-brand-link:focus-visible,
 .header-nav-link:focus-visible,
 .header-social-link:focus-visible {
-  color: #66b2ff;
-  outline: 2px solid #66b2ff;
+  color: var(--portfolio-active-accent);
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
@@ -754,11 +754,11 @@
 }
 
 .header-nav-link:hover {
-  color: var(--primary-accent);
+  color: var(--portfolio-active-accent);
 }
 
 .header-nav-link-active {
-  color: #66b2ff;
+  color: var(--portfolio-active-accent);
   font-weight: 600;
 }
 
@@ -779,7 +779,7 @@
 }
 
 .header-social-link:hover {
-  color: #0056b3;
+  color: var(--portfolio-active-accent);
   transform: scale(1.1);
 }
 

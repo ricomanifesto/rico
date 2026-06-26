@@ -269,7 +269,7 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
 }
 
 if (
-  !/\.header-brand-link\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-brand-link:hover\s*\{[\s\S]*color:\s*#66b2ff;[\s\S]*\.header-nav-link:hover\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-nav-link-active\s*\{[\s\S]*color:\s*#66b2ff;[\s\S]*\.header-social-link\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-social-link:hover\s*\{[\s\S]*color:\s*#0056b3;/.test(indexCssSource)
+  !/\.header-brand-link\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-brand-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*\.header-nav-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*\.header-nav-link-active\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*\.header-social-link\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-social-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);/.test(indexCssSource)
 ) {
   failures.push("src/index.css defines the shared header interactive visual contract");
 }
