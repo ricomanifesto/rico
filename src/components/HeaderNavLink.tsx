@@ -2,6 +2,24 @@ import type { HeaderNavItem } from "@/content/navigation";
 
 type HeaderNavLinkVariant = "desktop" | "mobile";
 
+interface HeaderNavLinkClassContract {
+  readonly getLayoutClass: (isLast: boolean) => string;
+  readonly inactiveClass: string;
+}
+
+const activeHeaderNavLinkClass = "font-semibold text-[#66b2ff]";
+
+const headerNavLinkClassContract: Record<HeaderNavLinkVariant, HeaderNavLinkClassContract> = {
+  desktop: {
+    getLayoutClass: (isLast) => (isLast ? "" : "mr-6"),
+    inactiveClass: "text-gray-200",
+  },
+  mobile: {
+    getLayoutClass: () => "inline-flex min-h-11 min-w-11 items-center justify-center",
+    inactiveClass: "font-medium text-gray-200",
+  },
+};
+
 interface HeaderNavLinkProps {
   item: HeaderNavItem;
   isActive: boolean;
@@ -10,9 +28,9 @@ interface HeaderNavLinkProps {
 }
 
 export default function HeaderNavLink({ item, isActive, isLast = false, variant = "desktop" }: HeaderNavLinkProps) {
-  const layoutClass =
-    variant === "mobile" ? "inline-flex min-h-11 min-w-11 items-center justify-center" : isLast ? "" : "mr-6";
-  const activeClass = isActive ? "font-semibold text-[#66b2ff]" : variant === "mobile" ? "font-medium text-gray-200" : "text-gray-200";
+  const { getLayoutClass, inactiveClass } = headerNavLinkClassContract[variant];
+  const layoutClass = getLayoutClass(isLast);
+  const activeClass = isActive ? activeHeaderNavLinkClass : inactiveClass;
 
   return (
     <a
