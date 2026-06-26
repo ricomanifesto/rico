@@ -10,6 +10,7 @@
     --primary-accent: #007bff; 
     --secondary-accent: #20c997;
     --border-color: #ddd;
+    --portfolio-heading: #ccd6f6;
     --section-rule: #233554;
     --portfolio-muted: #8892b0;
     --portfolio-surface: #112240;
@@ -191,22 +192,23 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 2.25rem;
   padding-bottom: 0;
-  color: #fff;
-  font-family: "Roboto Slab", serif;
-  font-size: 1.875rem;
-  line-height: 2.25rem;
+  color: var(--portfolio-heading);
+  font-family: "Open Sans", sans-serif;
+  font-size: 2rem;
+  line-height: 2.5rem;
   font-weight: 700;
+  letter-spacing: 0;
 }
 
 .section-title::after {
   content: "";
   display: block;
   flex: 1;
-  max-width: 18rem;
+  max-width: 18.75rem;
   height: 1px;
   background-color: var(--section-rule);
 }
@@ -236,8 +238,8 @@
   }
 
   .section-title {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
+    font-size: 2.875rem;
+    line-height: 3.25rem;
   }
 
   .hero-content-with-visual {

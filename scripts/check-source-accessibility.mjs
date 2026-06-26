@@ -7,6 +7,7 @@ import { createServer } from "vite";
 const root = process.cwd();
 const srcRoot = path.join(root, "src");
 const componentsRoot = path.join(root, "src/components");
+const indexHtmlPath = path.join(root, "index.html");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
 const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
@@ -23,6 +24,7 @@ const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx"
 const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
 const indexCssPath = path.join(root, "src/index.css");
+const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
 const appSource = fs.readFileSync(appPath, "utf8");
 const homeSource = fs.readFileSync(homePath, "utf8");
 const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
@@ -61,8 +63,8 @@ const checks = [
   },
   {
     label: "section headings use a shared title and rule treatment",
-    pattern: /(?=[\s\S]*--section-rule:\s*#233554;)(?=[\s\S]*\.section-title\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*gap:\s*1rem;[\s\S]*width:\s*100%;[\s\S]*margin-bottom:\s*2rem;[\s\S]*color:\s*#fff;[\s\S]*font-family:\s*"Roboto Slab",\s*serif;[\s\S]*font-size:\s*1\.875rem;[\s\S]*line-height:\s*2\.25rem;[\s\S]*font-weight:\s*700;)(?=[\s\S]*\.section-title::after\s*\{[\s\S]*flex:\s*1;[\s\S]*max-width:\s*18rem;[\s\S]*height:\s*1px;[\s\S]*background-color:\s*var\(--section-rule\);)(?=[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.section-title\s*\{[\s\S]*font-size:\s*2\.25rem;[\s\S]*line-height:\s*2\.5rem;)(?=[\s\S]*@media \(max-width: 768px\)\s*\{[\s\S]*\.section-title::after\s*\{[\s\S]*display:\s*none;)(?=[\s\S]*<motion\.h2\s+id="about-heading"\s+className="section-title")(?=[\s\S]*<motion\.h2\s+id="projects-heading"\s+className="section-title")(?=[\s\S]*<motion\.h2\s+id="experience-heading"\s+className="section-title")/,
-    source: `${indexCss}\n${aboutMeSource}\n${projectsSection}\n${experienceSource}`,
+    pattern: /(?=[\s\S]*family=Open\+Sans:wght@400;500;600;700&)(?=[\s\S]*--portfolio-heading:\s*#ccd6f6;)(?=[\s\S]*--section-rule:\s*#233554;)(?=[\s\S]*\.section-title\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*gap:\s*1\.25rem;[\s\S]*width:\s*100%;[\s\S]*margin-bottom:\s*2\.25rem;[\s\S]*color:\s*var\(--portfolio-heading\);[\s\S]*font-family:\s*"Open Sans",\s*sans-serif;[\s\S]*font-size:\s*2rem;[\s\S]*line-height:\s*2\.5rem;[\s\S]*font-weight:\s*700;[\s\S]*letter-spacing:\s*0;)(?=[\s\S]*\.section-title::after\s*\{[\s\S]*flex:\s*1;[\s\S]*max-width:\s*18\.75rem;[\s\S]*height:\s*1px;[\s\S]*background-color:\s*var\(--section-rule\);)(?=[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.section-title\s*\{[\s\S]*font-size:\s*2\.875rem;[\s\S]*line-height:\s*3\.25rem;)(?=[\s\S]*@media \(max-width: 768px\)\s*\{[\s\S]*\.section-title::after\s*\{[\s\S]*display:\s*none;)(?=[\s\S]*<motion\.h2\s+id="about-heading"\s+className="section-title")(?=[\s\S]*<motion\.h2\s+id="projects-heading"\s+className="section-title")(?=[\s\S]*<motion\.h2\s+id="experience-heading"\s+className="section-title")/,
+    source: `${indexHtml}\n${indexCss}\n${aboutMeSource}\n${projectsSection}\n${experienceSource}`,
   },
   {
     label: "portfolio content sections use the shared section shell visual contract",
