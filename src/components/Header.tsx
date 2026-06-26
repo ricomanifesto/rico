@@ -3,6 +3,14 @@ import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
 import { headerNavItems, headerNavigationBehavior, siteBrand, socialLinks } from "@/content/navigation";
 
+interface HeaderShellViewState {
+  readonly shadowClass: string;
+}
+
+const getHeaderShellViewState = (isScrolled: boolean): HeaderShellViewState => ({
+  shadowClass: isScrolled ? "shadow-sm" : "",
+});
+
 function getSectionElement(hash: string) {
   if (!hash.startsWith("#")) {
     return null;
@@ -14,6 +22,7 @@ function getSectionElement(hash: string) {
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState(headerNavigationBehavior.defaultActiveHref);
+  const shellViewState = getHeaderShellViewState(isScrolled);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,7 +66,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 bg-slate-900 bg-opacity-95 backdrop-blur-sm z-50 ${isScrolled ? 'shadow-sm' : ''} transition-shadow duration-300`}>
+    <header className={`fixed top-0 left-0 right-0 bg-slate-900 bg-opacity-95 backdrop-blur-sm z-50 ${shellViewState.shadowClass} transition-shadow duration-300`}>
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center">
           <a
