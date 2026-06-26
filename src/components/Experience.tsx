@@ -88,7 +88,7 @@ export default function Experience() {
 
   return (
     <section id="experience" aria-labelledby="experience-heading" className="portfolio-section">
-      <div className="max-w-4xl mx-auto">
+      <div className="experience-content">
         <motion.h2 
           id="experience-heading"
           className="section-title"
@@ -100,13 +100,13 @@ export default function Experience() {
           / experience
         </motion.h2>
 
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div className="lg:w-1/4 flex-shrink-0">
+        <div className="experience-layout">
+          <div className="experience-tab-column">
             <div
               role="tablist"
               aria-label="Experience companies"
               aria-orientation="vertical"
-              className="space-y-8"
+              className="experience-tab-list"
             >
               {experiences.map((exp, index) => (
                 <ExperienceTab
@@ -124,7 +124,7 @@ export default function Experience() {
             </div>
           </div>
 
-          <div className="lg:w-3/4 flex-1">
+          <div className="experience-panel-column">
             {experiences.map((exp, index) => {
               const panelViewState = getExperiencePanelViewState(selectedCompany === index);
 
@@ -141,7 +141,7 @@ export default function Experience() {
                   animate={panelViewState.animate}
                   transition={{ duration: experienceBehavior.panelMotion.duration }}
                 >
-                  <h4 className="text-xl md:text-2xl font-semibold mb-2">
+                  <h4 className="experience-panel-title">
                     {exp.title} @ <span className="experience-company-accent">{exp.displayCompany}</span>
                   </h4>
 
@@ -149,7 +149,7 @@ export default function Experience() {
                     {exp.period}
                   </p>
 
-                  <ul className="space-y-4">
+                  <ul className="experience-highlight-list">
                     {exp.highlights.map((highlight, highlightIndex) => (
                       <motion.li
                         key={highlight}
