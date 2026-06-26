@@ -169,7 +169,7 @@ export default function ProjectsSection() {
       <div className="max-w-4xl mx-auto">
       <motion.h2 
         id="projects-heading"
-        className="section-title text-3xl md:text-4xl font-serif font-bold mb-8 text-white"
+        className="section-title"
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}

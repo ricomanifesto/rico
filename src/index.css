@@ -184,7 +184,13 @@
   align-items: center;
   gap: 1rem;
   width: 100%;
+  margin-bottom: 2rem;
   padding-bottom: 0;
+  color: #fff;
+  font-family: "Roboto Slab", serif;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
 }
 
 .section-title::after {
@@ -218,6 +224,11 @@
 
   .hero-content {
     gap: 2.5rem;
+  }
+
+  .section-title {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 
   .hero-content-with-visual {
