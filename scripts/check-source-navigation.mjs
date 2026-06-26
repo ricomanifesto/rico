@@ -83,7 +83,7 @@ if (!fs.existsSync(navigationPath)) {
       ) {
         failures.push("Navigation target #intro reserves mobile header space");
       }
-    } else if (!sectionClassName || !sectionClassName.includes("scroll-mt-36")) {
+    } else if (!sectionPreservesMobileScrollOffset(sectionClassName, indexCssSource)) {
         failures.push(`Navigation target #${sectionId} preserves mobile scroll offset`);
     }
   }
@@ -290,6 +290,21 @@ function findSectionClassName(source, sectionId) {
   );
   const match = source.match(sectionPattern);
   return match?.[1] ?? null;
+}
+
+function sectionPreservesMobileScrollOffset(sectionClassName, cssSource) {
+  if (!sectionClassName) {
+    return false;
+  }
+
+  if (sectionClassName.includes("scroll-mt-36")) {
+    return true;
+  }
+
+  return (
+    sectionClassName.split(/\s+/).includes("portfolio-section") &&
+    /\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*9rem;/.test(cssSource)
+  );
 }
 
 function findNamedNavBlock(source, label) {

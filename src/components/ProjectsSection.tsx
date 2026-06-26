@@ -165,7 +165,7 @@ export default function ProjectsSection() {
   };
 
   return (
-    <section id="projects" aria-labelledby="projects-heading" className="scroll-mt-36 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
+    <section id="projects" aria-labelledby="projects-heading" className="portfolio-section">
       <div className="max-w-4xl mx-auto">
       <motion.h2 
         id="projects-heading"

@@ -87,7 +87,7 @@ export default function Experience() {
   };
 
   return (
-    <section id="experience" aria-labelledby="experience-heading" className="scroll-mt-36 py-16 px-4 bg-slate-900 text-white md:scroll-mt-20">
+    <section id="experience" aria-labelledby="experience-heading" className="portfolio-section">
       <div className="max-w-4xl mx-auto">
         <motion.h2 
           id="experience-heading"

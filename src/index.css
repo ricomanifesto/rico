@@ -100,6 +100,19 @@
   }
 }
 
+.portfolio-section {
+  scroll-margin-top: 9rem;
+  padding: 4rem 1rem;
+  background-color: #0f172a;
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .portfolio-section {
+    scroll-margin-top: 5rem;
+  }
+}
+
 .project-slide-surface {
   border-radius: var(--radius);
   border: 1px solid var(--portfolio-surface-border);
