@@ -401,17 +401,32 @@ const checks = [
   },
   {
     label: "header brand link has a visible keyboard focus style",
-    pattern: /href=\{siteBrand\.href\}[\s\S]*className="[^"]*focus-visible:outline[^"]*"[\s\S]*>\s*\{siteBrand\.label\}\s*<\/a>/,
+    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;/,
+    source: indexCss,
+  },
+  {
+    label: "header brand link uses the shared header visual contract",
+    pattern: /href=\{siteBrand\.href\}[\s\S]*className="[^"]*header-brand-link[^"]*"[\s\S]*>\s*\{siteBrand\.label\}\s*<\/a>/,
     source: headerSource,
   },
   {
     label: "desktop header navigation links have visible keyboard focus styles",
-    pattern: /focus-visible:outline/,
+    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;/,
+    source: indexCss,
+  },
+  {
+    label: "desktop header navigation links use the shared header visual contract",
+    pattern: /header-nav-link/,
     source: headerNavLinkSource,
   },
   {
     label: "header social links have visible keyboard focus styles",
-    pattern: /focus-visible:outline/,
+    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;/,
+    source: indexCss,
+  },
+  {
+    label: "header social links use the shared header visual contract",
+    pattern: /header-social-link/,
     source: socialLinkSource,
   },
   {

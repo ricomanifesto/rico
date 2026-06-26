@@ -7,7 +7,7 @@ interface HeaderNavLinkClassContract {
   readonly inactiveClass: string;
 }
 
-const activeHeaderNavLinkClass = "font-semibold text-[#66b2ff]";
+const activeHeaderNavLinkClass = "header-nav-link-active";
 
 const headerNavLinkClassContract: Record<HeaderNavLinkVariant, HeaderNavLinkClassContract> = {
   desktop: {
@@ -36,7 +36,7 @@ export default function HeaderNavLink({ item, isActive, isLast = false, variant 
     <a
       href={item.href}
       aria-current={isActive ? "location" : undefined}
-      className={`${layoutClass} text-sm transition-colors duration-300 hover:text-[#007bff] focus-visible:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${activeClass}`}
+      className={`${layoutClass} header-nav-link text-sm transition-colors duration-300 ${activeClass}`}
     >
       {item.label}
     </a>

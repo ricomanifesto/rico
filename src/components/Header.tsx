@@ -71,7 +71,7 @@ export default function Header() {
         <div className="flex items-center">
           <a
             href={siteBrand.href}
-            className="text-xl font-bold text-[#007bff] transition-colors duration-300 hover:text-[#66b2ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+            className="header-brand-link text-xl font-bold transition-colors duration-300"
           >
             {siteBrand.label}
           </a>

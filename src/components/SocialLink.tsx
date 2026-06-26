@@ -35,7 +35,7 @@ export default function SocialLink({ link }: SocialLinkProps) {
       target={anchorBehavior.target}
       rel={anchorBehavior.rel}
       aria-label={link.label}
-      className="inline-flex min-h-11 min-w-11 items-center justify-center text-[#007bff] transition duration-300 transform hover:scale-110 hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+      className="header-social-link inline-flex min-h-11 min-w-11 items-center justify-center"
     >
       <SocialIcon kind={link.kind} />
     </a>
