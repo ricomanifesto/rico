@@ -14,6 +14,14 @@
     --portfolio-surface: #112240;
     --portfolio-surface-strong: #233554;
     --portfolio-surface-border: rgba(136, 146, 176, 0.24);
+    --portfolio-control-surface: #475569;
+    --portfolio-control-surface-hover: #64748b;
+    --portfolio-control-border: #6b7280;
+    --portfolio-control-shadow: 0 10px 15px rgba(2, 12, 27, 0.22);
+    --portfolio-control-shadow-hover: 0 20px 25px rgba(2, 12, 27, 0.28);
+    --portfolio-control-dot-idle: #6b7280;
+    --portfolio-control-dot-hover: #9ca3af;
+    --portfolio-focus-ring: #66b2ff;
 
     /* shadcn color variables */
     --background: 180, 14%, 97%;
@@ -598,20 +606,20 @@
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
-  border: 1px solid #6b7280;
+  border: 1px solid var(--portfolio-control-border);
   border-radius: 9999px;
-  background-color: #475569;
-  box-shadow: 0 10px 15px rgba(2, 12, 27, 0.22);
+  background-color: var(--portfolio-control-surface);
+  box-shadow: var(--portfolio-control-shadow);
   transition: background-color 300ms ease, box-shadow 300ms ease;
 }
 
 .project-carousel-arrow-button:hover {
-  background-color: #64748b;
-  box-shadow: 0 20px 25px rgba(2, 12, 27, 0.28);
+  background-color: var(--portfolio-control-surface-hover);
+  box-shadow: var(--portfolio-control-shadow-hover);
 }
 
 .project-carousel-arrow-button:focus-visible {
-  outline: 2px solid #66b2ff;
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
@@ -629,7 +637,7 @@
 }
 
 .project-carousel-dot-button:focus-visible {
-  outline: 2px solid #66b2ff;
+  outline: 2px solid var(--portfolio-focus-ring);
   outline-offset: 4px;
 }
 
@@ -646,11 +654,11 @@
 }
 
 .project-carousel-dot-marker-idle {
-  background-color: #6b7280;
+  background-color: var(--portfolio-control-dot-idle);
 }
 
 .project-carousel-dot-button:hover .project-carousel-dot-marker-idle {
-  background-color: #9ca3af;
+  background-color: var(--portfolio-control-dot-hover);
 }
 
 @media (min-width: 768px) {

@@ -526,12 +526,12 @@ const checks = [
   },
   {
     label: "project carousel arrow buttons have visible keyboard focus styles",
-    pattern: /\.project-carousel-arrow-button:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    pattern: /--portfolio-focus-ring:\s*#66b2ff;[\s\S]*\.project-carousel-arrow-button:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*outline-offset:\s*4px;/,
     source: indexCss,
   },
   {
-    label: "project carousel arrow buttons keep mobile touch targets inside the viewport",
-    pattern: /\.project-carousel-arrow-button\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*center;/,
+    label: "project carousel arrow buttons use the shared control visual contract",
+    pattern: /--portfolio-control-surface:\s*#475569;[\s\S]*--portfolio-control-surface-hover:\s*#64748b;[\s\S]*--portfolio-control-border:\s*#6b7280;[\s\S]*--portfolio-control-shadow:\s*0 10px 15px rgba\(2,\s*12,\s*27,\s*0\.22\);[\s\S]*--portfolio-control-shadow-hover:\s*0 20px 25px rgba\(2,\s*12,\s*27,\s*0\.28\);[\s\S]*\.project-carousel-arrow-button\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*center;[\s\S]*border:\s*1px solid var\(--portfolio-control-border\);[\s\S]*border-radius:\s*9999px;[\s\S]*background-color:\s*var\(--portfolio-control-surface\);[\s\S]*box-shadow:\s*var\(--portfolio-control-shadow\);[\s\S]*\.project-carousel-arrow-button:hover\s*\{[\s\S]*background-color:\s*var\(--portfolio-control-surface-hover\);[\s\S]*box-shadow:\s*var\(--portfolio-control-shadow-hover\);/,
     source: indexCss,
   },
   {
@@ -541,7 +541,7 @@ const checks = [
   },
   {
     label: "project carousel dot buttons have visible keyboard focus styles",
-    pattern: /\.project-carousel-dot-button:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    pattern: /--portfolio-focus-ring:\s*#66b2ff;[\s\S]*\.project-carousel-dot-button:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*outline-offset:\s*4px;/,
     source: indexCss,
   },
   {
@@ -551,7 +551,7 @@ const checks = [
   },
   {
     label: "project carousel active dot uses a class-based accent style",
-    pattern: /\.project-carousel-dot-marker-current\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*transform:\s*scale\(1\.1\);[\s\S]*\.project-carousel-dot-button:hover\s+\.project-carousel-dot-marker-idle\s*\{[\s\S]*background-color:\s*#9ca3af;/,
+    pattern: /--portfolio-control-dot-idle:\s*#6b7280;[\s\S]*--portfolio-control-dot-hover:\s*#9ca3af;[\s\S]*\.project-carousel-dot-marker-current\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*transform:\s*scale\(1\.1\);[\s\S]*\.project-carousel-dot-marker-idle\s*\{[\s\S]*background-color:\s*var\(--portfolio-control-dot-idle\);[\s\S]*\.project-carousel-dot-button:hover\s+\.project-carousel-dot-marker-idle\s*\{[\s\S]*background-color:\s*var\(--portfolio-control-dot-hover\);/,
     source: indexCss,
   },
 ];
