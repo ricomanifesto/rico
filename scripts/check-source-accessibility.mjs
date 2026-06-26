@@ -256,8 +256,13 @@ const checks = [
   },
   {
     label: "about technology chevrons use the shared icon component",
-    pattern: /import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="[^"]*text-\[#007bff\][^"]*"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<span className="text-lg text-gray-200">\{tech\}<\/span>/,
+    pattern: /import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="about-technology-icon"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<span className="about-technology-label">\{tech\}<\/span>/,
     source: aboutMeSource,
+  },
+  {
+    label: "about section uses the shared about visual contract",
+    pattern: /\.about-content\s*\{[\s\S]*max-width:\s*56rem;[\s\S]*\.about-layout\s*\{[\s\S]*display:\s*flex;[\s\S]*flex-direction:\s*column;[\s\S]*\.about-copy\s*\{[\s\S]*flex:\s*1;[\s\S]*\.about-body-copy\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*line-height:\s*1\.625;[\s\S]*\.about-technology-grid\s*\{[\s\S]*grid-template-rows:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);[\s\S]*\.about-technology-item\s*\{[\s\S]*display:\s*flex;[\s\S]*\.about-technology-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.about-technology-label\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*\.about-profile-frame\s*\{[\s\S]*justify-content:\s*center;[\s\S]*\.about-profile-surface\s*\{[\s\S]*object-fit:\s*cover;[\s\S]*object-position:\s*50% 35%;[\s\S]*<div className="about-content">[\s\S]*<div className="about-layout">[\s\S]*<div className="about-copy">[\s\S]*className="about-body-copy about-body-spaced"[\s\S]*className="about-technology-grid"[\s\S]*className="about-technology-item"[\s\S]*className="about-technology-icon"[\s\S]*className="about-technology-label"[\s\S]*className="about-body-copy"[\s\S]*className="about-profile-frame"[\s\S]*className="about-profile-surface"/,
+    source: `${indexCss}\n${aboutMeSource}`,
   },
   {
     label: "about section avoids narration-only JSX comments",
@@ -271,7 +276,7 @@ const checks = [
   },
   {
     label: "about profile image uses the shared image surface treatment",
-    pattern: /\.about-profile-surface\s*\{[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*box-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.36\);[\s\S]*alt="Michael Rico Profile"[\s\S]*className="[^"]*about-profile-surface[^"]*"/,
+    pattern: /\.about-profile-surface\s*\{[\s\S]*width:\s*10rem;[\s\S]*height:\s*10rem;[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*box-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.36\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.about-profile-surface\s*\{[\s\S]*width:\s*12rem;[\s\S]*height:\s*12rem;[\s\S]*alt="Michael Rico Profile"[\s\S]*className="about-profile-surface"/,
     source: `${indexCss}\n${aboutMeSource}`,
   },
   {

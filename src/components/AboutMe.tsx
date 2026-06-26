@@ -10,7 +10,7 @@ export default function AboutMe() {
 
   return (
     <section id="about" aria-labelledby="about-heading" className="portfolio-section">
-      <div className="max-w-4xl mx-auto">
+      <div className="about-content">
         <motion.h2 
           id="about-heading"
           className="section-title text-3xl md:text-4xl font-serif font-bold mb-8 text-white"
@@ -22,10 +22,10 @@ export default function AboutMe() {
           / about me
         </motion.h2>
 
-        <div className="mb-12 flex flex-col md:flex-row gap-8">
-          <div className="flex-1">
+        <div className="about-layout">
+          <div className="about-copy">
             <motion.p 
-              className="text-lg md:text-xl mb-8 leading-relaxed text-gray-200"
+              className="about-body-copy about-body-spaced"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{
@@ -40,7 +40,7 @@ export default function AboutMe() {
             <motion.ul 
               aria-label="Technologies"
               role="list"
-              className="grid grid-flow-col grid-cols-2 grid-rows-3 gap-x-8 gap-y-3 mb-8"
+              className="about-technology-grid"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{
@@ -52,7 +52,7 @@ export default function AboutMe() {
               {aboutContent.technologies.map((tech, index) => (
                 <motion.li
                   key={tech}
-                  className="flex items-center justify-start"
+                  className="about-technology-item"
                   initial={{ opacity: 0, x: getTechnologyItemOffsetX(index) }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{
@@ -64,17 +64,17 @@ export default function AboutMe() {
                   viewport={{ once: true }}
                 >
                   <ChevronRight
-                    className="w-4 h-4 mr-3 flex-shrink-0 text-[#007bff]"
+                    className="about-technology-icon"
                     aria-hidden="true"
                     focusable="false"
                   />
-                  <span className="text-lg text-gray-200">{tech}</span>
+                  <span className="about-technology-label">{tech}</span>
                 </motion.li>
               ))}
             </motion.ul>
 
             <motion.p 
-              className="text-lg md:text-xl leading-relaxed text-gray-200"
+              className="about-body-copy"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{
@@ -88,7 +88,7 @@ export default function AboutMe() {
           </div>
 
           <motion.div
-            className="flex-shrink-0 flex justify-center md:justify-end"
+            className="about-profile-frame"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{
@@ -104,7 +104,7 @@ export default function AboutMe() {
               alt="Michael Rico Profile" 
               loading="lazy"
               decoding="async"
-              className="about-profile-surface h-40 w-40 object-cover object-[50%_35%] md:h-48 md:w-48"
+              className="about-profile-surface"
             />
           </motion.div>
         </div>
