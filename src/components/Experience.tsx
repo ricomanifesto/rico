@@ -49,8 +49,8 @@ const getExperiencePanelViewState = (isSelected: boolean): ExperiencePanelViewSt
 
 const getExperienceTabViewState = (isSelected: boolean): ExperienceTabViewState => ({
   tabIndex: isSelected ? 0 : -1,
-  textClass: isSelected ? "text-[#007bff]" : "text-gray-400 hover:text-gray-200",
-  indicatorClass: isSelected ? "bg-[#007bff]" : "bg-transparent",
+  textClass: isSelected ? "experience-tab-selected" : "experience-tab-idle",
+  indicatorClass: isSelected ? "experience-tab-indicator-selected" : "experience-tab-indicator-idle",
 });
 
 export default function Experience() {
@@ -136,16 +136,16 @@ export default function Experience() {
                   aria-labelledby={`experience-tab-${index}`}
                   tabIndex={panelViewState.tabIndex}
                   hidden={panelViewState.hidden}
-                  className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+                  className="experience-panel"
                   initial={false}
                   animate={panelViewState.animate}
                   transition={{ duration: experienceBehavior.panelMotion.duration }}
                 >
                   <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                    {exp.title} @ <span className="text-[#007bff]">{exp.displayCompany}</span>
+                    {exp.title} @ <span className="experience-company-accent">{exp.displayCompany}</span>
                   </h4>
 
-                  <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
+                  <p className="experience-period">
                     {exp.period}
                   </p>
 
@@ -153,7 +153,7 @@ export default function Experience() {
                     {exp.highlights.map((highlight, highlightIndex) => (
                       <motion.li
                         key={highlight}
-                        className="flex items-start"
+                        className="experience-highlight"
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{
@@ -164,11 +164,11 @@ export default function Experience() {
                         }}
                       >
                         <ChevronRight
-                          className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0 text-[#007bff]"
+                          className="experience-highlight-icon"
                           aria-hidden="true"
                           focusable="false"
                         />
-                        <p className="text-gray-200 leading-relaxed">
+                        <p className="experience-highlight-copy">
                           {highlight}
                         </p>
                       </motion.li>
@@ -205,7 +205,7 @@ function ExperienceTab({
       tabIndex={tabViewState.tabIndex}
       onClick={() => onSelect(index)}
       onKeyDown={(event) => onKeyDown(event, index)}
-      className={`relative w-full text-left transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${tabViewState.textClass}`}
+      className={`experience-tab ${tabViewState.textClass}`}
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
@@ -214,7 +214,7 @@ function ExperienceTab({
         delay: index * experienceBehavior.tabMotion.staggerDelay,
       }}
     >
-      <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${tabViewState.indicatorClass}`}></div>
+      <div className={`experience-tab-indicator ${tabViewState.indicatorClass}`}></div>
 
       <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
         {experience.company}

@@ -346,13 +346,18 @@ const checks = [
   },
   {
     label: "experience tabpanels have visible keyboard focus styles",
-    pattern: /role="tabpanel"[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
-    source: experienceSource,
+    pattern: /\.experience-panel:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*role="tabpanel"[\s\S]*className="experience-panel"/,
+    source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "experience tabs have visible keyboard focus styles",
-    pattern: /role="tab"[\s\S]*className=\{`[^`]*focus-visible:outline[^`]*`\}/,
-    source: experienceSource,
+    pattern: /\.experience-tab:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*role="tab"[\s\S]*className=\{`experience-tab \$\{tabViewState\.textClass\}`\}/,
+    source: `${indexCss}\n${experienceSource}`,
+  },
+  {
+    label: "experience section uses the shared experience visual contract",
+    pattern: /\.experience-panel:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*\.experience-company-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-period\s*\{[\s\S]*color:\s*#9ca3af;[\s\S]*\.experience-highlight\s*\{[\s\S]*display:\s*flex;[\s\S]*\.experience-highlight-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-highlight-copy\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*\.experience-tab\s*\{[\s\S]*\.experience-tab:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*\.experience-tab-selected\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-tab-idle\s*\{[\s\S]*color:\s*#9ca3af;[\s\S]*\.experience-tab-idle:hover\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*\.experience-tab-indicator-selected\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*className="experience-panel"[\s\S]*<span className="experience-company-accent">[\s\S]*className="experience-period"[\s\S]*className="experience-highlight"[\s\S]*className="experience-highlight-icon"[\s\S]*className="experience-highlight-copy"[\s\S]*className=\{`experience-tab \$\{tabViewState\.textClass\}`\}[\s\S]*className=\{`experience-tab-indicator \$\{tabViewState\.indicatorClass\}`\}/,
+    source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "experience renders persistent panels for tab controls",
@@ -366,13 +371,13 @@ const checks = [
   },
   {
     label: "experience selected tabs use class-based accent styles",
-    pattern: /interface ExperienceTabViewState \{[\s\S]*readonly tabIndex:\s*0 \| -1;[\s\S]*readonly textClass:\s*string;[\s\S]*readonly indicatorClass:\s*string;[\s\S]*\}[\s\S]*getExperienceTabViewState[\s\S]*textClass:\s*isSelected \? "text-\[#007bff\]" : "text-gray-400 hover:text-gray-200"[\s\S]*function ExperienceTab\([\s\S]*const tabViewState = getExperienceTabViewState\(isSelected\);[\s\S]*className=\{`[^`]*\$\{tabViewState\.textClass\}`\}/,
-    source: experienceSource,
+    pattern: /\.experience-tab-selected\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-tab-idle\s*\{[\s\S]*color:\s*#9ca3af;[\s\S]*\.experience-tab-idle:hover\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*interface ExperienceTabViewState \{[\s\S]*readonly tabIndex:\s*0 \| -1;[\s\S]*readonly textClass:\s*string;[\s\S]*indicatorClass:\s*string;[\s\S]*getExperienceTabViewState[\s\S]*textClass:\s*isSelected \? "experience-tab-selected" : "experience-tab-idle"[\s\S]*function ExperienceTab\([\s\S]*const tabViewState = getExperienceTabViewState\(isSelected\);[\s\S]*className=\{`experience-tab \$\{tabViewState\.textClass\}`\}/,
+    source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "experience selected tab bars use class-based accent styles",
-    pattern: /getExperienceTabViewState[\s\S]*indicatorClass:\s*isSelected \? "bg-\[#007bff\]" : "bg-transparent"[\s\S]*function ExperienceTab\([\s\S]*className=\{`[^`]*\$\{tabViewState\.indicatorClass\}`\}/,
-    source: experienceSource,
+    pattern: /\.experience-tab-indicator-selected\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.experience-tab-indicator-idle\s*\{[\s\S]*background-color:\s*transparent;[\s\S]*getExperienceTabViewState[\s\S]*indicatorClass:\s*isSelected \? "experience-tab-indicator-selected" : "experience-tab-indicator-idle"[\s\S]*function ExperienceTab\([\s\S]*className=\{`experience-tab-indicator \$\{tabViewState\.indicatorClass\}`\}/,
+    source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "experience tabs support arrow-key navigation",
@@ -396,13 +401,13 @@ const checks = [
   },
   {
     label: "experience panel company names use class-based accent styles",
-    pattern: /<span\s+className="[^"]*text-\[#007bff\][^"]*">\{exp\.displayCompany\}<\/span>/,
-    source: experienceSource,
+    pattern: /\.experience-company-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*<span\s+className="experience-company-accent">\{exp\.displayCompany\}<\/span>/,
+    source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "experience highlight chevrons use the shared icon component",
-    pattern: /import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="[^"]*text-\[#007bff\][^"]*"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<p className="text-gray-200 leading-relaxed">\s*\{highlight\}\s*<\/p>/,
-    source: experienceSource,
+    pattern: /\.experience-highlight-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-highlight-copy\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="experience-highlight-icon"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<p className="experience-highlight-copy">\s*\{highlight\}\s*<\/p>/,
+    source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "header brand link has a visible keyboard focus style",
