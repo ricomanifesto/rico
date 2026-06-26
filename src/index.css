@@ -250,12 +250,14 @@
   background-color: transparent;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .experience-period {
     font-size: 1rem;
     line-height: 1.5rem;
   }
+}
 
+@media (min-width: 1024px) {
   .experience-tab-indicator {
     display: block;
   }
