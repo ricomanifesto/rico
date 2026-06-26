@@ -14,6 +14,21 @@ interface ExperienceTabProps {
 
 type ExperienceTabNavigationDirection = "next" | "previous";
 
+interface ExperiencePanelViewState {
+  readonly tabIndex: 0 | -1;
+  readonly hidden: boolean;
+  readonly animate: {
+    readonly opacity: number;
+    readonly x: number;
+  };
+}
+
+interface ExperienceTabViewState {
+  readonly tabIndex: 0 | -1;
+  readonly textClass: string;
+  readonly indicatorClass: string;
+}
+
 const getWrappedExperienceTabIndex = (
   index: number,
   lastIndex: number,
@@ -25,6 +40,18 @@ const getWrappedExperienceTabIndex = (
 
   return index === 0 ? lastIndex : index - 1;
 };
+
+const getExperiencePanelViewState = (isSelected: boolean): ExperiencePanelViewState => ({
+  tabIndex: isSelected ? 0 : -1,
+  hidden: !isSelected,
+  animate: isSelected ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 },
+});
+
+const getExperienceTabViewState = (isSelected: boolean): ExperienceTabViewState => ({
+  tabIndex: isSelected ? 0 : -1,
+  textClass: isSelected ? "text-[#007bff]" : "text-gray-400 hover:text-gray-200",
+  indicatorClass: isSelected ? "bg-[#007bff]" : "bg-transparent",
+});
 
 export default function Experience() {
   const [selectedCompany, setSelectedCompany] = useState(0);
@@ -98,54 +125,58 @@ export default function Experience() {
           </div>
 
           <div className="lg:w-3/4 flex-1">
-            {experiences.map((exp, index) => (
-              <motion.div
-                key={exp.company}
-                id={`experience-panel-${index}`}
-                role="tabpanel"
-                aria-labelledby={`experience-tab-${index}`}
-                tabIndex={selectedCompany === index ? 0 : -1}
-                hidden={selectedCompany !== index}
-                className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
-                initial={false}
-                animate={selectedCompany === index ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-                transition={{ duration: experienceBehavior.panelMotion.duration }}
-              >
-                <h4 className="text-xl md:text-2xl font-semibold mb-2">
-                  {exp.title} @ <span className="text-[#007bff]">{exp.displayCompany}</span>
-                </h4>
+            {experiences.map((exp, index) => {
+              const panelViewState = getExperiencePanelViewState(selectedCompany === index);
 
-                <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
-                  {exp.period}
-                </p>
+              return (
+                <motion.div
+                  key={exp.company}
+                  id={`experience-panel-${index}`}
+                  role="tabpanel"
+                  aria-labelledby={`experience-tab-${index}`}
+                  tabIndex={panelViewState.tabIndex}
+                  hidden={panelViewState.hidden}
+                  className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+                  initial={false}
+                  animate={panelViewState.animate}
+                  transition={{ duration: experienceBehavior.panelMotion.duration }}
+                >
+                  <h4 className="text-xl md:text-2xl font-semibold mb-2">
+                    {exp.title} @ <span className="text-[#007bff]">{exp.displayCompany}</span>
+                  </h4>
 
-                <ul className="space-y-4">
-                  {exp.highlights.map((highlight, highlightIndex) => (
-                    <motion.li
-                      key={highlight}
-                      className="flex items-start"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{
-                        duration: experienceBehavior.highlightMotion.duration,
-                        delay:
-                          highlightIndex * experienceBehavior.highlightMotion.staggerDelay +
-                          experienceBehavior.highlightMotion.baseDelay,
-                      }}
-                    >
-                      <ChevronRight
-                        className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0 text-[#007bff]"
-                        aria-hidden="true"
-                        focusable="false"
-                      />
-                      <p className="text-gray-200 leading-relaxed">
-                        {highlight}
-                      </p>
-                    </motion.li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
+                  <p className="text-gray-400 text-sm md:text-base mb-6 font-medium tracking-wide">
+                    {exp.period}
+                  </p>
+
+                  <ul className="space-y-4">
+                    {exp.highlights.map((highlight, highlightIndex) => (
+                      <motion.li
+                        key={highlight}
+                        className="flex items-start"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: experienceBehavior.highlightMotion.duration,
+                          delay:
+                            highlightIndex * experienceBehavior.highlightMotion.staggerDelay +
+                            experienceBehavior.highlightMotion.baseDelay,
+                        }}
+                      >
+                        <ChevronRight
+                          className="w-4 h-4 mt-1.5 mr-4 flex-shrink-0 text-[#007bff]"
+                          aria-hidden="true"
+                          focusable="false"
+                        />
+                        <p className="text-gray-200 leading-relaxed">
+                          {highlight}
+                        </p>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -161,6 +192,8 @@ function ExperienceTab({
   onSelect,
   onKeyDown,
 }: ExperienceTabProps) {
+  const tabViewState = getExperienceTabViewState(isSelected);
+
   return (
     <motion.button
       id={`experience-tab-${index}`}
@@ -169,12 +202,10 @@ function ExperienceTab({
       type="button"
       aria-selected={isSelected}
       aria-controls={`experience-panel-${index}`}
-      tabIndex={isSelected ? 0 : -1}
+      tabIndex={tabViewState.tabIndex}
       onClick={() => onSelect(index)}
       onKeyDown={(event) => onKeyDown(event, index)}
-      className={`relative w-full text-left transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${
-        isSelected ? 'text-[#007bff]' : 'text-gray-400 hover:text-gray-200'
-      }`}
+      className={`relative w-full text-left transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff] ${tabViewState.textClass}`}
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
@@ -183,9 +214,7 @@ function ExperienceTab({
         delay: index * experienceBehavior.tabMotion.staggerDelay,
       }}
     >
-      <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${
-        isSelected ? 'bg-[#007bff]' : 'bg-transparent'
-      }`}></div>
+      <div className={`hidden lg:block absolute left-0 top-0 w-1 h-full transition-all duration-300 ${tabViewState.indicatorClass}`}></div>
 
       <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
         {experience.company}

@@ -341,7 +341,7 @@ const checks = [
   },
   {
     label: "experience renders persistent panels for tab controls",
-    pattern: /id=\{`experience-panel-\$\{index\}`\}[\s\S]*hidden=\{selectedCompany !== index\}/,
+    pattern: /interface ExperiencePanelViewState \{[\s\S]*readonly tabIndex:\s*0 \| -1;[\s\S]*readonly hidden:\s*boolean;[\s\S]*readonly animate:\s*\{[\s\S]*readonly opacity:\s*number;[\s\S]*readonly x:\s*number;[\s\S]*\};[\s\S]*\}[\s\S]*getExperiencePanelViewState[\s\S]*hidden:\s*!isSelected[\s\S]*animate:\s*isSelected \? \{ opacity: 1, x: 0 \} : \{ opacity: 0, x: 20 \}[\s\S]*const panelViewState = getExperiencePanelViewState\(selectedCompany === index\);[\s\S]*tabIndex=\{panelViewState\.tabIndex\}[\s\S]*hidden=\{panelViewState\.hidden\}[\s\S]*animate=\{panelViewState\.animate\}/,
     source: experienceSource,
   },
   {
@@ -351,12 +351,12 @@ const checks = [
   },
   {
     label: "experience selected tabs use class-based accent styles",
-    pattern: /function ExperienceTab\([\s\S]*isSelected \? '[^']*text-\[#007bff\][^']*'/,
+    pattern: /interface ExperienceTabViewState \{[\s\S]*readonly tabIndex:\s*0 \| -1;[\s\S]*readonly textClass:\s*string;[\s\S]*readonly indicatorClass:\s*string;[\s\S]*\}[\s\S]*getExperienceTabViewState[\s\S]*textClass:\s*isSelected \? "text-\[#007bff\]" : "text-gray-400 hover:text-gray-200"[\s\S]*function ExperienceTab\([\s\S]*const tabViewState = getExperienceTabViewState\(isSelected\);[\s\S]*className=\{`[^`]*\$\{tabViewState\.textClass\}`\}/,
     source: experienceSource,
   },
   {
     label: "experience selected tab bars use class-based accent styles",
-    pattern: /function ExperienceTab\([\s\S]*isSelected \? '[^']*bg-\[#007bff\][^']*'/,
+    pattern: /getExperienceTabViewState[\s\S]*indicatorClass:\s*isSelected \? "bg-\[#007bff\]" : "bg-transparent"[\s\S]*function ExperienceTab\([\s\S]*className=\{`[^`]*\$\{tabViewState\.indicatorClass\}`\}/,
     source: experienceSource,
   },
   {
@@ -371,7 +371,7 @@ const checks = [
   },
   {
     label: "experience tab renderer owns selected tab semantics",
-    pattern: /function ExperienceTab\([\s\S]*role="tab"[\s\S]*aria-selected=\{isSelected\}[\s\S]*aria-controls=\{`experience-panel-\$\{index\}`\}[\s\S]*tabIndex=\{isSelected \? 0 : -1\}/,
+    pattern: /function ExperienceTab\([\s\S]*const tabViewState = getExperienceTabViewState\(isSelected\);[\s\S]*role="tab"[\s\S]*aria-selected=\{isSelected\}[\s\S]*aria-controls=\{`experience-panel-\$\{index\}`\}[\s\S]*tabIndex=\{tabViewState\.tabIndex\}/,
     source: experienceSource,
   },
   {
