@@ -258,12 +258,12 @@ const checks = [
   },
   {
     label: "intro CTA visual contract defines outlined hover states",
-    pattern: /\.hero-cta-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*border:\s*1px solid var\(--primary-accent\);[\s\S]*border-radius:\s*4px;[\s\S]*\.hero-cta-link:hover\s*\{[\s\S]*background-color:\s*var\(--portfolio-surface-strong\);[\s\S]*border-color:\s*#66b2ff;[\s\S]*color:\s*#66b2ff;/,
+    pattern: /\.hero-cta-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*border:\s*1px solid var\(--primary-accent\);[\s\S]*border-radius:\s*4px;[\s\S]*\.hero-cta-link:hover\s*\{[\s\S]*background-color:\s*var\(--portfolio-surface-strong\);[\s\S]*border-color:\s*var\(--portfolio-active-accent\);[\s\S]*color:\s*var\(--portfolio-active-accent\);/,
     source: indexCss,
   },
   {
     label: "intro CTA has a visible keyboard focus style",
-    pattern: /\.hero-cta-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    pattern: /\.hero-cta-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*outline-offset:\s*4px;/,
     source: indexCss,
   },
   {
@@ -378,12 +378,12 @@ const checks = [
   },
   {
     label: "experience tabpanels have visible keyboard focus styles",
-    pattern: /\.experience-panel:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*role="tabpanel"[\s\S]*className="experience-panel"/,
+    pattern: /\.experience-panel:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*role="tabpanel"[\s\S]*className="experience-panel"/,
     source: `${indexCss}\n${experienceSource}`,
   },
   {
     label: "experience tabs have visible keyboard focus styles",
-    pattern: /\.experience-tab:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*role="tab"[\s\S]*className=\{`experience-tab \$\{tabViewState\.textClass\}`\}/,
+    pattern: /\.experience-tab:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*role="tab"[\s\S]*className=\{`experience-tab \$\{tabViewState\.textClass\}`\}/,
     source: `${indexCss}\n${experienceSource}`,
   },
   {
@@ -483,7 +483,7 @@ const checks = [
   },
   {
     label: "project action links have visible keyboard focus styles",
-    pattern: /\.project-action-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    pattern: /\.project-action-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*outline-offset:\s*4px;/,
     source: indexCss,
   },
   {
@@ -493,12 +493,12 @@ const checks = [
   },
   {
     label: "project action link visual contract defines hover states",
-    pattern: /\.project-action-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*color:\s*#fff;[\s\S]*\.project-action-link:hover\s*\{[\s\S]*color:\s*#66b3ff;[\s\S]*transform:\s*scale\(1\.1\);/,
+    pattern: /\.project-action-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*color:\s*#fff;[\s\S]*\.project-action-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*transform:\s*scale\(1\.1\);/,
     source: indexCss,
   },
   {
     label: "project tech labels use class-based accent styles",
-    pattern: /\.project-slide-tech-stack\s*\{[\s\S]*color:\s*#66b3ff;/,
+    pattern: /\.project-slide-tech-stack\s*\{[\s\S]*color:\s*var\(--portfolio-tech-accent\);/,
     source: indexCss,
   },
   {
