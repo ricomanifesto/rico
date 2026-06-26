@@ -14,8 +14,13 @@
     --section-rule: #233554;
     --portfolio-muted: #8892b0;
     --portfolio-surface: #112240;
+    --portfolio-surface-hover: #233554;
     --portfolio-surface-strong: #233554;
     --portfolio-surface-border: rgba(136, 146, 176, 0.24);
+    --portfolio-surface-shadow: 0 20px 45px rgba(2, 12, 27, 0.7);
+    --portfolio-caption-surface: rgba(17, 34, 64, 0.92);
+    --portfolio-copy: #a8b2d1;
+    --portfolio-tech-accent: #64ffda;
     --portfolio-control-surface: #475569;
     --portfolio-control-surface-hover: #64748b;
     --portfolio-control-border: #6b7280;
@@ -318,12 +323,14 @@
   border-radius: var(--radius);
   border: 1px solid var(--portfolio-surface-border);
   background-color: var(--portfolio-surface);
-  box-shadow: 0 18px 45px rgba(2, 12, 27, 0.45);
+  box-shadow: var(--portfolio-surface-shadow);
   transition: border-color 500ms ease, transform 500ms ease, box-shadow 500ms ease;
 }
 
 .project-slide-surface:hover {
-  border-color: var(--portfolio-surface-strong);
+  border-color: var(--portfolio-surface-hover);
+  background-color: var(--portfolio-surface-hover);
+  box-shadow: 0 24px 55px rgba(2, 12, 27, 0.78);
 }
 
 .project-slide-media {
@@ -360,14 +367,14 @@
 
 .project-slide-caption {
   padding: 1.5rem;
-  background: rgba(17, 34, 64, 0.88);
+  background: var(--portfolio-caption-surface);
   border-top: 1px solid var(--portfolio-surface-border);
   backdrop-filter: blur(8px);
 }
 
 .project-slide-title {
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: var(--portfolio-heading);
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 2rem;
@@ -377,7 +384,7 @@
   display: -webkit-box;
   margin-bottom: 0.75rem;
   overflow: hidden;
-  color: #e5e7eb;
+  color: var(--portfolio-copy);
   font-size: 0.875rem;
   line-height: 1.25rem;
   -webkit-box-orient: vertical;
@@ -386,7 +393,7 @@
 
 .project-slide-tech-stack {
   margin-bottom: 1rem;
-  color: #66b3ff;
+  color: var(--portfolio-tech-accent);
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1rem;
