@@ -60,6 +60,11 @@ const checks = [
     source: homeSource,
   },
   {
+    label: "section headings use a shared title and rule treatment",
+    pattern: /--section-rule:\s*#233554;[\s\S]*\.section-title\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*gap:\s*1rem;[\s\S]*width:\s*100%;[\s\S]*\.section-title::after\s*\{[\s\S]*flex:\s*1;[\s\S]*max-width:\s*18rem;[\s\S]*height:\s*1px;[\s\S]*background-color:\s*var\(--section-rule\);[\s\S]*@media \(max-width: 768px\)\s*\{[\s\S]*\.section-title::after\s*\{[\s\S]*display:\s*none;/,
+    source: indexCss,
+  },
+  {
     label: "footer copyright year uses machine-readable time markup",
     pattern: /<time\s+dateTime=\{String\(currentYear\)\}>\{currentYear\}<\/time>/,
     source: footerSource,
