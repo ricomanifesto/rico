@@ -350,7 +350,7 @@ function ProjectActionLink({
       aria-label={actionLabel}
       ref={actionRef}
       tabIndex={isActive ? 0 : -1}
-      className="inline-flex min-h-11 min-w-11 items-center justify-center text-white transition duration-300 hover:scale-110 hover:text-[#66b3ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
+      className="project-action-link"
     >
       <Icon size={24} aria-hidden="true" focusable="false" />
     </a>

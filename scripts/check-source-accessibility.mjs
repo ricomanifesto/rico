@@ -436,18 +436,18 @@ const checks = [
   },
   {
     label: "project action links have visible keyboard focus styles",
-    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
-    source: projectsSection,
+    pattern: /\.project-action-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    source: indexCss,
   },
   {
     label: "project action links use mobile-friendly touch targets",
-    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="[^"]*\bmin-h-11\b[^"]*\bmin-w-11\b[^"]*"/,
+    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="project-action-link"/,
     source: projectsSection,
   },
   {
-    label: "project action links use class-based hover styles",
-    pattern: /function ProjectActionLink\([\s\S]*aria-label=\{actionLabel\}[\s\S]*className="[^"]*hover:text-\[#66b3ff\][^"]*"/,
-    source: projectsSection,
+    label: "project action link visual contract defines hover states",
+    pattern: /\.project-action-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*color:\s*#fff;[\s\S]*\.project-action-link:hover\s*\{[\s\S]*color:\s*#66b3ff;[\s\S]*transform:\s*scale\(1\.1\);/,
+    source: indexCss,
   },
   {
     label: "project tech labels use class-based accent styles",

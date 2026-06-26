@@ -183,6 +183,26 @@
   outline-offset: 4px;
 }
 
+.project-action-link {
+  display: inline-flex;
+  min-height: 44px;
+  min-width: 44px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: color 300ms ease, transform 300ms ease;
+}
+
+.project-action-link:hover {
+  color: #66b3ff;
+  transform: scale(1.1);
+}
+
+.project-action-link:focus-visible {
+  outline: 2px solid #66b2ff;
+  outline-offset: 4px;
+}
+
 .node {
   position: absolute;
   width: 6px;
