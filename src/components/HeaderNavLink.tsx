@@ -11,12 +11,12 @@ const activeHeaderNavLinkClass = "header-nav-link-active";
 
 const headerNavLinkClassContract: Record<HeaderNavLinkVariant, HeaderNavLinkClassContract> = {
   desktop: {
-    getLayoutClass: (isLast) => (isLast ? "" : "mr-6"),
-    inactiveClass: "text-gray-200",
+    getLayoutClass: (isLast) => (isLast ? "" : "header-nav-link-desktop-spaced"),
+    inactiveClass: "header-nav-link-idle",
   },
   mobile: {
-    getLayoutClass: () => "inline-flex min-h-11 min-w-11 items-center justify-center",
-    inactiveClass: "font-medium text-gray-200",
+    getLayoutClass: () => "header-nav-link-mobile",
+    inactiveClass: "header-nav-link-idle",
   },
 };
 
@@ -36,7 +36,7 @@ export default function HeaderNavLink({ item, isActive, isLast = false, variant 
     <a
       href={item.href}
       aria-current={isActive ? "location" : undefined}
-      className={`${layoutClass} header-nav-link text-sm transition-colors duration-300 ${activeClass}`}
+      className={`${layoutClass} header-nav-link ${activeClass}`}
     >
       {item.label}
     </a>

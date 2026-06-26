@@ -85,6 +85,11 @@ const checks = [
     source: `${indexCss}\n${footerSource}`,
   },
   {
+    label: "header uses the shared header shell visual contract",
+    pattern: /\.header-shell\s*\{[\s\S]*position:\s*fixed;[\s\S]*top:\s*0;[\s\S]*right:\s*0;[\s\S]*left:\s*0;[\s\S]*z-index:\s*50;[\s\S]*background-color:\s*rgba\(15,\s*23,\s*42,\s*0\.95\);[\s\S]*backdrop-filter:\s*blur\(4px\);[\s\S]*transition:\s*box-shadow 300ms ease;[\s\S]*\.header-shell-scrolled\s*\{[\s\S]*box-shadow:\s*0 1px 2px rgba\(0,\s*0,\s*0,\s*0\.05\);[\s\S]*\.header-container\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*space-between;[\s\S]*max-width:\s*80rem;[\s\S]*padding:\s*0\.75rem 1rem;[\s\S]*\.header-brand-group\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*\.header-primary-nav\s*\{[\s\S]*display:\s*none;[\s\S]*\.header-social-list\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*gap:\s*0\.75rem;[\s\S]*\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*\.header-mobile-list\s*\{[\s\S]*display:\s*flex;[\s\S]*gap:\s*1rem;[\s\S]*overflow-x:\s*auto;[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.header-primary-nav\s*\{[\s\S]*display:\s*flex;[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;[\s\S]*className=\{`header-shell \$\{shellViewState\.shadowClass\}`\}[\s\S]*className="header-container"[\s\S]*className="header-brand-group"[\s\S]*className="header-primary-nav"[\s\S]*className="header-social-list"[\s\S]*className="header-mobile-nav"[\s\S]*className="header-mobile-list"/,
+    source: `${indexCss}\n${headerSource}`,
+  },
+  {
     label: "project repository links include accessible names",
     pattern: /const projectActionMetadata:[\s\S]*repository:\s*\{[\s\S]*getLabel:\s*\(projectTitle\)\s*=>\s*`View \$\{projectTitle\} repository`[\s\S]*<ProjectActionLink[\s\S]*kind="repository"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,

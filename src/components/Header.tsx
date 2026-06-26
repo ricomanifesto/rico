@@ -8,7 +8,7 @@ interface HeaderShellViewState {
 }
 
 const getHeaderShellViewState = (isScrolled: boolean): HeaderShellViewState => ({
-  shadowClass: isScrolled ? "shadow-sm" : "",
+  shadowClass: isScrolled ? "header-shell-scrolled" : "",
 });
 
 function getSectionElement(hash: string) {
@@ -66,16 +66,16 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 bg-slate-900 bg-opacity-95 backdrop-blur-sm z-50 ${shellViewState.shadowClass} transition-shadow duration-300`}>
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="flex items-center">
+    <header className={`header-shell ${shellViewState.shadowClass}`}>
+      <div className="header-container">
+        <div className="header-brand-group">
           <a
             href={siteBrand.href}
-            className="header-brand-link text-xl font-bold transition-colors duration-300"
+            className="header-brand-link"
           >
             {siteBrand.label}
           </a>
-          <nav aria-label="Primary" className="hidden md:flex items-center ml-8">
+          <nav aria-label="Primary" className="header-primary-nav">
             {headerNavItems.map((item, index) => (
               <HeaderNavLink
                 key={item.href}
@@ -88,7 +88,7 @@ export default function Header() {
         </div>
         
         <nav aria-label="Social links">
-          <ul role="list" className="flex items-center space-x-3">
+          <ul role="list" className="header-social-list">
             {socialLinks.map((link) => (
               <li key={link.href} role="listitem">
                 <SocialLink link={link} />
@@ -99,11 +99,11 @@ export default function Header() {
       </div>
       <nav
         aria-label="Mobile primary"
-        className="md:hidden border-t border-white/10 px-4 pb-3"
+        className="header-mobile-nav"
       >
-        <ul role="list" className="flex gap-4 overflow-x-auto whitespace-nowrap pt-3">
+        <ul role="list" className="header-mobile-list">
           {headerNavItems.map((item) => (
-            <li key={item.href} role="listitem" className="flex-shrink-0">
+            <li key={item.href} role="listitem" className="header-mobile-item">
               <HeaderNavLink item={item} isActive={item.href === activeHref} variant="mobile" />
             </li>
           ))}
