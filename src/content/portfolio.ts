@@ -72,6 +72,8 @@ export interface AboutBehavior {
     readonly baseDelay: number;
     readonly staggerDelay: number;
     readonly duration: number;
+    readonly leadingColumnOffsetX: number;
+    readonly trailingColumnOffsetX: number;
   };
   readonly interestsMotion: {
     readonly delay: number;
@@ -138,6 +140,8 @@ export const aboutBehavior: AboutBehavior = {
     baseDelay: 0.6,
     staggerDelay: 0.1,
     duration: 0.6,
+    leadingColumnOffsetX: -20,
+    trailingColumnOffsetX: 20,
   },
   interestsMotion: {
     delay: 1.0,
