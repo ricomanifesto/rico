@@ -313,7 +313,7 @@ const checks = [
   },
   {
     label: "social link component consumes typed external link behavior",
-    pattern: /import\s+type\s+\{\s*SocialLink as SocialLinkData,\s*SocialLinkKind\s*\}\s+from\s*["']@\/content\/navigation["'];[\s\S]*import\s*\{\s*socialLinkBehavior\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*target=\{link\.external \? socialLinkBehavior\.externalTarget : undefined\}[\s\S]*rel=\{link\.external \? socialLinkBehavior\.externalRel : undefined\}/,
+    pattern: /import\s+type\s+\{\s*SocialLink as SocialLinkData,\s*SocialLinkKind\s*\}\s+from\s*["']@\/content\/navigation["'];[\s\S]*import\s*\{\s*socialLinkBehavior\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*interface SocialLinkAnchorBehavior \{[\s\S]*readonly target\?:\s*"_blank";[\s\S]*readonly rel\?:\s*"noopener noreferrer";[\s\S]*\}[\s\S]*const getSocialLinkAnchorBehavior = \(isExternal: boolean\): SocialLinkAnchorBehavior => \(\{[\s\S]*target:\s*isExternal \? socialLinkBehavior\.externalTarget : undefined,[\s\S]*rel:\s*isExternal \? socialLinkBehavior\.externalRel : undefined,[\s\S]*\}\);[\s\S]*const anchorBehavior = getSocialLinkAnchorBehavior\(link\.external\);[\s\S]*target=\{anchorBehavior\.target\}[\s\S]*rel=\{anchorBehavior\.rel\}/,
     source: socialLink,
   },
   {
