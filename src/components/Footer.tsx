@@ -6,14 +6,14 @@ export default function Footer() {
   
   return (
     <motion.footer 
-      className="py-8 px-4 border-t border-gray-700 bg-slate-900 text-white"
+      className="footer-shell"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: footerBehavior.containerMotion.duration }}
     >
-      <div className="max-w-4xl mx-auto text-center">
-        <p className="text-gray-300">
+      <div className="footer-content">
+        <p className="footer-copy">
           © <time dateTime={String(currentYear)}>{currentYear}</time> Rico. All rights reserved.
         </p>
       </div>

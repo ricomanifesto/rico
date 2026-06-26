@@ -80,6 +80,11 @@ const checks = [
     source: footerSource,
   },
   {
+    label: "footer uses the shared footer visual contract",
+    pattern: /--portfolio-muted:\s*#8892b0;[\s\S]*\.footer-shell\s*\{[\s\S]*padding:\s*5rem 1rem 2\.5rem;[\s\S]*border-top:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*background-color:\s*#0f172a;[\s\S]*color:\s*var\(--portfolio-muted\);[\s\S]*\.footer-content\s*\{[\s\S]*max-width:\s*56rem;[\s\S]*margin-right:\s*auto;[\s\S]*margin-left:\s*auto;[\s\S]*text-align:\s*center;[\s\S]*\.footer-copy\s*\{[\s\S]*font-size:\s*0\.875rem;[\s\S]*line-height:\s*1\.5rem;[\s\S]*className="footer-shell"[\s\S]*className="footer-content"[\s\S]*className="footer-copy"/,
+    source: `${indexCss}\n${footerSource}`,
+  },
+  {
     label: "project repository links include accessible names",
     pattern: /const projectActionMetadata:[\s\S]*repository:\s*\{[\s\S]*getLabel:\s*\(projectTitle\)\s*=>\s*`View \$\{projectTitle\} repository`[\s\S]*<ProjectActionLink[\s\S]*kind="repository"[\s\S]*projectTitle=\{project\.title\}[\s\S]*function ProjectActionLink\([\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*aria-label=\{actionLabel\}/,
     source: projectsSection,
