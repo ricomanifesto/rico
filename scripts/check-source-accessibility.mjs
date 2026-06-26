@@ -555,6 +555,11 @@ const checks = [
     source: indexCss,
   },
   {
+    label: "project carousel arrow positions use the shared visual contract",
+    pattern: /^(?![\s\S]*(?:positionClass:\s*"left-2 md:left-0 md:-translate-x-4"|positionClass:\s*"right-2 md:right-0 md:translate-x-4"|className=\{`absolute \$\{positionClass\} top-1\/2 -translate-y-1\/2 project-carousel-arrow-button`\}))(?=[\s\S]*positionClass:\s*"project-carousel-arrow-previous")(?=[\s\S]*positionClass:\s*"project-carousel-arrow-next")(?=[\s\S]*className=\{`project-carousel-arrow-button \$\{positionClass\}`\})(?=[\s\S]*\.project-carousel-arrow-button\s*\{[\s\S]*position:\s*absolute;[\s\S]*top:\s*25%;[\s\S]*transform:\s*translateY\(-50%\);)(?=[\s\S]*\.project-carousel-arrow-previous\s*\{[\s\S]*left:\s*0\.5rem;)(?=[\s\S]*\.project-carousel-arrow-next\s*\{[\s\S]*right:\s*0\.5rem;)(?=[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.project-carousel-arrow-button\s*\{[\s\S]*top:\s*50%;[\s\S]*\.project-carousel-arrow-previous\s*\{[\s\S]*left:\s*0;[\s\S]*transform:\s*translate\(-1rem,\s*-50%\);[\s\S]*\.project-carousel-arrow-next\s*\{[\s\S]*right:\s*0;[\s\S]*transform:\s*translate\(1rem,\s*-50%\);)/,
+    source: `${indexCss}\n${projectsSection}`,
+  },
+  {
     label: "project carousel arrow icons use class-based accent styles",
     pattern: /\.project-carousel-arrow-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);/,
     source: indexCss,
