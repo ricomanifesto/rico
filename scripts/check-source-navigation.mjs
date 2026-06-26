@@ -7,12 +7,15 @@ const navigationPath = path.join(srcRoot, "content/navigation.ts");
 const headerPath = path.join(srcRoot, "components/Header.tsx");
 const headerNavLinkPath = path.join(srcRoot, "components/HeaderNavLink.tsx");
 const socialLinkPath = path.join(srcRoot, "components/SocialLink.tsx");
-const headerBrandHoverAccentClass = "hover:text-[#66b2ff]";
-const navHoverAccentClass = "hover:text-[#007bff]";
-const socialBaseAccentClass = "text-[#007bff]";
+const indexCssPath = path.join(srcRoot, "index.css");
+const headerBrandLinkClass = "header-brand-link";
+const headerNavLinkClass = "header-nav-link";
+const headerNavLinkActiveClass = "header-nav-link-active";
+const headerSocialLinkClass = "header-social-link";
 
 const failures = [];
 const navigationSource = fs.existsSync(navigationPath) ? fs.readFileSync(navigationPath, "utf8") : "";
+const indexCssSource = fs.existsSync(indexCssPath) ? fs.readFileSync(indexCssPath, "utf8") : "";
 
 if (!fs.existsSync(navigationPath)) {
   failures.push("src/content/navigation.ts defines typed navigation data");
@@ -109,8 +112,8 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header brand text links back to the intro section from metadata");
   }
 
-  if (!headerSource.includes(headerBrandHoverAccentClass)) {
-    failures.push("Header brand link keeps a readable hover color on the dark header");
+  if (!headerSource.includes(headerBrandLinkClass)) {
+    failures.push("Header brand link uses the shared header interactive visual contract");
   }
 
   if (!fs.existsSync(headerNavLinkPath)) {
@@ -198,8 +201,8 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
     failures.push(`${path.relative(root, componentPath)} uses class-based hover styles`);
   }
 
-  if (componentPath === headerNavLinkPath && !source.includes(navHoverAccentClass)) {
-    failures.push(`${path.relative(root, componentPath)} uses the header accent hover class`);
+  if (componentPath === headerNavLinkPath && !source.includes(headerNavLinkClass)) {
+    failures.push(`${path.relative(root, componentPath)} uses the shared header nav visual contract`);
   }
 
   if (
@@ -216,8 +219,12 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
     failures.push(`${path.relative(root, componentPath)} uses the typed nav link class contract`);
   }
 
-  if (componentPath === socialLinkPath && !source.includes(socialBaseAccentClass)) {
-    failures.push(`${path.relative(root, componentPath)} uses the social accent text class`);
+  if (componentPath === headerNavLinkPath && !source.includes(headerNavLinkActiveClass)) {
+    failures.push(`${path.relative(root, componentPath)} uses the shared active header nav visual contract`);
+  }
+
+  if (componentPath === socialLinkPath && !source.includes(headerSocialLinkClass)) {
+    failures.push(`${path.relative(root, componentPath)} uses the shared header social visual contract`);
   }
 
   if (
@@ -254,6 +261,12 @@ for (const componentPath of [headerNavLinkPath, socialLinkPath]) {
   ) {
     failures.push(`${path.relative(root, componentPath)} renders the LinkedIn social link with the shared LinkedIn icon`);
   }
+}
+
+if (
+  !/\.header-brand-link\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-brand-link:hover\s*\{[\s\S]*color:\s*#66b2ff;[\s\S]*\.header-nav-link:hover\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-nav-link-active\s*\{[\s\S]*color:\s*#66b2ff;[\s\S]*\.header-social-link\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.header-social-link:hover\s*\{[\s\S]*color:\s*#0056b3;/.test(indexCssSource)
+) {
+  failures.push("src/index.css defines the shared header interactive visual contract");
 }
 
 function walkFiles(directory) {
