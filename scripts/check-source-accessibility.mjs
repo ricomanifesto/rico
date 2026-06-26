@@ -443,7 +443,7 @@ const checks = [
   },
   {
     label: "header brand link has a visible keyboard focus style",
-    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;/,
+    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);/,
     source: indexCss,
   },
   {
@@ -453,7 +453,7 @@ const checks = [
   },
   {
     label: "desktop header navigation links have visible keyboard focus styles",
-    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;/,
+    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);/,
     source: indexCss,
   },
   {
@@ -463,7 +463,12 @@ const checks = [
   },
   {
     label: "header social links have visible keyboard focus styles",
-    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;/,
+    pattern: /\.header-brand-link:focus-visible,[\s\S]*\.header-nav-link:focus-visible,[\s\S]*\.header-social-link:focus-visible\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);/,
+    source: indexCss,
+  },
+  {
+    label: "header active and hover states use shared tone tokens",
+    pattern: /\.header-brand-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*\.header-nav-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*\.header-nav-link-active\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*\.header-social-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);/,
     source: indexCss,
   },
   {
