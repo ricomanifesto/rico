@@ -104,7 +104,7 @@ export default function AboutMe() {
               alt="Michael Rico Profile" 
               loading="lazy"
               decoding="async"
-              className="w-40 h-40 md:w-48 md:h-48 object-cover object-[50%_35%] border-4 border-[#007bff33] shadow-lg"
+              className="about-profile-surface h-40 w-40 object-cover object-[50%_35%] md:h-48 md:w-48"
             />
           </motion.div>
         </div>

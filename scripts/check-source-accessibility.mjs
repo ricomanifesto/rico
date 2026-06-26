@@ -260,9 +260,9 @@ const checks = [
     source: aboutMeSource,
   },
   {
-    label: "about profile image border uses a class-based accent style",
-    pattern: /alt="Michael Rico Profile"[\s\S]*className="[^"]*border-\[#007bff33\][^"]*"/,
-    source: aboutMeSource,
+    label: "about profile image uses the shared image surface treatment",
+    pattern: /\.about-profile-surface\s*\{[\s\S]*border-radius:\s*var\(--radius\);[\s\S]*border:\s*1px solid var\(--portfolio-surface-border\);[\s\S]*box-shadow:\s*0 18px 45px rgba\(2,\s*12,\s*27,\s*0\.36\);[\s\S]*alt="Michael Rico Profile"[\s\S]*className="[^"]*about-profile-surface[^"]*"/,
+    source: `${indexCss}\n${aboutMeSource}`,
   },
   {
     label: "project carousel uses shared reduced-motion preference hook",
