@@ -7,6 +7,11 @@ interface SocialLinkProps {
   link: SocialLinkData;
 }
 
+interface SocialLinkAnchorBehavior {
+  readonly target?: "_blank";
+  readonly rel?: "noopener noreferrer";
+}
+
 type SocialIconRenderer = () => ReactNode;
 
 const socialIconRegistry: Record<SocialLinkKind, SocialIconRenderer> = {
@@ -16,12 +21,19 @@ const socialIconRegistry: Record<SocialLinkKind, SocialIconRenderer> = {
   medium: MediumIcon,
 };
 
+const getSocialLinkAnchorBehavior = (isExternal: boolean): SocialLinkAnchorBehavior => ({
+  target: isExternal ? socialLinkBehavior.externalTarget : undefined,
+  rel: isExternal ? socialLinkBehavior.externalRel : undefined,
+});
+
 export default function SocialLink({ link }: SocialLinkProps) {
+  const anchorBehavior = getSocialLinkAnchorBehavior(link.external);
+
   return (
     <a
       href={link.href}
-      target={link.external ? socialLinkBehavior.externalTarget : undefined}
-      rel={link.external ? socialLinkBehavior.externalRel : undefined}
+      target={anchorBehavior.target}
+      rel={anchorBehavior.rel}
       aria-label={link.label}
       className="inline-flex min-h-11 min-w-11 items-center justify-center text-[#007bff] transition duration-300 transform hover:scale-110 hover:text-[#0056b3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#66b2ff]"
     >
