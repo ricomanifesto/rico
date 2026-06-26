@@ -220,19 +220,19 @@ const checks = [
     source: introSection,
   },
   {
-    label: "intro CTA uses class-based hover styles",
-    pattern: /href=\{contactLink\.href\}[\s\S]*className="[^"]*hover:bg-\[#007bff1a\][^"]*"/,
+    label: "intro CTA uses the shared hero CTA visual contract",
+    pattern: /href=\{contactLink\.href\}[\s\S]*className="hero-cta-link"/,
     source: introSection,
   },
   {
-    label: "intro CTA hover styles include text and border states",
-    pattern: /href=\{contactLink\.href\}[\s\S]*className="[^"]*hover:text-\[#0056b3\][^"]*hover:border-\[#007bff\][^"]*|href=\{contactLink\.href\}[\s\S]*className="[^"]*hover:border-\[#007bff\][^"]*hover:text-\[#0056b3\][^"]*"/,
-    source: introSection,
+    label: "intro CTA visual contract defines outlined hover states",
+    pattern: /\.hero-cta-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*border:\s*1px solid var\(--primary-accent\);[\s\S]*border-radius:\s*4px;[\s\S]*\.hero-cta-link:hover\s*\{[\s\S]*background-color:\s*var\(--portfolio-surface-strong\);[\s\S]*border-color:\s*#66b2ff;[\s\S]*color:\s*#66b2ff;/,
+    source: indexCss,
   },
   {
     label: "intro CTA has a visible keyboard focus style",
-    pattern: /href=\{contactLink\.href\}[\s\S]*className="[^"]*focus-visible:outline[^"]*"/,
-    source: introSection,
+    pattern: /\.hero-cta-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    source: indexCss,
   },
   {
     label: "intro CTA uses the shared mail icon component",
