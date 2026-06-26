@@ -203,6 +203,74 @@
   outline-offset: 4px;
 }
 
+.project-carousel-arrow-button {
+  display: inline-flex;
+  min-height: 44px;
+  min-width: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border: 1px solid #6b7280;
+  border-radius: 9999px;
+  background-color: #475569;
+  box-shadow: 0 10px 15px rgba(2, 12, 27, 0.22);
+  transition: background-color 300ms ease, box-shadow 300ms ease;
+}
+
+.project-carousel-arrow-button:hover {
+  background-color: #64748b;
+  box-shadow: 0 20px 25px rgba(2, 12, 27, 0.28);
+}
+
+.project-carousel-arrow-button:focus-visible {
+  outline: 2px solid #66b2ff;
+  outline-offset: 4px;
+}
+
+.project-carousel-arrow-icon {
+  color: var(--primary-accent);
+}
+
+.project-carousel-dot-button {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+.project-carousel-dot-button:focus-visible {
+  outline: 2px solid #66b2ff;
+  outline-offset: 4px;
+}
+
+.project-carousel-dot-marker {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  transition: background-color 300ms ease, transform 300ms ease;
+}
+
+.project-carousel-dot-marker-current {
+  background-color: var(--primary-accent);
+  transform: scale(1.1);
+}
+
+.project-carousel-dot-marker-idle {
+  background-color: #6b7280;
+}
+
+.project-carousel-dot-button:hover .project-carousel-dot-marker-idle {
+  background-color: #9ca3af;
+}
+
+@media (min-width: 768px) {
+  .project-carousel-arrow-button {
+    padding: 0.5rem;
+  }
+}
+
 .node {
   position: absolute;
   width: 6px;

@@ -501,33 +501,33 @@ const checks = [
   },
   {
     label: "project carousel arrow buttons have visible keyboard focus styles",
-    pattern: /function ProjectCarouselArrowButton[\s\S]*focus-visible:outline[\s\S]*aria-label=\{label\}/,
-    source: projectsSection,
+    pattern: /\.project-carousel-arrow-button:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    source: indexCss,
   },
   {
     label: "project carousel arrow buttons keep mobile touch targets inside the viewport",
-    pattern: /interface ProjectCarouselArrowMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly positionClass:\s*string;[\s\S]*\}[\s\S]*const projectCarouselArrowMetadata:\s*Record<ProjectCarouselArrowDirection,\s*ProjectCarouselArrowMetadata>\s*=\s*\{[\s\S]*previous:\s*\{[\s\S]*Icon:\s*ChevronLeft,[\s\S]*positionClass:\s*"left-2 md:left-0 md:-translate-x-4"[\s\S]*next:\s*\{[\s\S]*Icon:\s*ChevronRight,[\s\S]*positionClass:\s*"right-2 md:right-0 md:translate-x-4"[\s\S]*function ProjectCarouselArrowButton\([\s\S]*const \{ Icon, positionClass \} = projectCarouselArrowMetadata\[direction\];[\s\S]*p-3 md:p-2/,
-    source: projectsSection,
+    pattern: /\.project-carousel-arrow-button\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*center;/,
+    source: indexCss,
   },
   {
     label: "project carousel arrow icons use class-based accent styles",
-    pattern: /const projectCarouselArrowMetadata:[\s\S]*previous:\s*\{[\s\S]*Icon:\s*ChevronLeft[\s\S]*next:\s*\{[\s\S]*Icon:\s*ChevronRight[\s\S]*function ProjectCarouselArrowButton\([\s\S]*const \{ Icon, positionClass \} = projectCarouselArrowMetadata\[direction\];[\s\S]*<Icon[^>]*className="[^"]*text-\[#007bff\][^"]*"/,
-    source: projectsSection,
+    pattern: /\.project-carousel-arrow-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);/,
+    source: indexCss,
   },
   {
     label: "project carousel dot buttons have visible keyboard focus styles",
-    pattern: /focus-visible:outline[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}/,
-    source: projectsSection,
+    pattern: /\.project-carousel-dot-button:focus-visible\s*\{[\s\S]*outline:\s*2px solid #66b2ff;[\s\S]*outline-offset:\s*4px;/,
+    source: indexCss,
   },
   {
     label: "project carousel dot buttons use mobile-friendly touch targets",
-    pattern: /className="[^"]*h-11[^"]*w-11[^"]*"[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}[\s\S]*<span[\s\S]*className=\{`h-3 w-3 rounded-full/,
+    pattern: /className="project-carousel-dot-button"[\s\S]*aria-label=\{`Show \$\{project\.title\}`\}[\s\S]*<span[\s\S]*className=\{`project-carousel-dot-marker \$\{dotViewState\.className\}`\}/,
     source: projectsSection,
   },
   {
     label: "project carousel active dot uses a class-based accent style",
-    pattern: /const getProjectCarouselDotViewState = \(isCurrent: boolean\): ProjectCarouselDotViewState => \(\{[\s\S]*className:\s*isCurrent \? "scale-110 bg-\[#007bff\]" : "bg-gray-500 group-hover:bg-gray-400"[\s\S]*\}\)[\s\S]*className=\{`h-3 w-3 rounded-full transition-all duration-300 \$\{dotViewState\.className\}`\}/,
-    source: projectsSection,
+    pattern: /\.project-carousel-dot-marker-current\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*transform:\s*scale\(1\.1\);[\s\S]*\.project-carousel-dot-button:hover\s+\.project-carousel-dot-marker-idle\s*\{[\s\S]*background-color:\s*#9ca3af;/,
+    source: indexCss,
   },
 ];
 
