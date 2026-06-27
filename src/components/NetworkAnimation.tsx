@@ -104,7 +104,7 @@ export default function NetworkAnimation() {
             connection.classList.add('connection');
             
             const opacity = 0.5 * (1 - distance / networkAnimationBehavior.connectionThresholdPx);
-            connection.style.backgroundColor = `rgba(0, 123, 255, ${opacity})`;
+            connection.style.backgroundColor = `rgba(var(--portfolio-network-connection-rgb), ${opacity})`;
             
             const angle = Math.atan2(dy, dx) * 180 / Math.PI;
             
