@@ -482,6 +482,11 @@ const checks = [
     source: indexCss,
   },
   {
+    label: "header idle states use shared tone tokens",
+    pattern: /(?=[\s\S]*--portfolio-page-foreground:\s*#e6f1ff;)(?=[\s\S]*--portfolio-copy:\s*#a8b2d1;)(?=[\s\S]*--portfolio-active-accent:\s*#66b2ff;)(?=[\s\S]*\.header-brand-link\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);)(?=[\s\S]*\.header-nav-link\s*\{[\s\S]*color:\s*var\(--portfolio-page-foreground\);)(?=[\s\S]*\.header-nav-link-idle\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);)(?=[\s\S]*\.header-social-link\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);)/,
+    source: indexCss,
+  },
+  {
     label: "header social links use the shared header visual contract",
     pattern: /header-social-link/,
     source: socialLinkSource,
