@@ -216,7 +216,7 @@
   max-width: 42rem;
   margin-right: auto;
   margin-left: auto;
-  color: #e5e7eb;
+  color: var(--portfolio-copy);
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
@@ -472,7 +472,7 @@
 }
 
 .about-body-copy {
-  color: #e5e7eb;
+  color: var(--portfolio-copy);
   font-size: 1.125rem;
   line-height: 1.625;
 }
@@ -506,7 +506,7 @@
 }
 
 .about-technology-label {
-  color: #e5e7eb;
+  color: var(--portfolio-copy);
   font-size: 1.125rem;
   line-height: 1.75rem;
 }
@@ -878,7 +878,7 @@
   min-width: 44px;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--portfolio-page-foreground);
   transition: color 300ms ease, transform 300ms ease;
 }
 

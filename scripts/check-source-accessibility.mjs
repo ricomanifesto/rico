@@ -72,6 +72,11 @@ const checks = [
     source: indexCss,
   },
   {
+    label: "portfolio copy tone uses shared text tokens",
+    pattern: /(?=[\s\S]*--portfolio-copy:\s*#a8b2d1;)(?=[\s\S]*--portfolio-page-foreground:\s*#e6f1ff;)(?=[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);)(?=[\s\S]*\.about-body-copy\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);)(?=[\s\S]*\.about-technology-label\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);)(?=[\s\S]*\.experience-highlight-copy\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);)(?=[\s\S]*\.project-action-link\s*\{[\s\S]*color:\s*var\(--portfolio-page-foreground\);)/,
+    source: indexCss,
+  },
+  {
     label: "portfolio content sections use the shared section shell visual contract",
     pattern: /\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*9rem;[\s\S]*padding:\s*4rem 1rem;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*color:\s*var\(--portfolio-page-foreground\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*5rem;[\s\S]*<section id="about"[^>]*className="portfolio-section"[\s\S]*<section id="projects"[^>]*className="portfolio-section"[\s\S]*<section id="experience"[^>]*className="portfolio-section"/,
     source: `${indexCss}\n${aboutMeSource}\n${projectsSection}\n${experienceSource}`,
@@ -238,7 +243,7 @@ const checks = [
   },
   {
     label: "intro hero uses the shared hero visual contract",
-    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*72rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-typewriter-cursor\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*0\.9fr\) minmax\(0,\s*1\.1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className="hero-typewriter-cursor"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
+    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*72rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-typewriter-cursor\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*0\.9fr\) minmax\(0,\s*1\.1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className="hero-typewriter-cursor"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
     source: `${indexCss}\n${introSection}`,
   },
   {
@@ -288,7 +293,7 @@ const checks = [
   },
   {
     label: "about section uses the shared about visual contract",
-    pattern: /\.about-content\s*\{[\s\S]*max-width:\s*56rem;[\s\S]*\.about-layout\s*\{[\s\S]*display:\s*flex;[\s\S]*flex-direction:\s*column;[\s\S]*\.about-copy\s*\{[\s\S]*flex:\s*1;[\s\S]*\.about-body-copy\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*line-height:\s*1\.625;[\s\S]*\.about-technology-grid\s*\{[\s\S]*grid-template-rows:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);[\s\S]*\.about-technology-item\s*\{[\s\S]*display:\s*flex;[\s\S]*\.about-technology-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.about-technology-label\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*\.about-profile-frame\s*\{[\s\S]*justify-content:\s*center;[\s\S]*\.about-profile-surface\s*\{[\s\S]*object-fit:\s*cover;[\s\S]*object-position:\s*50% 35%;[\s\S]*<div className="about-content">[\s\S]*<div className="about-layout">[\s\S]*<div className="about-copy">[\s\S]*className="about-body-copy about-body-spaced"[\s\S]*className="about-technology-grid"[\s\S]*className="about-technology-item"[\s\S]*className="about-technology-icon"[\s\S]*className="about-technology-label"[\s\S]*className="about-body-copy"[\s\S]*className="about-profile-frame"[\s\S]*className="about-profile-surface"/,
+    pattern: /\.about-content\s*\{[\s\S]*max-width:\s*56rem;[\s\S]*\.about-layout\s*\{[\s\S]*display:\s*flex;[\s\S]*flex-direction:\s*column;[\s\S]*\.about-copy\s*\{[\s\S]*flex:\s*1;[\s\S]*\.about-body-copy\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*line-height:\s*1\.625;[\s\S]*\.about-technology-grid\s*\{[\s\S]*grid-template-rows:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);[\s\S]*\.about-technology-item\s*\{[\s\S]*display:\s*flex;[\s\S]*\.about-technology-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.about-technology-label\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*\.about-profile-frame\s*\{[\s\S]*justify-content:\s*center;[\s\S]*\.about-profile-surface\s*\{[\s\S]*object-fit:\s*cover;[\s\S]*object-position:\s*50% 35%;[\s\S]*<div className="about-content">[\s\S]*<div className="about-layout">[\s\S]*<div className="about-copy">[\s\S]*className="about-body-copy about-body-spaced"[\s\S]*className="about-technology-grid"[\s\S]*className="about-technology-item"[\s\S]*className="about-technology-icon"[\s\S]*className="about-technology-label"[\s\S]*className="about-body-copy"[\s\S]*className="about-profile-frame"[\s\S]*className="about-profile-surface"/,
     source: `${indexCss}\n${aboutMeSource}`,
   },
   {
@@ -443,7 +448,7 @@ const checks = [
   },
   {
     label: "experience highlight chevrons use the shared icon component",
-    pattern: /\.experience-highlight-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-highlight-copy\s*\{[\s\S]*color:\s*#e5e7eb;[\s\S]*import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="experience-highlight-icon"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<p className="experience-highlight-copy">\s*\{highlight\}\s*<\/p>/,
+    pattern: /\.experience-highlight-icon\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.experience-highlight-copy\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*import\s*\{\s*ChevronRight\s*\}\s*from\s*"lucide-react";[\s\S]*<ChevronRight\b[^>]*className="experience-highlight-icon"[^>]*aria-hidden="true"[^>]*focusable="false"[\s\S]*<p className="experience-highlight-copy">\s*\{highlight\}\s*<\/p>/,
     source: `${indexCss}\n${experienceSource}`,
   },
   {
@@ -498,7 +503,7 @@ const checks = [
   },
   {
     label: "project action link visual contract defines hover states",
-    pattern: /\.project-action-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*color:\s*#fff;[\s\S]*\.project-action-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*transform:\s*scale\(1\.1\);/,
+    pattern: /\.project-action-link\s*\{[\s\S]*display:\s*inline-flex;[\s\S]*min-height:\s*44px;[\s\S]*min-width:\s*44px;[\s\S]*color:\s*var\(--portfolio-page-foreground\);[\s\S]*\.project-action-link:hover\s*\{[\s\S]*color:\s*var\(--portfolio-active-accent\);[\s\S]*transform:\s*scale\(1\.1\);/,
     source: indexCss,
   },
   {
