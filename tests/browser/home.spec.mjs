@@ -667,7 +667,11 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await page.goto("/");
 
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Skip to main content" })).toBeFocused();
+  const skipLink = page.getByRole("link", { name: "Skip to main content" });
+  await expect(skipLink).toBeFocused();
+  await expect(skipLink).toHaveCSS("background-color", "rgb(2, 6, 23)");
+  await expect(skipLink).toHaveCSS("outline-color", "rgb(102, 178, 255)");
+  await expect(skipLink).toHaveCSS("outline-offset", "4px");
 
   await page.keyboard.press("Tab");
   const brandLink = page.getByRole("link", { name: "rico" });

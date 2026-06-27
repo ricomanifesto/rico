@@ -655,9 +655,18 @@ if (!fs.existsSync(skipLinkPath)) {
 
   if (
     !hasClassToken(skipLinkClassName, "sr-only") ||
-    !hasClassToken(skipLinkClassName, "focus:not-sr-only")
+    !/\.skip-link:focus\s*\{[\s\S]*position:\s*fixed;[\s\S]*top:\s*1rem;[\s\S]*left:\s*1rem;[\s\S]*z-index:\s*60;[\s\S]*width:\s*auto;[\s\S]*height:\s*auto;/.test(indexCss)
   ) {
     failures.push("Skip link stays hidden until focused");
+  }
+
+  if (
+    !hasClassToken(skipLinkClassName, "skip-link") ||
+    /\.skip-link:focus,\s*[\r\n\s]*\.skip-link:focus-visible\s*\{/.test(indexCss) ||
+    !/\.skip-link:focus\s*\{[\s\S]*background-color:\s*#020617;[\s\S]*color:\s*#fff;[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*outline-offset:\s*4px;/.test(indexCss) ||
+    !/\.skip-link:focus-visible\s*\{[\s\S]*outline:\s*2px solid var\(--portfolio-focus-ring\);[\s\S]*outline-offset:\s*4px;/.test(indexCss)
+  ) {
+    failures.push("Skip link focus style uses the shared focus token");
   }
 }
 
