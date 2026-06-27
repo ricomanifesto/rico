@@ -10,6 +10,9 @@
     --primary-accent: #007bff; 
     --secondary-accent: #20c997;
     --border-color: #ddd;
+    --portfolio-page-background: #0a192f;
+    --portfolio-page-foreground: #e6f1ff;
+    --portfolio-header-background: rgba(10, 25, 47, 0.95);
     --portfolio-active-accent: #66b2ff;
     --portfolio-heading: #ccd6f6;
     --section-rule: #233554;
@@ -66,6 +69,8 @@
   body {
     font-family: 'Open Sans', sans-serif;
     @apply antialiased bg-background text-foreground;
+    background-color: var(--portfolio-page-background);
+    color: var(--portfolio-page-foreground);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -141,8 +146,8 @@
   justify-content: center;
   overflow: hidden;
   padding: 9rem 1rem 0;
-  background-color: #0f172a;
-  color: #fff;
+  background-color: var(--portfolio-page-background);
+  color: var(--portfolio-page-foreground);
   text-align: center;
 }
 
@@ -263,8 +268,8 @@
 .portfolio-section {
   scroll-margin-top: 9rem;
   padding: 4rem 1rem;
-  background-color: #0f172a;
-  color: #fff;
+  background-color: var(--portfolio-page-background);
+  color: var(--portfolio-page-foreground);
 }
 
 @media (min-width: 768px) {
@@ -709,7 +714,7 @@
   right: 0;
   left: 0;
   z-index: 50;
-  background-color: rgba(15, 23, 42, 0.95);
+  background-color: var(--portfolio-header-background);
   backdrop-filter: blur(4px);
   transition: box-shadow 300ms ease;
 }
@@ -980,7 +985,7 @@
 .footer-shell {
   padding: 5rem 1rem 2.5rem;
   border-top: 1px solid var(--portfolio-surface-border);
-  background-color: #0f172a;
+  background-color: var(--portfolio-page-background);
   color: var(--portfolio-muted);
 }
 
