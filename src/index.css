@@ -745,7 +745,7 @@
 }
 
 .header-brand-link {
-  color: var(--primary-accent);
+  color: var(--portfolio-active-accent);
   font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 700;
@@ -765,7 +765,7 @@
 }
 
 .header-nav-link {
-  color: #e5e7eb;
+  color: var(--portfolio-page-foreground);
   font-size: 0.875rem;
   line-height: 1.25rem;
   transition: color 300ms ease;
@@ -785,7 +785,7 @@
 }
 
 .header-nav-link-idle {
-  color: #e5e7eb;
+  color: var(--portfolio-copy);
 }
 
 .header-nav-link:hover {
@@ -809,7 +809,7 @@
   min-height: 2.75rem;
   align-items: center;
   justify-content: center;
-  color: var(--primary-accent);
+  color: var(--portfolio-active-accent);
   transition: color 300ms ease, transform 300ms ease;
 }
 
