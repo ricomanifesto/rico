@@ -75,6 +75,36 @@
   html {
     scroll-behavior: smooth;
   }
+
+}
+
+@layer utilities {
+  .skip-link:focus {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 60;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    background-color: #020617;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    white-space: normal;
+    outline: 2px solid var(--portfolio-focus-ring);
+    outline-offset: 4px;
+  }
+
+  .skip-link:focus-visible {
+    outline: 2px solid var(--portfolio-focus-ring);
+    outline-offset: 4px;
+  }
 }
 
 /* Animation keyframes */
