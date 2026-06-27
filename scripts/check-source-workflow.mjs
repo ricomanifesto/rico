@@ -243,7 +243,7 @@ const checks = [
   },
   {
     label: "hero network animation behavior preserves current visual constants",
-    pattern: /export const networkAnimationBehavior:\s*NetworkAnimationBehavior\s*=\s*\{[\s\S]*maxNodes:\s*15,[\s\S]*connectionThresholdPx:\s*200,[\s\S]*resizeDebounceMs:\s*250,[\s\S]*nodeSizePx:\s*\{[\s\S]*min:\s*4,[\s\S]*variance:\s*6[\s\S]*\}[\s\S]*nodeOpacity:\s*\{[\s\S]*min:\s*0\.3,[\s\S]*variance:\s*0\.6[\s\S]*\}[\s\S]*nodeVelocity:\s*\{[\s\S]*range:\s*0\.4,[\s\S]*offset:\s*0\.2[\s\S]*\}[\s\S]*bounceDamping:\s*\{[\s\S]*min:\s*0\.9,[\s\S]*variance:\s*0\.2[\s\S]*\}[\s\S]*colors:\s*\[[\s\S]*rgba\(0, 123, 255, 0\.7\)[\s\S]*rgba\(32, 201, 151, 0\.6\)[\s\S]*\]/,
+    pattern: /export const networkAnimationBehavior:\s*NetworkAnimationBehavior\s*=\s*\{[\s\S]*maxNodes:\s*15,[\s\S]*connectionThresholdPx:\s*200,[\s\S]*resizeDebounceMs:\s*250,[\s\S]*nodeSizePx:\s*\{[\s\S]*min:\s*4,[\s\S]*variance:\s*6[\s\S]*\}[\s\S]*nodeOpacity:\s*\{[\s\S]*min:\s*0\.3,[\s\S]*variance:\s*0\.6[\s\S]*\}[\s\S]*nodeVelocity:\s*\{[\s\S]*range:\s*0\.4,[\s\S]*offset:\s*0\.2[\s\S]*\}[\s\S]*bounceDamping:\s*\{[\s\S]*min:\s*0\.9,[\s\S]*variance:\s*0\.2[\s\S]*\}[\s\S]*colors:\s*\[[\s\S]*"var\(--portfolio-network-node-primary\)"[\s\S]*"var\(--portfolio-network-node-accent\)"[\s\S]*\]/,
     source: hero,
   },
   {

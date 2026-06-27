@@ -23,6 +23,7 @@ const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
 const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
+const heroContentPath = path.join(root, "src/content/hero.ts");
 const indexCssPath = path.join(root, "src/index.css");
 const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
 const appSource = fs.readFileSync(appPath, "utf8");
@@ -43,6 +44,7 @@ const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 const socialLinkSource = fs.readFileSync(socialLinkPath, "utf8");
 const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
+const heroContentSource = fs.readFileSync(heroContentPath, "utf8");
 const indexCss = fs.readFileSync(indexCssPath, "utf8");
 
 const checks = [
@@ -230,6 +232,11 @@ const checks = [
     label: "network animation skips moving nodes for reduced motion",
     pattern: /shouldReduceMotion\)\s*\{\s*return;/,
     source: networkAnimation,
+  },
+  {
+    label: "hero network tones use shared portfolio tokens",
+    pattern: /(?=[\s\S]*--portfolio-network-grid-line:\s*rgba\(102,\s*178,\s*255,\s*0\.07\);)(?=[\s\S]*--portfolio-network-connection-rgb:\s*102,\s*178,\s*255;)(?=[\s\S]*--portfolio-network-node-primary:\s*rgba\(102,\s*178,\s*255,\s*0\.7\);)(?=[\s\S]*--portfolio-network-node-accent:\s*rgba\(100,\s*255,\s*218,\s*0\.6\);)(?=[\s\S]*\.network-grid\s*\{[\s\S]*linear-gradient\(to right,\s*var\(--portfolio-network-grid-line\) 1px,\s*transparent 1px\),[\s\S]*linear-gradient\(to bottom,\s*var\(--portfolio-network-grid-line\) 1px,\s*transparent 1px\);)(?=[\s\S]*\.node\s*\{[\s\S]*background-color:\s*var\(--portfolio-network-node-primary\);)(?=[\s\S]*\.connection\s*\{[\s\S]*background-color:\s*rgba\(var\(--portfolio-network-connection-rgb\),\s*0\.2\);)(?=[\s\S]*colors:\s*\[[\s\S]*"var\(--portfolio-network-node-primary\)"[\s\S]*"var\(--portfolio-network-node-accent\)"[\s\S]*\])(?=[\s\S]*connection\.style\.backgroundColor\s*=\s*`rgba\(var\(--portfolio-network-connection-rgb\), \$\{opacity\}\)`;)/,
+    source: `${indexCss}\n${heroContentSource}\n${networkAnimation}`,
   },
   {
     label: "intro typewriter uses shared reduced-motion preference hook",

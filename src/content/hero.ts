@@ -102,10 +102,10 @@ export const networkAnimationBehavior: NetworkAnimationBehavior = {
     variance: 0.2,
   },
   colors: [
-    "rgba(0, 123, 255, 0.7)",
-    "rgba(30, 144, 255, 0.6)",
-    "rgba(65, 105, 225, 0.7)",
-    "rgba(0, 191, 255, 0.6)",
-    "rgba(32, 201, 151, 0.6)",
+    "var(--portfolio-network-node-primary)",
+    "var(--portfolio-network-node-secondary)",
+    "var(--portfolio-network-node-muted)",
+    "var(--portfolio-network-node-primary)",
+    "var(--portfolio-network-node-accent)",
   ],
 };
