@@ -138,7 +138,7 @@ const checks = [
   },
   {
     label: "about content preserves current technologies",
-    pattern: /export const aboutContent:\s*AboutContent\s*=\s*\{[\s\S]*technologies:\s*\[\s*"Python",\s*"Next\.js",\s*"FastAPI",\s*"Go",\s*"scikit-learn",\s*"LangGraph",?\s*\][\s\S]*\}/,
+    pattern: /export const aboutContent:\s*AboutContent\s*=\s*\{[\s\S]*technologies:\s*\[\s*"Python",\s*"TypeScript",\s*"Next\.js",\s*"FastAPI",\s*"Go",\s*"LangGraph",?\s*\][\s\S]*\}/,
     source: portfolio,
   },
   {

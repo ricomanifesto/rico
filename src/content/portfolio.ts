@@ -118,7 +118,7 @@ export interface ExperienceBehavior {
 }
 
 export const aboutContent: AboutContent = {
-  technologies: ["Python", "Next.js", "FastAPI", "Go", "scikit-learn", "LangGraph"],
+  technologies: ["Python", "TypeScript", "Next.js", "FastAPI", "Go", "LangGraph"],
 };
 
 export const aboutBehavior: AboutBehavior = {
@@ -182,9 +182,9 @@ export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
 
 export const projects: readonly ProjectSummary[] = [
   {
-    title: "AI-Powered Threat Intelligence Platform",
+    title: "Threat Intelligence Research Workspace",
     description: "SentrySearch turns scattered threat research into searchable security profiles for malware, attack tools, and targeted technologies, with persistent reports, hybrid search, and detection guidance in one workspace.",
-    techStack: ["PYTHON", "FASTAPI", "NEXT.JS"],
+    techStack: ["NEXT.JS", "TYPESCRIPT", "FASTAPI", "PINECONE", "SUPABASE"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentrySearch",
@@ -204,9 +204,9 @@ export const projects: readonly ProjectSummary[] = [
     },
   },
   {
-    title: "Cybersecurity News Aggregator",
+    title: "Analyst-Ready Security Briefings",
     description: "SentryDigest turns noisy security feeds into a daily analyst-ready briefing, with source links, severity cues, and clean HTML output you can inspect before sharing.",
-    techStack: ["NODE.JS"],
+    techStack: ["NODE.JS", "RSS", "GITHUB ACTIONS"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentryDigest",
@@ -226,9 +226,9 @@ export const projects: readonly ProjectSummary[] = [
     },
   },
   {
-    title: "Cybersecurity Exploit Reporter",
+    title: "Exploitation Intelligence Reports",
     description: "SentryInsight turns security RSS feeds into exploitation-focused threat reports, with CVE correlation, affected systems, attack vectors, and executive summaries ready for review.",
-    techStack: ["PYTHON", "LANGGRAPH", "LANGCHAIN", "FASTMCP"],
+    techStack: ["PYTHON", "LANGGRAPH", "PYDANTIC", "OPENROUTER"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentryInsight",
@@ -248,9 +248,9 @@ export const projects: readonly ProjectSummary[] = [
     },
   },
   {
-    title: "Cybersecurity GRC Reporter",
+    title: "Audit-Ready GRC Intelligence",
     description: "GRCInsight turns regulatory and security feeds into audit-ready GRC intelligence, with framework mapping, agency signals, industry relevance, and concise action-oriented reports.",
-    techStack: ["GO", "PYTHON", "LANGGRAPH", "FASTAPI"],
+    techStack: ["GO", "PYTHON", "AWS LAMBDA", "DYNAMODB", "FASTAPI"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/GRCInsight",

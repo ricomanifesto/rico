@@ -442,14 +442,14 @@ test("exposes about technologies as a semantic list", async ({ page }) => {
   await expect(technologies.getByRole("listitem")).toHaveCount(6);
   await expect(technologies.getByRole("listitem")).toHaveText([
     "Python",
+    "TypeScript",
     "Next.js",
     "FastAPI",
     "Go",
-    "scikit-learn",
     "LangGraph",
   ]);
 
-  for (const technology of ["Python", "Next.js", "FastAPI", "Go", "scikit-learn", "LangGraph"]) {
+  for (const technology of ["Python", "TypeScript", "Next.js", "FastAPI", "Go", "LangGraph"]) {
     await expect(technologies.getByText(technology, { exact: true })).toBeVisible();
   }
 
@@ -532,8 +532,8 @@ test("opens external portfolio links with safe new-tab attributes", async ({ pag
   await page.getByRole("link", { name: "Projects" }).click();
 
   for (const linkName of [
-    "View AI-Powered Threat Intelligence Platform repository",
-    "Open AI-Powered Threat Intelligence Platform demo",
+    "View Threat Intelligence Research Workspace repository",
+    "Open Threat Intelligence Research Workspace demo",
   ]) {
     const link = page.getByRole("link", { name: linkName });
 
@@ -721,27 +721,27 @@ test("keeps inactive project slide links out of keyboard order", async ({ page }
 
   await page.getByRole("link", { name: "Projects" }).click();
   await expect(
-    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
   ).toHaveAttribute("aria-hidden", "false");
   await expect(
-    page.locator('[aria-label="Cybersecurity News Aggregator, project slide 2 of 4"]'),
+    page.locator('[aria-label="Analyst-Ready Security Briefings, project slide 2 of 4"]'),
   ).toHaveAttribute("aria-hidden", "true");
 
-  await page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }).focus();
+  await page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }).focus();
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Open AI-Powered Threat Intelligence Platform demo" })).toBeFocused();
+  await expect(page.getByRole("link", { name: "Open Threat Intelligence Research Workspace demo" })).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Previous project" })).toBeFocused();
 
   await page.getByRole("button", { name: "Next project" }).click();
   await expect(
-    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
   ).toHaveAttribute("aria-hidden", "true");
   await expect(
-    page.locator('[aria-label="Cybersecurity News Aggregator, project slide 2 of 4"]'),
+    page.locator('[aria-label="Analyst-Ready Security Briefings, project slide 2 of 4"]'),
   ).toHaveAttribute("aria-hidden", "false");
   await expect(
-    page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
+    page.locator('a[aria-label="View Threat Intelligence Research Workspace repository"]'),
   ).toHaveAttribute("tabindex", "-1");
 });
 
@@ -756,7 +756,7 @@ test("moves keyboard focus to the active project action after arrow navigation",
   await page.keyboard.press("Enter");
 
   await expect(
-    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+    page.getByRole("link", { name: "View Analyst-Ready Security Briefings repository" }),
   ).toBeFocused();
 });
 
@@ -775,7 +775,7 @@ test("keeps repeated carousel Enter activation on the arrow control", async ({ p
 
   await page.keyboard.up("Enter");
   await expect(
-    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+    page.getByRole("link", { name: "View Analyst-Ready Security Briefings repository" }),
   ).toBeFocused();
 });
 
@@ -790,10 +790,10 @@ test("moves Space-activated carousel focus to the new active project action", as
   await page.keyboard.press("Space");
 
   await expect(
-    page.getByRole("link", { name: "View Cybersecurity News Aggregator repository" }),
+    page.getByRole("link", { name: "View Analyst-Ready Security Briefings repository" }),
   ).toBeFocused();
   await expect(
-    page.locator('a[aria-label="View AI-Powered Threat Intelligence Platform repository"]'),
+    page.locator('a[aria-label="View Threat Intelligence Research Workspace repository"]'),
   ).toHaveAttribute("tabindex", "-1");
 });
 
@@ -803,11 +803,11 @@ test("announces the active project slide after manual navigation", async ({ page
   await page.getByRole("link", { name: "Projects" }).click();
   const projectStatus = page.getByRole("status", { name: "Current project" });
   await expect(projectStatus).toHaveAttribute("aria-live", "off");
-  await expect(projectStatus).toHaveText("Project 1 of 4: AI-Powered Threat Intelligence Platform");
+  await expect(projectStatus).toHaveText("Project 1 of 4: Threat Intelligence Research Workspace");
 
   await page.getByRole("button", { name: "Next project" }).click();
   await expect(projectStatus).toHaveAttribute("aria-live", "polite");
-  await expect(projectStatus).toHaveText("Project 2 of 4: Cybersecurity News Aggregator");
+  await expect(projectStatus).toHaveText("Project 2 of 4: Analyst-Ready Security Briefings");
 });
 
 test("exposes the project carousel as a named region", async ({ page }) => {
@@ -829,12 +829,12 @@ test("names project carousel slides by project title", async ({ page }) => {
   await page.getByRole("link", { name: "Projects" }).click();
   await expect(
     page.getByRole("group", {
-      name: "AI-Powered Threat Intelligence Platform, project slide 1 of 4",
+      name: "Threat Intelligence Research Workspace, project slide 1 of 4",
     }),
   ).toHaveAttribute("aria-hidden", "false");
   await expect(
     page.getByRole("group", {
-      name: "Cybersecurity News Aggregator, project slide 2 of 4",
+      name: "Analyst-Ready Security Briefings, project slide 2 of 4",
       includeHidden: true,
     }),
   ).toHaveAttribute("aria-hidden", "true");
@@ -847,10 +847,10 @@ test("treats project carousel background images as decorative", async ({ page })
   await page.getByRole("link", { name: "Projects" }).click();
   const carousel = page.getByRole("region", { name: "Featured projects" });
 
-  await expect(carousel.getByRole("img", { name: /AI-Powered Threat Intelligence Platform/ })).toHaveCount(0);
-  await expect(carousel.getByRole("heading", { name: "AI-Powered Threat Intelligence Platform" })).toBeVisible();
+  await expect(carousel.getByRole("img", { name: /Threat Intelligence Research Workspace/ })).toHaveCount(0);
+  await expect(carousel.getByRole("heading", { name: "Threat Intelligence Research Workspace" })).toBeVisible();
   await expect(
-    carousel.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }),
+    carousel.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }),
   ).toBeVisible();
 });
 
@@ -862,8 +862,8 @@ test("keeps active project action links easy to tap", async ({ page }) => {
   await page.getByRole("link", { name: "Projects" }).click();
 
   for (const linkName of [
-    "View AI-Powered Threat Intelligence Platform repository",
-    "Open AI-Powered Threat Intelligence Platform demo",
+    "View Threat Intelligence Research Workspace repository",
+    "Open Threat Intelligence Research Workspace demo",
   ]) {
     const link = page.getByRole("link", { name: linkName });
     const box = await link.boundingBox();
@@ -880,8 +880,8 @@ test("updates the current project dot after manual navigation", async ({ page })
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  const firstDot = page.getByRole("button", { name: "Show AI-Powered Threat Intelligence Platform" });
-  const secondDot = page.getByRole("button", { name: "Show Cybersecurity News Aggregator" });
+  const firstDot = page.getByRole("button", { name: "Show Threat Intelligence Research Workspace" });
+  const secondDot = page.getByRole("button", { name: "Show Analyst-Ready Security Briefings" });
   await expect(firstDot).toHaveAttribute("aria-current", "true");
   await expect(secondDot).not.toHaveAttribute("aria-current", "true");
 
@@ -895,9 +895,9 @@ test("updates the current project dot after keyboard activation", async ({ page 
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  const firstDot = page.getByRole("button", { name: "Show AI-Powered Threat Intelligence Platform" });
-  const secondDot = page.getByRole("button", { name: "Show Cybersecurity News Aggregator" });
-  const thirdDot = page.getByRole("button", { name: "Show Cybersecurity Exploit Reporter" });
+  const firstDot = page.getByRole("button", { name: "Show Threat Intelligence Research Workspace" });
+  const secondDot = page.getByRole("button", { name: "Show Analyst-Ready Security Briefings" });
+  const thirdDot = page.getByRole("button", { name: "Show Exploitation Intelligence Reports" });
 
   await secondDot.focus();
   await page.keyboard.press("Enter");
@@ -939,10 +939,10 @@ test("keeps mobile project carousel dots easy to tap", async ({ page }) => {
   await page.getByRole("link", { name: "Projects" }).click();
 
   for (const projectName of [
-    "AI-Powered Threat Intelligence Platform",
-    "Cybersecurity News Aggregator",
-    "Cybersecurity Exploit Reporter",
-    "Cybersecurity GRC Reporter",
+    "Threat Intelligence Research Workspace",
+    "Analyst-Ready Security Briefings",
+    "Exploitation Intelligence Reports",
+    "Audit-Ready GRC Intelligence",
   ]) {
     const dot = page.getByRole("button", { name: `Show ${projectName}` });
     const box = await dot.boundingBox();
@@ -957,23 +957,23 @@ test("pauses project auto-rotation while carousel has keyboard focus", async ({ 
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  await page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" }).focus();
+  await page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }).focus();
   await page.waitForTimeout(10500);
 
   await expect(
-    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
   ).toHaveAttribute("aria-hidden", "false");
-  await expect(page.getByRole("link", { name: "View AI-Powered Threat Intelligence Platform repository" })).toBeFocused();
+  await expect(page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" })).toBeFocused();
 });
 
 test("pauses project auto-rotation while carousel is hovered", async ({ page }) => {
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  await page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]').hover();
+  await page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]').hover();
   await page.waitForTimeout(10500);
 
   await expect(
-    page.locator('[aria-label="AI-Powered Threat Intelligence Platform, project slide 1 of 4"]'),
+    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
   ).toHaveAttribute("aria-hidden", "false");
 });
