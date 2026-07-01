@@ -183,7 +183,7 @@ export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
 export const projects: readonly ProjectSummary[] = [
   {
     title: "AI-Powered Threat Intelligence Platform",
-    description: "Leverages Anthropic's Claude with web search capabilities to generate comprehensive threat intelligence profiles for malware, attack tools, and targeted technologies.",
+    description: "SentrySearch turns scattered threat research into searchable security profiles for malware, attack tools, and targeted technologies, with persistent reports, hybrid search, and detection guidance in one workspace.",
     techStack: ["PYTHON", "FASTAPI", "NEXT.JS"],
     links: {
       repository: {
@@ -205,7 +205,7 @@ export const projects: readonly ProjectSummary[] = [
   },
   {
     title: "Cybersecurity News Aggregator",
-    description: "A low-maintenance website that automatically pulls in the day's top cybersecurity stories using GitHub Actions.",
+    description: "SentryDigest turns noisy security feeds into a daily analyst-ready briefing, with source links, severity cues, and clean HTML output you can inspect before sharing.",
     techStack: ["NODE.JS"],
     links: {
       repository: {
@@ -227,7 +227,7 @@ export const projects: readonly ProjectSummary[] = [
   },
   {
     title: "Cybersecurity Exploit Reporter",
-    description: "An AI-powered tool that doesn't just collect security news but analyzes it to identify active threats, vulnerabilities, and attack patterns, turning news feeds into actionable threat intelligence.",
+    description: "SentryInsight turns security RSS feeds into exploitation-focused threat reports, with CVE correlation, affected systems, attack vectors, and executive summaries ready for review.",
     techStack: ["PYTHON", "LANGGRAPH", "LANGCHAIN", "FASTMCP"],
     links: {
       repository: {
@@ -249,7 +249,7 @@ export const projects: readonly ProjectSummary[] = [
   },
   {
     title: "Cybersecurity GRC Reporter",
-    description: "Automated governance, risk & compliance intelligence that monitors RSS feeds and generates GRC reports using AI analysis.",
+    description: "GRCInsight turns regulatory and security feeds into audit-ready GRC intelligence, with framework mapping, agency signals, industry relevance, and concise action-oriented reports.",
     techStack: ["GO", "PYTHON", "LANGGRAPH", "FASTAPI"],
     links: {
       repository: {
