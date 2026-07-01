@@ -34,7 +34,7 @@ export default function AboutMe() {
               }}
               viewport={{ once: true }}
             >
-              I am currently a Staff Threat Hunter at SentinelOne, working in the ThreatOps organization under team Incident Readiness and Response. Here are some technologies I have been working with:
+              I am currently a Staff Threat Hunter at SentinelOne, working in ThreatOps on Incident Readiness and Response. My work sits at the intersection of threat hunting, detection engineering, automation, and analyst workflows. These are some of the tools and technologies I have been working with:
             </motion.p>
 
             <motion.ul 
@@ -83,7 +83,7 @@ export default function AboutMe() {
               }}
               viewport={{ once: true }}
             >
-              Outside of work I'm interested in keeping tabs on geopolitics and how it shapes our world.
+              Outside of work, I am interested in geopolitics, security research, and how technical systems shape real-world decisions.
             </motion.p>
           </div>
 

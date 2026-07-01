@@ -278,8 +278,8 @@ export const experiences: readonly ExperienceItem[] = [
     title: "Staff Threat Hunter",
     period: "DECEMBER 2024 - PRESENT",
     highlights: [
-      "Conduct proactive threat hunting services",
-      "Build, evolve, and expand hunting tooling, techniques and use-cases"
+      "Lead proactive threat hunting work across incident readiness and response workflows",
+      "Build tooling, detection logic, and analyst-facing systems that make threat activity easier to investigate, validate, and communicate"
     ]
   },
   {
@@ -288,8 +288,8 @@ export const experiences: readonly ExperienceItem[] = [
     title: "Threat Detection Engineer II",
     period: "OCTOBER 2023 - JULY 2024",
     highlights: [
-      "Used big data and real-time streaming technologies to build and refine threat detections",
-      "Built mechanisms that combined multiple detection signals to create higher fidelity threat detections"
+      "Built and refined threat detections using large-scale data and real-time streaming systems",
+      "Combined multiple detection signals into higher-fidelity alerting patterns for security operations"
     ]
   },
   {
@@ -298,8 +298,8 @@ export const experiences: readonly ExperienceItem[] = [
     title: "Information Security Researcher",
     period: "AUGUST 2013 - AUGUST 2023",
     highlights: [
-      "Tracked threat actors and analyzed anomalous activity, uncovering new attack techniques and threats",
-      "Wrote and deployed new countermeasures rapidly"
+      "Tracked threat actors, analyzed anomalous activity, and identified emerging attack techniques",
+      "Wrote and deployed countermeasures quickly to improve detection and response coverage"
     ]
   }
 ];

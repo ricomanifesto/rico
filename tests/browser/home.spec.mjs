@@ -221,8 +221,8 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   await page.goto("/");
 
   const heading = page.getByRole("heading", { name: "Hi, I'm Rico" });
-  const subtitle = page.getByText("I build things when inspiration strikes.");
-  const body = page.getByText("I'm a Staff Threat Hunter from Chicago, Illinois.");
+  const subtitle = page.getByText("I build security systems that turn noisy signals into clear, inspectable decisions.");
+  const body = page.getByText("I'm a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering.");
   const contactLink = page.getByRole("link", { name: "Say hi!" });
 
   await expect(heading).toBeVisible();

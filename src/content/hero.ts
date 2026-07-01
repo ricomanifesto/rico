@@ -53,8 +53,8 @@ export interface NetworkAnimationBehavior {
 
 export const heroContent: HeroContent = {
   headline: "Hi, I'm Rico",
-  subtitle: "I build things when inspiration strikes.",
-  body: "I'm a Staff Threat Hunter from Chicago, Illinois. I'm passionate about sharpening my skills in high-stakes environments. I have contributed to designing systems that automate incident detection, response, and threat intelligence that are fast, accurate, and scalable.",
+  subtitle: "I build security systems that turn noisy signals into clear, inspectable decisions.",
+  body: "I'm a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering. I build tools that make security work easier to inspect, validate, and act on.",
   ctaLabel: "Say hi!",
 };
 
