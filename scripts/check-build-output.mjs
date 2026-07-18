@@ -6,6 +6,30 @@ const dist = process.env.BUILD_OUTPUT_DIR || join(root, "dist");
 const indexPath = join(dist, "index.html");
 const sourceContentPath = join(root, "src", "content", "portfolio.ts");
 
+const siteUrl = "https://ricomanifesto.com";
+const projectPages = [
+  {
+    slug: "sentrysearch",
+    title: "Threat Intelligence Research Workspace",
+    repository: "https://github.com/ricomanifesto/SentrySearch",
+  },
+  {
+    slug: "sentrydigest",
+    title: "Analyst-Ready Security Briefings",
+    repository: "https://github.com/ricomanifesto/SentryDigest",
+  },
+  {
+    slug: "sentryinsight",
+    title: "Exploitation Intelligence Reports",
+    repository: "https://github.com/ricomanifesto/SentryInsight",
+  },
+  {
+    slug: "grcinsight",
+    title: "Audit-Ready GRC Intelligence",
+    repository: "https://github.com/ricomanifesto/GRCInsight",
+  },
+];
+
 const failures = [];
 
 function escapeRegExp(value) {
@@ -74,6 +98,12 @@ requireFile(join(dist, "CNAME"), "GitHub Pages CNAME");
 requireFile(join(dist, ".nojekyll"), "GitHub Pages nojekyll marker");
 requireFile(join(dist, "favicon.svg"), "favicon");
 requireFile(join(dist, "images", "profile.jpg"), "profile image");
+requireFile(join(dist, "robots.txt"), "robots policy");
+requireFile(join(dist, "sitemap.xml"), "XML sitemap");
+
+for (const { slug } of projectPages) {
+  requireFile(join(dist, "projects", slug, "index.html"), `${slug} project page`);
+}
 
 const forbiddenArtifacts = [
   join(dist, ".github"),
@@ -129,11 +159,39 @@ if (existsSync(indexPath)) {
     },
     {
       label: "description metadata",
-      pattern: /<meta\s+name="description"\s+content="Rico's Personal Portfolio \| Staff Threat Hunter"\s*\/?>/,
+      pattern: /<meta\s+name="description"\s+content="Michael Rico is a Staff Threat Hunter building threat intelligence, detection engineering, and analyst-facing security systems\."\s*\/?>/,
     },
     {
       label: "document title",
-      pattern: /<title>Rico Manifesto \| Personal Portfolio<\/title>/,
+      pattern: /<title>Michael Rico \| Staff Threat Hunter<\/title>/,
+    },
+    {
+      label: "canonical URL",
+      pattern: /<link\s+rel="canonical"\s+href="https:\/\/ricomanifesto\.com\/"\s*\/?>/,
+    },
+    {
+      label: "crawler directive",
+      pattern: /<meta\s+name="robots"\s+content="index, follow, max-image-preview:large"\s*\/?>/,
+    },
+    {
+      label: "Search Console verification",
+      pattern: /<meta\s+name="google-site-verification"\s+content="riZBCn3pciK8WdJHcJRRgTNbJrqnZWq5KUkk4r3iQ5c"\s*\/?>/,
+    },
+    {
+      label: "Open Graph title",
+      pattern: /<meta\s+property="og:title"\s+content="Michael Rico \| Staff Threat Hunter"\s*\/?>/,
+    },
+    {
+      label: "Open Graph URL",
+      pattern: /<meta\s+property="og:url"\s+content="https:\/\/ricomanifesto\.com\/"\s*\/?>/,
+    },
+    {
+      label: "Twitter card",
+      pattern: /<meta\s+name="twitter:card"\s+content="summary_large_image"\s*\/?>/,
+    },
+    {
+      label: "structured data",
+      pattern: /<script\s+type="application\/ld\+json">[\s\S]*?"@type":\s*"Person"[\s\S]*?"name":\s*"Michael Rico"[\s\S]*?<\/script>/,
     },
     {
       label: "favicon link",
@@ -148,6 +206,55 @@ if (existsSync(indexPath)) {
   for (const { label, pattern } of htmlMetadataChecks) {
     if (!pattern.test(index)) {
       failures.push(`Built index is missing ${label}`);
+    }
+  }
+}
+
+const robotsPath = join(dist, "robots.txt");
+if (existsSync(robotsPath)) {
+  const robots = readFileSync(robotsPath, "utf8");
+
+  for (const directive of ["User-agent: *", "Allow: /", `Sitemap: ${siteUrl}/sitemap.xml`]) {
+    if (!robots.includes(directive)) {
+      failures.push(`Robots policy is missing: ${directive}`);
+    }
+  }
+}
+
+const sitemapPath = join(dist, "sitemap.xml");
+if (existsSync(sitemapPath)) {
+  const sitemap = readFileSync(sitemapPath, "utf8");
+  const expectedUrls = [
+    `${siteUrl}/`,
+    ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
+  ];
+
+  for (const expectedUrl of expectedUrls) {
+    if (!sitemap.includes(`<loc>${expectedUrl}</loc>`)) {
+      failures.push(`Sitemap is missing URL: ${expectedUrl}`);
+    }
+  }
+}
+
+for (const { slug, title, repository } of projectPages) {
+  const projectPath = join(dist, "projects", slug, "index.html");
+
+  if (!existsSync(projectPath)) {
+    continue;
+  }
+
+  const projectPage = readFileSync(projectPath, "utf8");
+  const expectedCanonical = `${siteUrl}/projects/${slug}/`;
+
+  for (const [label, expected] of [
+    ["title", `<title>${title} | Michael Rico</title>`],
+    ["heading", `<h1>${title}</h1>`],
+    ["canonical URL", `<link rel="canonical" href="${expectedCanonical}" />`],
+    ["repository link", `href="${repository}"`],
+    ["structured data", 'type="application/ld+json"'],
+  ]) {
+    if (!projectPage.includes(expected)) {
+      failures.push(`${slug} project page is missing ${label}`);
     }
   }
 }

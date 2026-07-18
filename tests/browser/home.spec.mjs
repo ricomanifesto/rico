@@ -977,3 +977,48 @@ test("pauses project auto-rotation while carousel is hovered", async ({ page }) 
     page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
   ).toHaveAttribute("aria-hidden", "false");
 });
+
+for (const { slug, heading, repository } of [
+  {
+    slug: "sentrysearch",
+    heading: "Threat Intelligence Research Workspace",
+    repository: "https://github.com/ricomanifesto/SentrySearch",
+  },
+  {
+    slug: "sentrydigest",
+    heading: "Analyst-Ready Security Briefings",
+    repository: "https://github.com/ricomanifesto/SentryDigest",
+  },
+  {
+    slug: "sentryinsight",
+    heading: "Exploitation Intelligence Reports",
+    repository: "https://github.com/ricomanifesto/SentryInsight",
+  },
+  {
+    slug: "grcinsight",
+    heading: "Audit-Ready GRC Intelligence",
+    repository: "https://github.com/ricomanifesto/GRCInsight",
+  },
+]) {
+  test(`serves the ${slug} project route as crawlable HTML`, async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const response = await page.goto(`/projects/${slug}/index.html`);
+
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      `https://ricomanifesto.com/projects/${slug}/`,
+    );
+    await expect(page.getByRole("link", { name: "View repository" })).toHaveAttribute(
+      "href",
+      repository,
+    );
+    await expect(page.getByRole("navigation", { name: "Portfolio" })).toBeVisible();
+
+    const mainBox = await page.locator("main").boundingBox();
+    expect(mainBox).not.toBeNull();
+    expect(mainBox.x).toBeGreaterThanOrEqual(-0.5);
+    expect(mainBox.x + mainBox.width).toBeLessThanOrEqual(390.5);
+  });
+}
