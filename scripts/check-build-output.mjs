@@ -29,6 +29,17 @@ const projectPages = [
     repository: "https://github.com/ricomanifesto/GRCInsight",
   },
 ];
+const sentrySearchCaseStudy = {
+  path: join("projects", "sentrysearch", "llm-evaluation", "index.html"),
+  url: `${siteUrl}/projects/sentrysearch/llm-evaluation/`,
+  title: "LLM Evaluation for Threat-Intelligence Workflows",
+  evidenceUrls: [
+    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/section_validator.py",
+    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/validation_criteria.py",
+    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/parallel_section_validator.py",
+    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/markdown_generator.py",
+  ],
+};
 
 const failures = [];
 
@@ -104,6 +115,7 @@ requireFile(join(dist, "sitemap.xml"), "XML sitemap");
 for (const { slug } of projectPages) {
   requireFile(join(dist, "projects", slug, "index.html"), `${slug} project page`);
 }
+requireFile(join(dist, sentrySearchCaseStudy.path), "SentrySearch LLM evaluation case study");
 
 const forbiddenArtifacts = [
   join(dist, ".github"),
@@ -194,6 +206,10 @@ if (existsSync(indexPath)) {
       pattern: /<script\s+type="application\/ld\+json">[\s\S]*?"@type":\s*"Person"[\s\S]*?"name":\s*"Michael Rico"[\s\S]*?<\/script>/,
     },
     {
+      label: "SentrySearch case-study entity",
+      pattern: /https:\/\/ricomanifesto\.com\/projects\/sentrysearch\/llm-evaluation\//,
+    },
+    {
       label: "favicon link",
       pattern: /<link\s+rel="icon"\s+type="image\/svg\+xml"\s+href="\/favicon\.svg"\s*\/?>/,
     },
@@ -227,11 +243,34 @@ if (existsSync(sitemapPath)) {
   const expectedUrls = [
     `${siteUrl}/`,
     ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
+    sentrySearchCaseStudy.url,
   ];
 
   for (const expectedUrl of expectedUrls) {
     if (!sitemap.includes(`<loc>${expectedUrl}</loc>`)) {
       failures.push(`Sitemap is missing URL: ${expectedUrl}`);
+    }
+  }
+}
+
+const caseStudyPath = join(dist, sentrySearchCaseStudy.path);
+if (existsSync(caseStudyPath)) {
+  const caseStudy = readFileSync(caseStudyPath, "utf8");
+  const expectations = [
+    ["title", `<title>${sentrySearchCaseStudy.title} | Michael Rico</title>`],
+    ["heading", `<h1>${sentrySearchCaseStudy.title}</h1>`],
+    ["canonical URL", `<link rel="canonical" href="${sentrySearchCaseStudy.url}" />`],
+    ["claim boundary", "What this proves and what it does not"],
+    ["structured data", 'type="application/ld+json"'],
+  ];
+
+  for (const evidenceUrl of sentrySearchCaseStudy.evidenceUrls) {
+    expectations.push(["pinned public evidence", `href="${evidenceUrl}"`]);
+  }
+
+  for (const [label, expected] of expectations) {
+    if (!caseStudy.includes(expected)) {
+      failures.push(`SentrySearch case study is missing ${label}`);
     }
   }
 }

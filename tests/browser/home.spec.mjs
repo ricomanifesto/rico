@@ -1022,3 +1022,27 @@ for (const { slug, heading, repository } of [
     expect(mainBox.x + mainBox.width).toBeLessThanOrEqual(390.5);
   });
 }
+
+test("serves the SentrySearch LLM evaluation case study as crawlable HTML", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const response = await page.goto("/projects/sentrysearch/llm-evaluation/index.html");
+
+  expect(response?.status()).toBe(200);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "LLM Evaluation for Threat-Intelligence Workflows" }),
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "What this proves and what it does not" })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/projects/sentrysearch/llm-evaluation/",
+  );
+  await expect(page.getByRole("link", { name: "View SentrySearch repository" })).toHaveAttribute(
+    "href",
+    "https://github.com/ricomanifesto/SentrySearch",
+  );
+
+  const mainBox = await page.locator("main").boundingBox();
+  expect(mainBox).not.toBeNull();
+  expect(mainBox.x).toBeGreaterThanOrEqual(-0.5);
+  expect(mainBox.x + mainBox.width).toBeLessThanOrEqual(390.5);
+});
