@@ -41,7 +41,7 @@ if (!fs.existsSync(navigationPath)) {
   }
 
   if (
-    !/export const siteBrand:\s*SiteBrand\s*=\s*\{[\s\S]*label:\s*["']rico["'][\s\S]*href:\s*["']#intro["'][\s\S]*\}/.test(navigationSource)
+    !/export const siteBrand:\s*SiteBrand\s*=\s*\{[\s\S]*label:\s*["']Rico Manifesto["'][\s\S]*href:\s*["']#intro["'][\s\S]*\}/.test(navigationSource)
   ) {
     failures.push("Header brand metadata keeps the intro link target");
   }

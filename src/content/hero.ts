@@ -52,7 +52,7 @@ export interface NetworkAnimationBehavior {
 }
 
 export const heroContent: HeroContent = {
-  headline: "Hi, I'm Rico",
+  headline: "Hi, I'm Michael Rico",
   subtitle: "I build security systems that turn noisy signals into clear, inspectable decisions.",
   body: "I'm a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering. I build tools that make security work easier to inspect, validate, and act on.",
   ctaLabel: "Say hi!",

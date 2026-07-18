@@ -68,7 +68,7 @@ test("stops decorative motion when reduced motion is enabled after resize", asyn
   await page.waitForTimeout(350);
   await expect(page.locator("#nodes-container .node")).toHaveCount(0);
   await expect(page.locator("#nodes-container .connection")).toHaveCount(0);
-  await expect(page.getByRole("heading", { name: "Hi, I'm Rico" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hi, I'm Michael Rico" })).toBeVisible();
 });
 
 test("exposes mobile primary navigation from shared section links", async ({ page }) => {
@@ -220,7 +220,7 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
 
-  const heading = page.getByRole("heading", { name: "Hi, I'm Rico" });
+  const heading = page.getByRole("heading", { name: "Hi, I'm Michael Rico" });
   const subtitle = page.getByText("I build security systems that turn noisy signals into clear, inspectable decisions.");
   const body = page.getByText("I'm a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering.");
   const contactLink = page.getByRole("link", { name: "Say hi!" });

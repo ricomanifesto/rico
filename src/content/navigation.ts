@@ -38,7 +38,7 @@ export const headerNavItems: readonly HeaderNavItem[] = [
 ];
 
 export const siteBrand: SiteBrand = {
-  label: "rico",
+  label: "Rico Manifesto",
   href: "#intro",
 };
 
