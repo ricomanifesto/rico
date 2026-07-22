@@ -206,6 +206,14 @@ if (existsSync(indexPath)) {
       pattern: /<script\s+type="application\/ld\+json">[\s\S]*?"@type":\s*"Person"[\s\S]*?"name":\s*"Michael Rico"[\s\S]*?<\/script>/,
     },
     {
+      label: "ProfilePage structured data",
+      pattern: /"@type":\s*"ProfilePage"/,
+    },
+    {
+      label: "ProfilePage main entity",
+      pattern: /"mainEntity":\s*\{\s*"@id":\s*"https:\/\/ricomanifesto\.com\/#michael-rico"\s*\}/,
+    },
+    {
       label: "SentrySearch case-study entity",
       pattern: /https:\/\/ricomanifesto\.com\/projects\/sentrysearch\/llm-evaluation\//,
     },
