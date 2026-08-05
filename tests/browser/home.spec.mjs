@@ -954,11 +954,12 @@ test("keeps mobile project carousel dots easy to tap", async ({ page }) => {
 });
 
 test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
+  await page.clock.install();
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
   await page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }).focus();
-  await page.waitForTimeout(10500);
+  await page.clock.fastForward(10500);
 
   await expect(
     page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
@@ -967,11 +968,12 @@ test("pauses project auto-rotation while carousel has keyboard focus", async ({ 
 });
 
 test("pauses project auto-rotation while carousel is hovered", async ({ page }) => {
+  await page.clock.install();
   await page.goto("/");
 
   await page.getByRole("link", { name: "Projects" }).click();
   await page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]').hover();
-  await page.waitForTimeout(10500);
+  await page.clock.fastForward(10500);
 
   await expect(
     page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
