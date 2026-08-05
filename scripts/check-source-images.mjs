@@ -31,6 +31,43 @@ const checks = [
 
 const failures = [];
 
+const requiredBrandFiles = [
+  "favicon.svg",
+  "favicon.ico",
+  "safari-pinned-tab.svg",
+  "site.webmanifest",
+];
+
+const requiredBrandImages = [
+  { src: "apple-touch-icon.png", width: 180, height: 180 },
+  { src: "icons/icon-192.png", width: 192, height: 192 },
+  { src: "icons/icon-512.png", width: 512, height: 512 },
+  { src: "icons/icon-512-maskable.png", width: 512, height: 512 },
+  { src: "images/social-card.png", width: 1200, height: 630 },
+  { src: "images/profile-384.webp", width: 384, height: 833 },
+];
+
+for (const brandFile of requiredBrandFiles) {
+  if (!fs.existsSync(path.join(root, "public", brandFile))) {
+    failures.push(`${brandFile}: required brand asset exists`);
+  }
+}
+
+for (const brandImage of requiredBrandImages) {
+  const actualDimensions = readImageDimensions(path.join(root, "public", brandImage.src));
+
+  if (!actualDimensions) {
+    failures.push(`${brandImage.src}: image dimensions can be read`);
+    continue;
+  }
+
+  if (actualDimensions.width !== brandImage.width || actualDimensions.height !== brandImage.height) {
+    failures.push(
+      `${brandImage.src}: expected ${brandImage.width}x${brandImage.height}, received ${actualDimensions.width}x${actualDimensions.height}`,
+    );
+  }
+}
+
 if (!/export interface ProjectImage \{[\s\S]*readonly src:\s*string;[\s\S]*readonly decorative:\s*true;[\s\S]*\}/.test(portfolioSource)) {
   failures.push("project images use explicit decorative metadata");
 }

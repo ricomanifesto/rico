@@ -55,19 +55,23 @@ async function installReducedMotionController(page, initialPrefersReducedMotion 
   }, { query: reducedMotionQuery, initialPrefersReducedMotion });
 }
 
-test("stops decorative motion when reduced motion is enabled after resize", async ({ page }) => {
+test("keeps a resolved signal visible when reduced motion is enabled", async ({ page }) => {
   await installReducedMotionController(page);
+  await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
 
-  await expect(page.locator("#nodes-container .node")).toHaveCount(15);
+  const signal = page.getByTestId("signal-graphic");
+  await expect(signal).toHaveAttribute("data-motion", "animated");
+  await expect(page.getByTestId("signal-particle")).toHaveCount(12);
+  await expect(page.getByTestId("signal-line")).toHaveCount(1);
+
   await page.evaluate(() => {
-    window.dispatchEvent(new Event("resize"));
     window.__setReducedMotionForTest(true);
   });
 
-  await page.waitForTimeout(350);
-  await expect(page.locator("#nodes-container .node")).toHaveCount(0);
-  await expect(page.locator("#nodes-container .connection")).toHaveCount(0);
+  await expect(signal).toHaveAttribute("data-motion", "reduced");
+  await expect(page.getByTestId("signal-particle")).toHaveCount(12);
+  await expect(page.getByTestId("hero-visual")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Hi, I'm Michael Rico" })).toBeVisible();
 });
 
@@ -389,13 +393,14 @@ test("uses a split hero composition on desktop without crowding short mobile vie
   expect(landscapeLayout.contactLink.bottom).toBeLessThanOrEqual(landscapeLayout.viewportHeight);
 });
 
-test("collapses the desktop hero visual when reduced motion is enabled", async ({ page }) => {
+test("shows the static desktop signal when reduced motion is enabled", async ({ page }) => {
   await installReducedMotionController(page, true);
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
 
   const layout = await page.evaluate(() => {
     const visual = document.querySelector("[data-testid='hero-visual']");
+    const signal = document.querySelector("[data-testid='signal-graphic']");
     const copy = document.querySelector("[data-testid='hero-copy']");
     const contactLink = document.querySelector("#intro a[href^='mailto:']");
 
@@ -415,6 +420,8 @@ test("collapses the desktop hero visual when reduced motion is enabled", async (
 
     return {
       visualExists: Boolean(visual),
+      signalMotion: signal?.getAttribute("data-motion") ?? null,
+      visual: toBox(visual),
       copy: toBox(copy),
       contactLink: toBox(contactLink),
       viewportWidth: window.innerWidth,
@@ -422,16 +429,14 @@ test("collapses the desktop hero visual when reduced motion is enabled", async (
     };
   });
 
-  expect(layout.visualExists).toBe(false);
+  expect(layout.visualExists).toBe(true);
+  expect(layout.signalMotion).toBe("reduced");
+  expect(layout.visual).not.toBeNull();
   expect(layout.copy).not.toBeNull();
   expect(layout.contactLink).not.toBeNull();
-  expect(layout.copy.left).toBeGreaterThan(200);
-  expect(layout.copy.right).toBeLessThan(layout.viewportWidth - 200);
+  expect(layout.visual.left).toBeGreaterThanOrEqual(0);
+  expect(layout.copy.right).toBeLessThanOrEqual(layout.viewportWidth);
   expect(layout.contactLink.bottom).toBeLessThan(layout.viewportHeight);
-  expect(Math.abs(
-    (layout.contactLink.left + layout.contactLink.width / 2) -
-      (layout.copy.left + layout.copy.width / 2),
-  )).toBeLessThanOrEqual(2);
 });
 
 test("exposes about technologies as a semantic list", async ({ page }) => {

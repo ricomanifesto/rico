@@ -28,27 +28,17 @@ export interface HeroBehavior {
   };
 }
 
-export interface NetworkAnimationBehavior {
-  readonly maxNodes: number;
-  readonly connectionThresholdPx: number;
-  readonly resizeDebounceMs: number;
-  readonly nodeSizePx: {
-    readonly min: number;
-    readonly variance: number;
-  };
-  readonly nodeOpacity: {
-    readonly min: number;
-    readonly variance: number;
-  };
-  readonly nodeVelocity: {
-    readonly range: number;
-    readonly offset: number;
-  };
-  readonly bounceDamping: {
-    readonly min: number;
-    readonly variance: number;
-  };
-  readonly colors: readonly string[];
+export interface SignalPoint {
+  readonly noiseX: number;
+  readonly noiseY: number;
+  readonly signalX: number;
+  readonly signalY: number;
+  readonly delaySeconds: number;
+}
+
+export interface SignalAnimationBehavior {
+  readonly cycleDurationSeconds: number;
+  readonly points: readonly SignalPoint[];
 }
 
 export const heroContent: HeroContent = {
@@ -81,31 +71,20 @@ export const heroBehavior: HeroBehavior = {
   },
 };
 
-export const networkAnimationBehavior: NetworkAnimationBehavior = {
-  maxNodes: 15,
-  connectionThresholdPx: 200,
-  resizeDebounceMs: 250,
-  nodeSizePx: {
-    min: 4,
-    variance: 6,
-  },
-  nodeOpacity: {
-    min: 0.3,
-    variance: 0.6,
-  },
-  nodeVelocity: {
-    range: 0.4,
-    offset: 0.2,
-  },
-  bounceDamping: {
-    min: 0.9,
-    variance: 0.2,
-  },
-  colors: [
-    "var(--portfolio-network-node-primary)",
-    "var(--portfolio-network-node-secondary)",
-    "var(--portfolio-network-node-muted)",
-    "var(--portfolio-network-node-primary)",
-    "var(--portfolio-network-node-accent)",
+export const signalAnimationBehavior: SignalAnimationBehavior = {
+  cycleDurationSeconds: 9,
+  points: [
+    { noiseX: 52, noiseY: 54, signalX: 174, signalY: 180, delaySeconds: -0.18 },
+    { noiseX: 102, noiseY: 84, signalX: 198, signalY: 180, delaySeconds: -0.12 },
+    { noiseX: 68, noiseY: 116, signalX: 222, signalY: 180, delaySeconds: -0.06 },
+    { noiseX: 126, noiseY: 138, signalX: 246, signalY: 180, delaySeconds: 0 },
+    { noiseX: 44, noiseY: 166, signalX: 270, signalY: 180, delaySeconds: 0.06 },
+    { noiseX: 112, noiseY: 194, signalX: 294, signalY: 180, delaySeconds: 0.12 },
+    { noiseX: 72, noiseY: 218, signalX: 318, signalY: 180, delaySeconds: 0.18 },
+    { noiseX: 136, noiseY: 242, signalX: 342, signalY: 180, delaySeconds: 0.24 },
+    { noiseX: 54, noiseY: 270, signalX: 366, signalY: 180, delaySeconds: 0.3 },
+    { noiseX: 104, noiseY: 300, signalX: 390, signalY: 180, delaySeconds: 0.36 },
+    { noiseX: 148, noiseY: 318, signalX: 414, signalY: 180, delaySeconds: 0.42 },
+    { noiseX: 42, noiseY: 330, signalX: 438, signalY: 180, delaySeconds: 0.48 },
   ],
 };

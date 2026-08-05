@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import NetworkAnimation from "./NetworkAnimation";
+import SignalAnimation from "./SignalAnimation";
 import { motion } from "framer-motion";
 import { Mail } from "lucide-react";
 import { useMediaQuery } from "../hooks/useMediaQuery";
@@ -7,15 +7,11 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { heroBehavior, heroContent } from "../content/hero";
 import { contactLink } from "../content/navigation";
 
-function canShowHeroVisual(hasRoomyHeroViewport: boolean, shouldReduceMotion: boolean) {
-  return hasRoomyHeroViewport && !shouldReduceMotion;
-}
-
 export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
   const hasRoomyHeroViewport = useMediaQuery(heroBehavior.roomyVisualViewportQuery);
   const hasCompactLandscapeHeroViewport = useMediaQuery(heroBehavior.compactLandscapeViewportQuery);
-  const showHeroVisual = canShowHeroVisual(hasRoomyHeroViewport, shouldReduceMotion);
+  const showHeroVisual = hasRoomyHeroViewport;
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
   useEffect(() => {
@@ -61,7 +57,7 @@ export default function IntroSection() {
             data-testid="hero-visual"
             className="hero-visual"
           >
-            <NetworkAnimation />
+            <SignalAnimation />
           </div>
         ) : null}
 

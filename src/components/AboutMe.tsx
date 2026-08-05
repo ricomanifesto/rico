@@ -97,15 +97,18 @@ export default function AboutMe() {
             }}
             viewport={{ once: true }}
           >
-            <img 
-              src="/images/profile.jpg" 
-              width="369"
-              height="800"
-              alt="Michael Rico Profile" 
-              loading="lazy"
-              decoding="async"
-              className="about-profile-surface"
-            />
+            <picture>
+              <source srcSet="/images/profile-384.webp" type="image/webp" />
+              <img
+                src="/images/profile.jpg"
+                width="369"
+                height="800"
+                alt="Michael Rico Profile"
+                loading="lazy"
+                decoding="async"
+                className="about-profile-surface"
+              />
+            </picture>
           </motion.div>
         </div>
       </div>

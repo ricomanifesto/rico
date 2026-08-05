@@ -7,7 +7,7 @@
     /* Custom color variables for the portfolio */
     --light-bg: #f4f7f6;
     --dark-text: #333;
-    --primary-accent: #007bff; 
+    --primary-accent: #66b2ff;
     --secondary-accent: #20c997;
     --border-color: #ddd;
     --portfolio-page-background: #0a192f;
@@ -38,12 +38,10 @@
     --portfolio-experience-tab-hover: rgba(35, 53, 84, 0.52);
     --portfolio-experience-tab-rail: rgba(136, 146, 176, 0.22);
     --portfolio-focus-ring: #66b2ff;
-    --portfolio-network-grid-line: rgba(102, 178, 255, 0.07);
-    --portfolio-network-connection-rgb: 102, 178, 255;
-    --portfolio-network-node-primary: rgba(102, 178, 255, 0.7);
-    --portfolio-network-node-secondary: rgba(230, 241, 255, 0.45);
-    --portfolio-network-node-muted: rgba(168, 178, 209, 0.55);
-    --portfolio-network-node-accent: rgba(100, 255, 218, 0.6);
+    --portfolio-signal-grid-line: rgba(102, 178, 255, 0.07);
+    --portfolio-signal-primary: #66b2ff;
+    --portfolio-signal-secondary: #e6f1ff;
+    --portfolio-signal-muted: rgba(168, 178, 209, 0.42);
 
     /* shadcn color variables */
     --background: 180, 14%, 97%;
@@ -137,8 +135,8 @@
 /* Custom styles */
 .network-grid {
   background-image: 
-    linear-gradient(to right, var(--portfolio-network-grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--portfolio-network-grid-line) 1px, transparent 1px);
+    linear-gradient(to right, var(--portfolio-signal-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--portfolio-signal-grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
   animation: panBackground 60s linear infinite;
 }
@@ -1007,27 +1005,97 @@
   line-height: 1.5rem;
 }
 
-.node {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background-color: var(--portfolio-network-node-primary);
-  border-radius: 50%;
+.signal-graphic {
+  --signal-cycle: 9s;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-.connection {
-  position: absolute;
-  height: 1px;
-  background-color: rgba(var(--portfolio-network-connection-rgb), 0.2);
-  transform-origin: left center;
+.signal-guide {
+  fill: none;
+  stroke: var(--portfolio-signal-muted);
+  stroke-dasharray: 3 11;
+  stroke-linecap: round;
+  stroke-width: 2;
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+.signal-line {
+  stroke: var(--portfolio-signal-primary);
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  stroke-linecap: round;
+  stroke-width: 4;
+  filter: drop-shadow(0 0 10px rgba(102, 178, 255, 0.46));
+  animation: signal-line-cycle var(--signal-cycle) ease-in-out infinite;
 }
 
-.animate-pulse-slow {
-  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.signal-terminal {
+  fill: var(--portfolio-signal-secondary);
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(102, 178, 255, 0.72));
+  animation: signal-terminal-cycle var(--signal-cycle) ease-in-out infinite;
+}
+
+.signal-particle {
+  fill: var(--portfolio-signal-primary);
+  opacity: 0.42;
+  transform: translate(0, 0);
+  animation: signal-resolve var(--signal-cycle) cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  animation-delay: var(--signal-delay);
+}
+
+.signal-particle:nth-of-type(3n) {
+  fill: var(--portfolio-signal-secondary);
+}
+
+@keyframes signal-resolve {
+  0%, 12%, 100% {
+    opacity: 0.36;
+    transform: translate(0, 0);
+  }
+  42%, 72% {
+    opacity: 1;
+    transform: translate(var(--signal-resolve-x), var(--signal-resolve-y));
+  }
+  88% {
+    opacity: 0.18;
+    transform: translate(var(--signal-resolve-x), var(--signal-resolve-y));
+  }
+}
+
+@keyframes signal-line-cycle {
+  0%, 28%, 100% {
+    opacity: 0;
+    stroke-dashoffset: 320;
+  }
+  46%, 72% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  88% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes signal-terminal-cycle {
+  0%, 44%, 88%, 100% { opacity: 0; }
+  52%, 72% { opacity: 1; }
+}
+
+.signal-graphic[data-motion="reduced"] .signal-particle {
+  opacity: 1;
+  transform: translate(var(--signal-resolve-x), var(--signal-resolve-y));
+}
+
+.signal-graphic[data-motion="reduced"] .signal-line {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+.signal-graphic[data-motion="reduced"] .signal-terminal {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
