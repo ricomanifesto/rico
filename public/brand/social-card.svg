@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#66b2ff" stroke-opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#0a192f"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect x="48" y="48" width="1104" height="534" rx="24" fill="#112240" fill-opacity=".72" stroke="#66b2ff" stroke-opacity=".24" stroke-width="2"/>
+
+  <g transform="translate(86 84) scale(1.5)">
+    <rect width="64" height="64" rx="14" fill="#0a192f" stroke="#66b2ff" stroke-opacity=".28"/>
+    <g fill="none" stroke="#66b2ff" stroke-linecap="round">
+      <path d="M11 13C21 13 20 29 31 32" opacity=".28" stroke-width="2"/>
+      <path d="M10 25C20 25 22 31 31 32" opacity=".44" stroke-width="2"/>
+      <path d="M10 39C20 39 22 33 31 32" opacity=".44" stroke-width="2"/>
+      <path d="M13 51C22 51 21 35 31 32" opacity=".28" stroke-width="2"/>
+      <path d="M31 32H54" stroke-width="4"/>
+    </g>
+    <g fill="#66b2ff">
+      <circle cx="11" cy="13" r="3"/>
+      <circle cx="10" cy="25" r="2.5"/>
+      <circle cx="10" cy="39" r="2.5"/>
+      <circle cx="13" cy="51" r="3"/>
+    </g>
+    <circle cx="54" cy="32" r="3" fill="#e6f1ff"/>
+  </g>
+
+  <text x="86" y="224" fill="#66b2ff" font-family="Menlo, Consolas, monospace" font-size="24" font-weight="700" letter-spacing="2">THREAT INTELLIGENCE / DETECTION ENGINEERING</text>
+  <text x="86" y="330" fill="#e6f1ff" font-family="Helvetica, Arial, sans-serif" font-size="76" font-weight="700">Michael Rico</text>
+  <text x="90" y="391" fill="#a8b2d1" font-family="Helvetica, Arial, sans-serif" font-size="38">Staff Threat Hunter</text>
+
+  <g transform="translate(86 478)">
+    <circle cx="0" cy="0" r="5" fill="#66b2ff" opacity=".4"/>
+    <circle cx="28" cy="-10" r="4" fill="#66b2ff" opacity=".58"/>
+    <circle cx="55" cy="8" r="4" fill="#66b2ff" opacity=".72"/>
+    <path d="M76 0H310" fill="none" stroke="#66b2ff" stroke-linecap="round" stroke-width="5"/>
+    <circle cx="310" cy="0" r="5" fill="#e6f1ff"/>
+  </g>
+  <text x="456" y="489" fill="#a8b2d1" font-family="Helvetica, Arial, sans-serif" font-size="28">Noisy signals. Clear, inspectable decisions.</text>
+</svg>

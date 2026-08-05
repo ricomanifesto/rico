@@ -22,7 +22,7 @@ const headerNavLinkPath = path.join(root, "src/components/HeaderNavLink.tsx");
 const skipLinkPath = path.join(root, "src/components/SkipLink.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
 const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
-const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
+const signalAnimationPath = path.join(root, "src/components/SignalAnimation.tsx");
 const heroContentPath = path.join(root, "src/content/hero.ts");
 const indexCssPath = path.join(root, "src/index.css");
 const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
@@ -43,7 +43,7 @@ const headerNavLinkSource = fs.readFileSync(headerNavLinkPath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
 const socialLinkSource = fs.readFileSync(socialLinkPath, "utf8");
-const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
+const signalAnimation = fs.existsSync(signalAnimationPath) ? fs.readFileSync(signalAnimationPath, "utf8") : "";
 const heroContentSource = fs.readFileSync(heroContentPath, "utf8");
 const indexCss = fs.readFileSync(indexCssPath, "utf8");
 
@@ -204,39 +204,24 @@ const checks = [
     source: mediaQueryHook,
   },
   {
-    label: "network animation uses shared reduced-motion preference hook",
+    label: "signal animation uses shared reduced-motion preference hook",
     pattern: /usePrefersReducedMotion\(\)/,
-    source: networkAnimation,
+    source: signalAnimation,
   },
   {
-    label: "network animation tracks pending resize restart timeout",
-    pattern: /resizeTimeoutRef/,
-    source: networkAnimation,
+    label: "signal graphic remains decorative",
+    pattern: /<svg[\s\S]*aria-hidden="true"[\s\S]*focusable="false"/,
+    source: signalAnimation,
   },
   {
-    label: "network animation clears pending resize restart timeout",
-    pattern: /clearTimeout\(resizeTimeoutRef\.current\)/,
-    source: networkAnimation,
+    label: "signal graphic exposes a static reduced-motion state",
+    pattern: /data-motion=\{shouldReduceMotion \? "reduced" : "animated"\}/,
+    source: signalAnimation,
   },
   {
-    label: "network animation guards delayed resize restart against reduced motion",
-    pattern: /if\s*\(\s*shouldReduceMotionRef\.current\s*\)\s*\{\s*return;\s*\}/,
-    source: networkAnimation,
-  },
-  {
-    label: "network animation avoids narration-only source comments",
-    pattern: /^(?![\s\S]*(\/\/\s*(Increased number of nodes|Only connect nodes within this distance|Color variations for nodes - blue shades|Adding teal accent color|Create nodes|Clear previous nodes|Random size between 4px and 10px|Random opacity between 0\.3 and 0\.9|Random color from our palette|Apply pulsing animation to some nodes only|Set size and style|Random position within the container|Slower movement for larger nodes|Create connections between nodes|Clear existing connections|Create dynamically calculated connections based on proximity|Only connect nodes that are within connectionThreshold distance|Opacity based on distance \(farther = more transparent\)|Update node positions and connections|Update position based on velocity|Bounce off edges with slight randomness in new velocity|Add some randomness to bounce|Apply new position|Initialize animation|Start animation when component mounts|Handle window resize|Re-initialize the animation after a short delay|Cleanup)))[\s\S]*$/,
-    source: networkAnimation,
-  },
-  {
-    label: "network animation skips moving nodes for reduced motion",
-    pattern: /shouldReduceMotion\)\s*\{\s*return;/,
-    source: networkAnimation,
-  },
-  {
-    label: "hero network tones use shared portfolio tokens",
-    pattern: /(?=[\s\S]*--portfolio-network-grid-line:\s*rgba\(102,\s*178,\s*255,\s*0\.07\);)(?=[\s\S]*--portfolio-network-connection-rgb:\s*102,\s*178,\s*255;)(?=[\s\S]*--portfolio-network-node-primary:\s*rgba\(102,\s*178,\s*255,\s*0\.7\);)(?=[\s\S]*--portfolio-network-node-accent:\s*rgba\(100,\s*255,\s*218,\s*0\.6\);)(?=[\s\S]*\.network-grid\s*\{[\s\S]*linear-gradient\(to right,\s*var\(--portfolio-network-grid-line\) 1px,\s*transparent 1px\),[\s\S]*linear-gradient\(to bottom,\s*var\(--portfolio-network-grid-line\) 1px,\s*transparent 1px\);)(?=[\s\S]*\.node\s*\{[\s\S]*background-color:\s*var\(--portfolio-network-node-primary\);)(?=[\s\S]*\.connection\s*\{[\s\S]*background-color:\s*rgba\(var\(--portfolio-network-connection-rgb\),\s*0\.2\);)(?=[\s\S]*colors:\s*\[[\s\S]*"var\(--portfolio-network-node-primary\)"[\s\S]*"var\(--portfolio-network-node-accent\)"[\s\S]*\])(?=[\s\S]*connection\.style\.backgroundColor\s*=\s*`rgba\(var\(--portfolio-network-connection-rgb\), \$\{opacity\}\)`;)/,
-    source: `${indexCss}\n${heroContentSource}\n${networkAnimation}`,
+    label: "hero signal tones use shared portfolio tokens",
+    pattern: /(?=[\s\S]*--portfolio-signal-grid-line:\s*rgba\(102,\s*178,\s*255,\s*0\.07\);)(?=[\s\S]*--portfolio-signal-primary:\s*#66b2ff;)(?=[\s\S]*--portfolio-signal-secondary:\s*#e6f1ff;)(?=[\s\S]*\.network-grid\s*\{[\s\S]*var\(--portfolio-signal-grid-line\))(?=[\s\S]*\.signal-line\s*\{[\s\S]*stroke:\s*var\(--portfolio-signal-primary\);)(?=[\s\S]*\.signal-graphic\[data-motion="reduced"\] \.signal-particle)/,
+    source: `${indexCss}\n${heroContentSource}\n${signalAnimation}`,
   },
   {
     label: "intro typewriter uses shared reduced-motion preference hook",

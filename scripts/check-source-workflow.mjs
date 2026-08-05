@@ -12,7 +12,7 @@ const homePath = path.join(root, "src/Home.tsx");
 const headerPath = path.join(root, "src/components/Header.tsx");
 const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
 const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
-const networkAnimationPath = path.join(root, "src/components/NetworkAnimation.tsx");
+const signalAnimationPath = path.join(root, "src/components/SignalAnimation.tsx");
 const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
 const footerPath = path.join(root, "src/components/Footer.tsx");
@@ -28,7 +28,7 @@ const home = fs.readFileSync(homePath, "utf8");
 const header = fs.readFileSync(headerPath, "utf8");
 const socialLink = fs.readFileSync(socialLinkPath, "utf8");
 const introSection = fs.readFileSync(introSectionPath, "utf8");
-const networkAnimation = fs.readFileSync(networkAnimationPath, "utf8");
+const signalAnimation = fs.existsSync(signalAnimationPath) ? fs.readFileSync(signalAnimationPath, "utf8") : "";
 const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
 const footerSection = fs.readFileSync(footerPath, "utf8");
@@ -237,19 +237,24 @@ const checks = [
     source: introSection,
   },
   {
-    label: "hero network animation behavior is typed as readonly metadata",
-    pattern: /export interface NetworkAnimationBehavior \{[\s\S]*readonly maxNodes:\s*number;[\s\S]*readonly connectionThresholdPx:\s*number;[\s\S]*readonly resizeDebounceMs:\s*number;[\s\S]*readonly nodeSizePx:\s*\{[\s\S]*readonly min:\s*number;[\s\S]*readonly variance:\s*number;[\s\S]*\};[\s\S]*readonly nodeOpacity:\s*\{[\s\S]*readonly min:\s*number;[\s\S]*readonly variance:\s*number;[\s\S]*\};[\s\S]*readonly nodeVelocity:\s*\{[\s\S]*readonly range:\s*number;[\s\S]*readonly offset:\s*number;[\s\S]*\};[\s\S]*readonly bounceDamping:\s*\{[\s\S]*readonly min:\s*number;[\s\S]*readonly variance:\s*number;[\s\S]*\};[\s\S]*readonly colors:\s*readonly string\[\];[\s\S]*\}/,
+    label: "signal animation behavior is typed as readonly metadata",
+    pattern: /export interface SignalPoint \{[\s\S]*readonly noiseX:\s*number;[\s\S]*readonly noiseY:\s*number;[\s\S]*readonly signalX:\s*number;[\s\S]*readonly signalY:\s*number;[\s\S]*readonly delaySeconds:\s*number;[\s\S]*\}[\s\S]*export interface SignalAnimationBehavior \{[\s\S]*readonly cycleDurationSeconds:\s*number;[\s\S]*readonly points:\s*readonly SignalPoint\[\];[\s\S]*\}/,
     source: hero,
   },
   {
-    label: "hero network animation behavior preserves current visual constants",
-    pattern: /export const networkAnimationBehavior:\s*NetworkAnimationBehavior\s*=\s*\{[\s\S]*maxNodes:\s*15,[\s\S]*connectionThresholdPx:\s*200,[\s\S]*resizeDebounceMs:\s*250,[\s\S]*nodeSizePx:\s*\{[\s\S]*min:\s*4,[\s\S]*variance:\s*6[\s\S]*\}[\s\S]*nodeOpacity:\s*\{[\s\S]*min:\s*0\.3,[\s\S]*variance:\s*0\.6[\s\S]*\}[\s\S]*nodeVelocity:\s*\{[\s\S]*range:\s*0\.4,[\s\S]*offset:\s*0\.2[\s\S]*\}[\s\S]*bounceDamping:\s*\{[\s\S]*min:\s*0\.9,[\s\S]*variance:\s*0\.2[\s\S]*\}[\s\S]*colors:\s*\[[\s\S]*"var\(--portfolio-network-node-primary\)"[\s\S]*"var\(--portfolio-network-node-accent\)"[\s\S]*\]/,
+    label: "signal animation defines one twelve-point resolution cycle",
+    pattern: /export const signalAnimationBehavior:\s*SignalAnimationBehavior\s*=\s*\{[\s\S]*cycleDurationSeconds:\s*9,[\s\S]*points:\s*\[[\s\S]*\{\s*noiseX:[\s\S]*delaySeconds:[\s\S]*\][\s\S]*\}/,
     source: hero,
   },
   {
-    label: "network animation consumes typed hero behavior metadata",
-    pattern: /import\s*\{\s*networkAnimationBehavior\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*networkAnimationBehavior\.maxNodes[\s\S]*networkAnimationBehavior\.nodeSizePx\.variance[\s\S]*networkAnimationBehavior\.nodeSizePx\.min[\s\S]*networkAnimationBehavior\.nodeOpacity\.variance[\s\S]*networkAnimationBehavior\.nodeOpacity\.min[\s\S]*networkAnimationBehavior\.colors[\s\S]*networkAnimationBehavior\.nodeVelocity\.range[\s\S]*networkAnimationBehavior\.nodeVelocity\.offset[\s\S]*networkAnimationBehavior\.connectionThresholdPx[\s\S]*networkAnimationBehavior\.bounceDamping\.min[\s\S]*networkAnimationBehavior\.bounceDamping\.variance[\s\S]*networkAnimationBehavior\.resizeDebounceMs/,
-    source: networkAnimation,
+    label: "signal animation consumes typed metadata and exposes motion state",
+    pattern: /(?=[\s\S]*import\s*\{\s*signalAnimationBehavior\s*\}\s*from\s*["']\.\.\/content\/hero["'];)(?=[\s\S]*usePrefersReducedMotion\(\))(?=[\s\S]*data-testid="signal-graphic")(?=[\s\S]*data-motion=\{shouldReduceMotion \? "reduced" : "animated"\})(?=[\s\S]*signalAnimationBehavior\.points\.map)(?=[\s\S]*data-testid="signal-particle")(?=[\s\S]*data-testid="signal-line")/,
+    source: signalAnimation,
+  },
+  {
+    label: "roomy hero keeps the signal visual for reduced motion",
+    pattern: /import SignalAnimation from "\.\/SignalAnimation";[\s\S]*const showHeroVisual = hasRoomyHeroViewport;[\s\S]*<SignalAnimation \/>/,
+    source: introSection,
   },
   {
     label: "project action links are typed as readonly metadata",

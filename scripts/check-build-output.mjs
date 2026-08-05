@@ -108,7 +108,16 @@ requireFile(indexPath, "built index");
 requireFile(join(dist, "CNAME"), "GitHub Pages CNAME");
 requireFile(join(dist, ".nojekyll"), "GitHub Pages nojekyll marker");
 requireFile(join(dist, "favicon.svg"), "favicon");
+requireFile(join(dist, "favicon.ico"), "ICO favicon");
+requireFile(join(dist, "apple-touch-icon.png"), "Apple touch icon");
+requireFile(join(dist, "safari-pinned-tab.svg"), "Safari pinned-tab icon");
+requireFile(join(dist, "site.webmanifest"), "web app manifest");
+requireFile(join(dist, "icons", "icon-192.png"), "192px install icon");
+requireFile(join(dist, "icons", "icon-512.png"), "512px install icon");
+requireFile(join(dist, "icons", "icon-512-maskable.png"), "512px maskable install icon");
 requireFile(join(dist, "images", "profile.jpg"), "profile image");
+requireFile(join(dist, "images", "profile-384.webp"), "optimized profile image");
+requireFile(join(dist, "images", "social-card.png"), "social card");
 requireFile(join(dist, "robots.txt"), "robots policy");
 requireFile(join(dist, "sitemap.xml"), "XML sitemap");
 
@@ -198,8 +207,20 @@ if (existsSync(indexPath)) {
       pattern: /<meta\s+property="og:url"\s+content="https:\/\/ricomanifesto\.com\/"\s*\/?>/,
     },
     {
+      label: "Open Graph social card",
+      pattern: /<meta\s+property="og:image"\s+content="https:\/\/ricomanifesto\.com\/images\/social-card\.png"\s*\/?>/,
+    },
+    {
+      label: "Open Graph social card dimensions",
+      pattern: /<meta\s+property="og:image:width"\s+content="1200"\s*\/?>[\s\S]*<meta\s+property="og:image:height"\s+content="630"\s*\/?>/,
+    },
+    {
       label: "Twitter card",
       pattern: /<meta\s+name="twitter:card"\s+content="summary_large_image"\s*\/?>/,
+    },
+    {
+      label: "Twitter social card",
+      pattern: /<meta\s+name="twitter:image"\s+content="https:\/\/ricomanifesto\.com\/images\/social-card\.png"\s*\/?>/,
     },
     {
       label: "structured data",
@@ -220,6 +241,26 @@ if (existsSync(indexPath)) {
     {
       label: "favicon link",
       pattern: /<link\s+rel="icon"\s+type="image\/svg\+xml"\s+href="\/favicon\.svg"\s*\/?>/,
+    },
+    {
+      label: "ICO favicon link",
+      pattern: /<link\s+rel="icon"\s+href="\/favicon\.ico"\s+sizes="any"\s*\/?>/,
+    },
+    {
+      label: "Apple touch icon link",
+      pattern: /<link\s+rel="apple-touch-icon"\s+sizes="180x180"\s+href="\/apple-touch-icon\.png"\s*\/?>/,
+    },
+    {
+      label: "Safari pinned-tab link",
+      pattern: /<link\s+rel="mask-icon"\s+href="\/safari-pinned-tab\.svg"\s+color="#66b2ff"\s*\/?>/,
+    },
+    {
+      label: "web app manifest link",
+      pattern: /<link\s+rel="manifest"\s+href="\/site\.webmanifest"\s*\/?>/,
+    },
+    {
+      label: "navy browser theme",
+      pattern: /<meta\s+name="theme-color"\s+content="#0a192f"\s*\/?>/,
     },
     {
       label: "module entry",
