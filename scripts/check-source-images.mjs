@@ -7,14 +7,13 @@ const root = process.cwd();
 const componentsRoot = path.join(root, "src/components");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const projectsSectionPath = path.join(componentsRoot, "ProjectsSection.tsx");
+const aboutMePath = path.join(componentsRoot, "AboutMe.tsx");
+const headerPath = path.join(componentsRoot, "Header.tsx");
 const portfolioSource = fs.readFileSync(portfolioPath, "utf8");
 const projectsSectionSource = fs.readFileSync(projectsSectionPath, "utf8");
+const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
 
 const checks = [
-  {
-    label: "images use lazy loading",
-    pattern: /loading="lazy"/,
-  },
   {
     label: "images use async decoding",
     pattern: /decoding="async"/,
@@ -47,6 +46,17 @@ const requiredBrandImages = [
   { src: "images/profile-384.webp", width: 384, height: 833 },
 ];
 
+const rasterAssetBudgets = [
+  { src: "images/profile.jpg", type: "jpg", maxBytes: 100 * 1024 },
+  { src: "images/profile-384.webp", type: "webp", maxBytes: 25 * 1024 },
+  { src: "apple-touch-icon.png", type: "png", maxBytes: 20 * 1024, maxBitDepth: 8 },
+  { src: "icons/icon-192.png", type: "png", maxBytes: 20 * 1024, maxBitDepth: 8 },
+  { src: "icons/icon-512.png", type: "png", maxBytes: 50 * 1024, maxBitDepth: 8 },
+  { src: "icons/icon-512-maskable.png", type: "png", maxBytes: 50 * 1024, maxBitDepth: 8 },
+  { src: "images/social-card.png", type: "png", maxBytes: 100 * 1024, maxBitDepth: 8 },
+  { src: "images/SentryInsight.jpg", type: "jpg", maxBytes: 300 * 1024 },
+];
+
 for (const brandFile of requiredBrandFiles) {
   if (!fs.existsSync(path.join(root, "public", brandFile))) {
     failures.push(`${brandFile}: required brand asset exists`);
@@ -66,6 +76,40 @@ for (const brandImage of requiredBrandImages) {
       `${brandImage.src}: expected ${brandImage.width}x${brandImage.height}, received ${actualDimensions.width}x${actualDimensions.height}`,
     );
   }
+}
+
+for (const budget of rasterAssetBudgets) {
+  const assetPath = path.join(root, "public", budget.src);
+  const assetInfo = readImageInfo(assetPath);
+
+  if (!assetInfo) {
+    failures.push(`${budget.src}: image format and size can be read`);
+    continue;
+  }
+
+  if (assetInfo.type !== budget.type) {
+    failures.push(`${budget.src}: expected ${budget.type} bytes, received ${assetInfo.type}`);
+  }
+
+  if (assetInfo.bytes > budget.maxBytes) {
+    failures.push(
+      `${budget.src}: ${assetInfo.bytes} bytes exceeds ${budget.maxBytes}-byte budget`,
+    );
+  }
+
+  if (
+    budget.maxBitDepth
+    && assetInfo.pngBitDepth
+    && assetInfo.pngBitDepth > budget.maxBitDepth
+  ) {
+    failures.push(
+      `${budget.src}: ${assetInfo.pngBitDepth}-bit PNG exceeds ${budget.maxBitDepth}-bit export budget`,
+    );
+  }
+}
+
+if (!/<picture>[\s\S]*<source srcSet="\/images\/profile-384\.webp" type="image\/webp" \/>[\s\S]*<img[\s\S]*src="\/images\/profile\.jpg"/.test(aboutMeSource)) {
+  failures.push("About profile prefers the optimized WebP with a JPEG fallback");
 }
 
 if (!/export interface ProjectImage \{[\s\S]*readonly src:\s*string;[\s\S]*readonly decorative:\s*true;[\s\S]*\}/.test(portfolioSource)) {
@@ -111,6 +155,14 @@ for (const componentPath of walkFiles(componentsRoot)) {
   const imageTags = source.match(/<img\b[\s\S]*?\/>/g) ?? [];
 
   for (const imageTag of imageTags) {
+    const loadingPattern = componentPath === headerPath ? /loading="eager"/ : /loading="lazy"/;
+
+    if (!loadingPattern.test(imageTag)) {
+      failures.push(
+        `${path.relative(root, componentPath)}: ${componentPath === headerPath ? "above-fold images use eager loading" : "images use lazy loading"}`,
+      );
+    }
+
     if (
       componentPath === projectsSectionPath
       && /src=\{project\.bgImage\}/.test(imageTag)
@@ -255,12 +307,24 @@ function readNumericJsxAttribute(source, attributeName) {
 }
 
 function readImageDimensions(imagePath) {
+  const imageInfo = readImageInfo(imagePath);
+
+  return imageInfo
+    ? {
+      width: imageInfo.width,
+      height: imageInfo.height,
+    }
+    : null;
+}
+
+function readImageInfo(imagePath) {
   if (!fs.existsSync(imagePath)) {
     return null;
   }
 
   try {
-    const dimensions = imageSize(fs.readFileSync(imagePath));
+    const imageBuffer = fs.readFileSync(imagePath);
+    const dimensions = imageSize(imageBuffer);
     if (!dimensions.width || !dimensions.height) {
       return null;
     }
@@ -268,6 +332,9 @@ function readImageDimensions(imagePath) {
     return {
       width: dimensions.width,
       height: dimensions.height,
+      type: dimensions.type,
+      bytes: imageBuffer.byteLength,
+      pngBitDepth: dimensions.type === "png" ? imageBuffer[24] : null,
     };
   } catch {
     return null;

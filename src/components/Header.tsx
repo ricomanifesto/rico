@@ -73,7 +73,18 @@ export default function Header() {
             href={siteBrand.href}
             className="header-brand-link"
           >
-            {siteBrand.label}
+            <img
+              src="/favicon.svg"
+              width="64"
+              height="64"
+              alt=""
+              aria-hidden="true"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              className="header-brand-mark"
+            />
+            <span>{siteBrand.label}</span>
           </a>
           <nav aria-label="Primary" className="header-primary-nav">
             {headerNavItems.map((item, index) => (

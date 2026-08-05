@@ -104,8 +104,8 @@ if (fs.existsSync(headerPath)) {
     failures.push("Header imports the typed brand metadata");
   }
 
-  if (!/<a[\s\S]*href=\{siteBrand\.href\}[\s\S]*>\s*\{siteBrand\.label\}\s*<\/a>/.test(headerSource)) {
-    failures.push("Header brand text links back to the intro section from metadata");
+  if (!/<a[\s\S]*href=\{siteBrand\.href\}[\s\S]*className="header-brand-link"[\s\S]*>\s*<img[\s\S]*src="\/favicon\.svg"[\s\S]*alt=""[\s\S]*aria-hidden="true"[\s\S]*className="header-brand-mark"[\s\S]*\/?>[\s\S]*<span>\{siteBrand\.label\}<\/span>\s*<\/a>/.test(headerSource)) {
+    failures.push("Header brand mark and text link back to the intro section from metadata");
   }
 
   if (!headerSource.includes(headerBrandLinkClass)) {
