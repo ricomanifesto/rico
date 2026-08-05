@@ -8,15 +8,12 @@ const componentsRoot = path.join(root, "src/components");
 const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const projectsSectionPath = path.join(componentsRoot, "ProjectsSection.tsx");
 const aboutMePath = path.join(componentsRoot, "AboutMe.tsx");
+const headerPath = path.join(componentsRoot, "Header.tsx");
 const portfolioSource = fs.readFileSync(portfolioPath, "utf8");
 const projectsSectionSource = fs.readFileSync(projectsSectionPath, "utf8");
 const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
 
 const checks = [
-  {
-    label: "images use lazy loading",
-    pattern: /loading="lazy"/,
-  },
   {
     label: "images use async decoding",
     pattern: /decoding="async"/,
@@ -158,6 +155,14 @@ for (const componentPath of walkFiles(componentsRoot)) {
   const imageTags = source.match(/<img\b[\s\S]*?\/>/g) ?? [];
 
   for (const imageTag of imageTags) {
+    const loadingPattern = componentPath === headerPath ? /loading="eager"/ : /loading="lazy"/;
+
+    if (!loadingPattern.test(imageTag)) {
+      failures.push(
+        `${path.relative(root, componentPath)}: ${componentPath === headerPath ? "above-fold images use eager loading" : "images use lazy loading"}`,
+      );
+    }
+
     if (
       componentPath === projectsSectionPath
       && /src=\{project\.bgImage\}/.test(imageTag)

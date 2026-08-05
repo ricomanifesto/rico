@@ -282,6 +282,7 @@ test("uses a split hero composition on desktop without crowding short mobile vie
 
   const desktopLayout = await page.evaluate(() => {
     const visual = document.querySelector("[data-testid='hero-visual']");
+    const signal = document.querySelector("[data-testid='signal-graphic']");
     const copy = document.querySelector("[data-testid='hero-copy']");
 
     const toBox = (element) => {
@@ -300,14 +301,17 @@ test("uses a split hero composition on desktop without crowding short mobile vie
 
     return {
       visual: toBox(visual),
+      signal: toBox(signal),
       copy: toBox(copy),
     };
   });
 
   expect(desktopLayout.visual).not.toBeNull();
+  expect(desktopLayout.signal).not.toBeNull();
   expect(desktopLayout.copy).not.toBeNull();
   expect(desktopLayout.visual.right).toBeLessThan(desktopLayout.copy.left);
-  expect(desktopLayout.visual.width).toBeGreaterThan(300);
+  expect(desktopLayout.visual.width).toBeGreaterThan(560);
+  expect(desktopLayout.signal.width).toBeGreaterThan(560);
   expect(desktopLayout.copy.left).toBeGreaterThan(600);
 
   await page.setViewportSize({ width: 390, height: 667 });
@@ -391,6 +395,23 @@ test("uses a split hero composition on desktop without crowding short mobile vie
   expect(landscapeLayout.copy.left).toBeGreaterThanOrEqual(0);
   expect(landscapeLayout.copy.right).toBeLessThanOrEqual(landscapeLayout.viewportWidth);
   expect(landscapeLayout.contactLink.bottom).toBeLessThanOrEqual(landscapeLayout.viewportHeight);
+});
+
+test("pairs the navbar wordmark with the personal mark", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const brandLink = page.getByRole("link", { name: "Rico Manifesto", exact: true });
+  const brandMark = brandLink.locator("img.header-brand-mark");
+  const brandLabel = brandLink.locator("span");
+
+  await expect(brandLink).toBeVisible();
+  await expect(brandMark).toBeVisible();
+  await expect(brandMark).toHaveAttribute("src", "/favicon.svg");
+  await expect(brandMark).toHaveAttribute("alt", "");
+  await expect(brandMark).toHaveAttribute("aria-hidden", "true");
+  await expect(brandLink).toHaveCSS("white-space", "nowrap");
+  expect((await brandLabel.boundingBox())?.height).toBeLessThanOrEqual(24);
 });
 
 test("shows the static desktop signal when reduced motion is enabled", async ({ page }) => {
