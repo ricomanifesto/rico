@@ -4,9 +4,15 @@ import IntroSection from "@/components/IntroSection";
 import AboutMe from "@/components/AboutMe";
 import Experience from "@/components/Experience";
 import ProjectsSection from "@/components/ProjectsSection";
+import LatestWritingSection from "@/components/LatestWritingSection";
 import Footer from "@/components/Footer";
+import type { WritingSummary } from "@/lib/writing";
 
-export default function Home() {
+interface HomeProps {
+  readonly latestWriting: readonly WritingSummary[];
+}
+
+export default function Home({ latestWriting }: HomeProps) {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <SkipLink />
@@ -16,6 +22,7 @@ export default function Home() {
         <AboutMe />
         <Experience />
         <ProjectsSection />
+        <LatestWritingSection posts={latestWriting} />
       </main>
       <Footer />
     </div>

@@ -1,8 +1,10 @@
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
-import { ProjectActionLink as ProjectActionLinkData, projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
+import { useEffect, useRef, useState } from "react";
+import type { KeyboardEvent } from "react";
+import { projectActionLinkBehavior, projectCarouselBehavior, projects } from "../content/portfolio";
+import type { ProjectActionLink as ProjectActionLinkData } from "../content/portfolio";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 type ProjectActionLinkKind = "repository" | "demo";

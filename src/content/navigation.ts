@@ -30,20 +30,21 @@ export interface SocialLink {
 }
 
 export const headerNavItems: readonly HeaderNavItem[] = [
-  { label: "Home", href: "#intro" },
-  { label: "About", href: "#about" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
+  { label: "Home", href: "/#intro" },
+  { label: "About", href: "/#about" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Writing", href: "/writing/" },
   { label: "Contact", href: "mailto:michaelrico124@gmail.com" },
 ];
 
 export const siteBrand: SiteBrand = {
   label: "Rico Manifesto",
-  href: "#intro",
+  href: "/",
 };
 
 export const headerNavigationBehavior: HeaderNavigationBehavior = {
-  defaultActiveHref: "#intro",
+  defaultActiveHref: "/#intro",
   activeSectionOffsetPx: 160,
   scrolledShadowThresholdPx: 10,
   scrollListenerOptions: { passive: true },

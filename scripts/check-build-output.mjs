@@ -7,6 +7,12 @@ const indexPath = join(dist, "index.html");
 const sourceContentPath = join(root, "src", "content", "portfolio.ts");
 
 const siteUrl = "https://ricomanifesto.com";
+const firstWritingPost = {
+  path: join("writing", "i-thought-i-was-reading-a-repo", "index.html"),
+  url: `${siteUrl}/writing/i-thought-i-was-reading-a-repo/`,
+  title: "I Thought I Was Reading a Repo",
+  description: "How tracing an open-source agent turned a familiar cybersecurity habit into a lesson about observability.",
+};
 const projectPages = [
   {
     slug: "sentrysearch",
@@ -120,6 +126,9 @@ requireFile(join(dist, "images", "profile-384.webp"), "optimized profile image")
 requireFile(join(dist, "images", "social-card.png"), "social card");
 requireFile(join(dist, "robots.txt"), "robots policy");
 requireFile(join(dist, "sitemap.xml"), "XML sitemap");
+requireFile(join(dist, "rss.xml"), "writing RSS feed");
+requireFile(join(dist, "writing", "index.html"), "writing archive");
+requireFile(join(dist, firstWritingPost.path), "first writing article");
 
 for (const { slug } of projectPages) {
   requireFile(join(dist, "projects", slug, "index.html"), `${slug} project page`);
@@ -165,8 +174,8 @@ if (existsSync(indexPath)) {
     requireFile(join(dist, assetPath.replace(/^\//, "")), `referenced asset ${assetPath}`);
   }
 
-  if (!index.includes('<div id="root"></div>')) {
-    failures.push("Built index is missing the React root element");
+  if (!index.includes("<astro-island") || !index.includes("Latest Writing")) {
+    failures.push("Built index is missing the server-rendered portfolio island and writing preview");
   }
 
   const htmlMetadataChecks = [
@@ -264,7 +273,7 @@ if (existsSync(indexPath)) {
     },
     {
       label: "module entry",
-      pattern: /<script\s+type="module"\s+crossorigin\s+src="\/assets\/[^"]+\.js"><\/script>/,
+      pattern: /component-url="\/_astro\/App\.[^"]+\.js"/,
     },
   ];
 
@@ -291,6 +300,8 @@ if (existsSync(sitemapPath)) {
   const sitemap = readFileSync(sitemapPath, "utf8");
   const expectedUrls = [
     `${siteUrl}/`,
+    `${siteUrl}/writing/`,
+    firstWritingPost.url,
     ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
     sentrySearchCaseStudy.url,
   ];
@@ -298,6 +309,55 @@ if (existsSync(sitemapPath)) {
   for (const expectedUrl of expectedUrls) {
     if (!sitemap.includes(`<loc>${expectedUrl}</loc>`)) {
       failures.push(`Sitemap is missing URL: ${expectedUrl}`);
+    }
+  }
+}
+
+const writingArchivePath = join(dist, "writing", "index.html");
+if (existsSync(writingArchivePath)) {
+  const writingArchive = readFileSync(writingArchivePath, "utf8");
+
+  for (const [label, expected] of [
+    ["title", "<title>Writing | Michael Rico</title>"],
+    ["heading", "<h1>Writing</h1>"],
+    ["canonical URL", `<link rel="canonical" href="${siteUrl}/writing/">`],
+    ["article link", `href="/writing/i-thought-i-was-reading-a-repo/"`],
+    ["RSS link", 'href="/rss.xml"'],
+  ]) {
+    if (!writingArchive.includes(expected)) {
+      failures.push(`Writing archive is missing ${label}`);
+    }
+  }
+}
+
+const firstWritingPostPath = join(dist, firstWritingPost.path);
+if (existsSync(firstWritingPostPath)) {
+  const article = readFileSync(firstWritingPostPath, "utf8");
+
+  for (const [label, expected] of [
+    ["title", `<title>${firstWritingPost.title} | Michael Rico</title>`],
+    ["heading", `<h1>${firstWritingPost.title}</h1>`],
+    ["description", firstWritingPost.description],
+    ["canonical URL", `<link rel="canonical" href="${firstWritingPost.url}">`],
+    ["article metadata", '<meta property="og:type" content="article">'],
+    ["publication date", '<meta property="article:published_time" content="2026-08-11">'],
+    ["BlogPosting structured data", '"@type":"BlogPosting"'],
+    ["Anthropic source link", 'href="https://www.anthropic.com/research/team/interpretability"'],
+    ["Prime Agent source link", 'href="https://github.com/PrimeIntellect-ai/prime-agent"'],
+  ]) {
+    if (!article.includes(expected)) {
+      failures.push(`First writing article is missing ${label}`);
+    }
+  }
+}
+
+const rssPath = join(dist, "rss.xml");
+if (existsSync(rssPath)) {
+  const rssFeed = readFileSync(rssPath, "utf8");
+
+  for (const expected of [firstWritingPost.title, firstWritingPost.url, "<rss"]) {
+    if (!rssFeed.includes(expected)) {
+      failures.push(`Writing RSS feed is missing: ${expected}`);
     }
   }
 }

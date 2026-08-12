@@ -1,6 +1,6 @@
 # ricomanifesto.com
 
-Rico turns Michael's technical work into a public proof surface, showing security, AI, and systems projects through concise positioning, live demos, and inspectable artifacts.
+Rico turns Michael's technical work into a public proof surface, showing security, AI, and systems projects through concise positioning, live demos, inspectable artifacts, and first-party writing.
 
 **Live site:** [ricomanifesto.com](https://ricomanifesto.com)
 
@@ -19,13 +19,17 @@ The portfolio highlights projects such as:
 
 Project metadata lives in `src/content/portfolio.ts`, keeping public positioning, repository links, demo links, tech stacks, and carousel assets in one typed content surface.
 
+## Writing
+
+First-party articles live in `src/content/writing/` as Markdown with typed frontmatter. Astro generates the `/writing/` archive, permanent article routes, RSS, metadata, and sitemap entries during the build.
+
 ## Stack
 
 - React 18
+- Astro
 - TypeScript
 - Tailwind CSS
 - Framer Motion
-- Vite
 - GitHub Pages
 
 ## Local Development

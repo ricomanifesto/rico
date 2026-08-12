@@ -1,0 +1,83 @@
+---
+import { getCollection } from "astro:content";
+import { ArrowRight, Rss } from "lucide-react";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import SkipLink from "@/components/SkipLink";
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import { formatPublishedDate, getReadingMinutes } from "@/lib/writing";
+
+const posts = (await getCollection("writing", ({ data }) => !data.draft))
+  .sort((left, right) => right.data.publishedAt.valueOf() - left.data.publishedAt.valueOf());
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "https://ricomanifesto.com/writing/#collection",
+  url: "https://ricomanifesto.com/writing/",
+  name: "Writing by Michael Rico",
+  description: "Notes on security systems, AI agents, observability, and the work of making complex behavior inspectable.",
+  isPartOf: { "@id": "https://ricomanifesto.com/#website" },
+  author: { "@id": "https://ricomanifesto.com/#michael-rico" },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: posts.map((post, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `https://ricomanifesto.com/writing/${post.id}/`,
+    })),
+  },
+};
+---
+
+<SiteLayout
+  title="Writing | Michael Rico"
+  description="Notes from Michael Rico on security systems, AI agents, observability, and making complex behavior inspectable."
+  canonicalPath="/writing/"
+  structuredData={structuredData}
+>
+  <div class="writing-page-shell">
+    <SkipLink />
+    <Header currentPath="/writing/" client:load />
+    <main id="main-content" tabindex="-1" class="writing-index-main">
+      <header class="writing-index-intro">
+        <p class="writing-eyebrow">Field notes</p>
+        <h1>Writing</h1>
+        <p>
+          Notes on security systems, AI agents, observability, and the work of making complex behavior inspectable.
+        </p>
+        <a href="/rss.xml" class="writing-rss-link">
+          <Rss aria-hidden="true" focusable="false" size={17} />
+          Subscribe via RSS
+        </a>
+      </header>
+
+      <section aria-labelledby="writing-archive-heading" class="writing-archive">
+        <h2 id="writing-archive-heading" class="sr-only">Writing archive</h2>
+        {posts.map((post) => {
+          const publishedAt = post.data.publishedAt.toISOString().slice(0, 10);
+          const readingMinutes = getReadingMinutes(post.body ?? "");
+
+          return (
+            <article class="writing-archive-item">
+              <div class="writing-archive-meta">
+                <time datetime={publishedAt}>{formatPublishedDate(post.data.publishedAt)}</time>
+                <span aria-hidden="true">·</span>
+                <span>{readingMinutes} min read</span>
+              </div>
+              <h2><a href={`/writing/${post.id}/`}>{post.data.title}</a></h2>
+              <p>{post.data.description}</p>
+              <ul class="writing-topic-list" aria-label="Topics">
+                {post.data.topics.map((topic) => <li>{topic}</li>)}
+              </ul>
+              <a href={`/writing/${post.id}/`} class="writing-read-link" aria-label={`Read ${post.data.title}`}>
+                Read the article
+                <ArrowRight aria-hidden="true" focusable="false" size={17} />
+              </a>
+            </article>
+          );
+        })}
+      </section>
+    </main>
+    <Footer client:visible />
+  </div>
+</SiteLayout>

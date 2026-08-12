@@ -82,13 +82,14 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
   await expect(mobileNav).toBeVisible();
   await expect(mobileNav.getByRole("list")).toBeVisible();
-  await expect(mobileNav.getByRole("listitem")).toHaveCount(5);
-  await expect(mobileNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "#intro");
-  await expect(mobileNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "#about");
-  await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");
-  await expect(mobileNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+  await expect(mobileNav.getByRole("listitem")).toHaveCount(6);
+  await expect(mobileNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/#intro");
+  await expect(mobileNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "/#about");
+  await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "/#experience");
+  await expect(mobileNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "/#projects");
+  await expect(mobileNav.getByRole("link", { name: "Writing" })).toHaveAttribute("href", "/writing/");
 
-  for (const linkName of ["Home", "About", "Experience", "Projects", "Contact"]) {
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Writing", "Contact"]) {
     const box = await mobileNav.getByRole("link", { name: linkName }).boundingBox();
 
     expect(box).not.toBeNull();
@@ -135,10 +136,11 @@ test("exposes desktop primary navigation with an accessible name", async ({ page
 
   const desktopNav = page.getByRole("navigation", { name: "Primary" });
   await expect(desktopNav).toBeVisible();
-  await expect(desktopNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "#intro");
-  await expect(desktopNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "#about");
-  await expect(desktopNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "#experience");
-  await expect(desktopNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "#projects");
+  await expect(desktopNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/#intro");
+  await expect(desktopNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "/#about");
+  await expect(desktopNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "/#experience");
+  await expect(desktopNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "/#projects");
+  await expect(desktopNav.getByRole("link", { name: "Writing" })).toHaveAttribute("href", "/writing/");
   await expect(desktopNav.getByRole("link", { name: "Contact" })).toHaveAttribute(
     "href",
     "mailto:michaelrico124@gmail.com",
@@ -605,7 +607,7 @@ test("keeps every mobile nav rail item reachable without page overflow", async (
   const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
   await expect(mobileNav).toBeVisible();
 
-  for (const linkName of ["Home", "About", "Experience", "Projects", "Contact"]) {
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Writing", "Contact"]) {
     const link = mobileNav.getByRole("link", { name: linkName });
 
     await link.scrollIntoViewIfNeeded();
@@ -1004,6 +1006,78 @@ test("pauses project auto-rotation while carousel is hovered", async ({ page }) 
   await expect(
     page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
   ).toHaveAttribute("aria-hidden", "false");
+});
+
+test("links the homepage to the latest first-party article", async ({ page }) => {
+  await page.goto("/");
+
+  const writingSection = page.getByRole("region", { name: "Latest Writing" });
+  await expect(writingSection).toBeVisible();
+  await expect(
+    writingSection.getByRole("heading", { level: 3, name: "I Thought I Was Reading a Repo" }),
+  ).toBeVisible();
+  await expect(
+    writingSection.getByRole("link", { name: "Read I Thought I Was Reading a Repo" }),
+  ).toHaveAttribute("href", "/writing/i-thought-i-was-reading-a-repo/");
+});
+
+test("serves the writing archive as crawlable HTML", async ({ page }) => {
+  const response = await page.goto("/writing/");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "Writing" })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/",
+  );
+  await expect(page.getByRole("link", { name: "Subscribe via RSS" })).toHaveAttribute("href", "/rss.xml");
+
+  const desktopNav = page.getByRole("navigation", { name: "Primary" });
+  await expect(desktopNav.getByRole("link", { name: "Writing" })).toHaveAttribute(
+    "aria-current",
+    "location",
+  );
+});
+
+test("serves the first writing article with article metadata and source links", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const response = await page.goto("/writing/i-thought-i-was-reading-a-repo/");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "I Thought I Was Reading a Repo" })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+  );
+  await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "article");
+  await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute(
+    "content",
+    "2026-08-11",
+  );
+  await expect(page.getByRole("link", { name: "Anthropic’s work on mechanistic interpretability" })).toHaveAttribute(
+    "href",
+    "https://www.anthropic.com/research/team/interpretability",
+  );
+  await expect(page.getByRole("link", { name: "Prime Agent" })).toHaveAttribute(
+    "href",
+    "https://github.com/PrimeIntellect-ai/prime-agent",
+  );
+
+  const viewportMetrics = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
+});
+
+test("publishes the first article in the writing RSS feed", async ({ request }) => {
+  const response = await request.get("/rss.xml");
+
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("xml");
+  const body = await response.text();
+  expect(body).toContain("I Thought I Was Reading a Repo");
+  expect(body).toContain("https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/");
 });
 
 for (const { slug, heading, repository } of [

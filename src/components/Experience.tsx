@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
-import { KeyboardEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import type { KeyboardEvent } from "react";
 import { ChevronRight } from "lucide-react";
-import { ExperienceItem, experienceBehavior, experiences } from "../content/portfolio";
+import { experienceBehavior, experiences } from "../content/portfolio";
+import type { ExperienceItem } from "../content/portfolio";
 
 interface ExperienceTabProps {
   experience: ExperienceItem;

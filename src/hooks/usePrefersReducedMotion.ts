@@ -2,12 +2,8 @@ import { useEffect, useState } from "react";
 
 const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
 
-function getReducedMotionPreference() {
-  return typeof window !== "undefined" && window.matchMedia(reducedMotionQuery).matches;
-}
-
 export function usePrefersReducedMotion() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(getReducedMotionPreference);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     const motionQuery = window.matchMedia(reducedMotionQuery);

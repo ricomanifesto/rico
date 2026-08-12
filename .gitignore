@@ -28,6 +28,9 @@ yarn-error.log*
 # Vite
 .vite/
 
+# Astro
+.astro/
+
 # Private local files
 AGENTS.md
 agents.md
