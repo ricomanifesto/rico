@@ -42,10 +42,10 @@ const sentrySearchCaseStudy = {
   url: `${siteUrl}/projects/sentrysearch/llm-evaluation/`,
   title: "LLM Evaluation for Threat-Intelligence Workflows",
   evidenceUrls: [
-    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/section_validator.py",
-    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/validation_criteria.py",
-    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/parallel_section_validator.py",
-    "https://github.com/ricomanifesto/SentrySearch/blob/1f45ad31fe093d6b39f6e6ef08d97189db3c6cb4/src/core/markdown_generator.py",
+    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/section_validator.py#L291-L529",
+    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/validation_criteria.py#L21-L296",
+    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/parallel_section_validator.py#L19-L225",
+    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/markdown_generator.py#L57-L119",
   ],
 };
 
