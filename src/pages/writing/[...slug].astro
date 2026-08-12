@@ -84,7 +84,7 @@ const structuredData = {
           <h1>{post.data.title}</h1>
           <p class="writing-article-description">{post.data.description}</p>
           <div class="writing-article-meta">
-            <span>By Michael Rico</span>
+            <span>By <a href="/" rel="author" class="writing-author-link">Michael Rico</a></span>
             <span class="writing-article-meta-item">
               <span class="writing-meta-separator" aria-hidden="true">·</span>
               <time datetime={publishedAt}>{formatPublishedDate(post.data.publishedAt)}</time>

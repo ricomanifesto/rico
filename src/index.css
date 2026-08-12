@@ -1122,6 +1122,7 @@
 .writing-read-link:focus-visible,
 .writing-rss-link:focus-visible,
 .writing-back-link:focus-visible,
+.writing-author-link:focus-visible,
 .writing-archive-item h2 a:focus-visible,
 .writing-preview-card h3 a:focus-visible,
 .writing-prose a:focus-visible {
@@ -1359,6 +1360,18 @@
 .writing-article-meta-item {
   display: inline-flex;
   gap: 0.35rem;
+}
+
+.writing-author-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration-color: rgba(7, 95, 184, 0.35);
+  text-underline-offset: 0.18em;
+}
+
+.writing-author-link:hover {
+  color: var(--writing-link-hover);
+  text-decoration-color: currentColor;
 }
 
 @media (max-width: 639px) {

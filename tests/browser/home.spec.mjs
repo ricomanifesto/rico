@@ -1148,6 +1148,8 @@ test("serves the first writing article with article metadata and source links", 
   expect(blogPosting.image).toBe(
     "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
   );
+  await expect(page.getByRole("link", { name: "Michael Rico", exact: true })).toHaveAttribute("href", "/");
+  await expect(page.getByRole("link", { name: "Michael Rico", exact: true })).toHaveAttribute("rel", "author");
   await expect(page.getByRole("link", { name: "Anthropic’s work on mechanistic interpretability" })).toHaveAttribute(
     "href",
     "https://www.anthropic.com/research/team/interpretability",

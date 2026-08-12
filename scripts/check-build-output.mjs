@@ -392,7 +392,7 @@ for (const articlePath of publishedWritingArticlePaths) {
     ["published date", /<meta property="article:published_time" content="[^"]+">/],
     ["social image alt", /<meta property="og:image:alt" content="[^"]+">/],
     ["BlogPosting structured data", /"@type":"BlogPosting"/],
-    ["visible author", /By Michael Rico/],
+    ["visible author link", /By <a[^>]*href="\/"[^>]*rel="author"[^>]*>Michael Rico<\/a>/],
   ]) {
     if (!pattern.test(article)) {
       failures.push(`${routePath} is missing ${label}`);
