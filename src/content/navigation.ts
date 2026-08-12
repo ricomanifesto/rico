@@ -56,6 +56,13 @@ export const contactLink: SocialLink = {
   external: false,
 };
 
+export const githubProfileLink: SocialLink = {
+  label: "GitHub",
+  href: "https://github.com/ricomanifesto",
+  kind: "github",
+  external: true,
+};
+
 export const socialLinkBehavior: SocialLinkBehavior = {
   externalTarget: "_blank",
   externalRel: "noopener noreferrer",
@@ -63,12 +70,7 @@ export const socialLinkBehavior: SocialLinkBehavior = {
 
 export const socialLinks: readonly SocialLink[] = [
   contactLink,
-  {
-    label: "GitHub",
-    href: "https://github.com/ricomanifesto",
-    kind: "github",
-    external: true,
-  },
+  githubProfileLink,
   {
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/ricomanifesto",

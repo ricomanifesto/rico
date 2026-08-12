@@ -237,6 +237,18 @@ test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
   expect(box.height).toBeGreaterThanOrEqual(44);
 });
 
+test("links to Michael Rico's GitHub profile from the About section", async ({ page }) => {
+  await page.goto("/");
+
+  const aboutSection = page.getByRole("region", { name: "/ about me" });
+  const githubProfileLink = aboutSection.getByRole("link", { name: "Michael Rico on GitHub" });
+
+  await expect(githubProfileLink).toBeVisible();
+  await expect(githubProfileLink).toHaveAttribute("href", "https://github.com/ricomanifesto");
+  await expect(githubProfileLink).toHaveAttribute("target", "_blank");
+  await expect(githubProfileLink).toHaveAttribute("rel", "noopener noreferrer");
+});
+
 test("keeps mobile hero content visible before the next section", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
@@ -527,9 +539,10 @@ test("names main portfolio sections from their visible headings", async ({ page 
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  const socialNav = page.getByRole("navigation", { name: "Social links" });
 
   for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
-    const link = page.getByRole("link", { name: linkName });
+    const link = socialNav.getByRole("link", { name: linkName, exact: true });
     const box = await link.boundingBox();
 
     await expect(link).toBeVisible();
@@ -567,9 +580,10 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
 test("opens external portfolio links with safe new-tab attributes", async ({ page }) => {
   await installReducedMotionController(page, true);
   await page.goto("/");
+  const socialNav = page.getByRole("navigation", { name: "Social links" });
 
   for (const linkName of ["GitHub", "LinkedIn", "Medium"]) {
-    const link = page.getByRole("link", { name: linkName });
+    const link = socialNav.getByRole("link", { name: linkName, exact: true });
 
     await expect(link).toHaveAttribute("target", "_blank");
     await expect(link).toHaveAttribute("rel", "noopener noreferrer");
@@ -608,9 +622,10 @@ test("keeps the mobile header inside narrow viewports", async ({ page }) => {
   }));
 
   expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
+  const socialNav = page.getByRole("navigation", { name: "Social links" });
 
   for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
-    const box = await page.getByRole("link", { name: linkName }).boundingBox();
+    const box = await socialNav.getByRole("link", { name: linkName, exact: true }).boundingBox();
 
     expect(box).not.toBeNull();
     expect(box.x).toBeGreaterThanOrEqual(-0.5);
@@ -626,8 +641,9 @@ test("keeps the mobile header through tablet widths", async ({ page }) => {
   await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toBeHidden();
 
   const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+  const socialNav = page.getByRole("navigation", { name: "Social links" });
   for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
-    const box = await page.getByRole("link", { name: linkName }).boundingBox();
+    const box = await socialNav.getByRole("link", { name: linkName, exact: true }).boundingBox();
 
     expect(box).not.toBeNull();
     expect(box.x).toBeGreaterThanOrEqual(-0.5);
@@ -744,7 +760,7 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await expect(skipLink).toHaveCSS("outline-offset", "4px");
 
   await page.keyboard.press("Tab");
-  const brandLink = page.getByRole("link", { name: "rico" });
+  const brandLink = page.getByRole("link", { name: "Rico Manifesto", exact: true });
   await expect(brandLink).toBeFocused();
   await expect(brandLink).toHaveCSS("outline-style", "solid");
 

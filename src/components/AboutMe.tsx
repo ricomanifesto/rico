@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { aboutBehavior, aboutContent } from "../content/portfolio";
+import { githubProfileLink, socialLinkBehavior } from "../content/navigation";
 
 export default function AboutMe() {
   const getTechnologyItemOffsetX = (index: number) =>
@@ -35,6 +36,28 @@ export default function AboutMe() {
               viewport={{ once: true }}
             >
               I am currently a Staff Threat Hunter at SentinelOne, working in ThreatOps on Incident Readiness and Response. My work sits at the intersection of threat hunting, detection engineering, automation, and analyst workflows. These are some of the tools and technologies I have been working with:
+            </motion.p>
+
+            <motion.p
+              className="about-body-copy about-body-spaced"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{
+                delay: aboutBehavior.introMotion.delay,
+                duration: aboutBehavior.introMotion.duration,
+              }}
+              viewport={{ once: true }}
+            >
+              See{" "}
+              <a
+                href={githubProfileLink.href}
+                target={socialLinkBehavior.externalTarget}
+                rel={socialLinkBehavior.externalRel}
+                className="about-profile-link"
+              >
+                Michael Rico on GitHub
+              </a>{" "}
+              for public code and project evidence.
             </motion.p>
 
             <motion.ul 
