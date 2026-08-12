@@ -1,0 +1,99 @@
+---
+import { getCollection } from "astro:content";
+import App from "@/App";
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import { formatPublishedDate, getReadingMinutes, type WritingSummary } from "@/lib/writing";
+
+const posts = (await getCollection("writing", ({ data }) => !data.draft))
+  .sort((left, right) => right.data.publishedAt.valueOf() - left.data.publishedAt.valueOf())
+  .slice(0, 3);
+const latestWriting: WritingSummary[] = posts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  href: `/writing/${post.id}/`,
+  publishedAt: post.data.publishedAt.toISOString().slice(0, 10),
+  publishedLabel: formatPublishedDate(post.data.publishedAt),
+  readingMinutes: getReadingMinutes(post.body ?? ""),
+  topics: post.data.topics,
+}));
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://ricomanifesto.com/#website",
+      url: "https://ricomanifesto.com/",
+      name: "Rico Manifesto",
+      description: "Michael Rico's portfolio for threat intelligence, detection engineering, and analyst-facing security systems.",
+      inLanguage: "en-US",
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": "https://ricomanifesto.com/#profile",
+      url: "https://ricomanifesto.com/",
+      isPartOf: { "@id": "https://ricomanifesto.com/#website" },
+      mainEntity: { "@id": "https://ricomanifesto.com/#michael-rico" },
+    },
+    {
+      "@type": "Person",
+      "@id": "https://ricomanifesto.com/#michael-rico",
+      name: "Michael Rico",
+      url: "https://ricomanifesto.com/",
+      jobTitle: "Staff Threat Hunter",
+      sameAs: [
+        "https://github.com/ricomanifesto",
+        "https://www.linkedin.com/in/michael-rico-19600314a",
+        "https://medium.com/@ricomanifesto",
+      ],
+      knowsAbout: ["Threat intelligence", "Threat hunting", "Detection engineering", "Incident readiness"],
+      subjectOf: [
+        { "@id": "https://ricomanifesto.com/projects/sentrysearch/llm-evaluation/#article" },
+        { "@id": "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/#article" },
+      ],
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://ricomanifesto.com/#projects",
+      name: "Michael Rico's public security projects",
+      itemListElement: [
+        "https://ricomanifesto.com/projects/sentrysearch/",
+        "https://ricomanifesto.com/projects/sentrydigest/",
+        "https://ricomanifesto.com/projects/sentryinsight/",
+        "https://ricomanifesto.com/projects/grcinsight/",
+      ].map((url, index) => ({ "@type": "ListItem", position: index + 1, url })),
+    },
+    {
+      "@type": "Article",
+      "@id": "https://ricomanifesto.com/projects/sentrysearch/llm-evaluation/#article",
+      url: "https://ricomanifesto.com/projects/sentrysearch/llm-evaluation/",
+      headline: "LLM Evaluation for Threat-Intelligence Workflows",
+      description: "A code-backed case study of SentrySearch's structured section evaluation, bounded parallel validation, and inspectable quality summaries.",
+      author: { "@id": "https://ricomanifesto.com/#michael-rico" },
+      about: {
+        "@type": "SoftwareSourceCode",
+        name: "SentrySearch",
+        codeRepository: "https://github.com/ricomanifesto/SentrySearch",
+      },
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/#article",
+      url: "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+      headline: "I Thought I Was Reading a Repo",
+      description: "How tracing an open-source agent turned a familiar cybersecurity habit into a lesson about observability.",
+      datePublished: "2026-08-11",
+      author: { "@id": "https://ricomanifesto.com/#michael-rico" },
+      isPartOf: { "@id": "https://ricomanifesto.com/#website" },
+    },
+  ],
+};
+---
+
+<SiteLayout
+  title="Michael Rico | Staff Threat Hunter"
+  description="Michael Rico is a Staff Threat Hunter building threat intelligence, detection engineering, and analyst-facing security systems."
+  canonicalPath="/"
+  structuredData={structuredData}
+>
+  <App latestWriting={latestWriting} client:load />
+</SiteLayout>

@@ -59,7 +59,7 @@ const checks = [
   },
   {
     label: "site build still runs on the pinned project Node version",
-    pattern: /node-version:\s*['"]18['"]/,
+    pattern: /node-version:\s*['"]22\.12\.0['"]/,
   },
   {
     label: "workflow installs Chromium for browser interaction checks",
@@ -173,7 +173,7 @@ const checks = [
   },
   {
     label: "experience section uses behavior metadata for motion timing",
-    pattern: /import\s*\{\s*ExperienceItem,\s*experienceBehavior,\s*experiences\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*type ExperienceTabNavigationDirection = "next" \| "previous";[\s\S]*getWrappedExperienceTabIndex[\s\S]*direction:\s*ExperienceTabNavigationDirection[\s\S]*direction === "next"[\s\S]*return index === lastIndex \? 0 : index \+ 1;[\s\S]*return index === 0 \? lastIndex : index - 1;[\s\S]*experienceBehavior\.keyboardNavigationKeys\.next\.includes\(event\.key\)[\s\S]*getWrappedExperienceTabIndex\(index, lastIndex, "next"\)[\s\S]*experienceBehavior\.keyboardNavigationKeys\.previous\.includes\(event\.key\)[\s\S]*getWrappedExperienceTabIndex\(index, lastIndex, "previous"\)[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.first[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.last[\s\S]*transition=\{\{ duration: experienceBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*transition=\{\{ duration: experienceBehavior\.panelMotion\.duration \}\}[\s\S]*duration: experienceBehavior\.highlightMotion\.duration,[\s\S]*delay:\s*highlightIndex\s*\*\s*experienceBehavior\.highlightMotion\.staggerDelay\s*\+\s*experienceBehavior\.highlightMotion\.baseDelay[\s\S]*function ExperienceTab\([\s\S]*duration:\s*experienceBehavior\.tabMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*experienceBehavior\.tabMotion\.staggerDelay/,
+    pattern: /type ExperienceTabNavigationDirection = "next" \| "previous";[\s\S]*getWrappedExperienceTabIndex[\s\S]*direction:\s*ExperienceTabNavigationDirection[\s\S]*direction === "next"[\s\S]*return index === lastIndex \? 0 : index \+ 1;[\s\S]*return index === 0 \? lastIndex : index - 1;[\s\S]*experienceBehavior\.keyboardNavigationKeys\.next\.includes\(event\.key\)[\s\S]*getWrappedExperienceTabIndex\(index, lastIndex, "next"\)[\s\S]*experienceBehavior\.keyboardNavigationKeys\.previous\.includes\(event\.key\)[\s\S]*getWrappedExperienceTabIndex\(index, lastIndex, "previous"\)[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.first[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.last[\s\S]*transition=\{\{ duration: experienceBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*transition=\{\{ duration: experienceBehavior\.panelMotion\.duration \}\}[\s\S]*duration: experienceBehavior\.highlightMotion\.duration,[\s\S]*delay:\s*highlightIndex\s*\*\s*experienceBehavior\.highlightMotion\.staggerDelay\s*\+\s*experienceBehavior\.highlightMotion\.baseDelay[\s\S]*function ExperienceTab\([\s\S]*duration:\s*experienceBehavior\.tabMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*experienceBehavior\.tabMotion\.staggerDelay/,
     source: experienceSection,
   },
   {
@@ -203,7 +203,7 @@ const checks = [
   },
   {
     label: "hero behavior is typed as readonly metadata",
-    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*readonly roomyVisualViewportQuery:\s*string;[\s\S]*readonly compactLandscapeViewportQuery:\s*string;[\s\S]*readonly compactLandscapePaddingTop:\s*"4\.5rem";[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
+    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*readonly roomyVisualViewportQuery:\s*string;[\s\S]*readonly compactLandscapeViewportQuery:\s*string;[\s\S]*readonly compactLandscapeNarrowViewportQuery:\s*string;[\s\S]*readonly compactLandscapePaddingTop:\s*"4\.5rem";[\s\S]*readonly compactLandscapeNarrowPaddingTop:\s*"9rem";[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
     source: hero,
   },
   {
@@ -213,7 +213,7 @@ const checks = [
   },
   {
     label: "hero behavior preserves current typewriter timing",
-    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*typewriterIntervalMs:\s*150,[\s\S]*roomyVisualViewportQuery:\s*"\(min-width: 768px\) and \(min-height: 640px\)",[\s\S]*compactLandscapeViewportQuery:\s*"\(min-width: 768px\) and \(max-height: 639px\)",[\s\S]*compactLandscapePaddingTop:\s*"4\.5rem"[\s\S]*\}/,
+    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*typewriterIntervalMs:\s*150,[\s\S]*roomyVisualViewportQuery:\s*"\(min-width: 768px\) and \(min-height: 640px\)",[\s\S]*compactLandscapeViewportQuery:\s*"\(min-width: 768px\) and \(max-height: 639px\)",[\s\S]*compactLandscapeNarrowViewportQuery:\s*"\(min-width: 768px\) and \(max-width: 899px\) and \(max-height: 639px\)",[\s\S]*compactLandscapePaddingTop:\s*"4\.5rem",[\s\S]*compactLandscapeNarrowPaddingTop:\s*"9rem"[\s\S]*\}/,
     source: hero,
   },
   {
@@ -228,7 +228,7 @@ const checks = [
   },
   {
     label: "intro section uses hero behavior metadata for typewriter timing",
-    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useMediaQuery\(heroBehavior\.roomyVisualViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeViewportQuery\)[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);[\s\S]*paddingTop:\s*heroBehavior\.compactLandscapePaddingTop/,
+    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useMediaQuery\(heroBehavior\.roomyVisualViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeNarrowViewportQuery\)[\s\S]*heroBehavior\.compactLandscapeNarrowPaddingTop[\s\S]*heroBehavior\.compactLandscapePaddingTop[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);[\s\S]*paddingTop:\s*compactLandscapePaddingTop/,
     source: introSection,
   },
   {
@@ -288,7 +288,7 @@ const checks = [
   },
   {
     label: "project cards apply external action link metadata",
-    pattern: /import\s*\{[\s\S]*ProjectActionLink\s+as\s+ProjectActionLinkData[\s\S]*projectActionLinkBehavior[\s\S]*projectCarouselBehavior[\s\S]*projects[\s\S]*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*interface ProjectActionMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly getLabel:\s*\(projectTitle:\s*string\)\s*=>\s*string;[\s\S]*\}[\s\S]*interface ProjectActionLinkAnchorBehavior \{[\s\S]*readonly target\?:\s*"_blank";[\s\S]*readonly rel\?:\s*"noopener noreferrer";[\s\S]*\}[\s\S]*const projectActionMetadata:\s*Record<ProjectActionLinkKind,\s*ProjectActionMetadata>[\s\S]*const getProjectActionLinkAnchorBehavior = \([\s\S]*isExternal:\s*boolean,[\s\S]*\): ProjectActionLinkAnchorBehavior => \(\{[\s\S]*target:\s*isExternal \? projectActionLinkBehavior\.externalTarget : undefined,[\s\S]*rel:\s*isExternal \? projectActionLinkBehavior\.externalRel : undefined,[\s\S]*\}\);[\s\S]*function ProjectActionLink\([\s\S]*const \{ Icon, getLabel \} = projectActionMetadata\[kind\];[\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*const anchorBehavior = getProjectActionLinkAnchorBehavior\(link\.external\);[\s\S]*target=\{anchorBehavior\.target\}[\s\S]*rel=\{anchorBehavior\.rel\}/,
+    pattern: /interface ProjectActionMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly getLabel:\s*\(projectTitle:\s*string\)\s*=>\s*string;[\s\S]*\}[\s\S]*interface ProjectActionLinkAnchorBehavior \{[\s\S]*readonly target\?:\s*"_blank";[\s\S]*readonly rel\?:\s*"noopener noreferrer";[\s\S]*\}[\s\S]*const projectActionMetadata:\s*Record<ProjectActionLinkKind,\s*ProjectActionMetadata>[\s\S]*const getProjectActionLinkAnchorBehavior = \([\s\S]*isExternal:\s*boolean,[\s\S]*\): ProjectActionLinkAnchorBehavior => \(\{[\s\S]*target:\s*isExternal \? projectActionLinkBehavior\.externalTarget : undefined,[\s\S]*rel:\s*isExternal \? projectActionLinkBehavior\.externalRel : undefined,[\s\S]*\}\);[\s\S]*function ProjectActionLink\([\s\S]*const \{ Icon, getLabel \} = projectActionMetadata\[kind\];[\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*const anchorBehavior = getProjectActionLinkAnchorBehavior\(link\.external\);[\s\S]*target=\{anchorBehavior\.target\}[\s\S]*rel=\{anchorBehavior\.rel\}/,
     source: projectsSection,
   },
   {
@@ -298,12 +298,12 @@ const checks = [
   },
   {
     label: "header navigation behavior preserves current scroll thresholds",
-    pattern: /export const headerNavigationBehavior:\s*HeaderNavigationBehavior\s*=\s*\{[\s\S]*defaultActiveHref:\s*"#intro",[\s\S]*activeSectionOffsetPx:\s*160,[\s\S]*scrolledShadowThresholdPx:\s*10,[\s\S]*scrollListenerOptions:\s*\{ passive:\s*true \}[\s\S]*\}/,
+    pattern: /export const headerNavigationBehavior:\s*HeaderNavigationBehavior\s*=\s*\{[\s\S]*defaultActiveHref:\s*"\/#intro",[\s\S]*activeSectionOffsetPx:\s*160,[\s\S]*scrolledShadowThresholdPx:\s*10,[\s\S]*scrollListenerOptions:\s*\{ passive:\s*true \}[\s\S]*\}/,
     source: navigation,
   },
   {
     label: "header consumes typed navigation behavior metadata",
-    pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*interface HeaderShellViewState \{[\s\S]*readonly shadowClass:\s*string;[\s\S]*\}[\s\S]*const getHeaderShellViewState = \(isScrolled: boolean\): HeaderShellViewState => \(\{[\s\S]*shadowClass:\s*isScrolled \? "header-shell-scrolled" : ""[\s\S]*\}\);[\s\S]*useState\(headerNavigationBehavior\.defaultActiveHref\)[\s\S]*const shellViewState = getHeaderShellViewState\(isScrolled\);[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*sectionLinks\[0\]\?\.href \?\? headerNavigationBehavior\.defaultActiveHref[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*\$\{shellViewState\.shadowClass\}/,
+    pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*interface HeaderShellViewState \{[\s\S]*readonly shadowClass:\s*string;[\s\S]*\}[\s\S]*const getHeaderShellViewState = \(isScrolled: boolean\): HeaderShellViewState => \(\{[\s\S]*shadowClass:\s*isScrolled \? "header-shell-scrolled" : ""[\s\S]*\}\);[\s\S]*useState\(\(\) => getInitialActiveHref\(currentPath\)\)[\s\S]*const shellViewState = getHeaderShellViewState\(isScrolled\);[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*sectionLinks\[0\]\?\.href \?\? headerNavigationBehavior\.defaultActiveHref[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*\$\{shellViewState\.shadowClass\}/,
     source: header,
   },
   {

@@ -19,18 +19,63 @@ function getSectionElement(hash: string) {
   return document.getElementById(hash.slice(1));
 }
 
-export default function Header() {
+function normalizePathname(pathname: string) {
+  return pathname === "/" ? pathname : `${pathname.replace(/\/$/, "")}/`;
+}
+
+function getItemLocation(href: string) {
+  const url = new URL(href, window.location.origin);
+
+  return {
+    hash: url.hash,
+    pathname: normalizePathname(url.pathname),
+  };
+}
+
+function getInitialActiveHref(currentPath: string) {
+  const normalizedCurrentPath = normalizePathname(currentPath);
+  const currentPageItem = headerNavItems.find((item) => {
+    if (item.href.startsWith("mailto:")) {
+      return false;
+    }
+
+    const itemPath = normalizePathname(new URL(item.href, "https://ricomanifesto.com").pathname);
+    return !new URL(item.href, "https://ricomanifesto.com").hash && itemPath === normalizedCurrentPath;
+  });
+
+  return currentPageItem?.href ?? headerNavigationBehavior.defaultActiveHref;
+}
+
+interface HeaderProps {
+  readonly currentPath?: string;
+}
+
+export default function Header({ currentPath = "/" }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeHref, setActiveHref] = useState(headerNavigationBehavior.defaultActiveHref);
+  const [activeHref, setActiveHref] = useState(() => getInitialActiveHref(currentPath));
   const shellViewState = getHeaderShellViewState(isScrolled);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > headerNavigationBehavior.scrolledShadowThresholdPx);
 
-      const sectionLinks = headerNavItems.filter((item) => item.href.startsWith("#"));
+      const currentPathname = normalizePathname(window.location.pathname);
+      const sectionLinks = headerNavItems.filter((item) => {
+        if (item.href.startsWith("mailto:")) {
+          return false;
+        }
+
+        const itemLocation = getItemLocation(item.href);
+        return itemLocation.pathname === currentPathname && Boolean(itemLocation.hash);
+      });
+
+      if (sectionLinks.length === 0) {
+        setActiveHref(getInitialActiveHref(currentPathname));
+        return;
+      }
+
       const activeSection = sectionLinks.reduce((current, item) => {
-        const section = getSectionElement(item.href);
+        const section = getSectionElement(getItemLocation(item.href).hash);
 
         if (!section) {
           return current;

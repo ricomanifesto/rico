@@ -1,12 +1,17 @@
 import Home from "./Home";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { MotionConfig } from "framer-motion";
+import type { WritingSummary } from "./lib/writing";
 
-function App() {
+interface AppProps {
+  readonly latestWriting: readonly WritingSummary[];
+}
+
+function App({ latestWriting }: AppProps) {
   return (
     <MotionConfig reducedMotion="user">
       <ErrorBoundary>
-        <Home />
+        <Home latestWriting={latestWriting} />
       </ErrorBoundary>
     </MotionConfig>
   );

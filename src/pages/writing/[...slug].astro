@@ -1,0 +1,110 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { ArrowLeft } from "lucide-react";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import SkipLink from "@/components/SkipLink";
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import { formatPublishedDate, getReadingMinutes } from "@/lib/writing";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("writing", ({ data }) => !data.draft);
+
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props {
+  readonly post: CollectionEntry<"writing">;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const publishedAt = post.data.publishedAt.toISOString().slice(0, 10);
+const updatedAt = post.data.updatedAt?.toISOString().slice(0, 10);
+const readingMinutes = getReadingMinutes(post.body ?? "");
+const canonicalPath = `/writing/${post.id}/`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://ricomanifesto.com/#website",
+      url: "https://ricomanifesto.com/",
+      name: "Rico Manifesto",
+    },
+    {
+      "@type": "Person",
+      "@id": "https://ricomanifesto.com/#michael-rico",
+      name: "Michael Rico",
+      url: "https://ricomanifesto.com/",
+      jobTitle: "Staff Threat Hunter",
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": `https://ricomanifesto.com${canonicalPath}#article`,
+      url: `https://ricomanifesto.com${canonicalPath}`,
+      headline: post.data.title,
+      description: post.data.description,
+      datePublished: publishedAt,
+      ...(updatedAt ? { dateModified: updatedAt } : {}),
+      inLanguage: "en-US",
+      author: { "@id": "https://ricomanifesto.com/#michael-rico" },
+      isPartOf: { "@id": "https://ricomanifesto.com/#website" },
+      keywords: post.data.topics,
+      mainEntityOfPage: `https://ricomanifesto.com${canonicalPath}`,
+    },
+  ],
+};
+---
+
+<SiteLayout
+  title={`${post.data.title} | Michael Rico`}
+  description={post.data.description}
+  canonicalPath={canonicalPath}
+  pageType="article"
+  publishedAt={publishedAt}
+  updatedAt={updatedAt}
+  structuredData={structuredData}
+>
+  <div class="writing-page-shell">
+    <SkipLink />
+    <Header currentPath="/writing/" client:load />
+    <main id="main-content" tabindex="-1" class="writing-article-main">
+      <article class="writing-article">
+        <a href="/writing/" class="writing-back-link">
+          <ArrowLeft aria-hidden="true" focusable="false" size={17} />
+          All writing
+        </a>
+        <header class="writing-article-header">
+          <p class="writing-eyebrow">Field note</p>
+          <h1>{post.data.title}</h1>
+          <p class="writing-article-description">{post.data.description}</p>
+          <div class="writing-article-meta">
+            <span>By Michael Rico</span>
+            <span class="writing-article-meta-item">
+              <span class="writing-meta-separator" aria-hidden="true">·</span>
+              <time datetime={publishedAt}>{formatPublishedDate(post.data.publishedAt)}</time>
+            </span>
+            <span class="writing-article-meta-item">
+              <span class="writing-meta-separator" aria-hidden="true">·</span>
+              <span>{readingMinutes} min read</span>
+            </span>
+          </div>
+          <ul class="writing-topic-list" aria-label="Topics">
+            {post.data.topics.map((topic) => <li>{topic}</li>)}
+          </ul>
+        </header>
+        <div class="writing-prose">
+          <Content />
+        </div>
+        <footer class="writing-article-footer">
+          <a href="/writing/" class="writing-back-link">
+            <ArrowLeft aria-hidden="true" focusable="false" size={17} />
+            All writing
+          </a>
+        </footer>
+      </article>
+    </main>
+    <Footer client:visible />
+  </div>
+</SiteLayout>

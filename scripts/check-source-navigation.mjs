@@ -20,7 +20,7 @@ const indexCssSource = fs.existsSync(indexCssPath) ? fs.readFileSync(indexCssPat
 if (!fs.existsSync(navigationPath)) {
   failures.push("src/content/navigation.ts defines typed navigation data");
 } else {
-  const sectionHrefs = Array.from(navigationSource.matchAll(/href:\s*["']#([^"']+)["']/g)).map(
+  const sectionHrefs = Array.from(navigationSource.matchAll(/href:\s*["']\/#([^"']+)["']/g)).map(
     ([, sectionId]) => sectionId,
   );
 
@@ -41,9 +41,9 @@ if (!fs.existsSync(navigationPath)) {
   }
 
   if (
-    !/export const siteBrand:\s*SiteBrand\s*=\s*\{[\s\S]*label:\s*["']Rico Manifesto["'][\s\S]*href:\s*["']#intro["'][\s\S]*\}/.test(navigationSource)
+    !/export const siteBrand:\s*SiteBrand\s*=\s*\{[\s\S]*label:\s*["']Rico Manifesto["'][\s\S]*href:\s*["']\/["'][\s\S]*\}/.test(navigationSource)
   ) {
-    failures.push("Header brand metadata keeps the intro link target");
+    failures.push("Header brand metadata links to the home page");
   }
 
   if (
@@ -105,7 +105,7 @@ if (fs.existsSync(headerPath)) {
   }
 
   if (!/<a[\s\S]*href=\{siteBrand\.href\}[\s\S]*className="header-brand-link"[\s\S]*>\s*<img[\s\S]*src="\/favicon\.svg"[\s\S]*alt=""[\s\S]*aria-hidden="true"[\s\S]*className="header-brand-mark"[\s\S]*\/?>[\s\S]*<span>\{siteBrand\.label\}<\/span>\s*<\/a>/.test(headerSource)) {
-    failures.push("Header brand mark and text link back to the intro section from metadata");
+    failures.push("Header brand mark and text link back to the home page from metadata");
   }
 
   if (!headerSource.includes(headerBrandLinkClass)) {
@@ -134,7 +134,7 @@ if (fs.existsSync(headerPath)) {
 
   if (
     !/className="header-mobile-nav"/.test(headerSource) ||
-    !/\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;/.test(indexCssSource)
+    !/\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*@media \(min-width: 900px\)\s*\{[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;/.test(indexCssSource)
   ) {
     failures.push("Header keeps mobile navigation scoped below the desktop breakpoint");
   }
@@ -326,7 +326,7 @@ function introPreservesMobileHeaderSpace(sectionClassName, cssSource) {
 
   return (
     sectionClassName.split(/\s+/).includes("hero-section") &&
-    /\.hero-section\s*\{[\s\S]*padding:\s*9rem 1rem 0;[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.hero-section\s*\{[\s\S]*padding-top:\s*4rem;/.test(cssSource)
+    /\.hero-section\s*\{[\s\S]*padding:\s*9rem 1rem 0;[\s\S]*@media \(min-width: 900px\)\s*\{[\s\S]*\.hero-section\s*\{[\s\S]*padding-top:\s*4rem;/.test(cssSource)
   );
 }
 

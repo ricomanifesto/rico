@@ -2,12 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import React from "react";
 import ts from "typescript";
-import { createServer } from "vite";
 
 const root = process.cwd();
 const srcRoot = path.join(root, "src");
 const componentsRoot = path.join(root, "src/components");
-const indexHtmlPath = path.join(root, "index.html");
+const siteLayoutPath = path.join(root, "src/layouts/SiteLayout.astro");
 const appPath = path.join(root, "src/App.tsx");
 const homePath = path.join(root, "src/Home.tsx");
 const reducedMotionHookPath = path.join(root, "src/hooks/usePrefersReducedMotion.ts");
@@ -25,7 +24,7 @@ const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
 const signalAnimationPath = path.join(root, "src/components/SignalAnimation.tsx");
 const heroContentPath = path.join(root, "src/content/hero.ts");
 const indexCssPath = path.join(root, "src/index.css");
-const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
+const indexHtml = fs.readFileSync(siteLayoutPath, "utf8");
 const appSource = fs.readFileSync(appPath, "utf8");
 const homeSource = fs.readFileSync(homePath, "utf8");
 const reducedMotionHook = fs.existsSync(reducedMotionHookPath)
@@ -80,7 +79,7 @@ const checks = [
   },
   {
     label: "portfolio content sections use the shared section shell visual contract",
-    pattern: /\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*9rem;[\s\S]*padding:\s*4rem 1rem;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*color:\s*var\(--portfolio-page-foreground\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*5rem;[\s\S]*<section id="about"[^>]*className="portfolio-section"[\s\S]*<section id="projects"[^>]*className="portfolio-section"[\s\S]*<section id="experience"[^>]*className="portfolio-section"/,
+    pattern: /\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*9rem;[\s\S]*padding:\s*4rem 1rem;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*color:\s*var\(--portfolio-page-foreground\);[\s\S]*@media \(min-width: 900px\)\s*\{[\s\S]*\.portfolio-section\s*\{[\s\S]*scroll-margin-top:\s*5rem;[\s\S]*<section id="about"[^>]*className="portfolio-section"[\s\S]*<section id="projects"[^>]*className="portfolio-section"[\s\S]*<section id="experience"[^>]*className="portfolio-section"/,
     source: `${indexCss}\n${aboutMeSource}\n${projectsSection}\n${experienceSource}`,
   },
   {
@@ -110,7 +109,7 @@ const checks = [
   },
   {
     label: "header uses the shared header shell visual contract",
-    pattern: /\.header-shell\s*\{[\s\S]*position:\s*fixed;[\s\S]*top:\s*0;[\s\S]*right:\s*0;[\s\S]*left:\s*0;[\s\S]*z-index:\s*50;[\s\S]*background-color:\s*var\(--portfolio-header-background\);[\s\S]*backdrop-filter:\s*blur\(4px\);[\s\S]*transition:\s*box-shadow 300ms ease;[\s\S]*\.header-shell-scrolled\s*\{[\s\S]*box-shadow:\s*0 1px 2px rgba\(0,\s*0,\s*0,\s*0\.05\);[\s\S]*\.header-container\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*space-between;[\s\S]*max-width:\s*80rem;[\s\S]*padding:\s*0\.75rem 1rem;[\s\S]*\.header-brand-group\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*\.header-primary-nav\s*\{[\s\S]*display:\s*none;[\s\S]*\.header-social-list\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*gap:\s*0\.75rem;[\s\S]*\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*\.header-mobile-list\s*\{[\s\S]*display:\s*flex;[\s\S]*gap:\s*1rem;[\s\S]*overflow-x:\s*auto;[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.header-primary-nav\s*\{[\s\S]*display:\s*flex;[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;[\s\S]*className=\{`header-shell \$\{shellViewState\.shadowClass\}`\}[\s\S]*className="header-container"[\s\S]*className="header-brand-group"[\s\S]*className="header-primary-nav"[\s\S]*className="header-social-list"[\s\S]*className="header-mobile-nav"[\s\S]*className="header-mobile-list"/,
+    pattern: /\.header-shell\s*\{[\s\S]*position:\s*fixed;[\s\S]*top:\s*0;[\s\S]*right:\s*0;[\s\S]*left:\s*0;[\s\S]*z-index:\s*50;[\s\S]*background-color:\s*var\(--portfolio-header-background\);[\s\S]*backdrop-filter:\s*blur\(4px\);[\s\S]*transition:\s*box-shadow 300ms ease;[\s\S]*\.header-shell-scrolled\s*\{[\s\S]*box-shadow:\s*0 1px 2px rgba\(0,\s*0,\s*0,\s*0\.05\);[\s\S]*\.header-container\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*justify-content:\s*space-between;[\s\S]*max-width:\s*80rem;[\s\S]*padding:\s*0\.75rem 1rem;[\s\S]*\.header-brand-group\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*\.header-primary-nav\s*\{[\s\S]*display:\s*none;[\s\S]*\.header-social-list\s*\{[\s\S]*display:\s*flex;[\s\S]*align-items:\s*center;[\s\S]*gap:\s*0\.75rem;[\s\S]*\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*\.header-mobile-list\s*\{[\s\S]*display:\s*flex;[\s\S]*gap:\s*1rem;[\s\S]*overflow-x:\s*auto;[\s\S]*@media \(min-width: 900px\)\s*\{[\s\S]*\.header-primary-nav\s*\{[\s\S]*display:\s*flex;[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;[\s\S]*className=\{`header-shell \$\{shellViewState\.shadowClass\}`\}[\s\S]*className="header-container"[\s\S]*className="header-brand-group"[\s\S]*className="header-primary-nav"[\s\S]*className="header-social-list"[\s\S]*className="header-mobile-nav"[\s\S]*className="header-mobile-list"/,
     source: `${indexCss}\n${headerSource}`,
   },
   {
@@ -140,7 +139,7 @@ const checks = [
   },
   {
     label: "app wraps the portfolio in the top-level error boundary",
-    pattern: /<MotionConfig[^>]*reducedMotion="user"[\s\S]*<ErrorBoundary>\s*<Home\s*\/>\s*<\/ErrorBoundary>[\s\S]*<\/MotionConfig>/,
+    pattern: /<MotionConfig[^>]*reducedMotion="user"[\s\S]*<ErrorBoundary>\s*<Home\s+latestWriting=\{latestWriting\}\s*\/>\s*<\/ErrorBoundary>[\s\S]*<\/MotionConfig>/,
     source: appSource,
   },
   {
@@ -169,8 +168,8 @@ const checks = [
     source: reducedMotionHook,
   },
   {
-    label: "reduced-motion preference hook guards browser media query access",
-    pattern: /typeof window !== "undefined"[\s\S]*window\.matchMedia\(reducedMotionQuery\)\.matches/,
+    label: "reduced-motion preference hook hydrates from a stable server state",
+    pattern: /useState\(false\)[\s\S]*const motionQuery = window\.matchMedia\(reducedMotionQuery\)[\s\S]*setPrefersReducedMotion\(motionQuery\.matches\)/,
     source: reducedMotionHook,
   },
   {
@@ -189,8 +188,8 @@ const checks = [
     source: reducedMotionHook,
   },
   {
-    label: "media query hook guards browser media query access",
-    pattern: /typeof window !== "undefined"[\s\S]*window\.matchMedia\(query\)\.matches/,
+    label: "media query hook hydrates from a stable server state",
+    pattern: /useState\(false\)[\s\S]*const mediaQueryList = window\.matchMedia\(query\)[\s\S]*setMatches\(mediaQueryList\.matches\)/,
     source: mediaQueryHook,
   },
   {
@@ -642,7 +641,7 @@ if (projectCardsUseDecorativeBlurOverlays(projectsSection)) {
   failures.push("project cards avoid decorative blurred orb overlays");
 }
 
-if (!(await errorBoundaryFallbackReturnsAccessibleShell())) {
+if (!errorBoundaryFallbackReturnsAccessibleShell()) {
   failures.push("error boundary fallback returns a visible main landmark and failure heading");
 }
 
@@ -905,25 +904,6 @@ function findUnsafeNewTabAnchors(source, componentPath) {
   return unsafeAnchors;
 }
 
-async function importTsxDefaultExport(componentPath) {
-  const server = await createServer({
-    appType: "custom",
-    configFile: path.join(root, "vite.config.ts"),
-    logLevel: "silent",
-    root,
-    server: { middlewareMode: true },
-  });
-  const modulePath = `/${path.relative(root, componentPath).split(path.sep).join("/")}`;
-
-  try {
-    const module = await server.ssrLoadModule(modulePath);
-
-    return module.default;
-  } finally {
-    await server.close();
-  }
-}
-
 function elementPropsAreHidden(props = {}) {
   const classNames = typeof props.className === "string" ? props.className.split(/\s+/) : [];
   const style = props.style && typeof props.style === "object" ? props.style : {};
@@ -1005,20 +985,11 @@ function elementTreeHasVisibleMainWithHeading(node, text, ancestorsHidden = fals
   );
 }
 
-async function errorBoundaryFallbackReturnsAccessibleShell() {
-  const ErrorBoundary = await importTsxDefaultExport(errorBoundaryPath);
-  const derivedErrorState = ErrorBoundary.getDerivedStateFromError?.(new Error("Render failed during accessibility check"));
-  const boundary = new ErrorBoundary({
-    children: React.createElement("div", null, "Portfolio content"),
-  });
-
-  if (!derivedErrorState?.hasError) {
-    return false;
-  }
-
-  boundary.state = derivedErrorState;
-
-  return elementTreeHasVisibleMainWithHeading(boundary.render(), "Something failed while loading.");
+function errorBoundaryFallbackReturnsAccessibleShell() {
+  return (
+    /static getDerivedStateFromError\(\): ErrorBoundaryState \{\s*return \{ hasError: true \};\s*\}/.test(errorBoundarySource) &&
+    /if \(this\.state\.hasError\) \{[\s\S]*return \(\s*<main\b(?![^>]*(?:hidden|aria-hidden|className="[^"]*(?:hidden|sr-only)))[^>]*>[\s\S]*<h1[^>]*>Something failed while loading\.<\/h1>[\s\S]*<\/main>/.test(errorBoundarySource)
+  );
 }
 
 const fallbackTreeGuardExamples = [
