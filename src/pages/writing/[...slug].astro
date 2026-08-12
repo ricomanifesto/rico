@@ -4,7 +4,9 @@ import { ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipLink from "@/components/SkipLink";
+import WritingBreadcrumbs from "@/components/WritingBreadcrumbs.astro";
 import SiteLayout from "@/layouts/SiteLayout.astro";
+import { breadcrumbStructuredData } from "@/lib/breadcrumbs";
 import { formatPublishedDate, getReadingMinutes } from "@/lib/writing";
 
 export async function getStaticPaths() {
@@ -24,6 +26,11 @@ const updatedAt = post.data.updatedAt?.toISOString().slice(0, 10);
 const readingMinutes = getReadingMinutes(post.body ?? "");
 const canonicalPath = `/writing/${post.id}/`;
 const imageUrl = new URL(post.data.image.path, Astro.site).toString();
+const breadcrumbs = [
+  { name: "Home", path: "/" },
+  { name: "Writing", path: "/writing/" },
+  { name: post.data.title, path: canonicalPath },
+];
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -55,6 +62,7 @@ const structuredData = {
       keywords: post.data.topics,
       mainEntityOfPage: `https://ricomanifesto.com${canonicalPath}`,
     },
+    breadcrumbStructuredData(breadcrumbs),
   ],
 };
 ---
@@ -75,10 +83,7 @@ const structuredData = {
     <Header currentPath="/writing/" />
     <main id="main-content" tabindex="-1" class="writing-article-main">
       <article class="writing-article">
-        <a href="/writing/" class="writing-back-link">
-          <ArrowLeft aria-hidden="true" focusable="false" size={17} />
-          All writing
-        </a>
+        <WritingBreadcrumbs items={breadcrumbs} />
         <header class="writing-article-header">
           <p class="writing-eyebrow">Field note</p>
           <h1>{post.data.title}</h1>

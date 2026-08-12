@@ -1195,6 +1195,71 @@
   background-color: var(--portfolio-page-background);
 }
 
+.writing-breadcrumbs {
+  margin-bottom: 1.5rem;
+  color: var(--portfolio-muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.writing-breadcrumbs ol {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.writing-breadcrumbs li {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.writing-breadcrumbs li + li::before {
+  margin-right: 0.4rem;
+  color: var(--portfolio-muted);
+  content: "/";
+}
+
+.writing-breadcrumbs a {
+  color: var(--portfolio-active-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.writing-breadcrumbs a:hover {
+  color: var(--portfolio-tech-accent);
+}
+
+.writing-breadcrumbs a:focus-visible {
+  outline: 2px solid var(--portfolio-focus-ring);
+  outline-offset: 4px;
+}
+
+.writing-breadcrumbs [aria-current="page"] {
+  overflow: hidden;
+  max-width: min(34rem, 70vw);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.writing-article .writing-breadcrumbs {
+  color: var(--writing-muted);
+}
+
+.writing-article .writing-breadcrumbs a {
+  color: var(--writing-link);
+}
+
+.writing-article .writing-breadcrumbs a:hover {
+  color: var(--writing-link-hover);
+}
+
 .writing-index-main {
   width: 100%;
   max-width: 72rem;

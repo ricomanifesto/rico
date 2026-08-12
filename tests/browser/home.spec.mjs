@@ -1077,6 +1077,31 @@ test("serves the writing archive as crawlable HTML", async ({ page }) => {
   );
 });
 
+test("exposes the Writing hierarchy as visible and structured breadcrumbs", async ({ page }) => {
+  for (const { href, currentName, expectedItems } of [
+    { href: "/writing/", currentName: "Writing", expectedItems: 2 },
+    {
+      href: "/writing/i-thought-i-was-reading-a-repo/",
+      currentName: "I Thought I Was Reading a Repo",
+      expectedItems: 3,
+    },
+  ]) {
+    await page.goto(href);
+
+    const breadcrumbs = page.getByRole("navigation", { name: "Breadcrumb" });
+    await expect(breadcrumbs).toBeVisible();
+    await expect(breadcrumbs.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
+    await expect(breadcrumbs.getByText(currentName, { exact: true })).toHaveAttribute("aria-current", "page");
+
+    const structuredData = JSON.parse(
+      await page.locator('script[type="application/ld+json"]').textContent(),
+    );
+    const graph = structuredData["@graph"] ?? [structuredData];
+    const breadcrumbList = graph.find((entry) => entry["@type"] === "BreadcrumbList");
+    expect(breadcrumbList.itemListElement).toHaveLength(expectedItems);
+  }
+});
+
 test("renders Writing routes without client hydration", async ({ page }) => {
   for (const href of [
     "/writing/",
