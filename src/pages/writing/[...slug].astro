@@ -76,6 +76,8 @@ const structuredData = {
   imageAlt={post.data.image.alt}
   publishedAt={publishedAt}
   updatedAt={updatedAt}
+  articleAuthorUrl={new URL("/", Astro.site).toString()}
+  articleTopics={post.data.topics}
   structuredData={structuredData}
 >
   <div class="writing-page-shell">

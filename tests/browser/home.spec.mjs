@@ -1158,6 +1158,18 @@ test("serves the first writing article with article metadata and source links", 
     "content",
     "2026-08-11",
   );
+  await expect(page.locator('meta[property="article:author"]')).toHaveAttribute(
+    "content",
+    "https://ricomanifesto.com/",
+  );
+  await expect(page.locator('meta[property="article:tag"]')).toHaveCount(3);
+  expect(await page.locator('meta[property="article:tag"]').evaluateAll(
+    (elements) => elements.map((element) => element.getAttribute("content")),
+  )).toEqual([
+    "AI agents",
+    "Observability",
+    "Cybersecurity",
+  ]);
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     "content",
     "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
