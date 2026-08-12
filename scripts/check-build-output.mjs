@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative, sep } from "node:path";
 
 const root = process.cwd();
 const dist = process.env.BUILD_OUTPUT_DIR || join(root, "dist");
@@ -365,6 +365,66 @@ if (existsSync(rssPath)) {
     if (!rssFeed.includes(expected)) {
       failures.push(`Writing RSS feed is missing: ${expected}`);
     }
+  }
+}
+
+const publishedWritingArticlePaths = walkFiles(join(dist, "writing"))
+  .filter((artifactPath) => artifactPath.endsWith(`${sep}index.html`) && artifactPath !== writingArchivePath)
+  .sort();
+const writingArchiveOutput = existsSync(writingArchivePath) ? readFileSync(writingArchivePath, "utf8") : "";
+const sitemapOutput = existsSync(sitemapPath) ? readFileSync(sitemapPath, "utf8") : "";
+const rssOutput = existsSync(rssPath) ? readFileSync(rssPath, "utf8") : "";
+
+if (publishedWritingArticlePaths.length === 0) {
+  failures.push("Writing build has no published article routes");
+}
+
+for (const articlePath of publishedWritingArticlePaths) {
+  const relativeArticlePath = relative(dist, articlePath).split(sep).join("/");
+  const routePath = `/${relativeArticlePath.replace(/index\.html$/, "")}`;
+  const articleUrl = `${siteUrl}${routePath}`;
+  const article = readFileSync(articlePath, "utf8");
+
+  for (const [label, pattern] of [
+    ["heading", /<h1(?:\s[^>]*)?>[^<]+<\/h1>/],
+    ["canonical URL", new RegExp(`<link rel="canonical" href="${escapeRegExp(articleUrl)}">`)],
+    ["article Open Graph type", /<meta property="og:type" content="article">/],
+    ["published date", /<meta property="article:published_time" content="[^"]+">/],
+    ["social image alt", /<meta property="og:image:alt" content="[^"]+">/],
+    ["BlogPosting structured data", /"@type":"BlogPosting"/],
+    ["visible author", /By Michael Rico/],
+  ]) {
+    if (!pattern.test(article)) {
+      failures.push(`${routePath} is missing ${label}`);
+    }
+  }
+
+  if (article.includes("<astro-island")) {
+    failures.push(`${routePath} unexpectedly hydrates client JavaScript`);
+  }
+
+  const socialImageUrl = article.match(/<meta property="og:image" content="([^"]+)">/)?.[1];
+  if (!socialImageUrl?.startsWith(`${siteUrl}/`)) {
+    failures.push(`${routePath} does not use a first-party social image`);
+  } else {
+    const socialImagePath = new URL(socialImageUrl).pathname.replace(/^\//, "");
+    requireFile(join(dist, socialImagePath), `${routePath} social image`);
+
+    if (!article.includes(`"image":"${socialImageUrl}"`)) {
+      failures.push(`${routePath} BlogPosting image does not match Open Graph`);
+    }
+  }
+
+  if (!writingArchiveOutput.includes(`href="${routePath}"`)) {
+    failures.push(`Writing archive is missing ${routePath}`);
+  }
+
+  if (!sitemapOutput.includes(`<loc>${articleUrl}</loc>`)) {
+    failures.push(`Sitemap is missing ${articleUrl}`);
+  }
+
+  if (!rssOutput.includes(articleUrl)) {
+    failures.push(`RSS is missing ${articleUrl}`);
   }
 }
 
