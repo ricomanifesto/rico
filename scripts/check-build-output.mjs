@@ -47,10 +47,10 @@ const sentrySearchCaseStudy = {
   url: `${siteUrl}/projects/sentrysearch/llm-evaluation/`,
   title: "LLM Evaluation for Threat-Intelligence Workflows",
   evidenceUrls: [
-    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/section_validator.py#L291-L529",
-    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/validation_criteria.py#L21-L296",
-    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/parallel_section_validator.py#L19-L225",
-    "https://github.com/ricomanifesto/SentrySearch/blob/19b434481562fc247293a492b8054aa70d80002b/src/core/markdown_generator.py#L57-L119",
+    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/section_validator.py#L266-L472",
+    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/validation_criteria.py#L21-L259",
+    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/parallel_section_validator.py#L19-L227",
+    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/markdown_generator.py#L54-L115",
   ],
 };
 
@@ -497,7 +497,12 @@ if (existsSync(caseStudyPath)) {
   ];
 
   for (const evidenceUrl of sentrySearchCaseStudy.evidenceUrls) {
-    expectations.push(["pinned public evidence", `href="${evidenceUrl}"`]);
+    expectations.push(["main-branch public evidence", `href="${evidenceUrl}"`]);
+  }
+
+  const staleSentrySearchRef = /https:\/\/github\.com\/ricomanifesto\/SentrySearch\/blob\/(?!main\/)[^/"\s]+\/src\/core\//;
+  if (staleSentrySearchRef.test(caseStudy)) {
+    failures.push("SentrySearch case study links to code outside the main branch");
   }
 
   for (const [label, expected] of expectations) {
