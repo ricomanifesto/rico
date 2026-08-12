@@ -16,6 +16,28 @@ const latestWriting: WritingSummary[] = posts.map((post) => ({
   readingMinutes: getReadingMinutes(post.body ?? ""),
   topics: post.data.topics,
 }));
+const writingStructuredData = posts.map((post) => {
+  const path = `/writing/${post.id}/`;
+  const url = `https://ricomanifesto.com${path}`;
+
+  return {
+    "@type": "BlogPosting",
+    "@id": `${url}#article`,
+    url,
+    headline: post.data.title,
+    description: post.data.description,
+    datePublished: post.data.publishedAt.toISOString().slice(0, 10),
+    ...(post.data.updatedAt
+      ? { dateModified: post.data.updatedAt.toISOString().slice(0, 10) }
+      : {}),
+    image: `https://ricomanifesto.com${post.data.image.path}`,
+    inLanguage: "en-US",
+    keywords: post.data.topics,
+    author: { "@id": "https://ricomanifesto.com/#michael-rico" },
+    isPartOf: { "@id": "https://ricomanifesto.com/#website" },
+    mainEntityOfPage: url,
+  };
+});
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -46,10 +68,7 @@ const structuredData = {
         "https://medium.com/@ricomanifesto",
       ],
       knowsAbout: ["Threat intelligence", "Threat hunting", "Detection engineering", "Incident readiness"],
-      subjectOf: [
-        { "@id": "https://ricomanifesto.com/projects/sentrysearch/llm-evaluation/#article" },
-        { "@id": "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/#article" },
-      ],
+      subjectOf: [{ "@id": "https://ricomanifesto.com/projects/sentrysearch/llm-evaluation/#article" }],
     },
     {
       "@type": "ItemList",
@@ -75,16 +94,7 @@ const structuredData = {
         codeRepository: "https://github.com/ricomanifesto/SentrySearch",
       },
     },
-    {
-      "@type": "BlogPosting",
-      "@id": "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/#article",
-      url: "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
-      headline: "I Thought I Was Reading a Repo",
-      description: "How tracing an open-source agent turned a familiar cybersecurity habit into a lesson about observability.",
-      datePublished: "2026-08-11",
-      author: { "@id": "https://ricomanifesto.com/#michael-rico" },
-      isPartOf: { "@id": "https://ricomanifesto.com/#website" },
-    },
+    ...writingStructuredData,
   ],
 };
 ---

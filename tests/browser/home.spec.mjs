@@ -1046,6 +1046,17 @@ test("links the homepage to the latest first-party article", async ({ page }) =>
   await expect(
     writingSection.getByRole("link", { name: "Read I Thought I Was Reading a Repo" }),
   ).toHaveAttribute("href", "/writing/i-thought-i-was-reading-a-repo/");
+
+  const structuredData = JSON.parse(
+    await page.locator('script[type="application/ld+json"]').textContent(),
+  );
+  const blogPosting = structuredData["@graph"].find((entry) => entry["@type"] === "BlogPosting");
+  expect(blogPosting).toMatchObject({
+    url: "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+    headline: "I Thought I Was Reading a Repo",
+    image: "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
+    datePublished: "2026-08-11",
+  });
 });
 
 test("serves the writing archive as crawlable HTML", async ({ page }) => {
