@@ -356,6 +356,7 @@ test("uses a split hero composition on desktop without crowding short mobile vie
 
   await page.setViewportSize({ width: 844, height: 390 });
   await page.reload();
+  await expect(page.locator("#intro .hero-subtitle")).toHaveClass(/hero-copy-compact/);
 
   const landscapeLayout = await page.evaluate(() => {
     const header = document.querySelector("header");
@@ -420,6 +421,8 @@ test("shows the static desktop signal when reduced motion is enabled", async ({ 
   await installReducedMotionController(page, true);
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
+  await expect(page.getByTestId("hero-visual")).toBeVisible();
+  await expect(page.getByTestId("signal-graphic")).toHaveAttribute("data-motion", "reduced");
 
   const layout = await page.evaluate(() => {
     const visual = document.querySelector("[data-testid='hero-visual']");
