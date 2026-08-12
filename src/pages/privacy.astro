@@ -1,0 +1,46 @@
+---
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import SkipLink from "@/components/SkipLink";
+import SiteLayout from "@/layouts/SiteLayout.astro";
+---
+
+<SiteLayout
+  title="Privacy | Michael Rico"
+  description="How Rico Manifesto uses privacy-first, aggregate website analytics."
+  canonicalPath="/privacy/"
+>
+  <div class="writing-page-shell">
+    <SkipLink />
+    <Header currentPath="/privacy/" />
+    <main id="main-content" tabindex="-1" class="writing-article-main">
+      <article class="writing-article">
+        <header class="writing-article-header">
+          <p class="writing-eyebrow">Site information</p>
+          <h1>Privacy</h1>
+          <p class="writing-article-description">
+            Rico Manifesto uses privacy-first analytics to understand aggregate site use and performance.
+          </p>
+        </header>
+
+        <div class="writing-prose">
+          <h2>What is measured</h2>
+          <p>
+            The site uses Cloudflare Web Analytics to measure aggregate page views, visits, referral sources, and page performance. These measurements help identify which public pages are useful and whether they load well for visitors.
+          </p>
+
+          <h2>What is not measured</h2>
+          <p>
+            The site does not send custom analytics events, advertising identifiers, form entries, or contact-link activity. Cloudflare Web Analytics does not log URL query strings and Cloudflare states that the service does not collect or use visitors' personal data or track individual visitors across its customers' sites.
+          </p>
+
+          <h2>Provider information</h2>
+          <p>
+            Read more in the <a href="https://developers.cloudflare.com/web-analytics/">Cloudflare Web Analytics documentation</a> and <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare Privacy Policy</a>.
+          </p>
+        </div>
+      </article>
+    </main>
+    <Footer animated={false} />
+  </div>
+</SiteLayout>

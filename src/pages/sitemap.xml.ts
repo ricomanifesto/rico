@@ -3,6 +3,7 @@ import { projects } from "@/content/portfolio";
 
 const staticPaths = [
   "/",
+  "/privacy/",
   "/writing/",
   "/projects/sentrysearch/llm-evaluation/",
   ...projects.map((project) => `/projects/${project.page.slug}/`),

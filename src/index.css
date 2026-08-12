@@ -1091,6 +1091,20 @@
   line-height: 1.5rem;
 }
 
+.footer-privacy-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--portfolio-accent);
+  font-size: 0.875rem;
+  text-underline-offset: 0.2em;
+}
+
+.footer-privacy-link:hover,
+.footer-privacy-link:focus-visible {
+  color: var(--portfolio-text);
+}
+
 .writing-preview-section {
   padding-bottom: 6rem;
 }

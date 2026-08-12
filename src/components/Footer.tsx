@@ -35,6 +35,7 @@ function FooterContent() {
       <p className="footer-copy">
         © <time dateTime={String(currentYear)}>{currentYear}</time> Rico. All rights reserved.
       </p>
+      <a className="footer-privacy-link" href="/privacy/">Privacy</a>
     </div>
   );
 }
