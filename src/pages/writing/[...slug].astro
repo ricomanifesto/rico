@@ -81,10 +81,14 @@ const structuredData = {
           <p class="writing-article-description">{post.data.description}</p>
           <div class="writing-article-meta">
             <span>By Michael Rico</span>
-            <span aria-hidden="true">·</span>
-            <time datetime={publishedAt}>{formatPublishedDate(post.data.publishedAt)}</time>
-            <span aria-hidden="true">·</span>
-            <span>{readingMinutes} min read</span>
+            <span class="writing-article-meta-item">
+              <span class="writing-meta-separator" aria-hidden="true">·</span>
+              <time datetime={publishedAt}>{formatPublishedDate(post.data.publishedAt)}</time>
+            </span>
+            <span class="writing-article-meta-item">
+              <span class="writing-meta-separator" aria-hidden="true">·</span>
+              <span>{readingMinutes} min read</span>
+            </span>
           </div>
           <ul class="writing-topic-list" aria-label="Topics">
             {post.data.topics.map((topic) => <li>{topic}</li>)}
@@ -94,10 +98,9 @@ const structuredData = {
           <Content />
         </div>
         <footer class="writing-article-footer">
-          <p>More notes on making complex systems observable and easier to reason from.</p>
           <a href="/writing/" class="writing-back-link">
             <ArrowLeft aria-hidden="true" focusable="false" size={17} />
-            Back to Writing
+            All writing
           </a>
         </footer>
       </article>

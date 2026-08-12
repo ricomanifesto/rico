@@ -9,7 +9,9 @@ export interface HeroBehavior {
   readonly typewriterIntervalMs: number;
   readonly roomyVisualViewportQuery: string;
   readonly compactLandscapeViewportQuery: string;
+  readonly compactLandscapeNarrowViewportQuery: string;
   readonly compactLandscapePaddingTop: "4.5rem";
+  readonly compactLandscapeNarrowPaddingTop: "9rem";
   readonly containerMotion: {
     readonly duration: number;
     readonly ease: "easeOut";
@@ -52,7 +54,9 @@ export const heroBehavior: HeroBehavior = {
   typewriterIntervalMs: 150,
   roomyVisualViewportQuery: "(min-width: 768px) and (min-height: 640px)",
   compactLandscapeViewportQuery: "(min-width: 768px) and (max-height: 639px)",
+  compactLandscapeNarrowViewportQuery: "(min-width: 768px) and (max-width: 899px) and (max-height: 639px)",
   compactLandscapePaddingTop: "4.5rem",
+  compactLandscapeNarrowPaddingTop: "9rem",
   containerMotion: {
     duration: 0.8,
     ease: "easeOut",

@@ -35,7 +35,6 @@ export const headerNavItems: readonly HeaderNavItem[] = [
   { label: "Experience", href: "/#experience" },
   { label: "Projects", href: "/#projects" },
   { label: "Writing", href: "/writing/" },
-  { label: "Contact", href: "mailto:michaelrico124@gmail.com" },
 ];
 
 export const siteBrand: SiteBrand = {

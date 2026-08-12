@@ -82,14 +82,14 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
   await expect(mobileNav).toBeVisible();
   await expect(mobileNav.getByRole("list")).toBeVisible();
-  await expect(mobileNav.getByRole("listitem")).toHaveCount(6);
+  await expect(mobileNav.getByRole("listitem")).toHaveCount(5);
   await expect(mobileNav.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/#intro");
   await expect(mobileNav.getByRole("link", { name: "About" })).toHaveAttribute("href", "/#about");
   await expect(mobileNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "/#experience");
   await expect(mobileNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "/#projects");
   await expect(mobileNav.getByRole("link", { name: "Writing" })).toHaveAttribute("href", "/writing/");
 
-  for (const linkName of ["Home", "About", "Experience", "Projects", "Writing", "Contact"]) {
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Writing"]) {
     const box = await mobileNav.getByRole("link", { name: linkName }).boundingBox();
 
     expect(box).not.toBeNull();
@@ -141,7 +141,7 @@ test("exposes desktop primary navigation with an accessible name", async ({ page
   await expect(desktopNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "/#experience");
   await expect(desktopNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "/#projects");
   await expect(desktopNav.getByRole("link", { name: "Writing" })).toHaveAttribute("href", "/writing/");
-  await expect(desktopNav.getByRole("link", { name: "Contact" })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "Email" })).toHaveAttribute(
     "href",
     "mailto:michaelrico124@gmail.com",
   );
@@ -600,6 +600,30 @@ test("keeps the mobile header inside narrow viewports", async ({ page }) => {
   }
 });
 
+test("keeps the mobile header through tablet widths", async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto("/");
+
+  await expect(page.getByRole("navigation", { name: "Mobile primary" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Primary", exact: true })).toBeHidden();
+
+  const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
+  for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
+    const box = await page.getByRole("link", { name: linkName }).boundingBox();
+
+    expect(box).not.toBeNull();
+    expect(box.x).toBeGreaterThanOrEqual(-0.5);
+    expect(box.x + box.width).toBeLessThanOrEqual(clientWidth + 0.5);
+  }
+
+  await page.getByRole("navigation", { name: "Mobile primary" }).getByRole("link", { name: "About" }).click();
+  const tabletSectionPositions = await page.evaluate(() => ({
+    headerBottom: document.querySelector("header")?.getBoundingClientRect().bottom ?? 0,
+    aboutTop: document.querySelector("#about")?.getBoundingClientRect().top ?? 0,
+  }));
+  expect(tabletSectionPositions.aboutTop).toBeGreaterThanOrEqual(tabletSectionPositions.headerBottom - 1);
+});
+
 test("keeps every mobile nav rail item reachable without page overflow", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto("/");
@@ -607,7 +631,7 @@ test("keeps every mobile nav rail item reachable without page overflow", async (
   const mobileNav = page.getByRole("navigation", { name: "Mobile primary" });
   await expect(mobileNav).toBeVisible();
 
-  for (const linkName of ["Home", "About", "Experience", "Projects", "Writing", "Contact"]) {
+  for (const linkName of ["Home", "About", "Experience", "Projects", "Writing"]) {
     const link = mobileNav.getByRole("link", { name: linkName });
 
     await link.scrollIntoViewIfNeeded();
@@ -1011,7 +1035,7 @@ test("pauses project auto-rotation while carousel is hovered", async ({ page }) 
 test("links the homepage to the latest first-party article", async ({ page }) => {
   await page.goto("/");
 
-  const writingSection = page.getByRole("region", { name: "Latest Writing" });
+  const writingSection = page.getByRole("region", { name: "/ writing" });
   await expect(writingSection).toBeVisible();
   await expect(
     writingSection.getByRole("heading", { level: 3, name: "I Thought I Was Reading a Repo" }),
@@ -1037,6 +1061,33 @@ test("serves the writing archive as crawlable HTML", async ({ page }) => {
     "aria-current",
     "location",
   );
+});
+
+test("keeps Writing content below the tablet header", async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+
+  for (const { href, selector } of [
+    { href: "/writing/", selector: ".writing-eyebrow" },
+    {
+      href: "/writing/i-thought-i-was-reading-a-repo/",
+      selector: ".writing-article",
+    },
+  ]) {
+    await page.goto(href);
+    await expect(page.getByRole("navigation", { name: "Mobile primary" })).toBeVisible();
+
+    const positions = await page.evaluate((contentSelector) => {
+      const header = document.querySelector(".header-shell");
+      const content = document.querySelector(contentSelector);
+
+      return {
+        headerBottom: header?.getBoundingClientRect().bottom ?? 0,
+        contentTop: content?.getBoundingClientRect().top ?? 0,
+      };
+    }, selector);
+
+    expect(positions.contentTop).toBeGreaterThanOrEqual(positions.headerBottom);
+  }
 });
 
 test("serves the first writing article with article metadata and source links", async ({ page }) => {

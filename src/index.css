@@ -286,7 +286,6 @@
   .hero-section {
     padding-right: 2rem;
     padding-left: 2rem;
-    padding-top: 4rem;
   }
 
   .hero-content {
@@ -336,8 +335,37 @@
     justify-content: flex-start;
   }
 
+}
+
+@media (min-width: 900px) {
+  .hero-section {
+    padding-top: 4rem;
+  }
+
   .portfolio-section {
     scroll-margin-top: 5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 899px) and (max-height: 639px) {
+  .hero-headline,
+  .hero-copy-compact {
+    margin-bottom: 0.25rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+
+  .hero-body {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  .hero-section .hero-cta-link {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 
@@ -857,7 +885,7 @@
   flex-shrink: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .header-brand-link {
     gap: 0.5rem;
     font-size: 1.25rem;
@@ -1066,6 +1094,10 @@
   margin-bottom: 0;
 }
 
+.writing-view-all-link {
+  white-space: nowrap;
+}
+
 .writing-view-all-link,
 .writing-read-link,
 .writing-rss-link,
@@ -1253,13 +1285,18 @@
 }
 
 .writing-topic-list li {
-  padding: 0.3rem 0.6rem;
-  border: 1px solid rgba(102, 178, 255, 0.3);
-  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
   color: var(--portfolio-active-accent);
   font-family: "JetBrains Mono", monospace;
   font-size: 0.7rem;
   line-height: 1rem;
+}
+
+.writing-topic-list li + li::before {
+  margin-right: 0.5rem;
+  color: var(--portfolio-muted);
+  content: "·";
 }
 
 .writing-archive-item .writing-read-link {
@@ -1314,13 +1351,28 @@
 }
 
 .writing-article-meta {
+  gap: 0.25rem;
   margin-top: 1.5rem;
   color: #5d6879;
 }
 
+.writing-article-meta-item {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+@media (max-width: 639px) {
+  .writing-article-meta-item:last-child .writing-meta-separator {
+    display: none;
+  }
+}
+
 .writing-article-header .writing-topic-list li {
-  border-color: rgba(7, 95, 184, 0.28);
   color: var(--writing-link);
+}
+
+.writing-article-header .writing-topic-list li + li::before {
+  color: #7a8494;
 }
 
 .writing-prose {
@@ -1406,14 +1458,7 @@
   border-top: 1px solid #d6cfc2;
 }
 
-.writing-article-footer p {
-  max-width: 38rem;
-  color: var(--writing-copy);
-  line-height: 1.65rem;
-}
-
 .writing-article-footer .writing-back-link {
-  margin-top: 0.75rem;
   color: var(--writing-link);
 }
 
@@ -1432,13 +1477,15 @@
 @media (min-width: 768px) {
   .writing-index-main,
   .writing-article-main {
-    padding-top: 8rem;
-  }
-
-  .writing-index-main,
-  .writing-article-main {
     padding-right: 2rem;
     padding-left: 2rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .writing-index-main,
+  .writing-article-main {
+    padding-top: 8rem;
   }
 }
 

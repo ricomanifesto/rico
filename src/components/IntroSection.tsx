@@ -11,7 +11,11 @@ export default function IntroSection() {
   const shouldReduceMotion = usePrefersReducedMotion();
   const hasRoomyHeroViewport = useMediaQuery(heroBehavior.roomyVisualViewportQuery);
   const hasCompactLandscapeHeroViewport = useMediaQuery(heroBehavior.compactLandscapeViewportQuery);
+  const hasCompactLandscapeNarrowViewport = useMediaQuery(heroBehavior.compactLandscapeNarrowViewportQuery);
   const showHeroVisual = hasRoomyHeroViewport;
+  const compactLandscapePaddingTop = hasCompactLandscapeNarrowViewport
+    ? heroBehavior.compactLandscapeNarrowPaddingTop
+    : heroBehavior.compactLandscapePaddingTop;
   const [displayText, setDisplayText] = useState(shouldReduceMotion ? heroContent.headline : "");
 
   useEffect(() => {
@@ -37,7 +41,7 @@ export default function IntroSection() {
     <section
       id="intro"
       className="hero-section"
-      style={hasCompactLandscapeHeroViewport ? { paddingTop: heroBehavior.compactLandscapePaddingTop } : undefined}
+      style={hasCompactLandscapeHeroViewport ? { paddingTop: compactLandscapePaddingTop } : undefined}
     >
       <div className="network-grid absolute top-0 left-0 w-full h-full pointer-events-none z-0"></div>
 

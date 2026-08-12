@@ -7,7 +7,7 @@ export async function GET(context: { site: URL }) {
 
   return rss({
     title: "Rico Manifesto Writing",
-    description: "Notes from Michael Rico on security systems, AI agents, observability, and making complex behavior inspectable.",
+    description: "Notes on security systems, AI agents, and the evidence that makes complex behavior easier to inspect and reason from.",
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,

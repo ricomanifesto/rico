@@ -134,7 +134,7 @@ if (fs.existsSync(headerPath)) {
 
   if (
     !/className="header-mobile-nav"/.test(headerSource) ||
-    !/\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;/.test(indexCssSource)
+    !/\.header-mobile-nav\s*\{[\s\S]*border-top:\s*1px solid rgba\(255,\s*255,\s*255,\s*0\.1\);[\s\S]*@media \(min-width: 900px\)\s*\{[\s\S]*\.header-mobile-nav\s*\{[\s\S]*display:\s*none;/.test(indexCssSource)
   ) {
     failures.push("Header keeps mobile navigation scoped below the desktop breakpoint");
   }
@@ -326,7 +326,7 @@ function introPreservesMobileHeaderSpace(sectionClassName, cssSource) {
 
   return (
     sectionClassName.split(/\s+/).includes("hero-section") &&
-    /\.hero-section\s*\{[\s\S]*padding:\s*9rem 1rem 0;[\s\S]*@media \(min-width: 768px\)\s*\{[\s\S]*\.hero-section\s*\{[\s\S]*padding-top:\s*4rem;/.test(cssSource)
+    /\.hero-section\s*\{[\s\S]*padding:\s*9rem 1rem 0;[\s\S]*@media \(min-width: 900px\)\s*\{[\s\S]*\.hero-section\s*\{[\s\S]*padding-top:\s*4rem;/.test(cssSource)
   );
 }
 
