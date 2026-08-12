@@ -1208,6 +1208,21 @@ test("publishes the first article in the writing RSS feed", async ({ request }) 
   expect(stylesheet).toContain('select="rss/channel/title"');
 });
 
+test("publishes content-backed modification dates for Writing routes", async ({ request }) => {
+  const response = await request.get("/sitemap.xml");
+
+  expect(response.status()).toBe(200);
+  const body = await response.text();
+  for (const url of [
+    "https://ricomanifesto.com/writing/",
+    "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+  ]) {
+    const entry = Array.from(body.matchAll(/<url>[\s\S]*?<\/url>/g), ([match]) => match)
+      .find((candidate) => candidate.includes(`<loc>${url}</loc>`));
+    expect(entry).toContain("<lastmod>2026-08-11</lastmod>");
+  }
+});
+
 test("renders the RSS feed as an understandable subscription page", async ({ page }) => {
   const response = await page.goto("/rss.xml");
 

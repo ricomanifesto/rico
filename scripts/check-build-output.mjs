@@ -381,6 +381,7 @@ const publishedWritingArticlePaths = walkFiles(join(dist, "writing"))
 const writingArchiveOutput = existsSync(writingArchivePath) ? readFileSync(writingArchivePath, "utf8") : "";
 const sitemapOutput = existsSync(sitemapPath) ? readFileSync(sitemapPath, "utf8") : "";
 const rssOutput = existsSync(rssPath) ? readFileSync(rssPath, "utf8") : "";
+const sitemapEntries = Array.from(sitemapOutput.matchAll(/<url>[\s\S]*?<\/url>/g), ([entry]) => entry);
 
 if (publishedWritingArticlePaths.length === 0) {
   failures.push("Writing build has no published article routes");
@@ -428,6 +429,14 @@ for (const articlePath of publishedWritingArticlePaths) {
 
   if (!sitemapOutput.includes(`<loc>${articleUrl}</loc>`)) {
     failures.push(`Sitemap is missing ${articleUrl}`);
+  } else {
+    const sitemapEntry = sitemapEntries.find((entry) => entry.includes(`<loc>${articleUrl}</loc>`));
+    const articleDate = article.match(/"dateModified":"([^"]+)"/)?.[1]
+      ?? article.match(/"datePublished":"([^"]+)"/)?.[1];
+
+    if (!articleDate || !sitemapEntry?.includes(`<lastmod>${articleDate}</lastmod>`)) {
+      failures.push(`Sitemap modification date does not match ${routePath}`);
+    }
   }
 
   if (!rssOutput.includes(articleUrl)) {
