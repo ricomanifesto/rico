@@ -75,6 +75,21 @@ test("keeps a resolved signal visible when reduced motion is enabled", async ({ 
   await expect(page.getByRole("heading", { name: "Hi, I'm Michael Rico" })).toBeVisible();
 });
 
+test("renders the complete personal heading in initial HTML", async ({ request }) => {
+  const response = await request.get("/");
+  const html = await response.text();
+  const heading = html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "";
+  const visibleText = heading
+    .replace(/<[^>]*aria-hidden=["']true["'][^>]*>[\s\S]*?<\/[^>]+>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&#x27;|&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  expect(response.ok()).toBe(true);
+  expect(visibleText).toBe("Hi, I'm Michael Rico");
+});
+
 test("exposes mobile primary navigation from shared section links", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");

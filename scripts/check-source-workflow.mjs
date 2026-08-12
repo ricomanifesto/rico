@@ -203,7 +203,7 @@ const checks = [
   },
   {
     label: "hero behavior is typed as readonly metadata",
-    pattern: /export interface HeroBehavior \{[\s\S]*readonly typewriterIntervalMs:\s*number;[\s\S]*readonly roomyVisualViewportQuery:\s*string;[\s\S]*readonly compactLandscapeViewportQuery:\s*string;[\s\S]*readonly compactLandscapeNarrowViewportQuery:\s*string;[\s\S]*readonly compactLandscapePaddingTop:\s*"4\.5rem";[\s\S]*readonly compactLandscapeNarrowPaddingTop:\s*"9rem";[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
+    pattern: /export interface HeroBehavior \{[\s\S]*readonly roomyVisualViewportQuery:\s*string;[\s\S]*readonly compactLandscapeViewportQuery:\s*string;[\s\S]*readonly compactLandscapeNarrowViewportQuery:\s*string;[\s\S]*readonly compactLandscapePaddingTop:\s*"4\.5rem";[\s\S]*readonly compactLandscapeNarrowPaddingTop:\s*"9rem";[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
     source: hero,
   },
   {
@@ -212,8 +212,8 @@ const checks = [
     source: hero,
   },
   {
-    label: "hero behavior preserves current typewriter timing",
-    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*typewriterIntervalMs:\s*150,[\s\S]*roomyVisualViewportQuery:\s*"\(min-width: 768px\) and \(min-height: 640px\)",[\s\S]*compactLandscapeViewportQuery:\s*"\(min-width: 768px\) and \(max-height: 639px\)",[\s\S]*compactLandscapeNarrowViewportQuery:\s*"\(min-width: 768px\) and \(max-width: 899px\) and \(max-height: 639px\)",[\s\S]*compactLandscapePaddingTop:\s*"4\.5rem",[\s\S]*compactLandscapeNarrowPaddingTop:\s*"9rem"[\s\S]*\}/,
+    label: "hero behavior preserves current responsive layout metadata",
+    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*roomyVisualViewportQuery:\s*"\(min-width: 768px\) and \(min-height: 640px\)",[\s\S]*compactLandscapeViewportQuery:\s*"\(min-width: 768px\) and \(max-height: 639px\)",[\s\S]*compactLandscapeNarrowViewportQuery:\s*"\(min-width: 768px\) and \(max-width: 899px\) and \(max-height: 639px\)",[\s\S]*compactLandscapePaddingTop:\s*"4\.5rem",[\s\S]*compactLandscapeNarrowPaddingTop:\s*"9rem"[\s\S]*\}/,
     source: hero,
   },
   {
@@ -223,12 +223,12 @@ const checks = [
   },
   {
     label: "intro section renders hero copy from metadata",
-    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useState\(shouldReduceMotion \? heroContent\.headline : ""\)[\s\S]*setDisplayText\(heroContent\.headline\)[\s\S]*heroContent\.headline\.slice\(0, currentIndex\)[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
+    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*\{heroContent\.headline\}[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
     source: introSection,
   },
   {
-    label: "intro section uses hero behavior metadata for typewriter timing",
-    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useMediaQuery\(heroBehavior\.roomyVisualViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeNarrowViewportQuery\)[\s\S]*heroBehavior\.compactLandscapeNarrowPaddingTop[\s\S]*heroBehavior\.compactLandscapePaddingTop[\s\S]*\}, heroBehavior\.typewriterIntervalMs\);[\s\S]*paddingTop:\s*compactLandscapePaddingTop/,
+    label: "intro section uses hero behavior metadata for responsive layout",
+    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useMediaQuery\(heroBehavior\.roomyVisualViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeNarrowViewportQuery\)[\s\S]*heroBehavior\.compactLandscapeNarrowPaddingTop[\s\S]*heroBehavior\.compactLandscapePaddingTop[\s\S]*paddingTop:\s*compactLandscapePaddingTop/,
     source: introSection,
   },
   {

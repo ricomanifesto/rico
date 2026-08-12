@@ -223,33 +223,23 @@ const checks = [
     source: `${indexCss}\n${heroContentSource}\n${signalAnimation}`,
   },
   {
-    label: "intro typewriter uses shared reduced-motion preference hook",
-    pattern: /usePrefersReducedMotion\(\)/,
-    source: introSection,
-  },
-  {
-    label: "intro typewriter renders full text for reduced motion",
-    pattern: /shouldReduceMotion\)\s*\{\s*setDisplayText\(heroContent\.headline\);\s*return;/,
-    source: introSection,
-  },
-  {
     label: "intro hero uses the shared hero visual contract",
-    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*80rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-typewriter-cursor\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*1fr\) minmax\(0,\s*1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className="hero-typewriter-cursor"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
+    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*80rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-headline-cursor\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*1fr\) minmax\(0,\s*1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className="hero-headline-cursor"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
     source: `${indexCss}\n${introSection}`,
   },
   {
-    label: "intro typewriter text uses a class-based accent style",
-    pattern: /<span className="hero-headline-accent">\s*\{displayText\}/,
+    label: "intro headline text uses a class-based accent style",
+    pattern: /<span className="hero-headline-accent">\s*\{heroContent\.headline\}/,
     source: introSection,
   },
   {
-    label: "intro typewriter cursor uses a class-based accent style",
-    pattern: /<span[^>]*className="hero-typewriter-cursor"[^>]*><\/span>/,
+    label: "intro headline cursor uses a class-based accent style",
+    pattern: /<span[^>]*className="hero-headline-cursor"[^>]*><\/span>/,
     source: introSection,
   },
   {
-    label: "intro typewriter cursor is hidden from assistive technology",
-    pattern: /<span[^>]*aria-hidden="true"[^>]*className="hero-typewriter-cursor"[^>]*><\/span>/,
+    label: "intro headline cursor is hidden from assistive technology",
+    pattern: /<span[^>]*aria-hidden="true"[^>]*className="hero-headline-cursor"[^>]*><\/span>/,
     source: introSection,
   },
   {
@@ -605,8 +595,8 @@ if (introCtaUsesMouseHandlers(introSection)) {
   failures.push("intro CTA avoids mouse-event hover styling");
 }
 
-if (introTypewriterUsesInlineAccentStyles(introSection)) {
-  failures.push("intro typewriter avoids inline accent styles");
+if (introHeadlineUsesInlineAccentStyles(introSection)) {
+  failures.push("intro headline avoids inline accent styles");
 }
 
 if (aboutTechnologyChevronsUseInlineAccentStyles(aboutMeSource)) {
@@ -705,7 +695,7 @@ function introCtaUsesMouseHandlers(source) {
   return /onMouseEnter|onMouseLeave/.test(introCtaMatch?.[0] ?? "");
 }
 
-function introTypewriterUsesInlineAccentStyles(source) {
+function introHeadlineUsesInlineAccentStyles(source) {
   const headingMatch = source.match(
     /<h1 className="text-4xl md:text-5xl font-bold mb-4 font-mono">[\s\S]*?<\/h1>/,
   );

@@ -208,7 +208,7 @@
   color: var(--primary-accent);
 }
 
-.hero-typewriter-cursor {
+.hero-headline-cursor {
   display: inline-block;
   width: 0.5rem;
   height: 2rem;
