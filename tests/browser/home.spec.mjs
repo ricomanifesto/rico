@@ -1066,6 +1066,20 @@ test("serves the writing archive as crawlable HTML", async ({ page }) => {
   );
 });
 
+test("renders Writing routes without client hydration", async ({ page }) => {
+  for (const href of [
+    "/writing/",
+    "/writing/i-thought-i-was-reading-a-repo/",
+  ]) {
+    const response = await page.goto(href);
+
+    expect(response?.status()).toBe(200);
+    await expect(page.locator("astro-island")).toHaveCount(0);
+    await expect(page.getByRole("banner")).toBeVisible();
+    await expect(page.getByRole("contentinfo")).toBeVisible();
+  }
+});
+
 test("keeps Writing content below the tablet header", async ({ page }) => {
   await page.setViewportSize({ width: 768, height: 900 });
 

@@ -37,7 +37,7 @@ const structuredData = {
 >
   <div class="writing-page-shell">
     <SkipLink />
-    <Header currentPath="/writing/" client:load />
+    <Header currentPath="/writing/" />
     <main id="main-content" tabindex="-1" class="writing-index-main">
       <header class="writing-index-intro">
         <p class="writing-eyebrow">Field notes</p>
@@ -78,6 +78,6 @@ const structuredData = {
         })}
       </section>
     </main>
-    <Footer client:visible />
+    <Footer animated={false} />
   </div>
 </SiteLayout>
