@@ -23,6 +23,7 @@ const publishedAt = post.data.publishedAt.toISOString().slice(0, 10);
 const updatedAt = post.data.updatedAt?.toISOString().slice(0, 10);
 const readingMinutes = getReadingMinutes(post.body ?? "");
 const canonicalPath = `/writing/${post.id}/`;
+const imageUrl = new URL(post.data.image.path, Astro.site).toString();
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -47,6 +48,7 @@ const structuredData = {
       description: post.data.description,
       datePublished: publishedAt,
       ...(updatedAt ? { dateModified: updatedAt } : {}),
+      image: imageUrl,
       inLanguage: "en-US",
       author: { "@id": "https://ricomanifesto.com/#michael-rico" },
       isPartOf: { "@id": "https://ricomanifesto.com/#website" },
@@ -62,6 +64,8 @@ const structuredData = {
   description={post.data.description}
   canonicalPath={canonicalPath}
   pageType="article"
+  imagePath={post.data.image.path}
+  imageAlt={post.data.image.alt}
   publishedAt={publishedAt}
   updatedAt={updatedAt}
   structuredData={structuredData}

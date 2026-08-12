@@ -6,6 +6,9 @@ topics:
   - AI agents
   - Observability
   - Cybersecurity
+image:
+  path: /images/writing/i-thought-i-was-reading-a-repo.png
+  alt: Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.
 featured: true
 draft: false
 ---

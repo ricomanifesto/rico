@@ -12,6 +12,8 @@ const firstWritingPost = {
   url: `${siteUrl}/writing/i-thought-i-was-reading-a-repo/`,
   title: "I Thought I Was Reading a Repo",
   description: "How tracing an open-source agent turned a familiar cybersecurity habit into a lesson about observability.",
+  imagePath: "/images/writing/i-thought-i-was-reading-a-repo.png",
+  imageAlt: "Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.",
 };
 const projectPages = [
   {
@@ -129,6 +131,7 @@ requireFile(join(dist, "sitemap.xml"), "XML sitemap");
 requireFile(join(dist, "rss.xml"), "writing RSS feed");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
 requireFile(join(dist, firstWritingPost.path), "first writing article");
+requireFile(join(dist, firstWritingPost.imagePath.replace(/^\//, "")), "first writing social image");
 
 for (const { slug } of projectPages) {
   requireFile(join(dist, "projects", slug, "index.html"), `${slug} project page`);
@@ -341,6 +344,9 @@ if (existsSync(firstWritingPostPath)) {
     ["canonical URL", `<link rel="canonical" href="${firstWritingPost.url}">`],
     ["article metadata", '<meta property="og:type" content="article">'],
     ["publication date", '<meta property="article:published_time" content="2026-08-11">'],
+    ["social image", `<meta property="og:image" content="${siteUrl}${firstWritingPost.imagePath}">`],
+    ["social image alt", `<meta property="og:image:alt" content="${firstWritingPost.imageAlt}">`],
+    ["BlogPosting image", `"image":"${siteUrl}${firstWritingPost.imagePath}"`],
     ["BlogPosting structured data", '"@type":"BlogPosting"'],
     ["Anthropic source link", 'href="https://www.anthropic.com/research/team/interpretability"'],
     ["Prime Agent source link", 'href="https://github.com/PrimeIntellect-ai/prime-agent"'],

@@ -1122,6 +1122,21 @@ test("serves the first writing article with article metadata and source links", 
     "content",
     "2026-08-11",
   );
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
+  );
+  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
+    "content",
+    "Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.",
+  );
+  const structuredData = JSON.parse(
+    await page.locator('script[type="application/ld+json"]').textContent(),
+  );
+  const blogPosting = structuredData["@graph"].find((entry) => entry["@type"] === "BlogPosting");
+  expect(blogPosting.image).toBe(
+    "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
+  );
   await expect(page.getByRole("link", { name: "Anthropic’s work on mechanistic interpretability" })).toHaveAttribute(
     "href",
     "https://www.anthropic.com/research/team/interpretability",
