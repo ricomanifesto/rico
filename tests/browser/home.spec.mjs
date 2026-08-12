@@ -1300,6 +1300,16 @@ for (const { slug, heading, repository } of [
     );
     await expect(page.getByRole("navigation", { name: "Portfolio" })).toBeVisible();
 
+    const structuredData = JSON.parse(
+      await page.locator('script[type="application/ld+json"]').textContent(),
+    );
+    expect(structuredData.author).toMatchObject({
+      "@type": "Person",
+      "@id": "https://ricomanifesto.com/#michael-rico",
+      name: "Michael Rico",
+      url: "https://ricomanifesto.com/",
+    });
+
     const mainBox = await page.locator("main").boundingBox();
     expect(mainBox).not.toBeNull();
     expect(mainBox.x).toBeGreaterThanOrEqual(-0.5);
@@ -1324,6 +1334,16 @@ test("serves the SentrySearch LLM evaluation case study as crawlable HTML", asyn
     "href",
     "https://github.com/ricomanifesto/SentrySearch",
   );
+
+  const structuredData = JSON.parse(
+    await page.locator('script[type="application/ld+json"]').textContent(),
+  );
+  expect(structuredData.author).toMatchObject({
+    "@type": "Person",
+    "@id": "https://ricomanifesto.com/#michael-rico",
+    name: "Michael Rico",
+    url: "https://ricomanifesto.com/",
+  });
 
   const mainBox = await page.locator("main").boundingBox();
   expect(mainBox).not.toBeNull();
