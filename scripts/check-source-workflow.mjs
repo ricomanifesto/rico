@@ -17,6 +17,7 @@ const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
 const experiencePath = path.join(root, "src/components/Experience.tsx");
 const footerPath = path.join(root, "src/components/Footer.tsx");
 const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
+const projectRoutePath = path.join(root, "src/pages/projects/[slug].astro");
 const browserTestPath = path.join(root, "tests/browser/home.spec.mjs");
 const packageJson = fs.readFileSync(packagePath, "utf8");
 const workflow = fs.readFileSync(workflowPath, "utf8");
@@ -33,7 +34,15 @@ const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
 const experienceSection = fs.readFileSync(experiencePath, "utf8");
 const footerSection = fs.readFileSync(footerPath, "utf8");
 const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
+const projectRoute = fs.existsSync(projectRoutePath) ? fs.readFileSync(projectRoutePath, "utf8") : "";
 const browserTests = fs.readFileSync(browserTestPath, "utf8");
+
+const legacyProjectPagePaths = [
+  "sentrysearch",
+  "sentrydigest",
+  "sentryinsight",
+  "grcinsight",
+].map((slug) => path.join(root, "public", "projects", slug, "index.html"));
 
 const checks = [
   {
@@ -93,8 +102,18 @@ const checks = [
   },
   {
     label: "portfolio project data exports as a readonly collection",
-    pattern: /export const projects:\s*readonly ProjectSummary\[\]\s*=/,
+    pattern: /export const projects:\s*readonly PortfolioProject\[\]\s*=/,
     source: portfolio,
+  },
+  {
+    label: "project pages render from the canonical portfolio collection",
+    pattern: /import\s*\{\s*projects,\s*type\s+PortfolioProject\s*\}\s*from\s*["']@\/content\/portfolio["'];[\s\S]*getStaticPaths\(\)[\s\S]*projects\.map/,
+    source: projectRoute,
+  },
+  {
+    label: "source image checks use Sharp instead of the vulnerable image-size parser",
+    pattern: /"sharp":\s*"\^0\.35\.3"/,
+    source: packageJson,
   },
   {
     label: "footer behavior is typed as readonly metadata",
@@ -331,6 +350,25 @@ const checks = [
 const failures = checks
   .filter(({ pattern, source = workflow }) => !pattern.test(source))
   .map(({ label }) => label);
+
+for (const legacyProjectPagePath of legacyProjectPagePaths) {
+  if (fs.existsSync(legacyProjectPagePath)) {
+    failures.push(`${path.relative(root, legacyProjectPagePath)} duplicates the generated project route`);
+  }
+}
+
+for (const obsoletePath of [
+  path.join(root, "CNAME"),
+  path.join(root, "public", "brand", "social-card.svg"),
+]) {
+  if (fs.existsSync(obsoletePath)) {
+    failures.push(`${path.relative(root, obsoletePath)} is an obsolete duplicate or unused asset`);
+  }
+}
+
+if (/"image-size"\s*:/.test(packageJson)) {
+  failures.push("package manifest retains the vulnerable image-size parser");
+}
 
 if (failures.length > 0) {
   console.error("Source workflow check failed:");

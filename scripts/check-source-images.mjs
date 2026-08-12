@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { imageSize } from "image-size";
+import sharp from "sharp";
 import ts from "typescript";
 
 const root = process.cwd();
@@ -67,7 +67,7 @@ for (const brandFile of requiredBrandFiles) {
 }
 
 for (const brandImage of requiredBrandImages) {
-  const actualDimensions = readImageDimensions(path.join(root, "public", brandImage.src));
+  const actualDimensions = await readImageDimensions(path.join(root, "public", brandImage.src));
 
   if (!actualDimensions) {
     failures.push(`${brandImage.src}: image dimensions can be read`);
@@ -83,7 +83,7 @@ for (const brandImage of requiredBrandImages) {
 
 for (const budget of rasterAssetBudgets) {
   const assetPath = path.join(root, "public", budget.src);
-  const assetInfo = readImageInfo(assetPath);
+  const assetInfo = await readImageInfo(assetPath);
 
   if (!assetInfo) {
     failures.push(`${budget.src}: image format and size can be read`);
@@ -128,7 +128,7 @@ if (!/project\.image\?\.decorative[\s\S]*src=\{project\.image\.src\}[\s\S]*alt="
 }
 
 for (const image of findProjectImages(portfolioSource)) {
-  const actualDimensions = readImageDimensions(path.join(root, "public", image.src));
+  const actualDimensions = await readImageDimensions(path.join(root, "public", image.src));
 
   if (!actualDimensions) {
     failures.push(`${image.src}: image dimensions can be read`);
@@ -185,7 +185,7 @@ for (const componentPath of walkFiles(componentsRoot)) {
       continue;
     }
 
-    const actualDimensions = readImageDimensions(path.join(root, "public", literalImage.src));
+    const actualDimensions = await readImageDimensions(path.join(root, "public", literalImage.src));
     if (!actualDimensions) {
       failures.push(`${path.relative(root, componentPath)}: ${literalImage.src} dimensions can be read`);
       continue;
@@ -309,8 +309,8 @@ function readNumericJsxAttribute(source, attributeName) {
   return value ? Number(value) : null;
 }
 
-function readImageDimensions(imagePath) {
-  const imageInfo = readImageInfo(imagePath);
+async function readImageDimensions(imagePath) {
+  const imageInfo = await readImageInfo(imagePath);
 
   return imageInfo
     ? {
@@ -320,24 +320,24 @@ function readImageDimensions(imagePath) {
     : null;
 }
 
-function readImageInfo(imagePath) {
+async function readImageInfo(imagePath) {
   if (!fs.existsSync(imagePath)) {
     return null;
   }
 
   try {
     const imageBuffer = fs.readFileSync(imagePath);
-    const dimensions = imageSize(imageBuffer);
-    if (!dimensions.width || !dimensions.height) {
+    const metadata = await sharp(imageBuffer, { failOn: "error" }).metadata();
+    if (!metadata.width || !metadata.height || !metadata.format) {
       return null;
     }
 
     return {
-      width: dimensions.width,
-      height: dimensions.height,
-      type: dimensions.type,
+      width: metadata.width,
+      height: metadata.height,
+      type: metadata.format === "jpeg" ? "jpg" : metadata.format,
       bytes: imageBuffer.byteLength,
-      pngBitDepth: dimensions.type === "png" ? imageBuffer[24] : null,
+      pngBitDepth: metadata.format === "png" ? imageBuffer[24] : null,
     };
   } catch {
     return null;

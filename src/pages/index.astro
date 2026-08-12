@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import App from "@/App";
 import { socialLinks } from "@/content/navigation";
+import { projects } from "@/content/portfolio";
 import SiteLayout from "@/layouts/SiteLayout.astro";
 import { formatPublishedDate, getReadingMinutes, type WritingSummary } from "@/lib/writing";
 
@@ -72,12 +73,11 @@ const structuredData = {
       "@type": "ItemList",
       "@id": "https://ricomanifesto.com/#projects",
       name: "Michael Rico's public security projects",
-      itemListElement: [
-        "https://ricomanifesto.com/projects/sentrysearch/",
-        "https://ricomanifesto.com/projects/sentrydigest/",
-        "https://ricomanifesto.com/projects/sentryinsight/",
-        "https://ricomanifesto.com/projects/grcinsight/",
-      ].map((url, index) => ({ "@type": "ListItem", position: index + 1, url })),
+      itemListElement: projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `https://ricomanifesto.com/projects/${project.page.slug}/`,
+      })),
     },
     {
       "@type": "Article",

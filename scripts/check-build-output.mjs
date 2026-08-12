@@ -479,7 +479,7 @@ for (const { slug, title, repository } of projectPages) {
   for (const [label, expected] of [
     ["title", `<title>${title} | Michael Rico</title>`],
     ["heading", `<h1>${title}</h1>`],
-    ["canonical URL", `<link rel="canonical" href="${expectedCanonical}" />`],
+    ["canonical URL", `rel="canonical" href="${expectedCanonical}"`],
     ["repository link", `href="${repository}"`],
     ["structured data", 'type="application/ld+json"'],
   ]) {

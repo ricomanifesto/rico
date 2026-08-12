@@ -1,13 +1,11 @@
 import { getCollection } from "astro:content";
+import { projects } from "@/content/portfolio";
 
 const staticPaths = [
   "/",
   "/writing/",
-  "/projects/sentrysearch/",
   "/projects/sentrysearch/llm-evaluation/",
-  "/projects/sentrydigest/",
-  "/projects/sentryinsight/",
-  "/projects/grcinsight/",
+  ...projects.map((project) => `/projects/${project.page.slug}/`),
 ];
 
 export async function GET() {

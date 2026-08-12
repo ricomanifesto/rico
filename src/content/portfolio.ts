@@ -15,7 +15,21 @@ export interface ProjectActionLinkBehavior {
   readonly externalRel: "noopener noreferrer";
 }
 
-export interface ProjectSummary {
+export interface ProjectPageLink {
+  readonly href: string;
+  readonly label: string;
+}
+
+export interface ProjectPageDetails {
+  readonly slug: string;
+  readonly name: string;
+  readonly metaDescription: string;
+  readonly techStack: readonly string[];
+  readonly programmingLanguages: string | readonly string[];
+  readonly relatedLinks: readonly ProjectPageLink[];
+}
+
+export interface PortfolioProject {
   readonly title: string;
   readonly description: string;
   readonly techStack: readonly string[];
@@ -25,6 +39,7 @@ export interface ProjectSummary {
   };
   readonly bgGradient: string;
   readonly image: ProjectImage | null;
+  readonly page: ProjectPageDetails;
 }
 
 export interface FooterBehavior {
@@ -180,7 +195,7 @@ export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
   externalRel: "noopener noreferrer",
 };
 
-export const projects: readonly ProjectSummary[] = [
+export const projects: readonly PortfolioProject[] = [
   {
     title: "Threat Intelligence Research Workspace",
     description: "SentrySearch turns scattered threat research into searchable security profiles for malware, attack tools, and targeted technologies, with persistent reports, hybrid search, and detection guidance in one workspace.",
@@ -201,6 +216,19 @@ export const projects: readonly ProjectSummary[] = [
       width: 2048,
       height: 1280,
       decorative: true,
+    },
+    page: {
+      slug: "sentrysearch",
+      name: "SentrySearch",
+      metaDescription: "SentrySearch turns scattered threat research into searchable security profiles, persistent reports, hybrid search, and detection guidance.",
+      techStack: ["Next.js", "TypeScript", "FastAPI", "Pinecone", "Supabase"],
+      programmingLanguages: ["TypeScript", "Python"],
+      relatedLinks: [
+        {
+          href: "/projects/sentrysearch/llm-evaluation/",
+          label: "Read the LLM evaluation case study",
+        },
+      ],
     },
   },
   {
@@ -224,6 +252,14 @@ export const projects: readonly ProjectSummary[] = [
       height: 1280,
       decorative: true,
     },
+    page: {
+      slug: "sentrydigest",
+      name: "SentryDigest",
+      metaDescription: "SentryDigest turns noisy security feeds into a daily analyst-ready briefing with source links, severity cues, and inspectable HTML output.",
+      techStack: ["Node.js", "RSS", "GitHub Actions"],
+      programmingLanguages: "JavaScript",
+      relatedLinks: [],
+    },
   },
   {
     title: "Exploitation Intelligence Reports",
@@ -246,6 +282,14 @@ export const projects: readonly ProjectSummary[] = [
       height: 1280,
       decorative: true,
     },
+    page: {
+      slug: "sentryinsight",
+      name: "SentryInsight",
+      metaDescription: "SentryInsight turns security RSS feeds into exploitation-focused threat reports with CVE correlation, attack vectors, and executive summaries.",
+      techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
+      programmingLanguages: "Python",
+      relatedLinks: [],
+    },
   },
   {
     title: "Audit-Ready GRC Intelligence",
@@ -267,6 +311,14 @@ export const projects: readonly ProjectSummary[] = [
       width: 2048,
       height: 1280,
       decorative: true,
+    },
+    page: {
+      slug: "grcinsight",
+      name: "GRCInsight",
+      metaDescription: "GRCInsight turns regulatory and security feeds into audit-ready GRC intelligence with framework mapping and action-oriented reports.",
+      techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
+      programmingLanguages: ["Go", "Python"],
+      relatedLinks: [],
     },
   }
 ];
