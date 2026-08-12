@@ -129,6 +129,7 @@ requireFile(join(dist, "images", "social-card.png"), "social card");
 requireFile(join(dist, "robots.txt"), "robots policy");
 requireFile(join(dist, "sitemap.xml"), "XML sitemap");
 requireFile(join(dist, "rss.xml"), "writing RSS feed");
+requireFile(join(dist, "rss.xsl"), "writing RSS stylesheet");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
 requireFile(join(dist, firstWritingPost.path), "first writing article");
 requireFile(join(dist, firstWritingPost.imagePath.replace(/^\//, "")), "first writing social image");
@@ -361,7 +362,13 @@ const rssPath = join(dist, "rss.xml");
 if (existsSync(rssPath)) {
   const rssFeed = readFileSync(rssPath, "utf8");
 
-  for (const expected of [firstWritingPost.title, firstWritingPost.url, "<rss"]) {
+  for (const expected of [
+    "<?xml-stylesheet",
+    'href="/rss.xsl"',
+    firstWritingPost.title,
+    firstWritingPost.url,
+    "<rss",
+  ]) {
     if (!rssFeed.includes(expected)) {
       failures.push(`Writing RSS feed is missing: ${expected}`);
     }

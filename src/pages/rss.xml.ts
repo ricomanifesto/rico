@@ -9,6 +9,7 @@ export async function GET(context: { site: URL }) {
     title: "Rico Manifesto Writing",
     description: "Notes on security systems, AI agents, and the evidence that makes complex behavior easier to inspect and reason from.",
     site: context.site,
+    stylesheet: "/rss.xsl",
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,

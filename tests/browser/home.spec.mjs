@@ -1172,8 +1172,27 @@ test("publishes the first article in the writing RSS feed", async ({ request }) 
   expect(response.status()).toBe(200);
   expect(response.headers()["content-type"]).toContain("xml");
   const body = await response.text();
+  expect(body).toMatch(/<\?xml-stylesheet (?=[^?]*href="\/rss\.xsl")(?=[^?]*type="text\/xsl")[^?]*\?>/);
   expect(body).toContain("I Thought I Was Reading a Repo");
   expect(body).toContain("https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/");
+
+  const stylesheetResponse = await request.get("/rss.xsl");
+  expect(stylesheetResponse.status()).toBe(200);
+  const stylesheet = await stylesheetResponse.text();
+  expect(stylesheet).toContain("<h1>Subscribe to");
+  expect(stylesheet).toContain('select="rss/channel/title"');
+});
+
+test("renders the RSS feed as an understandable subscription page", async ({ page }) => {
+  const response = await page.goto("/rss.xml");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "Subscribe to Rico Manifesto Writing" })).toBeVisible();
+  await expect(page.getByText("11 Aug 2026", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "I Thought I Was Reading a Repo" })).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+  );
 });
 
 for (const { slug, heading, repository } of [
