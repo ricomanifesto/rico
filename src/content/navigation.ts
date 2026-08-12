@@ -71,7 +71,7 @@ export const socialLinks: readonly SocialLink[] = [
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/michael-rico-19600314a",
+    href: "https://www.linkedin.com/in/ricomanifesto",
     kind: "linkedin",
     external: true,
   },

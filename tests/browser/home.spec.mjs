@@ -556,7 +556,7 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
   );
   await expect(socialNav.getByRole("link", { name: "LinkedIn" })).toHaveAttribute(
     "href",
-    "https://www.linkedin.com/in/michael-rico-19600314a",
+    "https://www.linkedin.com/in/ricomanifesto",
   );
   await expect(socialNav.getByRole("link", { name: "Medium" })).toHaveAttribute(
     "href",
