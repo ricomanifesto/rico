@@ -133,11 +133,6 @@
   100% { background-position: -40px -40px; }
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
 /* Custom styles */
 .network-grid {
   background-image: 
@@ -206,15 +201,6 @@
   display: inline-flex;
   align-items: center;
   color: var(--primary-accent);
-}
-
-.hero-headline-cursor {
-  display: inline-block;
-  width: 0.5rem;
-  height: 2rem;
-  margin-left: 0.25rem;
-  background-color: var(--primary-accent);
-  animation: blink 1s step-end infinite;
 }
 
 .hero-subtitle {

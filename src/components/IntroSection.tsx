@@ -45,7 +45,6 @@ export default function IntroSection() {
           <h1 className={`hero-headline ${hasRoomyHeroViewport ? "hero-headline-roomy" : ""}`}>
             <span className="hero-headline-accent">
               {heroContent.headline}
-              <span aria-hidden="true" className="hero-headline-cursor"></span>
             </span>
           </h1>
           <motion.p

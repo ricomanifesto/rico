@@ -224,7 +224,7 @@ const checks = [
   },
   {
     label: "intro hero uses the shared hero visual contract",
-    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*80rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-headline-cursor\s*\{[\s\S]*background-color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*1fr\) minmax\(0,\s*1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className="hero-headline-cursor"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
+    pattern: /\.hero-section\s*\{[\s\S]*min-height:\s*80vh;[\s\S]*overflow:\s*hidden;[\s\S]*background-color:\s*var\(--portfolio-page-background\);[\s\S]*\.hero-content\s*\{[\s\S]*display:\s*grid;[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*max-width:\s*80rem;[\s\S]*\.hero-visual\s*\{[\s\S]*overflow:\s*hidden;[\s\S]*\.hero-copy\s*\{[\s\S]*max-width:\s*42rem;[\s\S]*\.hero-headline\s*\{[\s\S]*font-family:\s*ui-monospace[\s\S]*\.hero-headline-accent\s*\{[\s\S]*color:\s*var\(--primary-accent\);[\s\S]*\.hero-subtitle\s*\{[\s\S]*\.hero-body\s*\{[\s\S]*color:\s*var\(--portfolio-copy\);[\s\S]*\.hero-content-with-visual\s*\{[\s\S]*grid-template-columns:\s*minmax\(260px,\s*1fr\) minmax\(0,\s*1fr\);[\s\S]*<section[\s\S]*className="hero-section"[\s\S]*className=\{`hero-content \$\{[\s\S]*\}`\}[\s\S]*className="hero-visual"[\s\S]*data-testid="hero-copy" className=\{`hero-copy[\s\S]*className=\{`hero-headline[\s\S]*className="hero-headline-accent"[\s\S]*className=\{`hero-subtitle[\s\S]*className=\{`hero-body/,
     source: `${indexCss}\n${introSection}`,
   },
   {
@@ -233,14 +233,9 @@ const checks = [
     source: introSection,
   },
   {
-    label: "intro headline cursor uses a class-based accent style",
-    pattern: /<span[^>]*className="hero-headline-cursor"[^>]*><\/span>/,
-    source: introSection,
-  },
-  {
-    label: "intro headline cursor is hidden from assistive technology",
-    pattern: /<span[^>]*aria-hidden="true"[^>]*className="hero-headline-cursor"[^>]*><\/span>/,
-    source: introSection,
+    label: "intro headline omits decorative cursor markup and styles",
+    pattern: /^(?![\s\S]*(?:hero-headline-cursor|@keyframes\s+blink\b))[\s\S]*$/,
+    source: `${introSection}\n${indexCss}`,
   },
   {
     label: "intro CTA uses the shared hero CTA visual contract",
