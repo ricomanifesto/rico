@@ -788,29 +788,29 @@ test("moves focus to main content when the skip link is activated", async ({ pag
   await expect(page.locator("main#main-content")).toBeFocused();
 });
 
-test("links the homepage to the latest first-party article", async ({ page }) => {
+test("links the homepage to the remaining first-party article", async ({ page }) => {
   await page.goto("/");
 
   const writingSection = page.getByRole("region", { name: "/ writing" });
   await expect(writingSection).toBeVisible();
   await expect(
-    writingSection.getByRole("heading", { level: 3, name: "The Deploy Wasn’t the Proof" }),
+    writingSection.getByRole("heading", { level: 3, name: "I Thought I Was Reading a Repo" }),
   ).toBeVisible();
   await expect(
-    writingSection.getByRole("link", { name: "Read The Deploy Wasn’t the Proof" }),
-  ).toHaveAttribute("href", "/writing/the-deploy-wasnt-the-proof/");
+    writingSection.getByRole("link", { name: "Read I Thought I Was Reading a Repo" }),
+  ).toHaveAttribute("href", "/writing/i-thought-i-was-reading-a-repo/");
 
   const structuredData = JSON.parse(
     await page.locator('script[type="application/ld+json"]').textContent(),
   );
   const blogPosting = structuredData["@graph"].find(
-    (entry) => entry["@id"] === "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/#article",
+    (entry) => entry["@id"] === "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/#article",
   );
   expect(blogPosting).toMatchObject({
-    url: "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/",
-    headline: "The Deploy Wasn’t the Proof",
-    image: "https://ricomanifesto.com/images/writing/the-deploy-wasnt-the-proof.png",
-    datePublished: "2026-08-13",
+    url: "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+    headline: "I Thought I Was Reading a Repo",
+    image: "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
+    datePublished: "2026-08-11",
   });
 });
 
@@ -840,11 +840,6 @@ test("exposes the Writing hierarchy as visible and structured breadcrumbs", asyn
       currentName: "I Thought I Was Reading a Repo",
       expectedItems: 3,
     },
-    {
-      href: "/writing/the-deploy-wasnt-the-proof/",
-      currentName: "The Deploy Wasn’t the Proof",
-      expectedItems: 3,
-    },
   ]) {
     await page.goto(href);
 
@@ -866,7 +861,6 @@ test("renders Writing routes without client hydration", async ({ page }) => {
   for (const href of [
     "/writing/",
     "/writing/i-thought-i-was-reading-a-repo/",
-    "/writing/the-deploy-wasnt-the-proof/",
   ]) {
     const response = await page.goto(href);
 
@@ -964,36 +958,18 @@ test("serves the first writing article with article metadata and source links", 
   expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
 });
 
-test("serves the second writing article with truthful release evidence", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  const response = await page.goto("/writing/the-deploy-wasnt-the-proof/");
-
-  expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { level: 1, name: "The Deploy Wasn’t the Proof" })).toBeVisible();
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-    "href",
-    "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/",
-  );
-  await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute("content", "2026-08-13");
-  await expect(page.locator('meta[property="article:tag"]')).toHaveCount(3);
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
-    "content",
-    "https://ricomanifesto.com/images/writing/the-deploy-wasnt-the-proof.png",
-  );
-  await expect(page.getByRole("link", { name: "The diff" })).toHaveAttribute(
-    "href",
-    "https://github.com/ricomanifesto/rico/commit/e45e6ee361acfa24cbad65cc3c19885cb9ce8e50",
-  );
-  await expect(page.getByText("What can a stranger observe right now?", { exact: false })).toBeVisible();
-
-  const viewportMetrics = await page.evaluate(() => ({
-    clientWidth: document.documentElement.clientWidth,
-    scrollWidth: document.documentElement.scrollWidth,
-  }));
-  expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
+test("does not publish the removed writing article or its assets", async ({ request }) => {
+  for (const path of [
+    "/writing/the-deploy-wasnt-the-proof/",
+    "/images/writing/the-deploy-wasnt-the-proof.png",
+    "/brand/writing/the-deploy-wasnt-the-proof.svg",
+  ]) {
+    const response = await request.get(path);
+    expect(response.status()).toBe(404);
+  }
 });
 
-test("publishes the first article in the writing RSS feed", async ({ request }) => {
+test("publishes only the remaining article in the writing RSS feed", async ({ request }) => {
   const response = await request.get("/rss.xml");
 
   expect(response.status()).toBe(200);
@@ -1002,8 +978,8 @@ test("publishes the first article in the writing RSS feed", async ({ request }) 
   expect(body).toMatch(/<\?xml-stylesheet (?=[^?]*href="\/rss\.xsl")(?=[^?]*type="text\/xsl")[^?]*\?>/);
   expect(body).toContain("I Thought I Was Reading a Repo");
   expect(body).toContain("https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/");
-  expect(body).toContain("The Deploy Wasn’t the Proof");
-  expect(body).toContain("https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/");
+  expect(body).not.toContain("The Deploy Wasn’t the Proof");
+  expect(body).not.toContain("https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/");
 
   const stylesheetResponse = await request.get("/rss.xsl");
   expect(stylesheetResponse.status()).toBe(200);
@@ -1018,14 +994,14 @@ test("publishes content-backed modification dates for Writing routes", async ({ 
   expect(response.status()).toBe(200);
   const body = await response.text();
   for (const [url, lastModified] of [
-    ["https://ricomanifesto.com/writing/", "2026-08-13"],
+    ["https://ricomanifesto.com/writing/", "2026-08-11"],
     ["https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/", "2026-08-11"],
-    ["https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/", "2026-08-13"],
   ]) {
     const entry = Array.from(body.matchAll(/<url>[\s\S]*?<\/url>/g), ([match]) => match)
       .find((candidate) => candidate.includes(`<loc>${url}</loc>`));
     expect(entry).toContain(`<lastmod>${lastModified}</lastmod>`);
   }
+  expect(body).not.toContain("https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/");
 });
 
 test("renders the RSS feed as an understandable subscription page", async ({ page }) => {
@@ -1034,11 +1010,8 @@ test("renders the RSS feed as an understandable subscription page", async ({ pag
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1, name: "Subscribe to Rico Manifesto Writing" })).toBeVisible();
   await expect(page.getByText("11 Aug 2026", { exact: true })).toBeVisible();
-  await expect(page.getByText("13 Aug 2026", { exact: true })).toBeVisible();
-  await expect(page.getByRole("link", { name: "The Deploy Wasn’t the Proof" })).toHaveAttribute(
-    "href",
-    "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/",
-  );
+  await expect(page.getByText("13 Aug 2026", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "The Deploy Wasn’t the Proof" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "I Thought I Was Reading a Repo" })).toHaveAttribute(
     "href",
     "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",

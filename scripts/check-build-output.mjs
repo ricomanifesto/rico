@@ -20,12 +20,20 @@ const firstWritingPost = {
   imagePath: "/images/writing/i-thought-i-was-reading-a-repo.png",
   imageAlt: "Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.",
 };
-const secondWritingPost = {
+const removedWritingPost = {
   path: join("writing", "the-deploy-wasnt-the-proof", "index.html"),
   url: `${siteUrl}/writing/the-deploy-wasnt-the-proof/`,
   title: "The Deploy Wasn’t the Proof",
   imagePath: "/images/writing/the-deploy-wasnt-the-proof.png",
+  brandPath: "/brand/writing/the-deploy-wasnt-the-proof.svg",
 };
+const removedWritingMarkers = [
+  removedWritingPost.url,
+  "/writing/the-deploy-wasnt-the-proof/",
+  removedWritingPost.title,
+  removedWritingPost.imagePath,
+  removedWritingPost.brandPath,
+];
 const projectPages = [
   {
     slug: "sentrysearch",
@@ -146,8 +154,16 @@ requireFile(join(dist, "privacy", "index.html"), "privacy page");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
 requireFile(join(dist, firstWritingPost.path), "first writing article");
 requireFile(join(dist, firstWritingPost.imagePath.replace(/^\//, "")), "first writing social image");
-requireFile(join(dist, secondWritingPost.path), "second writing article");
-requireFile(join(dist, secondWritingPost.imagePath.replace(/^\//, "")), "second writing social image");
+
+for (const removedArtifactPath of [
+  removedWritingPost.path,
+  removedWritingPost.imagePath.replace(/^\//, ""),
+  removedWritingPost.brandPath.replace(/^\//, ""),
+]) {
+  if (existsSync(join(dist, removedArtifactPath))) {
+    failures.push(`Removed writing artifact is still published: ${removedArtifactPath}`);
+  }
+}
 
 for (const { slug } of projectPages) {
   requireFile(join(dist, "projects", slug, "index.html"), `${slug} project page`);
@@ -172,6 +188,12 @@ for (const artifactPath of walkFiles(dist).filter(isTextArtifact)) {
   for (const { label, pattern } of localPathPatterns) {
     if (pattern.test(artifact)) {
       failures.push(`Public artifact ${relativePath} contains ${label}`);
+    }
+  }
+
+  for (const removedMarker of removedWritingMarkers) {
+    if (artifact.includes(removedMarker)) {
+      failures.push(`Public artifact ${relativePath} references removed writing post: ${removedMarker}`);
     }
   }
 }
@@ -355,7 +377,6 @@ if (existsSync(sitemapPath)) {
     `${siteUrl}/privacy/`,
     `${siteUrl}/writing/`,
     firstWritingPost.url,
-    secondWritingPost.url,
     ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
     sentrySearchCaseStudy.url,
   ];
@@ -376,7 +397,6 @@ if (existsSync(writingArchivePath)) {
     ["heading", "<h1>Writing</h1>"],
     ["canonical URL", `<link rel="canonical" href="${siteUrl}/writing/">`],
     ["article link", `href="/writing/i-thought-i-was-reading-a-repo/"`],
-    ["second article link", `href="/writing/the-deploy-wasnt-the-proof/"`],
     ["RSS link", 'href="/rss.xml"'],
   ]) {
     if (!writingArchive.includes(expected)) {
@@ -418,8 +438,6 @@ if (existsSync(rssPath)) {
     'href="/rss.xsl"',
     firstWritingPost.title,
     firstWritingPost.url,
-    secondWritingPost.title,
-    secondWritingPost.url,
     "<rss",
   ]) {
     if (!rssFeed.includes(expected)) {
