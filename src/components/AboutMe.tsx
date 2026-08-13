@@ -1,53 +1,22 @@
-import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import { aboutBehavior, aboutContent } from "../content/portfolio";
+import { aboutContent } from "../content/portfolio";
 import { githubProfileLink, socialLinkBehavior } from "../content/navigation";
 
 export default function AboutMe() {
-  const getTechnologyItemOffsetX = (index: number) =>
-    index < aboutBehavior.technologyGrid.rowCount
-      ? aboutBehavior.technologyItemMotion.leadingColumnOffsetX
-      : aboutBehavior.technologyItemMotion.trailingColumnOffsetX;
-
   return (
     <section id="about" aria-labelledby="about-heading" className="portfolio-section">
       <div className="about-content">
-        <motion.h2 
-          id="about-heading"
-          className="section-title"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: aboutBehavior.sectionHeadingMotion.duration }}
-        >
+        <h2 id="about-heading" className="section-title">
           / about me
-        </motion.h2>
+        </h2>
 
         <div className="about-layout">
           <div className="about-copy">
-            <motion.p 
-              className="about-body-copy about-body-spaced"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{
-                delay: aboutBehavior.introMotion.delay,
-                duration: aboutBehavior.introMotion.duration,
-              }}
-              viewport={{ once: true }}
-            >
+            <p className="about-body-copy about-body-spaced">
               I am currently a Staff Threat Hunter at SentinelOne, working in ThreatOps on Incident Readiness and Response. My work sits at the intersection of threat hunting, detection engineering, automation, and analyst workflows. These are some of the tools and technologies I have been working with:
-            </motion.p>
+            </p>
 
-            <motion.p
-              className="about-body-copy about-body-spaced"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{
-                delay: aboutBehavior.introMotion.delay,
-                duration: aboutBehavior.introMotion.duration,
-              }}
-              viewport={{ once: true }}
-            >
+            <p className="about-body-copy about-body-spaced">
               See{" "}
               <a
                 href={githubProfileLink.href}
@@ -58,33 +27,17 @@ export default function AboutMe() {
                 Michael Rico on GitHub
               </a>{" "}
               for public code and project evidence.
-            </motion.p>
+            </p>
 
-            <motion.ul 
+            <ul
               aria-label="Technologies"
               role="list"
               className="about-technology-grid"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: aboutBehavior.technologiesMotion.delay,
-                duration: aboutBehavior.technologiesMotion.duration,
-              }}
-              viewport={{ once: true }}
             >
-              {aboutContent.technologies.map((tech, index) => (
-                <motion.li
+              {aboutContent.technologies.map((tech) => (
+                <li
                   key={tech}
                   className="about-technology-item"
-                  initial={{ opacity: 0, x: getTechnologyItemOffsetX(index) }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{
-                    delay:
-                      aboutBehavior.technologyItemMotion.baseDelay +
-                      (index % aboutBehavior.technologyGrid.rowCount) * aboutBehavior.technologyItemMotion.staggerDelay,
-                    duration: aboutBehavior.technologyItemMotion.duration,
-                  }}
-                  viewport={{ once: true }}
                 >
                   <ChevronRight
                     className="about-technology-icon"
@@ -92,34 +45,16 @@ export default function AboutMe() {
                     focusable="false"
                   />
                   <span className="about-technology-label">{tech}</span>
-                </motion.li>
+                </li>
               ))}
-            </motion.ul>
+            </ul>
 
-            <motion.p 
-              className="about-body-copy"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{
-                delay: aboutBehavior.interestsMotion.delay,
-                duration: aboutBehavior.interestsMotion.duration,
-              }}
-              viewport={{ once: true }}
-            >
+            <p className="about-body-copy">
               Outside of work, I am interested in geopolitics, security research, and how technical systems shape real-world decisions.
-            </motion.p>
+            </p>
           </div>
 
-          <motion.div
-            className="about-profile-frame"
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{
-              delay: aboutBehavior.imageMotion.delay,
-              duration: aboutBehavior.imageMotion.duration,
-            }}
-            viewport={{ once: true }}
-          >
+          <div className="about-profile-frame">
             <picture>
               <source srcSet="/images/profile-384.webp" type="image/webp" />
               <img
@@ -132,7 +67,7 @@ export default function AboutMe() {
                 className="about-profile-surface"
               />
             </picture>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

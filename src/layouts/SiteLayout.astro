@@ -30,6 +30,7 @@ const {
 } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, Astro.site);
 const imageUrl = new URL(imagePath, Astro.site);
+const imageType = imagePath.toLowerCase().match(/\.jpe?g$/) ? "image/jpeg" : "image/png";
 ---
 
 <!doctype html>
@@ -59,7 +60,7 @@ const imageUrl = new URL(imagePath, Astro.site);
     <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:type" content={imageType} />
     {publishedAt && <meta property="article:published_time" content={publishedAt} />}
     {updatedAt && <meta property="article:modified_time" content={updatedAt} />}
     {articleAuthorUrl && <meta property="article:author" content={articleAuthorUrl} />}

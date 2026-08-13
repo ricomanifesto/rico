@@ -1,373 +1,135 @@
-import fs from "node:fs";
-import path from "node:path";
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 
 const root = process.cwd();
-const packagePath = path.join(root, "package.json");
-const workflowPath = path.join(root, ".github/workflows/deploy.yml");
-const cleanTestArtifactsPath = path.join(root, "scripts/clean-test-artifacts.mjs");
-const portfolioPath = path.join(root, "src/content/portfolio.ts");
-const heroPath = path.join(root, "src/content/hero.ts");
-const navigationPath = path.join(root, "src/content/navigation.ts");
-const homePath = path.join(root, "src/Home.tsx");
-const headerPath = path.join(root, "src/components/Header.tsx");
-const socialLinkPath = path.join(root, "src/components/SocialLink.tsx");
-const introSectionPath = path.join(root, "src/components/IntroSection.tsx");
-const signalAnimationPath = path.join(root, "src/components/SignalAnimation.tsx");
-const aboutMePath = path.join(root, "src/components/AboutMe.tsx");
-const experiencePath = path.join(root, "src/components/Experience.tsx");
-const footerPath = path.join(root, "src/components/Footer.tsx");
-const projectsSectionPath = path.join(root, "src/components/ProjectsSection.tsx");
-const projectRoutePath = path.join(root, "src/pages/projects/[slug].astro");
-const browserTestPath = path.join(root, "tests/browser/home.spec.mjs");
-const packageJson = fs.readFileSync(packagePath, "utf8");
-const workflow = fs.readFileSync(workflowPath, "utf8");
-const cleanTestArtifacts = fs.readFileSync(cleanTestArtifactsPath, "utf8");
-const portfolio = fs.readFileSync(portfolioPath, "utf8");
-const hero = fs.existsSync(heroPath) ? fs.readFileSync(heroPath, "utf8") : "";
-const navigation = fs.readFileSync(navigationPath, "utf8");
-const home = fs.readFileSync(homePath, "utf8");
-const header = fs.readFileSync(headerPath, "utf8");
-const socialLink = fs.readFileSync(socialLinkPath, "utf8");
-const introSection = fs.readFileSync(introSectionPath, "utf8");
-const signalAnimation = fs.existsSync(signalAnimationPath) ? fs.readFileSync(signalAnimationPath, "utf8") : "";
-const aboutMeSection = fs.readFileSync(aboutMePath, "utf8");
-const experienceSection = fs.readFileSync(experiencePath, "utf8");
-const footerSection = fs.readFileSync(footerPath, "utf8");
-const projectsSection = fs.readFileSync(projectsSectionPath, "utf8");
-const projectRoute = fs.existsSync(projectRoutePath) ? fs.readFileSync(projectRoutePath, "utf8") : "";
-const browserTests = fs.readFileSync(browserTestPath, "utf8");
+const read = (path) => readFileSync(join(root, path), "utf8");
+const packageJson = JSON.parse(read("package.json"));
+const workflow = read(".github/workflows/deploy.yml");
+const playwright = read("playwright.config.mjs");
+const cleanup = read("scripts/clean-test-artifacts.mjs");
+const portfolio = read("src/content/portfolio.ts");
+const projectsSection = read("src/components/ProjectsSection.tsx");
+const projectRoute = read("src/pages/projects/[slug].astro");
+const sitemap = read("src/pages/sitemap.xml.ts");
+const failures = [];
 
-const legacyProjectPagePaths = [
-  "sentrysearch",
-  "sentrydigest",
-  "sentryinsight",
-  "grcinsight",
-].map((slug) => path.join(root, "public", "projects", slug, "index.html"));
-
-const checks = [
-  {
-    label: "workflow checks out code with a Node 24-compatible action",
-    pattern: /uses:\s*actions\/checkout@v7\b/,
-  },
-  {
-    label: "workflow sets up Node with a Node 24-compatible action",
-    pattern: /uses:\s*actions\/setup-node@v6\b/,
-  },
-  {
-    label: "workflow uploads the Pages artifact with a Node 24-compatible action",
-    pattern: /uses:\s*actions\/upload-pages-artifact@v5\b/,
-  },
-  {
-    label: "workflow deploys Pages with a Node 24-compatible action",
-    pattern: /uses:\s*actions\/deploy-pages@v5\b/,
-  },
-  {
-    label: "home shell avoids narration-only file comments",
-    pattern: /^(?![\s\S]*\/\/\s*src\/Home\.tsx\s+-\s+This should NOT contain any CSS)[\s\S]*$/,
-    source: home,
-  },
-  {
-    label: "site build still runs on the pinned project Node version",
-    pattern: /node-version:\s*['"]22\.12\.0['"]/,
-  },
-  {
-    label: "workflow installs Chromium for browser interaction checks",
-    pattern: /npx playwright install --with-deps chromium/,
-    source: workflow,
-  },
-  {
-    label: "package browser check installs Chromium before running tests",
-    pattern: /"browser":\s*"node scripts\/clean-test-artifacts\.mjs && playwright install chromium && playwright test"/,
-    source: packageJson,
-  },
-  {
-    label: "package browser check clears stale Playwright artifacts before running tests",
-    pattern: /"browser":\s*"node scripts\/clean-test-artifacts\.mjs && playwright install chromium && playwright test"/,
-    source: packageJson,
-  },
-  {
-    label: "test artifact cleanup removes Playwright output directories",
-    pattern: /const generatedArtifactDirs = \["test-results", "playwright-report", "blob-report"\];[\s\S]*rmSync\(join\(root, artifactDir\), \{ force: true, recursive: true \}\);/,
-    source: cleanTestArtifacts,
-  },
-  {
-    label: "browser tests guard mobile nav rail overflow behavior",
-    pattern: /test\("keeps every mobile nav rail item reachable without page overflow"[\s\S]*scrollIntoViewIfNeeded\(\)[\s\S]*metrics\.scrollWidth\)\.toBe\(metrics\.clientWidth\)/,
-    source: browserTests,
-  },
-  {
-    label: "browser tests guard safe external link attributes",
-    pattern: /test\("opens external portfolio links with safe new-tab attributes"[\s\S]*target",\s*"_blank"[\s\S]*rel",\s*"noopener noreferrer"/,
-    source: browserTests,
-  },
-  {
-    label: "portfolio project data exports as a readonly collection",
-    pattern: /export const projects:\s*readonly PortfolioProject\[\]\s*=/,
-    source: portfolio,
-  },
-  {
-    label: "project pages render from the canonical portfolio collection",
-    pattern: /import\s*\{\s*projects,\s*type\s+PortfolioProject\s*\}\s*from\s*["']@\/content\/portfolio["'];[\s\S]*getStaticPaths\(\)[\s\S]*projects\.map/,
-    source: projectRoute,
-  },
-  {
-    label: "source image checks use Sharp instead of the vulnerable image-size parser",
-    pattern: /"sharp":\s*"\^0\.35\.3"/,
-    source: packageJson,
-  },
-  {
-    label: "footer behavior is typed as readonly metadata",
-    pattern: /export interface FooterBehavior \{[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "footer behavior preserves current motion timing",
-    pattern: /export const footerBehavior:\s*FooterBehavior\s*=\s*\{[\s\S]*containerMotion:\s*\{[\s\S]*duration:\s*0\.5[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "footer uses behavior metadata for motion timing",
-    pattern: /import\s*\{\s*footerBehavior\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*transition=\{\{ duration: footerBehavior\.containerMotion\.duration \}\}/,
-    source: footerSection,
-  },
-  {
-    label: "project carousel behavior is typed as readonly metadata",
-    pattern: /export interface ProjectCarouselBehavior \{[\s\S]*readonly autoRotationIntervalMs:\s*number;[\s\S]*readonly keyboardActivationKeys:\s*readonly string\[\];[\s\S]*readonly slideStepPercent:\s*number;[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly slideMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*\};[\s\S]*readonly hoverMotion:\s*\{[\s\S]*readonly scale:\s*number;[\s\S]*\};[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "project carousel behavior preserves current motion timings",
-    pattern: /export const projectCarouselBehavior:\s*ProjectCarouselBehavior\s*=\s*\{[\s\S]*autoRotationIntervalMs:\s*10000,[\s\S]*keyboardActivationKeys:\s*\["Enter",\s*" "\],[\s\S]*slideStepPercent:\s*100,[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*slideMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1[\s\S]*\}[\s\S]*hoverMotion:\s*\{[\s\S]*scale:\s*1\.02[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "project carousel uses behavior metadata for timing",
-    pattern: /import\s*\{[\s\S]*projectCarouselBehavior,[\s\S]*projects[\s\S]*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*\},\s*projectCarouselBehavior\.autoRotationIntervalMs\);[\s\S]*projectCarouselBehavior\.keyboardActivationKeys\.includes\(event\.key\)[\s\S]*transition=\{\{ duration: projectCarouselBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*currentIndex \* projectCarouselBehavior\.slideStepPercent[\s\S]*duration:\s*projectCarouselBehavior\.slideMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*projectCarouselBehavior\.slideMotion\.staggerDelay[\s\S]*whileHover=\{[\s\S]*shouldReduceMotion\s*\?\s*undefined\s*:\s*\{\s*scale:\s*projectCarouselBehavior\.hoverMotion\.scale\s*\}[\s\S]*\}/,
-    source: projectsSection,
-  },
-  {
-    label: "about content is typed as readonly metadata",
-    pattern: /export interface AboutContent \{[\s\S]*readonly technologies:\s*readonly string\[\];[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "about behavior is typed as readonly metadata",
-    pattern: /export interface AboutBehavior \{[\s\S]*readonly technologyGrid:\s*\{[\s\S]*readonly rowCount:\s*number;[\s\S]*\};[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly introMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologiesMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly technologyItemMotion:\s*\{[\s\S]*readonly baseDelay:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*readonly leadingColumnOffsetX:\s*number;[\s\S]*readonly trailingColumnOffsetX:\s*number;[\s\S]*\};[\s\S]*readonly interestsMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly imageMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "about content preserves current technologies",
-    pattern: /export const aboutContent:\s*AboutContent\s*=\s*\{[\s\S]*technologies:\s*\[\s*"Python",\s*"TypeScript",\s*"Next\.js",\s*"FastAPI",\s*"Go",\s*"LangGraph",?\s*\][\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "about behavior preserves current motion timings",
-    pattern: /export const aboutBehavior:\s*AboutBehavior\s*=\s*\{[\s\S]*technologyGrid:\s*\{[\s\S]*rowCount:\s*3[\s\S]*\}[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*introMotion:\s*\{[\s\S]*delay:\s*0\.2,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologiesMotion:\s*\{[\s\S]*delay:\s*0\.4,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*technologyItemMotion:\s*\{[\s\S]*baseDelay:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*duration:\s*0\.6,[\s\S]*leadingColumnOffsetX:\s*-20,[\s\S]*trailingColumnOffsetX:\s*20[\s\S]*\}[\s\S]*interestsMotion:\s*\{[\s\S]*delay:\s*1\.0,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*imageMotion:\s*\{[\s\S]*delay:\s*0\.8,[\s\S]*duration:\s*0\.8[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "about section renders technologies from metadata",
-    pattern: /import\s*\{\s*aboutBehavior,\s*aboutContent\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*aboutContent\.technologies\.map\(\(tech, index\)/,
-    source: aboutMeSection,
-  },
-  {
-    label: "about section uses behavior metadata for motion timing",
-    pattern: /import\s*\{\s*aboutBehavior,\s*aboutContent\s*\}\s*from\s*["']\.\.\/content\/portfolio["'];[\s\S]*getTechnologyItemOffsetX[\s\S]*index < aboutBehavior\.technologyGrid\.rowCount[\s\S]*aboutBehavior\.technologyItemMotion\.leadingColumnOffsetX[\s\S]*aboutBehavior\.technologyItemMotion\.trailingColumnOffsetX[\s\S]*transition=\{\{ duration: aboutBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*delay:\s*aboutBehavior\.introMotion\.delay,\s*duration:\s*aboutBehavior\.introMotion\.duration[\s\S]*delay:\s*aboutBehavior\.technologiesMotion\.delay,[\s\S]*duration:\s*aboutBehavior\.technologiesMotion\.duration[\s\S]*x:\s*getTechnologyItemOffsetX\(index\)[\s\S]*aboutBehavior\.technologyItemMotion\.baseDelay[\s\S]*index % aboutBehavior\.technologyGrid\.rowCount[\s\S]*aboutBehavior\.technologyItemMotion\.staggerDelay[\s\S]*duration:\s*aboutBehavior\.technologyItemMotion\.duration[\s\S]*delay:\s*aboutBehavior\.interestsMotion\.delay,\s*duration:\s*aboutBehavior\.interestsMotion\.duration[\s\S]*delay:\s*aboutBehavior\.imageMotion\.delay,\s*duration:\s*aboutBehavior\.imageMotion\.duration/,
-    source: aboutMeSection,
-  },
-  {
-    label: "portfolio experience data exports as a readonly collection",
-    pattern: /export const experiences:\s*readonly ExperienceItem\[\]\s*=/,
-    source: portfolio,
-  },
-  {
-    label: "experience behavior is typed as readonly metadata",
-    pattern: /export interface ExperienceBehavior \{[\s\S]*readonly keyboardNavigationKeys:\s*\{[\s\S]*readonly next:\s*readonly string\[\];[\s\S]*readonly previous:\s*readonly string\[\];[\s\S]*readonly first:\s*string;[\s\S]*readonly last:\s*string;[\s\S]*\};[\s\S]*readonly sectionHeadingMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly tabMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*\};[\s\S]*readonly panelMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly highlightMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly staggerDelay:\s*number;[\s\S]*readonly baseDelay:\s*number;[\s\S]*\};[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "experience behavior preserves current motion timings",
-    pattern: /export const experienceBehavior:\s*ExperienceBehavior\s*=\s*\{[\s\S]*keyboardNavigationKeys:\s*\{[\s\S]*next:\s*\["ArrowDown",\s*"ArrowRight"\],[\s\S]*previous:\s*\["ArrowUp",\s*"ArrowLeft"\],[\s\S]*first:\s*"Home",[\s\S]*last:\s*"End"[\s\S]*\}[\s\S]*sectionHeadingMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*tabMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1[\s\S]*\}[\s\S]*panelMotion:\s*\{[\s\S]*duration:\s*0\.6[\s\S]*\}[\s\S]*highlightMotion:\s*\{[\s\S]*duration:\s*0\.6,[\s\S]*staggerDelay:\s*0\.1,[\s\S]*baseDelay:\s*0\.2[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "experience section uses behavior metadata for motion timing",
-    pattern: /type ExperienceTabNavigationDirection = "next" \| "previous";[\s\S]*getWrappedExperienceTabIndex[\s\S]*direction:\s*ExperienceTabNavigationDirection[\s\S]*direction === "next"[\s\S]*return index === lastIndex \? 0 : index \+ 1;[\s\S]*return index === 0 \? lastIndex : index - 1;[\s\S]*experienceBehavior\.keyboardNavigationKeys\.next\.includes\(event\.key\)[\s\S]*getWrappedExperienceTabIndex\(index, lastIndex, "next"\)[\s\S]*experienceBehavior\.keyboardNavigationKeys\.previous\.includes\(event\.key\)[\s\S]*getWrappedExperienceTabIndex\(index, lastIndex, "previous"\)[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.first[\s\S]*event\.key === experienceBehavior\.keyboardNavigationKeys\.last[\s\S]*transition=\{\{ duration: experienceBehavior\.sectionHeadingMotion\.duration \}\}[\s\S]*transition=\{\{ duration: experienceBehavior\.panelMotion\.duration \}\}[\s\S]*duration: experienceBehavior\.highlightMotion\.duration,[\s\S]*delay:\s*highlightIndex\s*\*\s*experienceBehavior\.highlightMotion\.staggerDelay\s*\+\s*experienceBehavior\.highlightMotion\.baseDelay[\s\S]*function ExperienceTab\([\s\S]*duration:\s*experienceBehavior\.tabMotion\.duration,[\s\S]*delay:\s*index\s*\*\s*experienceBehavior\.tabMotion\.staggerDelay/,
-    source: experienceSection,
-  },
-  {
-    label: "experience highlights are typed as readonly content",
-    pattern: /readonly highlights:\s*readonly string\[\];/,
-    source: portfolio,
-  },
-  {
-    label: "project technologies are typed as readonly content",
-    pattern: /readonly techStack:\s*readonly string\[\];/,
-    source: portfolio,
-  },
-  {
-    label: "project data uses technology lists instead of comma-separated strings",
-    pattern: /^(?![\s\S]*\n\s*tech:\s*")[\s\S]*techStack:\s*\[/,
-    source: portfolio,
-  },
-  {
-    label: "project cards render technology lists with stable separator text",
-    pattern: /project\.techStack\.join\(", "\)/,
-    source: projectsSection,
-  },
-  {
-    label: "hero copy is typed as readonly content",
-    pattern: /export interface HeroContent \{[\s\S]*readonly headline:\s*string;[\s\S]*readonly subtitle:\s*string;[\s\S]*readonly body:\s*string;[\s\S]*readonly ctaLabel:\s*string;[\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "hero behavior is typed as readonly metadata",
-    pattern: /export interface HeroBehavior \{[\s\S]*readonly roomyVisualViewportQuery:\s*string;[\s\S]*readonly compactLandscapeViewportQuery:\s*string;[\s\S]*readonly compactLandscapeNarrowViewportQuery:\s*string;[\s\S]*readonly compactLandscapePaddingTop:\s*"4\.5rem";[\s\S]*readonly compactLandscapeNarrowPaddingTop:\s*"9rem";[\s\S]*readonly containerMotion:\s*\{[\s\S]*readonly duration:\s*number;[\s\S]*readonly ease:\s*"easeOut";[\s\S]*\};[\s\S]*readonly subtitleMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly bodyMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*readonly ctaMotion:\s*\{[\s\S]*readonly delay:\s*number;[\s\S]*readonly duration:\s*number;[\s\S]*\};[\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "hero content preserves current public copy",
-    pattern: /export const heroContent:\s*HeroContent\s*=\s*\{[\s\S]*headline:\s*"Hi, I'm Michael Rico"[\s\S]*subtitle:\s*"I build security systems that turn noisy signals into clear, inspectable decisions\."[\s\S]*body:\s*"I'm a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering\. I build tools that make security work easier to inspect, validate, and act on\."[\s\S]*ctaLabel:\s*"Say hi!"[\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "hero behavior preserves current responsive layout metadata",
-    pattern: /export const heroBehavior:\s*HeroBehavior\s*=\s*\{[\s\S]*roomyVisualViewportQuery:\s*"\(min-width: 768px\) and \(min-height: 640px\)",[\s\S]*compactLandscapeViewportQuery:\s*"\(min-width: 768px\) and \(max-height: 639px\)",[\s\S]*compactLandscapeNarrowViewportQuery:\s*"\(min-width: 768px\) and \(max-width: 899px\) and \(max-height: 639px\)",[\s\S]*compactLandscapePaddingTop:\s*"4\.5rem",[\s\S]*compactLandscapeNarrowPaddingTop:\s*"9rem"[\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "hero behavior preserves current motion timings",
-    pattern: /containerMotion:\s*\{[\s\S]*duration:\s*0\.8,[\s\S]*ease:\s*"easeOut"[\s\S]*\}[\s\S]*subtitleMotion:\s*\{[\s\S]*delay:\s*0\.5,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*bodyMotion:\s*\{[\s\S]*delay:\s*0\.7,[\s\S]*duration:\s*0\.8[\s\S]*\}[\s\S]*ctaMotion:\s*\{[\s\S]*delay:\s*0\.9,[\s\S]*duration:\s*0\.8[\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "intro section renders hero copy from metadata",
-    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*\{heroContent\.headline\}[\s\S]*\{heroContent\.subtitle\}[\s\S]*\{heroContent\.body\}[\s\S]*\{heroContent\.ctaLabel\}/,
-    source: introSection,
-  },
-  {
-    label: "intro section uses hero behavior metadata for responsive layout",
-    pattern: /import\s*\{\s*heroBehavior,\s*heroContent\s*\}\s*from\s*["']\.\.\/content\/hero["'];[\s\S]*useMediaQuery\(heroBehavior\.roomyVisualViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeViewportQuery\)[\s\S]*useMediaQuery\(heroBehavior\.compactLandscapeNarrowViewportQuery\)[\s\S]*heroBehavior\.compactLandscapeNarrowPaddingTop[\s\S]*heroBehavior\.compactLandscapePaddingTop[\s\S]*paddingTop:\s*compactLandscapePaddingTop/,
-    source: introSection,
-  },
-  {
-    label: "intro section uses hero behavior metadata for motion timing",
-    pattern: /transition=\{\{ duration: heroBehavior\.containerMotion\.duration, ease: heroBehavior\.containerMotion\.ease \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.subtitleMotion\.delay, duration: heroBehavior\.subtitleMotion\.duration \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.bodyMotion\.delay, duration: heroBehavior\.bodyMotion\.duration \}\}[\s\S]*transition=\{\{ delay: heroBehavior\.ctaMotion\.delay, duration: heroBehavior\.ctaMotion\.duration \}\}/,
-    source: introSection,
-  },
-  {
-    label: "signal animation behavior is typed as readonly metadata",
-    pattern: /export interface SignalPoint \{[\s\S]*readonly noiseX:\s*number;[\s\S]*readonly noiseY:\s*number;[\s\S]*readonly signalX:\s*number;[\s\S]*readonly signalY:\s*number;[\s\S]*readonly delaySeconds:\s*number;[\s\S]*\}[\s\S]*export interface SignalAnimationBehavior \{[\s\S]*readonly cycleDurationSeconds:\s*number;[\s\S]*readonly points:\s*readonly SignalPoint\[\];[\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "signal animation defines one twelve-point resolution cycle",
-    pattern: /export const signalAnimationBehavior:\s*SignalAnimationBehavior\s*=\s*\{[\s\S]*cycleDurationSeconds:\s*9,[\s\S]*points:\s*\[[\s\S]*\{\s*noiseX:[\s\S]*delaySeconds:[\s\S]*\][\s\S]*\}/,
-    source: hero,
-  },
-  {
-    label: "signal animation consumes typed metadata and exposes motion state",
-    pattern: /(?=[\s\S]*import\s*\{\s*signalAnimationBehavior\s*\}\s*from\s*["']\.\.\/content\/hero["'];)(?=[\s\S]*usePrefersReducedMotion\(\))(?=[\s\S]*data-testid="signal-graphic")(?=[\s\S]*data-motion=\{shouldReduceMotion \? "reduced" : "animated"\})(?=[\s\S]*signalAnimationBehavior\.points\.map)(?=[\s\S]*data-testid="signal-particle")(?=[\s\S]*data-testid="signal-line")/,
-    source: signalAnimation,
-  },
-  {
-    label: "roomy hero keeps the signal visual for reduced motion",
-    pattern: /import SignalAnimation from "\.\/SignalAnimation";[\s\S]*const showHeroVisual = hasRoomyHeroViewport;[\s\S]*<SignalAnimation \/>/,
-    source: introSection,
-  },
-  {
-    label: "project action links are typed as readonly metadata",
-    pattern: /export interface ProjectActionLink \{[\s\S]*readonly href:\s*string;[\s\S]*readonly external:\s*true;[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "project action link behavior is typed as readonly metadata",
-    pattern: /export interface ProjectActionLinkBehavior \{[\s\S]*readonly externalTarget:\s*"_blank";[\s\S]*readonly externalRel:\s*"noopener noreferrer";[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "project action link behavior preserves safe external attributes",
-    pattern: /export const projectActionLinkBehavior:\s*ProjectActionLinkBehavior\s*=\s*\{[\s\S]*externalTarget:\s*"_blank",[\s\S]*externalRel:\s*"noopener noreferrer"[\s\S]*\}/,
-    source: portfolio,
-  },
-  {
-    label: "project data groups action links by purpose",
-    pattern: /readonly links:\s*\{[\s\S]*readonly repository:\s*ProjectActionLink;[\s\S]*readonly demo:\s*ProjectActionLink \| null;[\s\S]*\};/,
-    source: portfolio,
-  },
-  {
-    label: "project data avoids loose action URL fields",
-    pattern: /^(?![\s\S]*(readonly repoUrl:\s*string;|readonly demoUrl:\s*string;|\n\s*repoUrl:\s*"|\n\s*demoUrl:\s*"))[\s\S]*links:\s*\{/,
-    source: portfolio,
-  },
-  {
-    label: "project cards render action links from metadata",
-    pattern: /<ProjectActionLink[\s\S]*kind="repository"[\s\S]*link=\{project\.links\.repository\}[\s\S]*<ProjectActionLink[\s\S]*kind="demo"[\s\S]*link=\{project\.links\.demo\}/,
-    source: projectsSection,
-  },
-  {
-    label: "project cards apply external action link metadata",
-    pattern: /interface ProjectActionMetadata \{[\s\S]*readonly Icon:\s*LucideIcon;[\s\S]*readonly getLabel:\s*\(projectTitle:\s*string\)\s*=>\s*string;[\s\S]*\}[\s\S]*interface ProjectActionLinkAnchorBehavior \{[\s\S]*readonly target\?:\s*"_blank";[\s\S]*readonly rel\?:\s*"noopener noreferrer";[\s\S]*\}[\s\S]*const projectActionMetadata:\s*Record<ProjectActionLinkKind,\s*ProjectActionMetadata>[\s\S]*const getProjectActionLinkAnchorBehavior = \([\s\S]*isExternal:\s*boolean,[\s\S]*\): ProjectActionLinkAnchorBehavior => \(\{[\s\S]*target:\s*isExternal \? projectActionLinkBehavior\.externalTarget : undefined,[\s\S]*rel:\s*isExternal \? projectActionLinkBehavior\.externalRel : undefined,[\s\S]*\}\);[\s\S]*function ProjectActionLink\([\s\S]*const \{ Icon, getLabel \} = projectActionMetadata\[kind\];[\s\S]*const actionLabel = getLabel\(projectTitle\);[\s\S]*const anchorBehavior = getProjectActionLinkAnchorBehavior\(link\.external\);[\s\S]*target=\{anchorBehavior\.target\}[\s\S]*rel=\{anchorBehavior\.rel\}/,
-    source: projectsSection,
-  },
-  {
-    label: "header navigation behavior is typed as readonly metadata",
-    pattern: /export interface HeaderNavigationBehavior \{[\s\S]*readonly defaultActiveHref:\s*string;[\s\S]*readonly activeSectionOffsetPx:\s*number;[\s\S]*readonly scrolledShadowThresholdPx:\s*number;[\s\S]*readonly scrollListenerOptions:\s*AddEventListenerOptions;[\s\S]*\}/,
-    source: navigation,
-  },
-  {
-    label: "header navigation behavior preserves current scroll thresholds",
-    pattern: /export const headerNavigationBehavior:\s*HeaderNavigationBehavior\s*=\s*\{[\s\S]*defaultActiveHref:\s*"\/#intro",[\s\S]*activeSectionOffsetPx:\s*160,[\s\S]*scrolledShadowThresholdPx:\s*10,[\s\S]*scrollListenerOptions:\s*\{ passive:\s*true \}[\s\S]*\}/,
-    source: navigation,
-  },
-  {
-    label: "header consumes typed navigation behavior metadata",
-    pattern: /import\s*\{\s*headerNavItems,\s*headerNavigationBehavior,\s*siteBrand,\s*socialLinks\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*interface HeaderShellViewState \{[\s\S]*readonly shadowClass:\s*string;[\s\S]*\}[\s\S]*const getHeaderShellViewState = \(isScrolled: boolean\): HeaderShellViewState => \(\{[\s\S]*shadowClass:\s*isScrolled \? "header-shell-scrolled" : ""[\s\S]*\}\);[\s\S]*useState\(\(\) => getInitialActiveHref\(currentPath\)\)[\s\S]*const shellViewState = getHeaderShellViewState\(isScrolled\);[\s\S]*window\.scrollY > headerNavigationBehavior\.scrolledShadowThresholdPx[\s\S]*top <= headerNavigationBehavior\.activeSectionOffsetPx[\s\S]*sectionLinks\[0\]\?\.href \?\? headerNavigationBehavior\.defaultActiveHref[\s\S]*window\.addEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*window\.removeEventListener\("scroll", handleScroll, headerNavigationBehavior\.scrollListenerOptions\)[\s\S]*\$\{shellViewState\.shadowClass\}/,
-    source: header,
-  },
-  {
-    label: "social link behavior is typed as readonly metadata",
-    pattern: /export interface SocialLinkBehavior \{[\s\S]*readonly externalTarget:\s*"_blank";[\s\S]*readonly externalRel:\s*"noopener noreferrer";[\s\S]*\}/,
-    source: navigation,
-  },
-  {
-    label: "social link behavior preserves safe external attributes",
-    pattern: /export const socialLinkBehavior:\s*SocialLinkBehavior\s*=\s*\{[\s\S]*externalTarget:\s*"_blank",[\s\S]*externalRel:\s*"noopener noreferrer"[\s\S]*\}/,
-    source: navigation,
-  },
-  {
-    label: "social link component consumes typed external link behavior",
-    pattern: /import\s+type\s+\{\s*SocialLink as SocialLinkData,\s*SocialLinkKind\s*\}\s+from\s*["']@\/content\/navigation["'];[\s\S]*import\s*\{\s*socialLinkBehavior\s*\}\s*from\s*["']@\/content\/navigation["'];[\s\S]*interface SocialLinkAnchorBehavior \{[\s\S]*readonly target\?:\s*"_blank";[\s\S]*readonly rel\?:\s*"noopener noreferrer";[\s\S]*\}[\s\S]*const getSocialLinkAnchorBehavior = \(isExternal: boolean\): SocialLinkAnchorBehavior => \(\{[\s\S]*target:\s*isExternal \? socialLinkBehavior\.externalTarget : undefined,[\s\S]*rel:\s*isExternal \? socialLinkBehavior\.externalRel : undefined,[\s\S]*\}\);[\s\S]*const anchorBehavior = getSocialLinkAnchorBehavior\(link\.external\);[\s\S]*target=\{anchorBehavior\.target\}[\s\S]*rel=\{anchorBehavior\.rel\}/,
-    source: socialLink,
-  },
-  {
-    label: "social link icons use a canonical typed registry",
-    pattern: /type SocialIconRenderer = \(\) => ReactNode;[\s\S]*const socialIconRegistry:\s*Record<SocialLinkKind,\s*SocialIconRenderer>\s*=\s*\{[\s\S]*email:\s*\(\)\s*=>\s*<Mail\b[\s\S]*github:\s*\(\)\s*=>\s*<Github\b[\s\S]*linkedin:\s*\(\)\s*=>\s*<Linkedin\b[\s\S]*medium:\s*MediumIcon[\s\S]*\};[\s\S]*const Icon = socialIconRegistry\[kind\];[\s\S]*return <Icon \/>/,
-    source: socialLink,
-  },
-];
-
-const failures = checks
-  .filter(({ pattern, source = workflow }) => !pattern.test(source))
-  .map(({ label }) => label);
-
-for (const legacyProjectPagePath of legacyProjectPagePaths) {
-  if (fs.existsSync(legacyProjectPagePath)) {
-    failures.push(`${path.relative(root, legacyProjectPagePath)} duplicates the generated project route`);
-  }
-}
-
-for (const obsoletePath of [
-  path.join(root, "CNAME"),
-  path.join(root, "public", "brand", "social-card.svg"),
+// Classification:
+// - This script owns workflow wiring, canonical source ownership, and migration
+//   boundaries.
+// - Image files and budgets belong to check-source-images.
+// - Route/metadata/public-file outcomes belong to check-build-output.
+// - Interaction, accessibility, contrast, focus, and layout belong to Playwright.
+for (const action of [
+  "actions/checkout@",
+  "actions/setup-node@",
+  "actions/upload-pages-artifact@",
+  "actions/deploy-pages@",
 ]) {
-  if (fs.existsSync(obsoletePath)) {
-    failures.push(`${path.relative(root, obsoletePath)} is an obsolete duplicate or unused asset`);
+  if (!workflow.includes(action)) {
+    failures.push(`Deployment workflow is missing ${action}`);
   }
 }
 
-if (/"image-size"\s*:/.test(packageJson)) {
-  failures.push("package manifest retains the vulnerable image-size parser");
+for (const command of [
+  "npm ci",
+  "npx playwright install --with-deps chromium",
+  "npm run check",
+]) {
+  if (!workflow.includes(`run: ${command}`)) {
+    failures.push(`Deployment workflow is missing command: ${command}`);
+  }
+}
+
+const minimumNode = packageJson.engines?.node?.replace(/^>=/, "");
+if (!minimumNode || !workflow.includes(`node-version: '${minimumNode}'`)) {
+  failures.push("Deployment workflow does not use the package minimum Node version");
+}
+
+for (const scriptName of ["lint", "typecheck", "a11y", "images", "nav", "workflow", "browser", "build", "smoke"]) {
+  if (!packageJson.scripts?.[scriptName]) {
+    failures.push(`package.json is missing ${scriptName} script`);
+  }
+}
+
+for (const command of [
+  "npm run lint",
+  "npm run typecheck",
+  "npm run a11y",
+  "npm run images",
+  "npm run nav",
+  "npm run workflow",
+  "npm run browser",
+  "npm run build",
+  "npm run smoke",
+]) {
+  if (!packageJson.scripts.check?.includes(command)) {
+    failures.push(`Full check does not include ${command}`);
+  }
+}
+
+if (!packageJson.scripts.browser.includes("clean-test-artifacts.mjs")
+  || !packageJson.scripts.browser.includes("playwright test")) {
+  failures.push("Browser script does not clean stale artifacts and run Playwright");
+}
+
+for (const directory of ["test-results", "playwright-report", "blob-report"]) {
+  if (!cleanup.includes(`"${directory}"`)) {
+    failures.push(`Test cleanup does not remove ${directory}`);
+  }
+}
+
+if (!playwright.includes('testDir: "./tests/browser"')
+  || !playwright.includes('command: "npm run build && npm run preview')) {
+  failures.push("Playwright does not test the built preview from tests/browser");
+}
+
+for (const [label, source, required] of [
+  ["homepage projects", projectsSection, 'import { projectActionLinkBehavior, projects }'],
+  ["project routes", projectRoute, 'import { projects, type PortfolioProject }'],
+  ["sitemap", sitemap, 'import { projects }'],
+]) {
+  if (!source.includes(required)) {
+    failures.push(`${label} do not use the canonical portfolio collection`);
+  }
+}
+
+if (!projectRoute.includes("getStaticPaths()") || !projectRoute.includes("projects.map")) {
+  failures.push("Project routes are not generated from the canonical collection");
+}
+
+if (projectsSection.includes("setInterval") || projectsSection.includes("projectCarousel")) {
+  failures.push("Project collection still owns timer-driven carousel state");
+}
+
+if (!projectsSection.includes('href={`/projects/${project.page.slug}/`}')) {
+  failures.push("Project cards do not derive first-party routes from their canonical slugs");
+}
+
+const nestedCaseStudy = join(root, "src/pages/projects/sentrysearch/llm-evaluation.astro");
+const legacyCaseStudy = join(root, "public/projects/sentrysearch/llm-evaluation/index.html");
+if (!existsSync(nestedCaseStudy) || existsSync(legacyCaseStudy)) {
+  failures.push("Nested SentrySearch evidence is not owned by the shared Astro route");
+}
+
+for (const removedBehavior of ["projectCarouselBehavior", "aboutBehavior", "footerBehavior"]) {
+  if (portfolio.includes(removedBehavior)) {
+    failures.push(`Portfolio content still freezes presentation through ${removedBehavior}`);
+  }
+}
+
+for (const script of [
+  "scripts/check-source-accessibility.mjs",
+  "scripts/check-source-navigation.mjs",
+  "scripts/check-source-workflow.mjs",
+]) {
+  const scriptPath = join(root, script);
+  const content = readFileSync(scriptPath, "utf8");
+  if (statSync(scriptPath).size > 16 * 1024) {
+    failures.push(`${script} is too large for its narrow source-level contract`);
+  }
+  if (/#[0-9a-f]{3,8}|font-size:\\s|padding:\\s/i.test(content)) {
+    failures.push(`${script} pins cosmetic source literals`);
+  }
 }
 
 if (failures.length > 0) {

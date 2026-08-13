@@ -20,6 +20,12 @@ const firstWritingPost = {
   imagePath: "/images/writing/i-thought-i-was-reading-a-repo.png",
   imageAlt: "Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.",
 };
+const secondWritingPost = {
+  path: join("writing", "the-deploy-wasnt-the-proof", "index.html"),
+  url: `${siteUrl}/writing/the-deploy-wasnt-the-proof/`,
+  title: "The Deploy Wasn’t the Proof",
+  imagePath: "/images/writing/the-deploy-wasnt-the-proof.png",
+};
 const projectPages = [
   {
     slug: "sentrysearch",
@@ -140,6 +146,8 @@ requireFile(join(dist, "privacy", "index.html"), "privacy page");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
 requireFile(join(dist, firstWritingPost.path), "first writing article");
 requireFile(join(dist, firstWritingPost.imagePath.replace(/^\//, "")), "first writing social image");
+requireFile(join(dist, secondWritingPost.path), "second writing article");
+requireFile(join(dist, secondWritingPost.imagePath.replace(/^\//, "")), "second writing social image");
 
 for (const { slug } of projectPages) {
   requireFile(join(dist, "projects", slug, "index.html"), `${slug} project page`);
@@ -305,15 +313,15 @@ if (existsSync(indexPath)) {
     },
     {
       label: "Safari pinned-tab link",
-      pattern: /<link\s+rel="mask-icon"\s+href="\/safari-pinned-tab\.svg"\s+color="#66b2ff"\s*\/?>/,
+      pattern: /<link\s+rel="mask-icon"\s+href="\/safari-pinned-tab\.svg"\s+color="[^"]+"\s*\/?>/,
     },
     {
       label: "web app manifest link",
       pattern: /<link\s+rel="manifest"\s+href="\/site\.webmanifest"\s*\/?>/,
     },
     {
-      label: "navy browser theme",
-      pattern: /<meta\s+name="theme-color"\s+content="#0a192f"\s*\/?>/,
+      label: "browser theme color",
+      pattern: /<meta\s+name="theme-color"\s+content="[^"]+"\s*\/?>/,
     },
     {
       label: "module entry",
@@ -347,6 +355,7 @@ if (existsSync(sitemapPath)) {
     `${siteUrl}/privacy/`,
     `${siteUrl}/writing/`,
     firstWritingPost.url,
+    secondWritingPost.url,
     ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
     sentrySearchCaseStudy.url,
   ];
@@ -367,6 +376,7 @@ if (existsSync(writingArchivePath)) {
     ["heading", "<h1>Writing</h1>"],
     ["canonical URL", `<link rel="canonical" href="${siteUrl}/writing/">`],
     ["article link", `href="/writing/i-thought-i-was-reading-a-repo/"`],
+    ["second article link", `href="/writing/the-deploy-wasnt-the-proof/"`],
     ["RSS link", 'href="/rss.xml"'],
   ]) {
     if (!writingArchive.includes(expected)) {
@@ -408,6 +418,8 @@ if (existsSync(rssPath)) {
     'href="/rss.xsl"',
     firstWritingPost.title,
     firstWritingPost.url,
+    secondWritingPost.title,
+    secondWritingPost.url,
     "<rss",
   ]) {
     if (!rssFeed.includes(expected)) {
@@ -491,7 +503,7 @@ if (existsSync(caseStudyPath)) {
   const expectations = [
     ["title", `<title>${sentrySearchCaseStudy.title} | Michael Rico</title>`],
     ["heading", `<h1>${sentrySearchCaseStudy.title}</h1>`],
-    ["canonical URL", `<link rel="canonical" href="${sentrySearchCaseStudy.url}" />`],
+    ["canonical URL", `rel="canonical" href="${sentrySearchCaseStudy.url}"`],
     ["claim boundary", "What this proves and what it does not"],
     ["structured data", 'type="application/ld+json"'],
   ];

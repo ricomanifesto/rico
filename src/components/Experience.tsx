@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { ChevronRight } from "lucide-react";
@@ -19,10 +18,6 @@ type ExperienceTabNavigationDirection = "next" | "previous";
 interface ExperiencePanelViewState {
   readonly tabIndex: 0 | -1;
   readonly hidden: boolean;
-  readonly animate: {
-    readonly opacity: number;
-    readonly x: number;
-  };
 }
 
 interface ExperienceTabViewState {
@@ -46,7 +41,6 @@ const getWrappedExperienceTabIndex = (
 const getExperiencePanelViewState = (isSelected: boolean): ExperiencePanelViewState => ({
   tabIndex: isSelected ? 0 : -1,
   hidden: !isSelected,
-  animate: isSelected ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 },
 });
 
 const getExperienceTabViewState = (isSelected: boolean): ExperienceTabViewState => ({
@@ -91,16 +85,9 @@ export default function Experience() {
   return (
     <section id="experience" aria-labelledby="experience-heading" className="portfolio-section">
       <div className="experience-content">
-        <motion.h2 
-          id="experience-heading"
-          className="section-title"
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: experienceBehavior.sectionHeadingMotion.duration }}
-        >
+        <h2 id="experience-heading" className="section-title">
           / experience
-        </motion.h2>
+        </h2>
 
         <div className="experience-layout">
           <div className="experience-tab-column">
@@ -131,7 +118,7 @@ export default function Experience() {
               const panelViewState = getExperiencePanelViewState(selectedCompany === index);
 
               return (
-                <motion.div
+                <div
                   key={exp.company}
                   id={`experience-panel-${index}`}
                   role="tabpanel"
@@ -139,9 +126,6 @@ export default function Experience() {
                   tabIndex={panelViewState.tabIndex}
                   hidden={panelViewState.hidden}
                   className="experience-panel"
-                  initial={false}
-                  animate={panelViewState.animate}
-                  transition={{ duration: experienceBehavior.panelMotion.duration }}
                 >
                   <h4 className="experience-panel-title">
                     {exp.title} @ <span className="experience-company-accent">{exp.displayCompany}</span>
@@ -152,18 +136,10 @@ export default function Experience() {
                   </p>
 
                   <ul className="experience-highlight-list">
-                    {exp.highlights.map((highlight, highlightIndex) => (
-                      <motion.li
+                    {exp.highlights.map((highlight) => (
+                      <li
                         key={highlight}
                         className="experience-highlight"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{
-                          duration: experienceBehavior.highlightMotion.duration,
-                          delay:
-                            highlightIndex * experienceBehavior.highlightMotion.staggerDelay +
-                            experienceBehavior.highlightMotion.baseDelay,
-                        }}
                       >
                         <ChevronRight
                           className="experience-highlight-icon"
@@ -173,10 +149,10 @@ export default function Experience() {
                         <p className="experience-highlight-copy">
                           {highlight}
                         </p>
-                      </motion.li>
+                      </li>
                     ))}
                   </ul>
-                </motion.div>
+                </div>
               );
             })}
           </div>
@@ -197,7 +173,7 @@ function ExperienceTab({
   const tabViewState = getExperienceTabViewState(isSelected);
 
   return (
-    <motion.button
+    <button
       id={`experience-tab-${index}`}
       ref={tabRef}
       role="tab"
@@ -208,19 +184,12 @@ function ExperienceTab({
       onClick={() => onSelect(index)}
       onKeyDown={(event) => onKeyDown(event, index)}
       className={`experience-tab ${tabViewState.textClass}`}
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        duration: experienceBehavior.tabMotion.duration,
-        delay: index * experienceBehavior.tabMotion.staggerDelay,
-      }}
     >
       <div className={`experience-tab-indicator ${tabViewState.indicatorClass}`}></div>
 
       <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
         {experience.company}
       </h3>
-    </motion.button>
+    </button>
   );
 }

@@ -42,62 +42,8 @@ export interface PortfolioProject {
   readonly page: ProjectPageDetails;
 }
 
-export interface FooterBehavior {
-  readonly containerMotion: {
-    readonly duration: number;
-  };
-}
-
-export interface ProjectCarouselBehavior {
-  readonly autoRotationIntervalMs: number;
-  readonly keyboardActivationKeys: readonly string[];
-  readonly slideStepPercent: number;
-  readonly sectionHeadingMotion: {
-    readonly duration: number;
-  };
-  readonly slideMotion: {
-    readonly duration: number;
-    readonly staggerDelay: number;
-  };
-  readonly hoverMotion: {
-    readonly scale: number;
-  };
-}
-
 export interface AboutContent {
   readonly technologies: readonly string[];
-}
-
-export interface AboutBehavior {
-  readonly technologyGrid: {
-    readonly rowCount: number;
-  };
-  readonly sectionHeadingMotion: {
-    readonly duration: number;
-  };
-  readonly introMotion: {
-    readonly delay: number;
-    readonly duration: number;
-  };
-  readonly technologiesMotion: {
-    readonly delay: number;
-    readonly duration: number;
-  };
-  readonly technologyItemMotion: {
-    readonly baseDelay: number;
-    readonly staggerDelay: number;
-    readonly duration: number;
-    readonly leadingColumnOffsetX: number;
-    readonly trailingColumnOffsetX: number;
-  };
-  readonly interestsMotion: {
-    readonly delay: number;
-    readonly duration: number;
-  };
-  readonly imageMotion: {
-    readonly delay: number;
-    readonly duration: number;
-  };
 }
 
 export interface ExperienceItem {
@@ -115,79 +61,10 @@ export interface ExperienceBehavior {
     readonly first: string;
     readonly last: string;
   };
-  readonly sectionHeadingMotion: {
-    readonly duration: number;
-  };
-  readonly tabMotion: {
-    readonly duration: number;
-    readonly staggerDelay: number;
-  };
-  readonly panelMotion: {
-    readonly duration: number;
-  };
-  readonly highlightMotion: {
-    readonly duration: number;
-    readonly staggerDelay: number;
-    readonly baseDelay: number;
-  };
 }
 
 export const aboutContent: AboutContent = {
   technologies: ["Python", "TypeScript", "Next.js", "FastAPI", "Go", "LangGraph"],
-};
-
-export const aboutBehavior: AboutBehavior = {
-  technologyGrid: {
-    rowCount: 3,
-  },
-  sectionHeadingMotion: {
-    duration: 0.6,
-  },
-  introMotion: {
-    delay: 0.2,
-    duration: 0.8,
-  },
-  technologiesMotion: {
-    delay: 0.4,
-    duration: 0.8,
-  },
-  technologyItemMotion: {
-    baseDelay: 0.6,
-    staggerDelay: 0.1,
-    duration: 0.6,
-    leadingColumnOffsetX: -20,
-    trailingColumnOffsetX: 20,
-  },
-  interestsMotion: {
-    delay: 1.0,
-    duration: 0.8,
-  },
-  imageMotion: {
-    delay: 0.8,
-    duration: 0.8,
-  },
-};
-
-export const footerBehavior: FooterBehavior = {
-  containerMotion: {
-    duration: 0.5,
-  },
-};
-
-export const projectCarouselBehavior: ProjectCarouselBehavior = {
-  autoRotationIntervalMs: 10000,
-  keyboardActivationKeys: ["Enter", " "],
-  slideStepPercent: 100,
-  sectionHeadingMotion: {
-    duration: 0.6,
-  },
-  slideMotion: {
-    duration: 0.6,
-    staggerDelay: 0.1,
-  },
-  hoverMotion: {
-    scale: 1.02,
-  },
 };
 
 export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
@@ -362,20 +239,5 @@ export const experienceBehavior: ExperienceBehavior = {
     previous: ["ArrowUp", "ArrowLeft"],
     first: "Home",
     last: "End",
-  },
-  sectionHeadingMotion: {
-    duration: 0.6,
-  },
-  tabMotion: {
-    duration: 0.6,
-    staggerDelay: 0.1,
-  },
-  panelMotion: {
-    duration: 0.6,
-  },
-  highlightMotion: {
-    duration: 0.6,
-    staggerDelay: 0.1,
-    baseDelay: 0.2,
   },
 };

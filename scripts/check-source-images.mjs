@@ -36,6 +36,7 @@ const requiredBrandFiles = [
   "safari-pinned-tab.svg",
   "site.webmanifest",
   "brand/writing/i-thought-i-was-reading-a-repo.svg",
+  "brand/writing/the-deploy-wasnt-the-proof.svg",
 ];
 
 const requiredBrandImages = [
@@ -45,6 +46,7 @@ const requiredBrandImages = [
   { src: "icons/icon-512-maskable.png", width: 512, height: 512 },
   { src: "images/social-card.png", width: 1200, height: 630 },
   { src: "images/writing/i-thought-i-was-reading-a-repo.png", width: 1200, height: 630 },
+  { src: "images/writing/the-deploy-wasnt-the-proof.png", width: 1200, height: 630 },
   { src: "images/profile-384.webp", width: 384, height: 833 },
 ];
 
@@ -57,6 +59,7 @@ const rasterAssetBudgets = [
   { src: "icons/icon-512-maskable.png", type: "png", maxBytes: 50 * 1024, maxBitDepth: 8 },
   { src: "images/social-card.png", type: "png", maxBytes: 100 * 1024, maxBitDepth: 8 },
   { src: "images/writing/i-thought-i-was-reading-a-repo.png", type: "png", maxBytes: 200 * 1024, maxBitDepth: 8 },
+  { src: "images/writing/the-deploy-wasnt-the-proof.png", type: "png", maxBytes: 200 * 1024, maxBitDepth: 8 },
   { src: "images/SentryInsight.jpg", type: "jpg", maxBytes: 300 * 1024 },
 ];
 

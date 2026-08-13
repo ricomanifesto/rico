@@ -1,0 +1,152 @@
+---
+import { ArrowLeft, ExternalLink } from "lucide-react";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import SkipLink from "@/components/SkipLink";
+import WritingBreadcrumbs from "@/components/WritingBreadcrumbs.astro";
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import { breadcrumbStructuredData } from "@/lib/breadcrumbs";
+
+const canonicalPath = "/projects/sentrysearch/llm-evaluation/";
+const title = "LLM Evaluation for Threat-Intelligence Workflows";
+const description = "A code-backed case study of SentrySearch's structured section evaluation, bounded parallel validation, and inspectable quality summaries.";
+const evidence = [
+  {
+    href: "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/section_validator.py#L266-L472",
+    label: "Section evaluation and structured results",
+  },
+  {
+    href: "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/validation_criteria.py#L21-L259",
+    label: "Five-dimension rubric and recommendation contract",
+  },
+  {
+    href: "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/parallel_section_validator.py#L19-L227",
+    label: "Bounded parallel validation and enhancement paths",
+  },
+  {
+    href: "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/markdown_generator.py#L54-L115",
+    label: "Rendered quality summary and section scores",
+  },
+] as const;
+const breadcrumbs = [
+  { name: "Home", path: "/" },
+  { name: "Projects", path: "/#projects" },
+  { name: "SentrySearch", path: "/projects/sentrysearch/" },
+  { name: "LLM evaluation", path: canonicalPath },
+];
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `https://ricomanifesto.com${canonicalPath}#article`,
+      url: `https://ricomanifesto.com${canonicalPath}`,
+      headline: title,
+      description,
+      author: {
+        "@type": "Person",
+        "@id": "https://ricomanifesto.com/#michael-rico",
+        name: "Michael Rico",
+        url: "https://ricomanifesto.com/",
+      },
+      about: {
+        "@type": "SoftwareSourceCode",
+        name: "SentrySearch",
+        codeRepository: "https://github.com/ricomanifesto/SentrySearch",
+      },
+      citation: evidence.map(({ href }) => href),
+    },
+    breadcrumbStructuredData(breadcrumbs),
+  ],
+};
+---
+
+<SiteLayout
+  title={`${title} | Michael Rico`}
+  description={description}
+  canonicalPath={canonicalPath}
+  pageType="article"
+  imagePath="/images/SentrySearch.jpg"
+  imageAlt="SentrySearch project preview"
+  structuredData={structuredData}
+>
+  <div class="writing-page-shell project-page-shell">
+    <SkipLink />
+    <Header currentPath={canonicalPath} currentNavHref="/#projects" />
+    <main id="main-content" tabindex="-1" class="project-page-main">
+      <article class="project-detail project-evaluation-detail">
+        <WritingBreadcrumbs items={breadcrumbs} />
+        <header class="project-detail-header">
+          <p class="project-detail-eyebrow">SentrySearch evidence</p>
+          <h1>{title}</h1>
+          <p class="project-detail-description">{description}</p>
+        </header>
+
+        <div class="project-detail-actions">
+          <a
+            href="https://github.com/ricomanifesto/SentrySearch"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="project-detail-action"
+          >
+            <ExternalLink size={19} aria-hidden="true" focusable="false" />
+            View SentrySearch repository
+          </a>
+        </div>
+
+        <div class="project-detail-prose">
+          <h2>The evaluation contract</h2>
+          <p>
+            Each eligible profile section is evaluated across five named dimensions: completeness,
+            technical accuracy, source quality, actionability, and relevance. The evaluator returns
+            structured scores, missing information, weak areas, technical issues, recommended
+            improvements, and a PASS, ENHANCE, or RETRY recommendation.
+          </p>
+
+          <h2>Bounded parallel validation</h2>
+          <p>
+            The parallel validator separates initial validation from enhancement work and gives each
+            path its own concurrency limit. This makes the execution boundary visible in code instead
+            of hiding it inside an unbounded batch.
+          </p>
+
+          <h2>Inspectable output</h2>
+          <p>
+            The report renderer exposes an overall quality score, section counts, per-section scores,
+            recommendations, and a cross-section consistency result. Those fields make the evaluation
+            output reviewable alongside the threat profile.
+          </p>
+
+          <h2>Public implementation evidence</h2>
+          <ul class="project-evidence-list">
+            {evidence.map((item) => (
+              <li>
+                <a href={item.href} target="_blank" rel="noopener noreferrer">
+                  {item.label}
+                  <ExternalLink size={16} aria-hidden="true" focusable="false" />
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <h2>What this proves and what it does not</h2>
+          <div class="project-proof-boundary">
+            <p>
+              This page documents public code structure. It does not claim production accuracy,
+              reviewer agreement, latency improvement, cost reduction, or search performance.
+            </p>
+          </div>
+        </div>
+
+        <nav aria-label="Project navigation" class="project-detail-back project-detail-back-split">
+          <a href="/projects/sentrysearch/">
+            <ArrowLeft size={18} aria-hidden="true" focusable="false" />
+            SentrySearch case study
+          </a>
+          <a href="/#projects">All projects</a>
+        </nav>
+      </article>
+    </main>
+    <Footer />
+  </div>
+</SiteLayout>

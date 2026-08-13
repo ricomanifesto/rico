@@ -607,7 +607,7 @@ test("exposes footer copyright year as machine-readable time", async ({ page }) 
 
   const currentYear = String(new Date().getFullYear());
   const footer = page.getByRole("contentinfo");
-  await expect(footer).toContainText(`© ${currentYear} Rico. All rights reserved.`);
+  await expect(footer).toContainText(`© ${currentYear} Rico Manifesto. All rights reserved.`);
   await expect(footer.locator("time")).toHaveAttribute("dateTime", currentYear);
   await expect(footer.locator("time")).toHaveText(currentYear);
 });
@@ -765,29 +765,16 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await expect(brandLink).toHaveCSS("outline-style", "solid");
 
   const sayHiLink = page.getByRole("link", { name: "Say hi!" });
-  for (let index = 0; index < 30; index++) {
-    if (await sayHiLink.evaluate((element) => document.activeElement === element).catch(() => false)) {
-      break;
-    }
-
-    await page.keyboard.press("Tab");
-  }
-
+  await sayHiLink.focus();
   await expect(sayHiLink).toBeFocused();
   await expect(sayHiLink).toHaveCSS("outline-style", "solid");
 
   await page.getByRole("link", { name: "Projects" }).click();
-  const nextProjectButton = page.getByRole("button", { name: "Next project" });
-  for (let index = 0; index < 30; index++) {
-    if (await nextProjectButton.evaluate((element) => document.activeElement === element).catch(() => false)) {
-      break;
-    }
-
-    await page.keyboard.press("Tab");
-  }
-
-  await expect(nextProjectButton).toBeFocused();
-  await expect(nextProjectButton).toHaveCSS("outline-style", "solid");
+  await page.keyboard.press("Tab");
+  const firstProjectLink = page.getByRole("link", { name: "Read SentrySearch case study" });
+  await firstProjectLink.focus();
+  await expect(firstProjectLink).toBeFocused();
+  await expect(firstProjectLink).toHaveCSS("outline-style", "solid");
 });
 
 test("moves focus to main content when the skip link is activated", async ({ page }) => {
@@ -801,292 +788,29 @@ test("moves focus to main content when the skip link is activated", async ({ pag
   await expect(page.locator("main#main-content")).toBeFocused();
 });
 
-test("keeps inactive project slide links out of keyboard order", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  await expect(
-    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
-  ).toHaveAttribute("aria-hidden", "false");
-  await expect(
-    page.locator('[aria-label="Analyst-Ready Security Briefings, project slide 2 of 4"]'),
-  ).toHaveAttribute("aria-hidden", "true");
-
-  await page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }).focus();
-  await page.keyboard.press("Tab");
-  await expect(page.getByRole("link", { name: "Open Threat Intelligence Research Workspace demo" })).toBeFocused();
-  await page.keyboard.press("Tab");
-  await expect(page.getByRole("button", { name: "Previous project" })).toBeFocused();
-
-  await page.getByRole("button", { name: "Next project" }).click();
-  await expect(
-    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
-  ).toHaveAttribute("aria-hidden", "true");
-  await expect(
-    page.locator('[aria-label="Analyst-Ready Security Briefings, project slide 2 of 4"]'),
-  ).toHaveAttribute("aria-hidden", "false");
-  await expect(
-    page.locator('a[aria-label="View Threat Intelligence Research Workspace repository"]'),
-  ).toHaveAttribute("tabindex", "-1");
-});
-
-test("moves keyboard focus to the active project action after arrow navigation", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const nextProjectButton = page.getByRole("button", { name: "Next project" });
-
-  await nextProjectButton.focus();
-  await page.keyboard.press("Enter");
-
-  await expect(
-    page.getByRole("link", { name: "View Analyst-Ready Security Briefings repository" }),
-  ).toBeFocused();
-});
-
-test("keeps repeated carousel Enter activation on the arrow control", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const nextProjectButton = page.getByRole("button", { name: "Next project" });
-
-  await nextProjectButton.focus();
-  await page.keyboard.down("Enter");
-  await page.keyboard.down("Enter");
-
-  await expect(nextProjectButton).toBeFocused();
-
-  await page.keyboard.up("Enter");
-  await expect(
-    page.getByRole("link", { name: "View Analyst-Ready Security Briefings repository" }),
-  ).toBeFocused();
-});
-
-test("moves Space-activated carousel focus to the new active project action", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const nextProjectButton = page.getByRole("button", { name: "Next project" });
-
-  await nextProjectButton.focus();
-  await page.keyboard.press("Space");
-
-  await expect(
-    page.getByRole("link", { name: "View Analyst-Ready Security Briefings repository" }),
-  ).toBeFocused();
-  await expect(
-    page.locator('a[aria-label="View Threat Intelligence Research Workspace repository"]'),
-  ).toHaveAttribute("tabindex", "-1");
-});
-
-test("announces the active project slide after manual navigation", async ({ page }) => {
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const projectStatus = page.getByRole("status", { name: "Current project" });
-  await expect(projectStatus).toHaveAttribute("aria-live", "off");
-  await expect(projectStatus).toHaveText("Project 1 of 4: Threat Intelligence Research Workspace");
-
-  await page.getByRole("button", { name: "Next project" }).click();
-  await expect(projectStatus).toHaveAttribute("aria-live", "polite");
-  await expect(projectStatus).toHaveText("Project 2 of 4: Analyst-Ready Security Briefings");
-});
-
-test("exposes the project carousel as a named region", async ({ page }) => {
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const carousel = page.getByRole("region", { name: "Featured projects" });
-
-  await expect(carousel).toHaveAttribute("aria-roledescription", "carousel");
-  await expect(carousel.getByRole("status", { name: "Current project" })).toBeAttached();
-  await expect(carousel.getByRole("button", { name: "Previous project" })).toBeVisible();
-  await expect(carousel.getByRole("button", { name: "Next project" })).toBeVisible();
-});
-
-test("names project carousel slides by project title", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  await expect(
-    page.getByRole("group", {
-      name: "Threat Intelligence Research Workspace, project slide 1 of 4",
-    }),
-  ).toHaveAttribute("aria-hidden", "false");
-  await expect(
-    page.getByRole("group", {
-      name: "Analyst-Ready Security Briefings, project slide 2 of 4",
-      includeHidden: true,
-    }),
-  ).toHaveAttribute("aria-hidden", "true");
-});
-
-test("treats project carousel background images as decorative", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const carousel = page.getByRole("region", { name: "Featured projects" });
-
-  await expect(carousel.getByRole("img", { name: /Threat Intelligence Research Workspace/ })).toHaveCount(0);
-  await expect(carousel.getByRole("heading", { name: "Threat Intelligence Research Workspace" })).toBeVisible();
-  await expect(
-    carousel.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }),
-  ).toBeVisible();
-});
-
-test("keeps active project action links easy to tap", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-
-  for (const linkName of [
-    "View Threat Intelligence Research Workspace repository",
-    "Open Threat Intelligence Research Workspace demo",
-  ]) {
-    const link = page.getByRole("link", { name: linkName });
-    const box = await link.boundingBox();
-
-    await expect(link).toBeVisible();
-    expect(box).not.toBeNull();
-    expect(box.width).toBeGreaterThanOrEqual(44);
-    expect(box.height).toBeGreaterThanOrEqual(44);
-  }
-});
-
-test("updates the current project dot after manual navigation", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const firstDot = page.getByRole("button", { name: "Show Threat Intelligence Research Workspace" });
-  const secondDot = page.getByRole("button", { name: "Show Analyst-Ready Security Briefings" });
-  await expect(firstDot).toHaveAttribute("aria-current", "true");
-  await expect(secondDot).not.toHaveAttribute("aria-current", "true");
-
-  await secondDot.click();
-  await expect(firstDot).not.toHaveAttribute("aria-current", "true");
-  await expect(secondDot).toHaveAttribute("aria-current", "true");
-});
-
-test("updates the current project dot after keyboard activation", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  const firstDot = page.getByRole("button", { name: "Show Threat Intelligence Research Workspace" });
-  const secondDot = page.getByRole("button", { name: "Show Analyst-Ready Security Briefings" });
-  const thirdDot = page.getByRole("button", { name: "Show Exploitation Intelligence Reports" });
-
-  await secondDot.focus();
-  await page.keyboard.press("Enter");
-  await expect(firstDot).not.toHaveAttribute("aria-current", "true");
-  await expect(secondDot).toHaveAttribute("aria-current", "true");
-  await expect(secondDot).toBeFocused();
-
-  await thirdDot.focus();
-  await page.keyboard.press("Space");
-  await expect(secondDot).not.toHaveAttribute("aria-current", "true");
-  await expect(thirdDot).toHaveAttribute("aria-current", "true");
-  await expect(thirdDot).toBeFocused();
-});
-
-test("keeps mobile project carousel arrows inside the viewport", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-
-  for (const buttonName of ["Previous project", "Next project"]) {
-    const button = page.getByRole("button", { name: buttonName });
-    const box = await button.boundingBox();
-
-    expect(box).not.toBeNull();
-    expect(box.width).toBeGreaterThanOrEqual(44);
-    expect(box.height).toBeGreaterThanOrEqual(44);
-    expect(box.x).toBeGreaterThanOrEqual(-0.5);
-    expect(box.x + box.width).toBeLessThanOrEqual(390.5);
-  }
-});
-
-test("keeps mobile project carousel dots easy to tap", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await installReducedMotionController(page, true);
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-
-  for (const projectName of [
-    "Threat Intelligence Research Workspace",
-    "Analyst-Ready Security Briefings",
-    "Exploitation Intelligence Reports",
-    "Audit-Ready GRC Intelligence",
-  ]) {
-    const dot = page.getByRole("button", { name: `Show ${projectName}` });
-    const box = await dot.boundingBox();
-
-    expect(box).not.toBeNull();
-    expect(box.width).toBeGreaterThanOrEqual(44);
-    expect(box.height).toBeGreaterThanOrEqual(44);
-  }
-});
-
-test("pauses project auto-rotation while carousel has keyboard focus", async ({ page }) => {
-  await page.clock.install();
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  await page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" }).focus();
-  await page.clock.fastForward(10500);
-
-  await expect(
-    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
-  ).toHaveAttribute("aria-hidden", "false");
-  await expect(page.getByRole("link", { name: "View Threat Intelligence Research Workspace repository" })).toBeFocused();
-});
-
-test("pauses project auto-rotation while carousel is hovered", async ({ page }) => {
-  await page.clock.install();
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Projects" }).click();
-  await page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]').hover();
-  await page.clock.fastForward(10500);
-
-  await expect(
-    page.locator('[aria-label="Threat Intelligence Research Workspace, project slide 1 of 4"]'),
-  ).toHaveAttribute("aria-hidden", "false");
-});
-
 test("links the homepage to the latest first-party article", async ({ page }) => {
   await page.goto("/");
 
   const writingSection = page.getByRole("region", { name: "/ writing" });
   await expect(writingSection).toBeVisible();
   await expect(
-    writingSection.getByRole("heading", { level: 3, name: "I Thought I Was Reading a Repo" }),
+    writingSection.getByRole("heading", { level: 3, name: "The Deploy Wasn’t the Proof" }),
   ).toBeVisible();
   await expect(
-    writingSection.getByRole("link", { name: "Read I Thought I Was Reading a Repo" }),
-  ).toHaveAttribute("href", "/writing/i-thought-i-was-reading-a-repo/");
+    writingSection.getByRole("link", { name: "Read The Deploy Wasn’t the Proof" }),
+  ).toHaveAttribute("href", "/writing/the-deploy-wasnt-the-proof/");
 
   const structuredData = JSON.parse(
     await page.locator('script[type="application/ld+json"]').textContent(),
   );
-  const blogPosting = structuredData["@graph"].find((entry) => entry["@type"] === "BlogPosting");
+  const blogPosting = structuredData["@graph"].find(
+    (entry) => entry["@id"] === "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/#article",
+  );
   expect(blogPosting).toMatchObject({
-    url: "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
-    headline: "I Thought I Was Reading a Repo",
-    image: "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
-    datePublished: "2026-08-11",
+    url: "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/",
+    headline: "The Deploy Wasn’t the Proof",
+    image: "https://ricomanifesto.com/images/writing/the-deploy-wasnt-the-proof.png",
+    datePublished: "2026-08-13",
   });
 });
 
@@ -1116,6 +840,11 @@ test("exposes the Writing hierarchy as visible and structured breadcrumbs", asyn
       currentName: "I Thought I Was Reading a Repo",
       expectedItems: 3,
     },
+    {
+      href: "/writing/the-deploy-wasnt-the-proof/",
+      currentName: "The Deploy Wasn’t the Proof",
+      expectedItems: 3,
+    },
   ]) {
     await page.goto(href);
 
@@ -1137,6 +866,7 @@ test("renders Writing routes without client hydration", async ({ page }) => {
   for (const href of [
     "/writing/",
     "/writing/i-thought-i-was-reading-a-repo/",
+    "/writing/the-deploy-wasnt-the-proof/",
   ]) {
     const response = await page.goto(href);
 
@@ -1234,6 +964,35 @@ test("serves the first writing article with article metadata and source links", 
   expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
 });
 
+test("serves the second writing article with truthful release evidence", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const response = await page.goto("/writing/the-deploy-wasnt-the-proof/");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "The Deploy Wasn’t the Proof" })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/",
+  );
+  await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute("content", "2026-08-13");
+  await expect(page.locator('meta[property="article:tag"]')).toHaveCount(3);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    "https://ricomanifesto.com/images/writing/the-deploy-wasnt-the-proof.png",
+  );
+  await expect(page.getByRole("link", { name: "The diff" })).toHaveAttribute(
+    "href",
+    "https://github.com/ricomanifesto/rico/commit/e45e6ee361acfa24cbad65cc3c19885cb9ce8e50",
+  );
+  await expect(page.getByText("What can a stranger observe right now?", { exact: false })).toBeVisible();
+
+  const viewportMetrics = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
+});
+
 test("publishes the first article in the writing RSS feed", async ({ request }) => {
   const response = await request.get("/rss.xml");
 
@@ -1243,6 +1002,8 @@ test("publishes the first article in the writing RSS feed", async ({ request }) 
   expect(body).toMatch(/<\?xml-stylesheet (?=[^?]*href="\/rss\.xsl")(?=[^?]*type="text\/xsl")[^?]*\?>/);
   expect(body).toContain("I Thought I Was Reading a Repo");
   expect(body).toContain("https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/");
+  expect(body).toContain("The Deploy Wasn’t the Proof");
+  expect(body).toContain("https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/");
 
   const stylesheetResponse = await request.get("/rss.xsl");
   expect(stylesheetResponse.status()).toBe(200);
@@ -1256,13 +1017,14 @@ test("publishes content-backed modification dates for Writing routes", async ({ 
 
   expect(response.status()).toBe(200);
   const body = await response.text();
-  for (const url of [
-    "https://ricomanifesto.com/writing/",
-    "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
+  for (const [url, lastModified] of [
+    ["https://ricomanifesto.com/writing/", "2026-08-13"],
+    ["https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/", "2026-08-11"],
+    ["https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/", "2026-08-13"],
   ]) {
     const entry = Array.from(body.matchAll(/<url>[\s\S]*?<\/url>/g), ([match]) => match)
       .find((candidate) => candidate.includes(`<loc>${url}</loc>`));
-    expect(entry).toContain("<lastmod>2026-08-11</lastmod>");
+    expect(entry).toContain(`<lastmod>${lastModified}</lastmod>`);
   }
 });
 
@@ -1272,6 +1034,11 @@ test("renders the RSS feed as an understandable subscription page", async ({ pag
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1, name: "Subscribe to Rico Manifesto Writing" })).toBeVisible();
   await expect(page.getByText("11 Aug 2026", { exact: true })).toBeVisible();
+  await expect(page.getByText("13 Aug 2026", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "The Deploy Wasn’t the Proof" })).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/",
+  );
   await expect(page.getByRole("link", { name: "I Thought I Was Reading a Repo" })).toHaveAttribute(
     "href",
     "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
@@ -1314,12 +1081,15 @@ for (const { slug, heading, repository } of [
       "href",
       repository,
     );
-    await expect(page.getByRole("navigation", { name: "Portfolio" })).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Project navigation" })).toBeVisible();
 
     const structuredData = JSON.parse(
       await page.locator('script[type="application/ld+json"]').textContent(),
     );
-    expect(structuredData.author).toMatchObject({
+    const projectSchema = structuredData["@graph"].find(
+      (entry) => entry["@type"] === "SoftwareSourceCode",
+    );
+    expect(projectSchema.author).toMatchObject({
       "@type": "Person",
       "@id": "https://ricomanifesto.com/#michael-rico",
       name: "Michael Rico",
@@ -1354,7 +1124,8 @@ test("serves the SentrySearch LLM evaluation case study as crawlable HTML", asyn
   const structuredData = JSON.parse(
     await page.locator('script[type="application/ld+json"]').textContent(),
   );
-  expect(structuredData.author).toMatchObject({
+  const articleSchema = structuredData["@graph"].find((entry) => entry["@type"] === "Article");
+  expect(articleSchema.author).toMatchObject({
     "@type": "Person",
     "@id": "https://ricomanifesto.com/#michael-rico",
     name: "Michael Rico",

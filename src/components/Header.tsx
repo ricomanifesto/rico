@@ -48,11 +48,12 @@ function getInitialActiveHref(currentPath: string) {
 
 interface HeaderProps {
   readonly currentPath?: string;
+  readonly currentNavHref?: string;
 }
 
-export default function Header({ currentPath = "/" }: HeaderProps) {
+export default function Header({ currentPath = "/", currentNavHref }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeHref, setActiveHref] = useState(() => getInitialActiveHref(currentPath));
+  const [activeHref, setActiveHref] = useState(() => currentNavHref ?? getInitialActiveHref(currentPath));
   const shellViewState = getHeaderShellViewState(isScrolled);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
       });
 
       if (sectionLinks.length === 0) {
-        setActiveHref(getInitialActiveHref(currentPathname));
+        setActiveHref(currentNavHref ?? getInitialActiveHref(currentPathname));
         return;
       }
 
@@ -108,7 +109,7 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
       window.cancelAnimationFrame(alignInitialHash);
       window.removeEventListener("scroll", handleScroll, headerNavigationBehavior.scrollListenerOptions);
     };
-  }, []);
+  }, [currentNavHref]);
 
   return (
     <header className={`header-shell ${shellViewState.shadowClass}`}>

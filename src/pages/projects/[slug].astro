@@ -1,5 +1,12 @@
 ---
+import { ArrowLeft, ArrowRight, ExternalLink, Github } from "lucide-react";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import SkipLink from "@/components/SkipLink";
+import WritingBreadcrumbs from "@/components/WritingBreadcrumbs.astro";
 import { projects, type PortfolioProject } from "@/content/portfolio";
+import SiteLayout from "@/layouts/SiteLayout.astro";
+import { breadcrumbStructuredData } from "@/lib/breadcrumbs";
 
 interface Props {
   readonly project: PortfolioProject;
@@ -14,79 +21,117 @@ export function getStaticPaths() {
 
 const { project } = Astro.props;
 const canonicalPath = `/projects/${project.page.slug}/`;
-const canonicalUrl = new URL(canonicalPath, Astro.site);
-const imageUrl = new URL(project.image?.src ?? "/images/social-card.png", Astro.site);
+const canonicalUrl = new URL(canonicalPath, Astro.site).toString();
 const pageTitle = `${project.title} | Michael Rico`;
+const breadcrumbs = [
+  { name: "Home", path: "/" },
+  { name: "Projects", path: "/#projects" },
+  { name: project.page.name, path: canonicalPath },
+];
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  name: project.page.name,
-  headline: project.title,
-  description: project.description,
-  url: canonicalUrl,
-  codeRepository: project.links.repository.href,
-  author: {
-    "@type": "Person",
-    "@id": "https://ricomanifesto.com/#michael-rico",
-    name: "Michael Rico",
-    url: "https://ricomanifesto.com/",
-  },
-  programmingLanguage: project.page.programmingLanguages,
+  "@graph": [
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": `${canonicalUrl}#project`,
+      name: project.page.name,
+      headline: project.title,
+      description: project.description,
+      url: canonicalUrl,
+      codeRepository: project.links.repository.href,
+      author: {
+        "@type": "Person",
+        "@id": "https://ricomanifesto.com/#michael-rico",
+        name: "Michael Rico",
+        url: "https://ricomanifesto.com/",
+      },
+      programmingLanguage: project.page.programmingLanguages,
+    },
+    breadcrumbStructuredData(breadcrumbs),
+  ],
 };
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={project.page.metaDescription} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#66b2ff" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#0a192f" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={project.page.metaDescription} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={imageUrl} />
-    <meta property="og:image:alt" content={`${project.page.name} project preview`} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={project.page.metaDescription} />
-    <meta name="twitter:image" content={imageUrl} />
-    <title>{pageTitle}</title>
-    <style is:global>
-      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #08111f; color: #e5edf8; }
-      body { margin: 0; }
-      main { box-sizing: border-box; min-height: 100vh; max-width: 760px; margin: 0 auto; padding: clamp(3rem, 8vw, 7rem) 1.5rem; }
-      p { color: #b7c4d6; font-size: 1.1rem; line-height: 1.75; }
-      h1 { max-width: 18ch; font-size: clamp(2.3rem, 7vw, 4.5rem); line-height: 1.05; letter-spacing: -0.04em; }
-      .eyebrow { color: #67e8f9; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
-      .stack { color: #94a3b8; font-size: 0.95rem; }
-      nav, .actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
-      a { color: #67e8f9; text-underline-offset: 0.2em; }
-      .actions a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 1rem; border: 1px solid #31506d; border-radius: 0.5rem; }
-    </style>
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
-  </head>
-  <body>
-    <main>
-      <p class="eyebrow">{project.page.name}</p>
-      <h1>{project.title}</h1>
-      <p>{project.description}</p>
-      <p class="stack">{project.page.techStack.join(" · ")}</p>
-      <div class="actions">
-        <a href={project.links.repository.href}>View repository</a>
-        {project.links.demo && <a href={project.links.demo.href}>View live project</a>}
-        {project.page.relatedLinks.map((link) => <a href={link.href}>{link.label}</a>)}
-      </div>
-      <nav aria-label="Portfolio"><a href="/">Back to Michael Rico's portfolio</a></nav>
+<SiteLayout
+  title={pageTitle}
+  description={project.page.metaDescription}
+  canonicalPath={canonicalPath}
+  pageType="article"
+  imagePath={project.image?.src ?? "/images/social-card.png"}
+  imageAlt={`${project.page.name} project preview`}
+  structuredData={structuredData}
+>
+  <div class="writing-page-shell project-page-shell">
+    <SkipLink />
+    <Header currentPath={canonicalPath} currentNavHref="/#projects" />
+    <main id="main-content" tabindex="-1" class="project-page-main">
+      <article class="project-detail">
+        <WritingBreadcrumbs items={breadcrumbs} />
+        <header class="project-detail-header">
+          <p class="project-detail-eyebrow">{project.page.name} case study</p>
+          <h1>{project.title}</h1>
+          <p class="project-detail-description">{project.description}</p>
+          <ul class="project-detail-tech" aria-label="Technologies">
+            {project.page.techStack.map((technology) => <li>{technology}</li>)}
+          </ul>
+        </header>
+
+        {project.image && (
+          <div class="project-detail-media">
+            <img
+              src={project.image.src}
+              width={project.image.width}
+              height={project.image.height}
+              alt={`${project.page.name} project interface`}
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        )}
+
+        <div class="project-detail-actions">
+          <a
+            href={project.links.repository.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="project-detail-action"
+          >
+            <Github size={19} aria-hidden="true" focusable="false" />
+            View repository
+          </a>
+          {project.links.demo && (
+            <a
+              href={project.links.demo.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="project-detail-action"
+            >
+              <ExternalLink size={19} aria-hidden="true" focusable="false" />
+              View live project
+            </a>
+          )}
+        </div>
+
+        {project.page.relatedLinks.length > 0 && (
+          <section aria-labelledby="project-evidence-heading" class="project-detail-evidence">
+            <h2 id="project-evidence-heading">Inspect the evidence</h2>
+            {project.page.relatedLinks.map((link) => (
+              <a href={link.href} class="project-evidence-link">
+                {link.label}
+                <ArrowRight size={18} aria-hidden="true" focusable="false" />
+              </a>
+            ))}
+          </section>
+        )}
+
+        <nav aria-label="Project navigation" class="project-detail-back">
+          <a href="/#projects">
+            <ArrowLeft size={18} aria-hidden="true" focusable="false" />
+            All projects
+          </a>
+        </nav>
+      </article>
     </main>
-    <script is:inline type="module" src="/analytics.js"></script>
-  </body>
-</html>
+    <Footer />
+  </div>
+</SiteLayout>
