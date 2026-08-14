@@ -5,6 +5,7 @@ const projects = [
     title: "Threat Intelligence Research Workspace",
     name: "SentrySearch",
     slug: "sentrysearch",
+    claim: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
     evidenceHref: "/projects/sentrysearch/llm-evaluation/",
     evidenceExternal: false,
   },
@@ -12,6 +13,7 @@ const projects = [
     title: "Analyst-Ready Security Briefings",
     name: "SentryDigest",
     slug: "sentrydigest",
+    claim: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
     evidenceHref: "https://ricomanifesto.github.io/SentryDigest/archive/",
     evidenceExternal: true,
   },
@@ -19,6 +21,7 @@ const projects = [
     title: "Exploitation Intelligence Reports",
     name: "SentryInsight",
     slug: "sentryinsight",
+    claim: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
     evidenceHref: "https://ricomanifesto.github.io/SentryInsight/reports/",
     evidenceExternal: true,
   },
@@ -26,7 +29,8 @@ const projects = [
     title: "Audit-Ready GRC Intelligence",
     name: "GRCInsight",
     slug: "grcinsight",
-    evidenceHref: "https://ricomanifesto.github.io/GRCInsight/publication-history.json",
+    claim: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
+    evidenceHref: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
     evidenceExternal: true,
   },
 ];
@@ -72,11 +76,15 @@ test("shows all project case studies in a two-by-two desktop collection", async 
   await expect(cards).toHaveCount(4);
 
   for (const project of projects) {
-    await expect(collection.getByRole("heading", { name: project.title })).toBeVisible();
+    const card = collection.getByRole("article").filter({
+      has: page.getByRole("heading", { name: project.title }),
+    });
+    await expect(card).toHaveCount(1);
+    await expect(card.locator(".project-card-description")).toHaveText(project.claim);
     await expect(
-      collection.getByRole("link", { name: `Read ${project.name} case study` }),
+      card.getByRole("link", { name: `Read ${project.name} case study` }),
     ).toHaveAttribute("href", `/projects/${project.slug}/`);
-    const evidenceLink = collection.getByRole("link", {
+    const evidenceLink = card.getByRole("link", {
       name: `Inspect ${project.name} evidence`,
     });
     await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
@@ -249,6 +257,7 @@ for (const project of projects) {
     await expect(page.getByRole("link", { name: "Rico Manifesto", exact: true })).toBeVisible();
     await expect(page.locator("main#main-content")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: project.title })).toBeVisible();
+    await expect(page.locator(".project-detail-description")).toHaveText(project.claim);
     const evidenceLink = page.getByRole("link", { name: `Inspect ${project.name} evidence` });
     await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
     if (project.evidenceExternal) {
@@ -274,6 +283,13 @@ test("keeps the nested LLM evaluation inside the shared site shell", async ({ pa
   );
   await expect(page.getByRole("contentinfo")).toContainText("Rico Manifesto");
 
+  const revision = "39c86789bdca5ca0ada2161624c1831f425049c7";
+  const vintage = page.locator(".project-evidence-vintage");
+  await expect(vintage).toHaveText("Evidence pinned at 39c86789");
+  await expect(vintage.getByRole("link", {
+    name: "View SentrySearch evidence revision 39c86789",
+  })).toHaveAttribute("href", `https://github.com/ricomanifesto/SentrySearch/commit/${revision}`);
+
   const evidenceLinks = page.locator(".project-evidence-list a");
   await expect(evidenceLinks).toHaveCount(4);
   for (const link of await evidenceLinks.all()) {
@@ -296,10 +312,16 @@ test("keeps project evidence usable without JavaScript", async ({ browser }) => 
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("region", { name: "/ projects" })).toBeVisible();
   for (const project of projects) {
+    await expect(page.getByText(project.claim, { exact: true })).toBeVisible();
     await expect(page.getByRole("link", {
       name: `Inspect ${project.name} evidence`,
     })).toHaveAttribute("href", project.evidenceHref);
   }
+
+  await page.goto("http://127.0.0.1:5173/projects/sentrysearch/llm-evaluation/");
+  await expect(page.locator(".project-evidence-vintage")).toHaveText(
+    "Evidence pinned at 39c86789",
+  );
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

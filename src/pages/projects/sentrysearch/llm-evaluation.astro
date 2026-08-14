@@ -11,6 +11,8 @@ const canonicalPath = "/projects/sentrysearch/llm-evaluation/";
 const title = "LLM Evaluation for Threat-Intelligence Workflows";
 const description = "A code-backed case study of SentrySearch's structured section evaluation, bounded parallel validation, and inspectable quality summaries.";
 const evidenceRevision = "39c86789bdca5ca0ada2161624c1831f425049c7";
+const evidenceShortRevision = evidenceRevision.slice(0, 8);
+const evidenceCommitUrl = `https://github.com/ricomanifesto/SentrySearch/commit/${evidenceRevision}`;
 const evidence = [
   {
     href: `https://github.com/ricomanifesto/SentrySearch/blob/${evidenceRevision}/src/core/section_validator.py#L266-L472`,
@@ -54,6 +56,7 @@ const structuredData = {
         "@type": "SoftwareSourceCode",
         name: "SentrySearch",
         codeRepository: "https://github.com/ricomanifesto/SentrySearch",
+        version: evidenceRevision,
       },
       citation: evidence.map(({ href }) => href),
     },
@@ -119,6 +122,15 @@ const structuredData = {
           </p>
 
           <h2>Public implementation evidence</h2>
+          <p class="project-evidence-vintage">
+            Evidence pinned at{" "}
+            <a
+              href={evidenceCommitUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View SentrySearch evidence revision ${evidenceShortRevision}`}
+            ><code>{evidenceShortRevision}</code></a>
+          </p>
           <ul class="project-evidence-list">
             {evidence.map((item) => (
               <li>

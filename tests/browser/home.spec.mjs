@@ -1093,6 +1093,15 @@ test("serves the SentrySearch LLM evaluation case study as crawlable HTML", asyn
     "href",
     "https://github.com/ricomanifesto/SentrySearch",
   );
+  const evidenceRevision = "39c86789bdca5ca0ada2161624c1831f425049c7";
+  const evidenceVintage = page.locator(".project-evidence-vintage");
+  await expect(evidenceVintage).toHaveText("Evidence pinned at 39c86789");
+  await expect(evidenceVintage.getByRole("link", {
+    name: "View SentrySearch evidence revision 39c86789",
+  })).toHaveAttribute(
+    "href",
+    `https://github.com/ricomanifesto/SentrySearch/commit/${evidenceRevision}`,
+  );
   const evidenceLinks = page.locator(".project-evidence-list a");
   await expect(evidenceLinks).toHaveCount(4);
   const evidenceHrefs = await evidenceLinks.evaluateAll((links) => (
@@ -1107,6 +1116,7 @@ test("serves the SentrySearch LLM evaluation case study as crawlable HTML", asyn
     await page.locator('script[type="application/ld+json"]').textContent(),
   );
   const articleSchema = structuredData["@graph"].find((entry) => entry["@type"] === "Article");
+  expect(articleSchema.about.version).toBe(evidenceRevision);
   expect(articleSchema.author).toMatchObject({
     "@type": "Person",
     "@id": "https://ricomanifesto.com/#michael-rico",

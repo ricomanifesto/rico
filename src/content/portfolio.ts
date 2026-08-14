@@ -204,7 +204,7 @@ export const projects: readonly PortfolioProject[] = [
       techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
       programmingLanguages: ["Go", "Python"],
       evidence: {
-        href: "https://ricomanifesto.github.io/GRCInsight/publication-history.json",
+        href: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
         label: "Inspect the publication outcome journal",
         external: true,
       },

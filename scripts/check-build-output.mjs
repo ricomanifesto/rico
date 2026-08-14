@@ -39,6 +39,7 @@ const projectPages = [
     slug: "sentrysearch",
     name: "SentrySearch",
     title: "Threat Intelligence Research Workspace",
+    claim: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
     repository: "https://github.com/ricomanifesto/SentrySearch",
     evidence: "/projects/sentrysearch/llm-evaluation/",
   },
@@ -46,6 +47,7 @@ const projectPages = [
     slug: "sentrydigest",
     name: "SentryDigest",
     title: "Analyst-Ready Security Briefings",
+    claim: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
     repository: "https://github.com/ricomanifesto/SentryDigest",
     evidence: "https://ricomanifesto.github.io/SentryDigest/archive/",
   },
@@ -53,6 +55,7 @@ const projectPages = [
     slug: "sentryinsight",
     name: "SentryInsight",
     title: "Exploitation Intelligence Reports",
+    claim: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
     repository: "https://github.com/ricomanifesto/SentryInsight",
     evidence: "https://ricomanifesto.github.io/SentryInsight/reports/",
   },
@@ -60,11 +63,19 @@ const projectPages = [
     slug: "grcinsight",
     name: "GRCInsight",
     title: "Audit-Ready GRC Intelligence",
+    claim: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
     repository: "https://github.com/ricomanifesto/GRCInsight",
-    evidence: "https://ricomanifesto.github.io/GRCInsight/publication-history.json",
+    evidence: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
   },
 ];
 const sentrySearchEvidenceRevision = "39c86789bdca5ca0ada2161624c1831f425049c7";
+const sentrySearchEvidenceShortRevision = sentrySearchEvidenceRevision.slice(0, 8);
+const staleProjectClaims = [
+  "persistent reports, hybrid search",
+  "daily analyst-ready briefing",
+  "turns security RSS feeds into exploitation-focused threat reports",
+  "turns regulatory and security feeds into audit-ready GRC intelligence",
+];
 const sentrySearchCaseStudy = {
   path: join("projects", "sentrysearch", "llm-evaluation", "index.html"),
   url: `${siteUrl}/projects/sentrysearch/llm-evaluation/`,
@@ -366,15 +377,20 @@ if (existsSync(indexPath)) {
     }
   }
 
-  for (const { slug, name, evidence } of projectPages) {
+  for (const { slug, name, claim, evidence } of projectPages) {
     if (!index.includes(`aria-label="Inspect ${name} evidence"`)
       || !index.includes(`href="${evidence}"`)) {
       failures.push(`Built index is missing ${slug} evidence link`);
     }
+    if (!index.includes(claim)) {
+      failures.push(`Built index is missing current ${slug} claim`);
+    }
   }
 
-  if (!index.includes("scheduled three-hour briefing") || index.includes("daily analyst-ready briefing")) {
-    failures.push("Built index does not use the current SentryDigest cadence claim");
+  for (const staleClaim of staleProjectClaims) {
+    if (index.includes(staleClaim)) {
+      failures.push(`Built index contains stale project claim: ${staleClaim}`);
+    }
   }
 }
 
@@ -543,6 +559,9 @@ if (existsSync(caseStudyPath)) {
     ["heading", `<h1>${sentrySearchCaseStudy.title}</h1>`],
     ["canonical URL", `rel="canonical" href="${sentrySearchCaseStudy.url}"`],
     ["claim boundary", "What this proves and what it does not"],
+    ["visible evidence vintage", `Evidence pinned at <a href="https://github.com/ricomanifesto/SentrySearch/commit/${sentrySearchEvidenceRevision}"`],
+    ["short evidence revision", `>${sentrySearchEvidenceShortRevision}</code>`],
+    ["structured evidence revision", `"version":"${sentrySearchEvidenceRevision}"`],
     ["structured data", 'type="application/ld+json"'],
   ];
 
@@ -562,7 +581,7 @@ if (existsSync(caseStudyPath)) {
   }
 }
 
-for (const { slug, title, repository, evidence } of projectPages) {
+for (const { slug, title, claim, repository, evidence } of projectPages) {
   const projectPath = join(dist, "projects", slug, "index.html");
 
   if (!existsSync(projectPath)) {
@@ -575,6 +594,7 @@ for (const { slug, title, repository, evidence } of projectPages) {
   for (const [label, expected] of [
     ["title", `<title>${title} | Michael Rico</title>`],
     ["heading", `<h1>${title}</h1>`],
+    ["current project claim", claim],
     ["canonical URL", `rel="canonical" href="${expectedCanonical}"`],
     ["repository link", `href="${repository}"`],
     ["evidence link", `href="${evidence}"`],

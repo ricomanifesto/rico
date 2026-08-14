@@ -1356,6 +1356,23 @@
   padding-left: 1.25rem;
 }
 
+.project-evidence-vintage {
+  color: var(--portfolio-copy);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5rem;
+}
+
+.project-evidence-vintage a {
+  color: var(--portfolio-active-accent);
+  font-weight: 700;
+  text-underline-offset: 0.2em;
+}
+
+.project-evidence-vintage code {
+  font: inherit;
+}
+
 .project-evidence-list li + li {
   margin-top: 0.75rem;
 }
