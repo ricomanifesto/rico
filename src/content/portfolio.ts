@@ -18,6 +18,7 @@ export interface ProjectActionLinkBehavior {
 export interface ProjectPageLink {
   readonly href: string;
   readonly label: string;
+  readonly external: boolean;
 }
 
 export interface ProjectPageDetails {
@@ -26,7 +27,7 @@ export interface ProjectPageDetails {
   readonly metaDescription: string;
   readonly techStack: readonly string[];
   readonly programmingLanguages: string | readonly string[];
-  readonly relatedLinks: readonly ProjectPageLink[];
+  readonly evidence: ProjectPageLink;
 }
 
 export interface PortfolioProject {
@@ -75,7 +76,7 @@ export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
 export const projects: readonly PortfolioProject[] = [
   {
     title: "Threat Intelligence Research Workspace",
-    description: "SentrySearch turns scattered threat research into searchable security profiles for malware, attack tools, and targeted technologies, with persistent reports, hybrid search, and detection guidance in one workspace.",
+    description: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
     techStack: ["NEXT.JS", "TYPESCRIPT", "FASTAPI", "PINECONE", "SUPABASE"],
     links: {
       repository: {
@@ -97,20 +98,19 @@ export const projects: readonly PortfolioProject[] = [
     page: {
       slug: "sentrysearch",
       name: "SentrySearch",
-      metaDescription: "SentrySearch turns scattered threat research into searchable security profiles, persistent reports, hybrid search, and detection guidance.",
+      metaDescription: "SentrySearch builds source-backed, searchable threat profiles with hybrid retrieval, detection guidance, and explicit evaluation status.",
       techStack: ["Next.js", "TypeScript", "FastAPI", "Pinecone", "Supabase"],
       programmingLanguages: ["TypeScript", "Python"],
-      relatedLinks: [
-        {
-          href: "/projects/sentrysearch/llm-evaluation/",
-          label: "Read the LLM evaluation case study",
-        },
-      ],
+      evidence: {
+        href: "/projects/sentrysearch/llm-evaluation/",
+        label: "Read the LLM evaluation case study",
+        external: false,
+      },
     },
   },
   {
     title: "Analyst-Ready Security Briefings",
-    description: "SentryDigest turns noisy security feeds into a daily analyst-ready briefing, with source links, severity cues, and clean HTML output you can inspect before sharing.",
+    description: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
     techStack: ["NODE.JS", "RSS", "GITHUB ACTIONS"],
     links: {
       repository: {
@@ -132,15 +132,19 @@ export const projects: readonly PortfolioProject[] = [
     page: {
       slug: "sentrydigest",
       name: "SentryDigest",
-      metaDescription: "SentryDigest turns noisy security feeds into a daily analyst-ready briefing with source links, severity cues, and inspectable HTML output.",
+      metaDescription: "SentryDigest publishes scheduled three-hour security briefings with UTC freshness, source health, retained issues, and stable handoffs.",
       techStack: ["Node.js", "RSS", "GitHub Actions"],
       programmingLanguages: "JavaScript",
-      relatedLinks: [],
+      evidence: {
+        href: "https://ricomanifesto.github.io/SentryDigest/archive/",
+        label: "Browse retained digest issues",
+        external: true,
+      },
     },
   },
   {
     title: "Exploitation Intelligence Reports",
-    description: "SentryInsight turns security RSS feeds into exploitation-focused threat reports, with CVE correlation, affected systems, attack vectors, and executive summaries ready for review.",
+    description: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
     techStack: ["PYTHON", "LANGGRAPH", "PYDANTIC", "OPENROUTER"],
     links: {
       repository: {
@@ -162,15 +166,19 @@ export const projects: readonly PortfolioProject[] = [
     page: {
       slug: "sentryinsight",
       name: "SentryInsight",
-      metaDescription: "SentryInsight turns security RSS feeds into exploitation-focused threat reports with CVE correlation, attack vectors, and executive summaries.",
+      metaDescription: "SentryInsight publishes CVE-backed exploitation reports, dated archives, and fail-closed retention of the last verified report.",
       techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
       programmingLanguages: "Python",
-      relatedLinks: [],
+      evidence: {
+        href: "https://ricomanifesto.github.io/SentryInsight/reports/",
+        label: "Browse dated exploitation reports",
+        external: true,
+      },
     },
   },
   {
     title: "Audit-Ready GRC Intelligence",
-    description: "GRCInsight turns regulatory and security feeds into audit-ready GRC intelligence, with framework mapping, agency signals, industry relevance, and concise action-oriented reports.",
+    description: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
     techStack: ["GO", "PYTHON", "AWS LAMBDA", "DYNAMODB", "FASTAPI"],
     links: {
       repository: {
@@ -192,10 +200,14 @@ export const projects: readonly PortfolioProject[] = [
     page: {
       slug: "grcinsight",
       name: "GRCInsight",
-      metaDescription: "GRCInsight turns regulatory and security feeds into audit-ready GRC intelligence with framework mapping and action-oriented reports.",
+      metaDescription: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and machine-readable publication outcomes.",
       techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
       programmingLanguages: ["Go", "Python"],
-      relatedLinks: [],
+      evidence: {
+        href: "https://ricomanifesto.github.io/GRCInsight/publication-history.json",
+        label: "Inspect the publication outcome journal",
+        external: true,
+      },
     },
   }
 ];

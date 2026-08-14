@@ -12,6 +12,7 @@ const home = read("src/Home.tsx");
 const about = read("src/components/AboutMe.tsx");
 const experience = read("src/components/Experience.tsx");
 const projects = read("src/components/ProjectsSection.tsx");
+const projectPage = read("src/pages/projects/[slug].astro");
 const footer = read("src/components/Footer.tsx");
 const indexCss = read("src/index.css");
 
@@ -77,12 +78,19 @@ for (const required of [
   "<article",
   'data-testid="project-collection"',
   'aria-label={`Read ${project.page.name} case study`}',
+  'aria-label={`Inspect ${project.page.name} evidence`}',
   'aria-label={getLabel(projectTitle)}',
   'alt=""',
   'aria-hidden="true"',
 ]) {
   if (!projects.includes(required)) {
     failures.push(`Projects is missing semantic: ${required}`);
+  }
+}
+
+for (const content of [projects, projectPage]) {
+  if (!content.includes('aria-label={`Inspect ${project.page.name} evidence`}')) {
+    failures.push("Project evidence links do not have project-specific accessible names");
   }
 }
 

@@ -112,17 +112,19 @@ const structuredData = {
           )}
         </div>
 
-        {project.page.relatedLinks.length > 0 && (
-          <section aria-labelledby="project-evidence-heading" class="project-detail-evidence">
-            <h2 id="project-evidence-heading">Inspect the evidence</h2>
-            {project.page.relatedLinks.map((link) => (
-              <a href={link.href} class="project-evidence-link">
-                {link.label}
-                <ArrowRight size={18} aria-hidden="true" focusable="false" />
-              </a>
-            ))}
-          </section>
-        )}
+        <section aria-labelledby="project-evidence-heading" class="project-detail-evidence">
+          <h2 id="project-evidence-heading">Inspect the evidence</h2>
+          <a
+            href={project.page.evidence.href}
+            target={project.page.evidence.external ? "_blank" : undefined}
+            rel={project.page.evidence.external ? "noopener noreferrer" : undefined}
+            aria-label={`Inspect ${project.page.name} evidence`}
+            class="project-evidence-link"
+          >
+            {project.page.evidence.label}
+            <ArrowRight size={18} aria-hidden="true" focusable="false" />
+          </a>
+        </section>
 
         <nav aria-label="Project navigation" class="project-detail-back">
           <a href="/#projects">

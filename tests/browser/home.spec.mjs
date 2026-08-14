@@ -1093,6 +1093,15 @@ test("serves the SentrySearch LLM evaluation case study as crawlable HTML", asyn
     "href",
     "https://github.com/ricomanifesto/SentrySearch",
   );
+  const evidenceLinks = page.locator(".project-evidence-list a");
+  await expect(evidenceLinks).toHaveCount(4);
+  const evidenceHrefs = await evidenceLinks.evaluateAll((links) => (
+    links.map((link) => link.getAttribute("href"))
+  ));
+  expect(evidenceHrefs.every((href) => (
+    /^https:\/\/github\.com\/ricomanifesto\/SentrySearch\/blob\/[0-9a-f]{40}\/src\/core\//.test(href)
+  ))).toBe(true);
+  expect(evidenceHrefs.some((href) => /\/blob\/(?:main|master)\//.test(href))).toBe(false);
 
   const structuredData = JSON.parse(
     await page.locator('script[type="application/ld+json"]').textContent(),
@@ -1109,4 +1118,22 @@ test("serves the SentrySearch LLM evaluation case study as crawlable HTML", asyn
   expect(mainBox).not.toBeNull();
   expect(mainBox.x).toBeGreaterThanOrEqual(-0.5);
   expect(mainBox.x + mainBox.width).toBeLessThanOrEqual(390.5);
+});
+
+test("describes SentryDigest with its scheduled three-hour cadence", async ({ page }) => {
+  await page.goto("/");
+
+  const digestCard = page.getByTestId("project-collection").getByRole("article").filter({
+    has: page.getByText("SentryDigest", { exact: true }),
+  });
+  await expect(digestCard).toContainText("scheduled three-hour briefing");
+  await expect(digestCard).not.toContainText("daily analyst-ready briefing");
+
+  await page.goto("/projects/sentrydigest/");
+  await expect(page.locator(".project-detail-description")).toContainText(
+    "scheduled three-hour briefing",
+  );
+  await expect(page.locator(".project-detail-description")).not.toContainText(
+    "daily analyst-ready briefing",
+  );
 });

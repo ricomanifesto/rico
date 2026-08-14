@@ -92,13 +92,18 @@ export default function ProjectsSection() {
                   </div>
                 </div>
 
-                {project.page.relatedLinks.length > 0 && (
-                  <div className="project-evidence-links">
-                    {project.page.relatedLinks.map((link) => (
-                      <a key={link.href} href={link.href}>{link.label}</a>
-                    ))}
-                  </div>
-                )}
+                <div className="project-evidence-links">
+                  <a
+                    href={project.page.evidence.href}
+                    target={project.page.evidence.external ? projectActionLinkBehavior.externalTarget : undefined}
+                    rel={project.page.evidence.external ? projectActionLinkBehavior.externalRel : undefined}
+                    aria-label={`Inspect ${project.page.name} evidence`}
+                    className="project-evidence-link"
+                  >
+                    Inspect the evidence
+                    <ArrowRight size={17} aria-hidden="true" focusable="false" />
+                  </a>
+                </div>
               </div>
             </article>
           ))}

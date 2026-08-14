@@ -37,34 +37,43 @@ const removedWritingMarkers = [
 const projectPages = [
   {
     slug: "sentrysearch",
+    name: "SentrySearch",
     title: "Threat Intelligence Research Workspace",
     repository: "https://github.com/ricomanifesto/SentrySearch",
+    evidence: "/projects/sentrysearch/llm-evaluation/",
   },
   {
     slug: "sentrydigest",
+    name: "SentryDigest",
     title: "Analyst-Ready Security Briefings",
     repository: "https://github.com/ricomanifesto/SentryDigest",
+    evidence: "https://ricomanifesto.github.io/SentryDigest/archive/",
   },
   {
     slug: "sentryinsight",
+    name: "SentryInsight",
     title: "Exploitation Intelligence Reports",
     repository: "https://github.com/ricomanifesto/SentryInsight",
+    evidence: "https://ricomanifesto.github.io/SentryInsight/reports/",
   },
   {
     slug: "grcinsight",
+    name: "GRCInsight",
     title: "Audit-Ready GRC Intelligence",
     repository: "https://github.com/ricomanifesto/GRCInsight",
+    evidence: "https://ricomanifesto.github.io/GRCInsight/publication-history.json",
   },
 ];
+const sentrySearchEvidenceRevision = "39c86789bdca5ca0ada2161624c1831f425049c7";
 const sentrySearchCaseStudy = {
   path: join("projects", "sentrysearch", "llm-evaluation", "index.html"),
   url: `${siteUrl}/projects/sentrysearch/llm-evaluation/`,
   title: "LLM Evaluation for Threat-Intelligence Workflows",
   evidenceUrls: [
-    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/section_validator.py#L266-L472",
-    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/validation_criteria.py#L21-L259",
-    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/parallel_section_validator.py#L19-L227",
-    "https://github.com/ricomanifesto/SentrySearch/blob/main/src/core/markdown_generator.py#L54-L115",
+    `https://github.com/ricomanifesto/SentrySearch/blob/${sentrySearchEvidenceRevision}/src/core/section_validator.py#L266-L472`,
+    `https://github.com/ricomanifesto/SentrySearch/blob/${sentrySearchEvidenceRevision}/src/core/validation_criteria.py#L21-L259`,
+    `https://github.com/ricomanifesto/SentrySearch/blob/${sentrySearchEvidenceRevision}/src/core/parallel_section_validator.py#L19-L227`,
+    `https://github.com/ricomanifesto/SentrySearch/blob/${sentrySearchEvidenceRevision}/src/core/markdown_generator.py#L54-L115`,
   ],
 };
 
@@ -356,6 +365,17 @@ if (existsSync(indexPath)) {
       failures.push(`Built index is missing ${label}`);
     }
   }
+
+  for (const { slug, name, evidence } of projectPages) {
+    if (!index.includes(`aria-label="Inspect ${name} evidence"`)
+      || !index.includes(`href="${evidence}"`)) {
+      failures.push(`Built index is missing ${slug} evidence link`);
+    }
+  }
+
+  if (!index.includes("scheduled three-hour briefing") || index.includes("daily analyst-ready briefing")) {
+    failures.push("Built index does not use the current SentryDigest cadence claim");
+  }
 }
 
 const robotsPath = join(dist, "robots.txt");
@@ -527,12 +547,12 @@ if (existsSync(caseStudyPath)) {
   ];
 
   for (const evidenceUrl of sentrySearchCaseStudy.evidenceUrls) {
-    expectations.push(["main-branch public evidence", `href="${evidenceUrl}"`]);
+    expectations.push(["commit-pinned public evidence", `href="${evidenceUrl}"`]);
   }
 
-  const staleSentrySearchRef = /https:\/\/github\.com\/ricomanifesto\/SentrySearch\/blob\/(?!main\/)[^/"\s]+\/src\/core\//;
-  if (staleSentrySearchRef.test(caseStudy)) {
-    failures.push("SentrySearch case study links to code outside the main branch");
+  const movingSentrySearchRef = /https:\/\/github\.com\/ricomanifesto\/SentrySearch\/blob\/(?:main|master)\/src\/core\//;
+  if (movingSentrySearchRef.test(caseStudy)) {
+    failures.push("SentrySearch case study uses a moving branch evidence link");
   }
 
   for (const [label, expected] of expectations) {
@@ -542,7 +562,7 @@ if (existsSync(caseStudyPath)) {
   }
 }
 
-for (const { slug, title, repository } of projectPages) {
+for (const { slug, title, repository, evidence } of projectPages) {
   const projectPath = join(dist, "projects", slug, "index.html");
 
   if (!existsSync(projectPath)) {
@@ -557,6 +577,7 @@ for (const { slug, title, repository } of projectPages) {
     ["heading", `<h1>${title}</h1>`],
     ["canonical URL", `rel="canonical" href="${expectedCanonical}"`],
     ["repository link", `href="${repository}"`],
+    ["evidence link", `href="${evidence}"`],
     ["structured data", 'type="application/ld+json"'],
   ]) {
     if (!projectPage.includes(expected)) {

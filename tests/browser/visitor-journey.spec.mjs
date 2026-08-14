@@ -5,21 +5,29 @@ const projects = [
     title: "Threat Intelligence Research Workspace",
     name: "SentrySearch",
     slug: "sentrysearch",
+    evidenceHref: "/projects/sentrysearch/llm-evaluation/",
+    evidenceExternal: false,
   },
   {
     title: "Analyst-Ready Security Briefings",
     name: "SentryDigest",
     slug: "sentrydigest",
+    evidenceHref: "https://ricomanifesto.github.io/SentryDigest/archive/",
+    evidenceExternal: true,
   },
   {
     title: "Exploitation Intelligence Reports",
     name: "SentryInsight",
     slug: "sentryinsight",
+    evidenceHref: "https://ricomanifesto.github.io/SentryInsight/reports/",
+    evidenceExternal: true,
   },
   {
     title: "Audit-Ready GRC Intelligence",
     name: "GRCInsight",
     slug: "grcinsight",
+    evidenceHref: "https://ricomanifesto.github.io/GRCInsight/publication-history.json",
+    evidenceExternal: true,
   },
 ];
 
@@ -68,6 +76,16 @@ test("shows all project case studies in a two-by-two desktop collection", async 
     await expect(
       collection.getByRole("link", { name: `Read ${project.name} case study` }),
     ).toHaveAttribute("href", `/projects/${project.slug}/`);
+    const evidenceLink = collection.getByRole("link", {
+      name: `Inspect ${project.name} evidence`,
+    });
+    await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
+    if (project.evidenceExternal) {
+      await expect(evidenceLink).toHaveAttribute("target", "_blank");
+      await expect(evidenceLink).toHaveAttribute("rel", "noopener noreferrer");
+    } else {
+      await expect(evidenceLink).not.toHaveAttribute("target", "_blank");
+    }
   }
 
   const boxes = await cards.evaluateAll((elements) => elements.map((element) => {
@@ -162,6 +180,7 @@ test("keeps every project action tappable and project copy at readable contrast"
         ".project-card-description",
         ".project-card-tech-stack",
         ".project-case-study-link",
+        ".project-evidence-link",
       ].join(","))).map((element) => ({
         ratio: contrast(getComputedStyle(element).color, background),
         text: element.textContent?.trim(),
@@ -230,6 +249,12 @@ for (const project of projects) {
     await expect(page.getByRole("link", { name: "Rico Manifesto", exact: true })).toBeVisible();
     await expect(page.locator("main#main-content")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: project.title })).toBeVisible();
+    const evidenceLink = page.getByRole("link", { name: `Inspect ${project.name} evidence` });
+    await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
+    if (project.evidenceExternal) {
+      await expect(evidenceLink).toHaveAttribute("target", "_blank");
+      await expect(evidenceLink).toHaveAttribute("rel", "noopener noreferrer");
+    }
     await expect(page.getByRole("contentinfo")).toContainText("Rico Manifesto");
   });
 }
@@ -248,6 +273,38 @@ test("keeps the nested LLM evaluation inside the shared site shell", async ({ pa
     "/projects/sentrysearch/",
   );
   await expect(page.getByRole("contentinfo")).toContainText("Rico Manifesto");
+
+  const evidenceLinks = page.locator(".project-evidence-list a");
+  await expect(evidenceLinks).toHaveCount(4);
+  for (const link of await evidenceLinks.all()) {
+    await expect(link).toHaveAttribute(
+      "href",
+      /https:\/\/github\.com\/ricomanifesto\/SentrySearch\/blob\/[0-9a-f]{40}\/src\/core\//,
+    );
+    await expect(link).not.toHaveAttribute("href", /\/blob\/(?:main|master)\//);
+  }
+});
+
+test("keeps project evidence usable without JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 390, height: 844 },
+  });
+  const page = await context.newPage();
+  const response = await page.goto("http://127.0.0.1:5173/#projects");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("region", { name: "/ projects" })).toBeVisible();
+  for (const project of projects) {
+    await expect(page.getByRole("link", {
+      name: `Inspect ${project.name} evidence`,
+    })).toHaveAttribute("href", project.evidenceHref);
+  }
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(1);
+  await context.close();
 });
 
 test("uses the full Rico Manifesto identity and tighter first-note copy", async ({ page }) => {
