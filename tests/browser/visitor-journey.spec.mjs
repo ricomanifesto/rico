@@ -35,39 +35,19 @@ const projects = [
   },
 ];
 
-test("changes Experience with pointer input and the complete keyboard map", async ({ page }) => {
+test("presents every role as a chronological record without a mode switch", async ({ page }) => {
   await page.goto("/");
 
-  const sentinelOne = page.getByRole("tab", { name: "SENTINELONE" });
-  const uber = page.getByRole("tab", { name: "UBER" });
-  const dellSecureworks = page.getByRole("tab", { name: "DELL SECUREWORKS" });
-
-  await uber.click();
-  await expect(uber).toHaveAttribute("aria-selected", "true");
-  await expect(uber).toHaveAttribute("tabindex", "0");
-  await expect(sentinelOne).toHaveAttribute("tabindex", "-1");
-  await expect(page.getByRole("tabpanel", { name: "UBER" })).toContainText(
-    "Threat Detection Engineer II",
-  );
-
-  await uber.focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(dellSecureworks).toBeFocused();
-  await page.keyboard.press("ArrowRight");
-  await expect(sentinelOne).toBeFocused();
-  await page.keyboard.press("ArrowLeft");
-  await expect(dellSecureworks).toBeFocused();
-  await page.keyboard.press("Home");
-  await expect(sentinelOne).toBeFocused();
-  await page.keyboard.press("End");
-  await expect(dellSecureworks).toBeFocused();
-  await expect(dellSecureworks).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel", { name: "DELL SECUREWORKS" })).toContainText(
-    "Information Security Researcher",
-  );
+  const experience = page.getByRole("region", { name: "Experience" });
+  const roles = experience.getByRole("article");
+  await expect(roles).toHaveCount(3);
+  await expect(roles.nth(0)).toContainText("December 2024 — present");
+  await expect(roles.nth(1)).toContainText("October 2023 — July 2024");
+  await expect(roles.nth(2)).toContainText("August 2013 — August 2023");
+  await expect(experience.getByRole("button")).toHaveCount(0);
 });
 
-test("shows all project case studies in a two-by-two desktop collection", async ({ page }) => {
+test("shows all project case studies as an editorial desktop sequence", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/");
 
@@ -97,20 +77,19 @@ test("shows all project case studies in a two-by-two desktop collection", async 
   }
 
   const boxes = await cards.evaluateAll((elements) => elements.map((element) => {
-    const { left, top, width } = element.getBoundingClientRect();
-    return { left, top, width };
+    const { left, top, width, height } = element.getBoundingClientRect();
+    return { left, top, width, height };
   }));
 
-  expect(Math.abs(boxes[0].top - boxes[1].top)).toBeLessThan(2);
-  expect(Math.abs(boxes[2].top - boxes[3].top)).toBeLessThan(2);
-  expect(boxes[2].top).toBeGreaterThan(boxes[0].top + 100);
-  expect(boxes[1].left).toBeGreaterThan(boxes[0].left + boxes[0].width - 2);
-  expect(Math.abs(boxes[0].left - boxes[2].left)).toBeLessThan(2);
+  for (let index = 1; index < boxes.length; index += 1) {
+    expect(boxes[index].top).toBeGreaterThan(boxes[index - 1].top + boxes[index - 1].height - 2);
+    expect(Math.abs(boxes[index].left - boxes[0].left)).toBeLessThan(2);
+    expect(Math.abs(boxes[index].width - boxes[0].width)).toBeLessThan(2);
+  }
 });
 
-test("uses user-controlled project scroll snapping on mobile", async ({ page }) => {
+test("uses a natural vertical project sequence on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.clock.install();
   await page.goto("/");
 
   const collection = page.getByTestId("project-collection");
@@ -119,7 +98,7 @@ test("uses user-controlled project scroll snapping on mobile", async ({ page }) 
   await expect(page.getByRole("button", { name: "Previous project" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Next project" })).toHaveCount(0);
 
-  const before = await cards.evaluateAll((elements) => elements.map((element) => {
+  const positions = await cards.evaluateAll((elements) => elements.map((element) => {
     const { left, top } = element.getBoundingClientRect();
     return { left, top };
   }));
@@ -135,17 +114,16 @@ test("uses user-controlled project scroll snapping on mobile", async ({ page }) 
     };
   });
 
-  expect(metrics.scrollWidth).toBeGreaterThan(metrics.clientWidth);
-  expect(metrics.overflowX).toBe("auto");
-  expect(metrics.scrollSnapType).toContain("x");
+  expect(metrics.scrollWidth).toBe(metrics.clientWidth);
+  expect(metrics.overflowX).not.toBe("auto");
+  expect(metrics.scrollSnapType).toBe("none");
   expect(metrics.documentScrollWidth).toBe(metrics.documentClientWidth);
-
-  await page.clock.fastForward(15_000);
-  const after = await cards.evaluateAll((elements) => elements.map((element) => {
-    const { left, top } = element.getBoundingClientRect();
-    return { left, top };
-  }));
-  expect(after).toEqual(before);
+  expect(positions[1].top).toBeGreaterThan(positions[0].top);
+  expect(positions[2].top).toBeGreaterThan(positions[1].top);
+  expect(positions[3].top).toBeGreaterThan(positions[2].top);
+  for (const position of positions) {
+    expect(position.left).toBeGreaterThanOrEqual(0);
+  }
 });
 
 test("keeps every project action tappable and project copy at readable contrast", async ({ page }) => {
@@ -211,8 +189,8 @@ test("keeps meaningful homepage content available before it enters the viewport"
       "#about .about-body-copy",
       "#about .about-technology-item",
       "#experience .section-title",
-      "#experience [role='tab']",
-      "#experience [role='tabpanel']:not([hidden]) li",
+      "#experience .experience-item",
+      "#experience .experience-highlight-list li",
       "#projects .section-title",
       "#projects h3",
       "#writing .section-title",
@@ -310,7 +288,7 @@ test("keeps project evidence usable without JavaScript", async ({ browser }) => 
   const response = await page.goto("http://127.0.0.1:5173/#projects");
 
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("region", { name: "/ projects" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Selected work" })).toBeVisible();
   for (const project of projects) {
     await expect(page.getByText(project.claim, { exact: true })).toBeVisible();
     await expect(page.getByRole("link", {

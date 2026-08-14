@@ -1,80 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
-
-async function installReducedMotionController(page, initialPrefersReducedMotion = false) {
-  await page.addInitScript(({ query, initialPrefersReducedMotion }) => {
-    const nativeMatchMedia = window.matchMedia.bind(window);
-    let prefersReducedMotion = initialPrefersReducedMotion;
-    const listeners = new Set();
-    const mediaQueryLists = new Set();
-
-    function notifyListeners() {
-      const event = { matches: prefersReducedMotion, media: query };
-      for (const mediaQueryList of mediaQueryLists) {
-        mediaQueryList.matches = prefersReducedMotion;
-        mediaQueryList.onchange?.(event);
-      }
-      for (const listener of listeners) {
-        listener(event);
-      }
-    }
-
-    window.__setReducedMotionForTest = (value) => {
-      prefersReducedMotion = value;
-      notifyListeners();
-    };
-
-    window.matchMedia = (requestedQuery) => {
-      if (requestedQuery !== query) {
-        return nativeMatchMedia(requestedQuery);
-      }
-
-      const mediaQueryList = {
-        matches: prefersReducedMotion,
-        media: query,
-        onchange: null,
-        addEventListener: (eventName, listener) => {
-          if (eventName === "change") {
-            listeners.add(listener);
-          }
-        },
-        removeEventListener: (eventName, listener) => {
-          if (eventName === "change") {
-            listeners.delete(listener);
-          }
-        },
-        addListener: (listener) => listeners.add(listener),
-        removeListener: (listener) => listeners.delete(listener),
-        dispatchEvent: () => true,
-      };
-
-      mediaQueryLists.add(mediaQueryList);
-      return mediaQueryList;
-    };
-  }, { query: reducedMotionQuery, initialPrefersReducedMotion });
-}
-
-test("keeps a resolved signal visible when reduced motion is enabled", async ({ page }) => {
-  await installReducedMotionController(page);
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/");
-
-  const signal = page.getByTestId("signal-graphic");
-  await expect(signal).toHaveAttribute("data-motion", "animated");
-  await expect(page.getByTestId("signal-particle")).toHaveCount(12);
-  await expect(page.getByTestId("signal-line")).toHaveCount(1);
-
-  await page.evaluate(() => {
-    window.__setReducedMotionForTest(true);
-  });
-
-  await expect(signal).toHaveAttribute("data-motion", "reduced");
-  await expect(page.getByTestId("signal-particle")).toHaveCount(12);
-  await expect(page.getByTestId("hero-visual")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Hi, I'm Michael Rico" })).toBeVisible();
-});
-
 test("renders the complete personal heading in initial HTML", async ({ request }) => {
   const response = await request.get("/");
   const html = await response.text();
@@ -87,7 +12,7 @@ test("renders the complete personal heading in initial HTML", async ({ request }
     .trim();
 
   expect(response.ok()).toBe(true);
-  expect(visibleText).toBe("Hi, I'm Michael Rico");
+  expect(visibleText).toBe("I build security systems that show their work.");
 });
 
 test("exposes mobile primary navigation from shared section links", async ({ page }) => {
@@ -156,7 +81,7 @@ test("exposes desktop primary navigation with an accessible name", async ({ page
   await expect(desktopNav.getByRole("link", { name: "Experience" })).toHaveAttribute("href", "/#experience");
   await expect(desktopNav.getByRole("link", { name: "Projects" })).toHaveAttribute("href", "/#projects");
   await expect(desktopNav.getByRole("link", { name: "Writing" })).toHaveAttribute("href", "/writing/");
-  await expect(page.getByRole("link", { name: "Email" })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "Email", exact: true })).toHaveAttribute(
     "href",
     "mailto:michaelrico124@gmail.com",
   );
@@ -181,7 +106,7 @@ test("marks the active desktop section in primary navigation", async ({ page }) 
   await experienceLink.click();
   await expect(experienceLink).toHaveAttribute("aria-current", "location");
   await expect(aboutLink).not.toHaveAttribute("aria-current", "location");
-  await expect(experienceLink).toHaveCSS("font-weight", "600");
+  await expect(experienceLink).toHaveCSS("font-weight", "700");
 });
 
 test("marks the active mobile section in primary navigation", async ({ page }) => {
@@ -198,7 +123,7 @@ test("marks the active mobile section in primary navigation", async ({ page }) =
   await aboutLink.click();
   await expect(aboutLink).toHaveAttribute("aria-current", "location");
   await expect(homeLink).not.toHaveAttribute("aria-current", "location");
-  await expect(aboutLink).toHaveCSS("font-weight", "600");
+  await expect(aboutLink).toHaveCSS("font-weight", "700");
 });
 
 test("marks direct section links as active after page load", async ({ page }) => {
@@ -226,7 +151,7 @@ test("ignores malformed section fragments without crashing the header", async ({
 test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
   await page.goto("/");
 
-  const contactLink = page.getByRole("link", { name: "Say hi!" });
+  const contactLink = page.getByRole("link", { name: "Email me" });
   await expect(contactLink).toBeVisible();
   await expect(contactLink).toHaveAttribute("href", "mailto:michaelrico124@gmail.com");
 
@@ -240,7 +165,7 @@ test("keeps hero contact CTA accessible and easy to tap", async ({ page }) => {
 test("links to Michael Rico's GitHub profile from the About section", async ({ page }) => {
   await page.goto("/");
 
-  const aboutSection = page.getByRole("region", { name: "/ about me" });
+  const aboutSection = page.getByRole("region", { name: "About" });
   const githubProfileLink = aboutSection.getByRole("link", { name: "Michael Rico on GitHub" });
 
   await expect(githubProfileLink).toBeVisible();
@@ -253,10 +178,10 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
 
-  const heading = page.getByRole("heading", { name: "Hi, I'm Michael Rico" });
-  const subtitle = page.getByText("I build security systems that turn noisy signals into clear, inspectable decisions.");
-  const body = page.getByText("I'm a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering.");
-  const contactLink = page.getByRole("link", { name: "Say hi!" });
+  const heading = page.getByRole("heading", { name: "I build security systems that show their work." });
+  const subtitle = page.getByText("I'm Michael Rico, a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering.");
+  const body = page.getByText("My projects turn noisy signals into clear decisions, with the evidence, failure modes, and history left visible.");
+  const contactLink = page.getByRole("link", { name: "Email me" });
 
   await expect(heading).toBeVisible();
   await expect(subtitle).toBeVisible();
@@ -304,127 +229,47 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.aboutSection.top);
 });
 
-test("uses a split hero composition on desktop without crowding short mobile viewports", async ({ page }) => {
+test("uses an authored editorial hero without decorative dashboard motifs", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
-  await expect(page.getByTestId("hero-visual")).toBeVisible();
 
-  const desktopLayout = await page.evaluate(() => {
-    const visual = document.querySelector("[data-testid='hero-visual']");
-    const signal = document.querySelector("[data-testid='signal-graphic']");
-    const copy = document.querySelector("[data-testid='hero-copy']");
+  await expect(page.getByTestId("hero-copy")).toBeVisible();
+  await expect(page.getByRole("heading", {
+    name: "I build security systems that show their work.",
+  })).toBeVisible();
+  await expect(page.locator(".network-grid, .signal-graphic, [data-testid='hero-visual']")).toHaveCount(0);
 
-    const toBox = (element) => {
-      const rect = element?.getBoundingClientRect();
-
-      return rect
-        ? {
-          left: rect.left,
-          right: rect.right,
-          top: rect.top,
-          bottom: rect.bottom,
-          width: rect.width,
-        }
-        : null;
-    };
-
-    return {
-      visual: toBox(visual),
-      signal: toBox(signal),
-      copy: toBox(copy),
-    };
-  });
-
-  expect(desktopLayout.visual).not.toBeNull();
-  expect(desktopLayout.signal).not.toBeNull();
-  expect(desktopLayout.copy).not.toBeNull();
-  expect(desktopLayout.visual.right).toBeLessThan(desktopLayout.copy.left);
-  expect(desktopLayout.visual.width).toBeGreaterThan(560);
-  expect(desktopLayout.signal.width).toBeGreaterThan(560);
-  expect(desktopLayout.copy.left).toBeGreaterThan(600);
-
-  await page.setViewportSize({ width: 390, height: 667 });
-  await page.reload();
-
-  const mobileLayout = await page.evaluate(() => {
-    const visual = document.querySelector("[data-testid='hero-visual']");
-    const copy = document.querySelector("[data-testid='hero-copy']");
-    const contactLink = document.querySelector("#intro a[href^='mailto:']");
-
-    const toBox = (element) => {
-      const rect = element?.getBoundingClientRect();
-
-      return rect
-        ? {
-          left: rect.left,
-          right: rect.right,
-          top: rect.top,
-          bottom: rect.bottom,
-        }
-        : null;
-    };
-
-    return {
-      visual: toBox(visual),
-      copy: toBox(copy),
-      contactLink: toBox(contactLink),
-      viewportHeight: window.innerHeight,
-      visualDisplay: visual ? window.getComputedStyle(visual).display : null,
-    };
-  });
-
-  expect(mobileLayout.copy).not.toBeNull();
-  expect(mobileLayout.contactLink).not.toBeNull();
-  expect(mobileLayout.visual).toBeNull();
-  expect(mobileLayout.visualDisplay).toBeNull();
-  expect(mobileLayout.copy.top).toBeGreaterThanOrEqual(0);
-  expect(mobileLayout.copy.right).toBeLessThanOrEqual(390);
-  expect(mobileLayout.contactLink.bottom).toBeLessThanOrEqual(mobileLayout.viewportHeight);
-
-  await page.setViewportSize({ width: 844, height: 390 });
-  await page.reload();
-  await expect(page.locator("#intro .hero-subtitle")).toHaveClass(/hero-copy-compact/);
-
-  const landscapeLayout = await page.evaluate(() => {
-    const header = document.querySelector("header");
-    const visual = document.querySelector("[data-testid='hero-visual']");
-    const copy = document.querySelector("[data-testid='hero-copy']");
+  const visualContract = await page.evaluate(() => {
+    const hero = document.querySelector("#intro");
     const heading = document.querySelector("#intro h1");
-    const contactLink = document.querySelector("#intro a[href^='mailto:']");
-
-    const toBox = (element) => {
-      const rect = element?.getBoundingClientRect();
-
-      return rect
-        ? {
-          left: rect.left,
-          right: rect.right,
-          top: rect.top,
-          bottom: rect.bottom,
-        }
-        : null;
-    };
+    const about = document.getElementById("about");
+    const headingStyle = heading ? getComputedStyle(heading) : null;
+    const heroBox = hero?.getBoundingClientRect();
+    const aboutBox = about?.getBoundingClientRect();
 
     return {
-      header: toBox(header),
-      visual: toBox(visual),
-      copy: toBox(copy),
-      heading: toBox(heading),
-      contactLink: toBox(contactLink),
-      viewportHeight: window.innerHeight,
-      viewportWidth: window.innerWidth,
+      heroHeight: heroBox?.height ?? 0,
+      aboutTop: aboutBox?.top ?? 0,
+      viewportHeight: innerHeight,
+      headingFamily: headingStyle?.fontFamily ?? "",
+      headingShadow: headingStyle?.textShadow ?? "",
+      headingAnimation: headingStyle?.animationName ?? "",
     };
   });
 
-  expect(landscapeLayout.visual).toBeNull();
-  expect(landscapeLayout.header).not.toBeNull();
-  expect(landscapeLayout.copy).not.toBeNull();
-  expect(landscapeLayout.heading).not.toBeNull();
-  expect(landscapeLayout.contactLink).not.toBeNull();
-  expect(landscapeLayout.heading.top).toBeGreaterThanOrEqual(landscapeLayout.header.bottom);
-  expect(landscapeLayout.copy.left).toBeGreaterThanOrEqual(0);
-  expect(landscapeLayout.copy.right).toBeLessThanOrEqual(landscapeLayout.viewportWidth);
-  expect(landscapeLayout.contactLink.bottom).toBeLessThanOrEqual(landscapeLayout.viewportHeight);
+  expect(visualContract.heroHeight).toBeGreaterThanOrEqual(visualContract.viewportHeight - 1);
+  expect(visualContract.aboutTop).toBeGreaterThanOrEqual(visualContract.viewportHeight - 1);
+  expect(visualContract.headingFamily).toContain("Roboto Slab");
+  expect(visualContract.headingShadow).toBe("none");
+  expect(visualContract.headingAnimation).toBe("none");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  const mobileOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(mobileOverflow).toBeLessThanOrEqual(1);
+  await expect(page.getByRole("link", { name: "Email me" })).toBeVisible();
 });
 
 test("pairs the navbar wordmark with the personal mark", async ({ page }) => {
@@ -442,54 +287,6 @@ test("pairs the navbar wordmark with the personal mark", async ({ page }) => {
   await expect(brandMark).toHaveAttribute("aria-hidden", "true");
   await expect(brandLink).toHaveCSS("white-space", "nowrap");
   expect((await brandLabel.boundingBox())?.height).toBeLessThanOrEqual(24);
-});
-
-test("shows the static desktop signal when reduced motion is enabled", async ({ page }) => {
-  await installReducedMotionController(page, true);
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/");
-  await expect(page.getByTestId("hero-visual")).toBeVisible();
-  await expect(page.getByTestId("signal-graphic")).toHaveAttribute("data-motion", "reduced");
-
-  const layout = await page.evaluate(() => {
-    const visual = document.querySelector("[data-testid='hero-visual']");
-    const signal = document.querySelector("[data-testid='signal-graphic']");
-    const copy = document.querySelector("[data-testid='hero-copy']");
-    const contactLink = document.querySelector("#intro a[href^='mailto:']");
-
-    const toBox = (element) => {
-      const rect = element?.getBoundingClientRect();
-
-      return rect
-        ? {
-          left: rect.left,
-          right: rect.right,
-          top: rect.top,
-          bottom: rect.bottom,
-          width: rect.width,
-        }
-        : null;
-    };
-
-    return {
-      visualExists: Boolean(visual),
-      signalMotion: signal?.getAttribute("data-motion") ?? null,
-      visual: toBox(visual),
-      copy: toBox(copy),
-      contactLink: toBox(contactLink),
-      viewportWidth: window.innerWidth,
-      viewportHeight: window.innerHeight,
-    };
-  });
-
-  expect(layout.visualExists).toBe(true);
-  expect(layout.signalMotion).toBe("reduced");
-  expect(layout.visual).not.toBeNull();
-  expect(layout.copy).not.toBeNull();
-  expect(layout.contactLink).not.toBeNull();
-  expect(layout.visual.left).toBeGreaterThanOrEqual(0);
-  expect(layout.copy.right).toBeLessThanOrEqual(layout.viewportWidth);
-  expect(layout.contactLink.bottom).toBeLessThan(layout.viewportHeight);
 });
 
 test("exposes about technologies as a semantic list", async ({ page }) => {
@@ -511,29 +308,16 @@ test("exposes about technologies as a semantic list", async ({ page }) => {
     await expect(technologies.getByText(technology, { exact: true })).toBeVisible();
   }
 
-  const itemBoxes = await technologies.getByRole("listitem").evaluateAll((items) =>
-    items.map((item) => {
-      const box = item.getBoundingClientRect();
-
-      return { left: box.left, top: box.top };
-    }),
-  );
-
-  expect(itemBoxes[0].left).toBeCloseTo(itemBoxes[1].left, 0);
-  expect(itemBoxes[1].left).toBeCloseTo(itemBoxes[2].left, 0);
-  expect(itemBoxes[3].left).toBeGreaterThan(itemBoxes[0].left);
-  expect(itemBoxes[4].left).toBeCloseTo(itemBoxes[3].left, 0);
-  expect(itemBoxes[5].left).toBeCloseTo(itemBoxes[3].left, 0);
-  expect(itemBoxes[1].top).toBeGreaterThan(itemBoxes[0].top);
-  expect(itemBoxes[2].top).toBeGreaterThan(itemBoxes[1].top);
+  await expect(technologies).toHaveCSS("display", "flex");
+  await expect(technologies.getByRole("listitem").first()).toHaveCSS("font-family", /Open Sans/);
 });
 
 test("names main portfolio sections from their visible headings", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("region", { name: "/ about me" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "/ experience" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "/ projects" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "About" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Experience" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Selected work" })).toBeVisible();
 });
 
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
@@ -578,7 +362,6 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
 });
 
 test("opens external portfolio links with safe new-tab attributes", async ({ page }) => {
-  await installReducedMotionController(page, true);
   await page.goto("/");
   const socialNav = page.getByRole("navigation", { name: "Social links" });
 
@@ -592,8 +375,8 @@ test("opens external portfolio links with safe new-tab attributes", async ({ pag
   await page.getByRole("link", { name: "Projects" }).click();
 
   for (const linkName of [
-    "View Threat Intelligence Research Workspace repository",
-    "Open Threat Intelligence Research Workspace demo",
+    "Repository for Threat Intelligence Research Workspace",
+    "Live site for Threat Intelligence Research Workspace",
   ]) {
     const link = page.getByRole("link", { name: linkName });
 
@@ -689,64 +472,20 @@ test("keeps every mobile nav rail item reachable without page overflow", async (
   }
 });
 
-test("supports keyboard navigation across experience tabs", async ({ page }) => {
+test("shows the complete chronological experience without interaction", async ({ page }) => {
   await page.goto("/");
 
   await page.getByRole("link", { name: "Experience" }).click();
-  await expect(page.getByRole("tablist", { name: "Experience companies" })).toHaveAttribute(
-    "aria-orientation",
-    "vertical",
-  );
-  const sentinelOne = page.getByRole("tab", { name: "SENTINELONE" });
-  const uber = page.getByRole("tab", { name: "UBER" });
-  const dellSecureworks = page.getByRole("tab", { name: "DELL SECUREWORKS" });
-  const tabs = [sentinelOne, uber, dellSecureworks];
-
-  await expect(page.locator('[role="tabpanel"]')).toHaveCount(3);
-
-  for (const tab of tabs) {
-    const panelId = await tab.getAttribute("aria-controls");
-
-    await expect(page.locator(`#${panelId}`)).toHaveCount(1);
-  }
-
-  await expect(sentinelOne).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator("#experience-panel-1")).toBeHidden();
-  await expect(page.getByRole("tabpanel", { name: "SENTINELONE" })).toContainText("Staff Threat Hunter");
-
-  await sentinelOne.focus();
-  await page.keyboard.press("ArrowDown");
-  await expect(uber).toBeFocused();
-  await expect(uber).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel", { name: "UBER" })).toContainText("Threat Detection Engineer II");
-
-  await page.keyboard.press("End");
-  await expect(dellSecureworks).toBeFocused();
-  await expect(dellSecureworks).toHaveAttribute("aria-selected", "true");
-  const selectedPanel = page.getByRole("tabpanel", { name: "DELL SECUREWORKS" });
-  await expect(selectedPanel).toContainText("Information Security Researcher");
-
-  await selectedPanel.focus();
-  await expect(selectedPanel).toBeFocused();
-  await expect(selectedPanel).toHaveCSS("outline-style", "solid");
-});
-
-test("renders visible focus for experience tabs", async ({ page }) => {
-  await page.goto("/");
-
-  await page.getByRole("link", { name: "Experience" }).click();
-  const firstTab = page.getByRole("tab", { name: "SENTINELONE" });
-
-  for (let index = 0; index < 30; index++) {
-    if (await firstTab.evaluate((element) => document.activeElement === element).catch(() => false)) {
-      break;
-    }
-
-    await page.keyboard.press("Tab");
-  }
-
-  await expect(firstTab).toBeFocused();
-  await expect(firstTab).toHaveCSS("outline-style", "solid");
+  const experience = page.getByRole("region", { name: "Experience" });
+  const roles = experience.getByRole("article");
+  await expect(roles).toHaveCount(3);
+  await expect(roles.nth(0)).toContainText("SentinelOne");
+  await expect(roles.nth(0)).toContainText("Staff Threat Hunter");
+  await expect(roles.nth(1)).toContainText("Uber");
+  await expect(roles.nth(1)).toContainText("Threat Detection Engineer II");
+  await expect(roles.nth(2)).toContainText("Dell Secureworks");
+  await expect(roles.nth(2)).toContainText("Information Security Researcher");
+  await expect(page.locator("#experience [role='tab'], #experience [role='tabpanel']")).toHaveCount(0);
 });
 
 test("renders visible focus for keyboard navigation controls", async ({ page }) => {
@@ -755,8 +494,8 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await page.keyboard.press("Tab");
   const skipLink = page.getByRole("link", { name: "Skip to main content" });
   await expect(skipLink).toBeFocused();
-  await expect(skipLink).toHaveCSS("background-color", "rgb(2, 6, 23)");
-  await expect(skipLink).toHaveCSS("outline-color", "rgb(102, 178, 255)");
+  await expect(skipLink).toHaveCSS("background-color", "rgb(5, 7, 10)");
+  await expect(skipLink).toHaveCSS("outline-color", "rgb(185, 217, 245)");
   await expect(skipLink).toHaveCSS("outline-offset", "4px");
 
   await page.keyboard.press("Tab");
@@ -764,10 +503,10 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
   await expect(brandLink).toBeFocused();
   await expect(brandLink).toHaveCSS("outline-style", "solid");
 
-  const sayHiLink = page.getByRole("link", { name: "Say hi!" });
-  await sayHiLink.focus();
-  await expect(sayHiLink).toBeFocused();
-  await expect(sayHiLink).toHaveCSS("outline-style", "solid");
+  const emailLink = page.getByRole("link", { name: "Email me" });
+  await emailLink.focus();
+  await expect(emailLink).toBeFocused();
+  await expect(emailLink).toHaveCSS("outline-style", "solid");
 
   await page.getByRole("link", { name: "Projects" }).click();
   await page.keyboard.press("Tab");
@@ -791,7 +530,7 @@ test("moves focus to main content when the skip link is activated", async ({ pag
 test("links the homepage to the remaining first-party article", async ({ page }) => {
   await page.goto("/");
 
-  const writingSection = page.getByRole("region", { name: "/ writing" });
+  const writingSection = page.getByRole("region", { name: "Writing" });
   await expect(writingSection).toBeVisible();
   await expect(
     writingSection.getByRole("heading", { level: 3, name: "I Thought I Was Reading a Repo" }),

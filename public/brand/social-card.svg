@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Michael Rico, Staff Threat Hunter</title>
+  <desc id="description">Security systems that show their work.</desc>
+  <rect width="1200" height="630" fill="#11151b" />
+  <g transform="translate(88 82)">
+    <text fill="#8db7df" font-family="Arial, sans-serif" font-size="27" font-weight="700">Michael Rico · Staff Threat Hunter</text>
+    <text y="152" fill="#f1eee7" font-family="Georgia, serif" font-size="82" font-weight="500" letter-spacing="-2">Security systems</text>
+    <text y="247" fill="#f1eee7" font-family="Georgia, serif" font-size="82" font-weight="500" letter-spacing="-2">that show their work.</text>
+    <text y="355" fill="#bac2cc" font-family="Arial, sans-serif" font-size="28">Threat intelligence · incident readiness · detection engineering</text>
+  </g>
+</svg>

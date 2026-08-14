@@ -1,195 +1,32 @@
-import { useRef, useState } from "react";
-import type { KeyboardEvent } from "react";
-import { ChevronRight } from "lucide-react";
-import { experienceBehavior, experiences } from "../content/portfolio";
-import type { ExperienceItem } from "../content/portfolio";
-
-interface ExperienceTabProps {
-  experience: ExperienceItem;
-  index: number;
-  isSelected: boolean;
-  tabRef: (element: HTMLButtonElement | null) => void;
-  onSelect: (index: number) => void;
-  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>, index: number) => void;
-}
-
-type ExperienceTabNavigationDirection = "next" | "previous";
-
-interface ExperiencePanelViewState {
-  readonly tabIndex: 0 | -1;
-  readonly hidden: boolean;
-}
-
-interface ExperienceTabViewState {
-  readonly tabIndex: 0 | -1;
-  readonly textClass: string;
-  readonly indicatorClass: string;
-}
-
-const getWrappedExperienceTabIndex = (
-  index: number,
-  lastIndex: number,
-  direction: ExperienceTabNavigationDirection,
-) => {
-  if (direction === "next") {
-    return index === lastIndex ? 0 : index + 1;
-  }
-
-  return index === 0 ? lastIndex : index - 1;
-};
-
-const getExperiencePanelViewState = (isSelected: boolean): ExperiencePanelViewState => ({
-  tabIndex: isSelected ? 0 : -1,
-  hidden: !isSelected,
-});
-
-const getExperienceTabViewState = (isSelected: boolean): ExperienceTabViewState => ({
-  tabIndex: isSelected ? 0 : -1,
-  textClass: isSelected ? "experience-tab-selected" : "experience-tab-idle",
-  indicatorClass: isSelected ? "experience-tab-indicator-selected" : "experience-tab-indicator-idle",
-});
+import { experiences } from "../content/portfolio";
 
 export default function Experience() {
-  const [selectedCompany, setSelectedCompany] = useState(0);
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-
-  const selectCompany = (index: number) => {
-    setSelectedCompany(index);
-    tabRefs.current[index]?.focus();
-  };
-
-  const handleCompanyKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
-    const lastIndex = experiences.length - 1;
-
-    if (experienceBehavior.keyboardNavigationKeys.next.includes(event.key)) {
-      event.preventDefault();
-      selectCompany(getWrappedExperienceTabIndex(index, lastIndex, "next"));
-    }
-
-    if (experienceBehavior.keyboardNavigationKeys.previous.includes(event.key)) {
-      event.preventDefault();
-      selectCompany(getWrappedExperienceTabIndex(index, lastIndex, "previous"));
-    }
-
-    if (event.key === experienceBehavior.keyboardNavigationKeys.first) {
-      event.preventDefault();
-      selectCompany(0);
-    }
-
-    if (event.key === experienceBehavior.keyboardNavigationKeys.last) {
-      event.preventDefault();
-      selectCompany(lastIndex);
-    }
-  };
-
   return (
     <section id="experience" aria-labelledby="experience-heading" className="portfolio-section">
       <div className="experience-content">
         <h2 id="experience-heading" className="section-title">
-          / experience
+          Experience
         </h2>
 
-        <div className="experience-layout">
-          <div className="experience-tab-column">
-            <div
-              role="tablist"
-              aria-label="Experience companies"
-              aria-orientation="vertical"
-              className="experience-tab-list"
-            >
-              {experiences.map((exp, index) => (
-                <ExperienceTab
-                  key={exp.company}
-                  experience={exp}
-                  index={index}
-                  isSelected={selectedCompany === index}
-                  tabRef={(element) => {
-                    tabRefs.current[index] = element;
-                  }}
-                  onSelect={selectCompany}
-                  onKeyDown={handleCompanyKeyDown}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="experience-panel-column">
-            {experiences.map((exp, index) => {
-              const panelViewState = getExperiencePanelViewState(selectedCompany === index);
-
-              return (
-                <div
-                  key={exp.company}
-                  id={`experience-panel-${index}`}
-                  role="tabpanel"
-                  aria-labelledby={`experience-tab-${index}`}
-                  tabIndex={panelViewState.tabIndex}
-                  hidden={panelViewState.hidden}
-                  className="experience-panel"
-                >
-                  <h4 className="experience-panel-title">
-                    {exp.title} @ <span className="experience-company-accent">{exp.displayCompany}</span>
-                  </h4>
-
-                  <p className="experience-period">
-                    {exp.period}
-                  </p>
-
-                  <ul className="experience-highlight-list">
-                    {exp.highlights.map((highlight) => (
-                      <li
-                        key={highlight}
-                        className="experience-highlight"
-                      >
-                        <ChevronRight
-                          className="experience-highlight-icon"
-                          aria-hidden="true"
-                          focusable="false"
-                        />
-                        <p className="experience-highlight-copy">
-                          {highlight}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
+        <div className="experience-list">
+          {experiences.map((experience) => (
+            <article key={experience.company} className="experience-item">
+              <div className="experience-item-heading">
+                <p className="experience-company">{experience.displayCompany}</p>
+                <p className="experience-period">{experience.period}</p>
+              </div>
+              <div className="experience-item-body">
+                <h3>{experience.title}</h3>
+                <ul className="experience-highlight-list">
+                  {experience.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function ExperienceTab({
-  experience,
-  index,
-  isSelected,
-  tabRef,
-  onSelect,
-  onKeyDown,
-}: ExperienceTabProps) {
-  const tabViewState = getExperienceTabViewState(isSelected);
-
-  return (
-    <button
-      id={`experience-tab-${index}`}
-      ref={tabRef}
-      role="tab"
-      type="button"
-      aria-selected={isSelected}
-      aria-controls={`experience-panel-${index}`}
-      tabIndex={tabViewState.tabIndex}
-      onClick={() => onSelect(index)}
-      onKeyDown={(event) => onKeyDown(event, index)}
-      className={`experience-tab ${tabViewState.textClass}`}
-    >
-      <div className={`experience-tab-indicator ${tabViewState.indicatorClass}`}></div>
-
-      <h3 className="font-medium text-sm lg:text-base tracking-wider lg:pl-4">
-        {experience.company}
-      </h3>
-    </button>
   );
 }

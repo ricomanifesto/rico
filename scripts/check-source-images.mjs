@@ -35,6 +35,7 @@ const requiredBrandFiles = [
   "favicon.ico",
   "safari-pinned-tab.svg",
   "site.webmanifest",
+  "brand/social-card.svg",
   "brand/writing/i-thought-i-was-reading-a-repo.svg",
 ];
 

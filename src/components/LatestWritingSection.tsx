@@ -15,7 +15,7 @@ export default function LatestWritingSection({ posts }: LatestWritingSectionProp
       <div className="writing-preview-content">
         <div className="writing-preview-heading-row">
           <h2 id="writing-heading" className="section-title writing-preview-title">
-            / writing
+            Writing
           </h2>
           <a href="/writing/" className="writing-view-all-link">
             All writing

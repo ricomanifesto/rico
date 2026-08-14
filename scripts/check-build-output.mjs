@@ -268,7 +268,7 @@ if (existsSync(indexPath)) {
     requireFile(join(dist, assetPath.replace(/^\//, "")), `referenced asset ${assetPath}`);
   }
 
-  if (!index.includes("<astro-island") || !index.includes("/ writing")) {
+  if (!index.includes("<astro-island") || !index.includes(">Writing</h2>")) {
     failures.push("Built index is missing the server-rendered portfolio island and writing preview");
   }
 

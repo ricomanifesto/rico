@@ -11,24 +11,24 @@
         <style>
           :root { color-scheme: dark; font-family: "Open Sans", system-ui, sans-serif; }
           * { box-sizing: border-box; }
-          body { margin: 0; background: #0a192f; color: #e6f1ff; }
-          a { color: #66b2ff; text-underline-offset: .18em; }
-          a:hover { color: #a8d4ff; }
+          body { margin: 0; background: #11151b; color: #f1eee7; }
+          a { color: #8db7df; text-underline-offset: .22em; }
+          a:hover { color: #c0dbf2; }
           .shell { width: min(100% - 2rem, 56rem); margin: 0 auto; padding: 4rem 0 5rem; }
-          .brand { font: 700 .85rem/1.4 Menlo, Consolas, monospace; letter-spacing: .14em; text-transform: uppercase; }
-          .eyebrow { margin: 4rem 0 .75rem; color: #66b2ff; font: 700 .75rem/1.4 Menlo, Consolas, monospace; letter-spacing: .18em; text-transform: uppercase; }
-          h1 { max-width: 44rem; margin: 0; font: 700 clamp(2.4rem, 8vw, 4.5rem)/1.05 Georgia, serif; }
-          .intro { max-width: 42rem; color: #a8b2d1; font-size: 1.1rem; line-height: 1.75; }
-          .feed-url { display: block; width: fit-content; max-width: 100%; overflow-wrap: anywhere; margin: 1.5rem 0 0; padding: .75rem 1rem; border: 1px solid rgba(102, 178, 255, .28); border-radius: .5rem; background: #112240; color: #e6f1ff; font: .85rem/1.5 Menlo, Consolas, monospace; }
-          .archive { margin-top: 3rem; border-top: 1px solid rgba(102, 178, 255, .2); }
-          article { padding: 2.25rem 0; border-bottom: 1px solid rgba(102, 178, 255, .16); }
-          article h2 { margin: 0; font: 700 clamp(1.6rem, 5vw, 2.35rem)/1.2 Georgia, serif; }
-          article p { max-width: 44rem; margin: .85rem 0 0; color: #a8b2d1; font-size: 1rem; line-height: 1.7; }
-          .meta { color: #8892b0; font: .72rem/1.5 Menlo, Consolas, monospace; }
-          .topics { margin-top: 1rem; color: #66b2ff; font: .72rem/1.5 Menlo, Consolas, monospace; }
-          .topics span + span::before { margin: 0 .5rem; color: #8892b0; content: "·"; }
+          .brand { color: #f1eee7; font: 600 1rem/1.4 Georgia, serif; text-decoration: none; }
+          .eyebrow { margin: 4rem 0 .75rem; color: #8db7df; font-size: .85rem; font-weight: 700; }
+          h1 { max-width: 44rem; margin: 0; font: 500 clamp(2.4rem, 8vw, 4.75rem)/1.04 Georgia, serif; letter-spacing: -.035em; }
+          .intro { max-width: 42rem; color: #bac2cc; font-size: 1.1rem; line-height: 1.75; }
+          .feed-url { display: block; width: fit-content; max-width: 100%; overflow-wrap: anywhere; margin: 1.5rem 0 0; color: #bac2cc; font: .85rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+          .archive { margin-top: 3rem; border-top: 1px solid #303741; }
+          article { padding: 2.25rem 0; border-bottom: 1px solid #303741; }
+          article h2 { margin: 0; font: 500 clamp(1.6rem, 5vw, 2.35rem)/1.2 Georgia, serif; }
+          article p { max-width: 44rem; margin: .85rem 0 0; color: #bac2cc; font-size: 1rem; line-height: 1.7; }
+          .meta { color: #8f99a6; font-size: .78rem; line-height: 1.5; }
+          .topics { margin-top: 1rem; color: #8db7df; font-size: .78rem; line-height: 1.5; }
+          .topics span + span::before { margin: 0 .5rem; color: #68727e; content: "·"; }
           .article-link { display: inline-block; margin-top: 1.1rem; font-weight: 700; }
-          footer { margin-top: 3rem; color: #8892b0; font-size: .85rem; }
+          footer { margin-top: 3rem; color: #8f99a6; font-size: .85rem; }
         </style>
       </head>
       <body>

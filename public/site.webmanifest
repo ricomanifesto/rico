@@ -4,8 +4,8 @@
   "description": "Threat intelligence, detection engineering, and analyst-facing security systems.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a192f",
-  "theme_color": "#0a192f",
+  "background_color": "#11151b",
+  "theme_color": "#11151b",
   "icons": [
     {
       "src": "/icons/icon-192.png",

@@ -55,15 +55,6 @@ export interface ExperienceItem {
   readonly highlights: readonly string[];
 }
 
-export interface ExperienceBehavior {
-  readonly keyboardNavigationKeys: {
-    readonly next: readonly string[];
-    readonly previous: readonly string[];
-    readonly first: string;
-    readonly last: string;
-  };
-}
-
 export const aboutContent: AboutContent = {
   technologies: ["Python", "TypeScript", "Next.js", "FastAPI", "Go", "LangGraph"],
 };
@@ -77,7 +68,7 @@ export const projects: readonly PortfolioProject[] = [
   {
     title: "Threat Intelligence Research Workspace",
     description: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
-    techStack: ["NEXT.JS", "TYPESCRIPT", "FASTAPI", "PINECONE", "SUPABASE"],
+    techStack: ["Next.js", "TypeScript", "FastAPI", "Pinecone", "Supabase"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentrySearch",
@@ -111,7 +102,7 @@ export const projects: readonly PortfolioProject[] = [
   {
     title: "Analyst-Ready Security Briefings",
     description: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
-    techStack: ["NODE.JS", "RSS", "GITHUB ACTIONS"],
+    techStack: ["Node.js", "RSS", "GitHub Actions"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentryDigest",
@@ -145,7 +136,7 @@ export const projects: readonly PortfolioProject[] = [
   {
     title: "Exploitation Intelligence Reports",
     description: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
-    techStack: ["PYTHON", "LANGGRAPH", "PYDANTIC", "OPENROUTER"],
+    techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentryInsight",
@@ -179,7 +170,7 @@ export const projects: readonly PortfolioProject[] = [
   {
     title: "Audit-Ready GRC Intelligence",
     description: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
-    techStack: ["GO", "PYTHON", "AWS LAMBDA", "DYNAMODB", "FASTAPI"],
+    techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/GRCInsight",
@@ -214,42 +205,33 @@ export const projects: readonly PortfolioProject[] = [
 
 export const experiences: readonly ExperienceItem[] = [
   {
-    company: "SENTINELONE",
+    company: "SentinelOne",
     displayCompany: "SentinelOne",
     title: "Staff Threat Hunter",
-    period: "DECEMBER 2024 - PRESENT",
+    period: "December 2024 — present",
     highlights: [
       "Lead proactive threat hunting work across incident readiness and response workflows",
       "Build tooling, detection logic, and analyst-facing systems that make threat activity easier to investigate, validate, and communicate"
     ]
   },
   {
-    company: "UBER",
+    company: "Uber",
     displayCompany: "Uber",
     title: "Threat Detection Engineer II",
-    period: "OCTOBER 2023 - JULY 2024",
+    period: "October 2023 — July 2024",
     highlights: [
       "Built and refined threat detections using large-scale data and real-time streaming systems",
       "Combined multiple detection signals into higher-fidelity alerting patterns for security operations"
     ]
   },
   {
-    company: "DELL SECUREWORKS",
+    company: "Dell Secureworks",
     displayCompany: "Dell Secureworks",
     title: "Information Security Researcher",
-    period: "AUGUST 2013 - AUGUST 2023",
+    period: "August 2013 — August 2023",
     highlights: [
       "Tracked threat actors, analyzed anomalous activity, and identified emerging attack techniques",
       "Wrote and deployed countermeasures quickly to improve detection and response coverage"
     ]
   }
 ];
-
-export const experienceBehavior: ExperienceBehavior = {
-  keyboardNavigationKeys: {
-    next: ["ArrowDown", "ArrowRight"],
-    previous: ["ArrowUp", "ArrowLeft"],
-    first: "Home",
-    last: "End",
-  },
-};

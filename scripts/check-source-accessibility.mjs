@@ -61,16 +61,13 @@ for (const [label, content, id, headingId] of [
 }
 
 for (const required of [
-  'role="tablist"',
-  'aria-orientation="vertical"',
-  'role="tab"',
-  'aria-selected={isSelected}',
-  'aria-controls={`experience-panel-${index}`}',
-  'role="tabpanel"',
-  'aria-labelledby={`experience-tab-${index}`}',
+  '<div className="experience-list">',
+  '<article key={experience.company} className="experience-item">',
+  '<h3>{experience.title}</h3>',
+  '<ul className="experience-highlight-list">',
 ]) {
   if (!experience.includes(required)) {
-    failures.push(`Experience is missing tab semantic: ${required}`);
+    failures.push(`Experience is missing chronological content semantic: ${required}`);
   }
 }
 
@@ -79,7 +76,7 @@ for (const required of [
   'data-testid="project-collection"',
   'aria-label={`Read ${project.page.name} case study`}',
   'aria-label={`Inspect ${project.page.name} evidence`}',
-  'aria-label={getLabel(projectTitle)}',
+  'aria-label={`${label} for ${projectTitle}`}',
   'alt=""',
   'aria-hidden="true"',
 ]) {

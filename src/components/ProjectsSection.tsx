@@ -1,5 +1,3 @@
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { projectActionLinkBehavior, projects } from "../content/portfolio";
 import type { ProjectActionLink as ProjectActionLinkData } from "../content/portfolio";
 
@@ -11,20 +9,9 @@ interface ProjectActionLinkProps {
   readonly projectTitle: string;
 }
 
-interface ProjectActionMetadata {
-  readonly Icon: LucideIcon;
-  readonly getLabel: (projectTitle: string) => string;
-}
-
-const projectActionMetadata: Record<ProjectActionLinkKind, ProjectActionMetadata> = {
-  repository: {
-    Icon: Github,
-    getLabel: (projectTitle) => `View ${projectTitle} repository`,
-  },
-  demo: {
-    Icon: ExternalLink,
-    getLabel: (projectTitle) => `Open ${projectTitle} demo`,
-  },
+const projectActionLabels: Record<ProjectActionLinkKind, string> = {
+  repository: "Repository",
+  demo: "Live site",
 };
 
 export default function ProjectsSection() {
@@ -32,7 +19,7 @@ export default function ProjectsSection() {
     <section id="projects" aria-labelledby="projects-heading" className="portfolio-section">
       <div className="projects-content">
         <h2 id="projects-heading" className="section-title">
-          / projects
+          Selected work
         </h2>
 
         <div
@@ -55,16 +42,15 @@ export default function ProjectsSection() {
                     className="project-card-image"
                   />
                 ) : (
-                  <div className={`project-card-gradient ${project.bgGradient}`}></div>
+                <div className={`project-card-gradient ${project.bgGradient}`}></div>
                 )}
-                <div className="project-card-image-overlay"></div>
               </div>
 
               <div className="project-card-content">
                 <p className="project-card-name">{project.page.name}</p>
                 <h3 className="project-card-title">{project.title}</h3>
                 <p className="project-card-description">{project.description}</p>
-                <p className="project-card-tech-stack">{project.techStack.join(", ")}</p>
+                <p className="project-card-tech-stack">Built with {project.techStack.join(", ")}.</p>
 
                 <div className="project-card-links">
                   <a
@@ -73,7 +59,6 @@ export default function ProjectsSection() {
                     aria-label={`Read ${project.page.name} case study`}
                   >
                     Case study
-                    <ArrowRight size={18} aria-hidden="true" focusable="false" />
                   </a>
 
                   <div className="project-external-actions" aria-label={`${project.page.name} links`}>
@@ -101,7 +86,6 @@ export default function ProjectsSection() {
                     className="project-evidence-link"
                   >
                     Inspect the evidence
-                    <ArrowRight size={17} aria-hidden="true" focusable="false" />
                   </a>
                 </div>
               </div>
@@ -114,17 +98,17 @@ export default function ProjectsSection() {
 }
 
 function ProjectActionLink({ kind, link, projectTitle }: ProjectActionLinkProps) {
-  const { Icon, getLabel } = projectActionMetadata[kind];
+  const label = projectActionLabels[kind];
 
   return (
     <a
       href={link.href}
       target={link.external ? projectActionLinkBehavior.externalTarget : undefined}
       rel={link.external ? projectActionLinkBehavior.externalRel : undefined}
-      aria-label={getLabel(projectTitle)}
+      aria-label={`${label} for ${projectTitle}`}
       className="project-action-link"
     >
-      <Icon size={22} aria-hidden="true" focusable="false" />
+      {label}
     </a>
   );
 }

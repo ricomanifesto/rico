@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import { aboutContent } from "../content/portfolio";
 import { githubProfileLink, socialLinkBehavior } from "../content/navigation";
 
@@ -7,13 +6,13 @@ export default function AboutMe() {
     <section id="about" aria-labelledby="about-heading" className="portfolio-section">
       <div className="about-content">
         <h2 id="about-heading" className="section-title">
-          / about me
+          About
         </h2>
 
         <div className="about-layout">
           <div className="about-copy">
             <p className="about-body-copy about-body-spaced">
-              I am currently a Staff Threat Hunter at SentinelOne, working in ThreatOps on Incident Readiness and Response. My work sits at the intersection of threat hunting, detection engineering, automation, and analyst workflows. These are some of the tools and technologies I have been working with:
+              I am currently a Staff Threat Hunter at SentinelOne, working in ThreatOps on Incident Readiness and Response. My work sits at the intersection of threat hunting, detection engineering, automation, and analyst workflows.
             </p>
 
             <p className="about-body-copy about-body-spaced">
@@ -39,11 +38,6 @@ export default function AboutMe() {
                   key={tech}
                   className="about-technology-item"
                 >
-                  <ChevronRight
-                    className="about-technology-icon"
-                    aria-hidden="true"
-                    focusable="false"
-                  />
                   <span className="about-technology-label">{tech}</span>
                 </li>
               ))}
