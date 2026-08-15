@@ -1,58 +1,57 @@
 # ricomanifesto.com
 
-Rico turns Michael's technical work into a public proof surface, showing security, AI, and systems projects through concise positioning, live demos, inspectable artifacts, and first-party writing.
+This is Michael Rico's public portfolio for security, AI, and systems work.
 
-**Live site:** [ricomanifesto.com](https://ricomanifesto.com)
+**[Visit ricomanifesto.com](https://ricomanifesto.com)**
 
-## What It Shows
+## What Is Here
 
-The site is a personal portfolio for security, AI, and systems projects. It is designed to make each project easier to understand quickly: what it does, why it matters, what stack it uses, and where to inspect the repository or live demo.
+The home page introduces Michael's work and links to four public projects:
 
-## Project Surface
+- [SentrySearch](https://github.com/ricomanifesto/SentrySearch): source-backed threat research and saved report review.
+- [SentryDigest](https://github.com/ricomanifesto/SentryDigest): scheduled security-news briefings and dated issues.
+- [SentryInsight](https://github.com/ricomanifesto/SentryInsight): exploitation reports with CVE and source evidence.
+- [GRCInsight](https://github.com/ricomanifesto/GRCInsight): GRC reports with framework mapping and publication history.
 
-The portfolio highlights projects such as:
+Each project has its own page with a plain-language description, stack, repository, live demo, and evidence link. The shared project data lives in `src/content/portfolio.ts`.
 
-- **SentrySearch:** searchable threat intelligence profiles
-- **SentryDigest:** analyst-ready security feed briefings
-- **SentryInsight:** exploitation-focused threat reports
-- **GRCInsight:** audit-ready GRC intelligence reports
+First-party articles live in `src/content/writing/`. Astro turns them into the writing archive, permanent article pages, RSS feed, sitemap entries, and structured metadata.
 
-Project metadata lives in `src/content/portfolio.ts`, keeping public positioning, repository links, demo links, tech stacks, and carousel assets in one typed content surface.
+## Run It Locally
 
-## Writing
-
-First-party articles live in `src/content/writing/` as Markdown with typed frontmatter. Astro generates the `/writing/` archive, permanent article routes, RSS, metadata, and sitemap entries during the build.
-
-## Stack
-
-- React 18
-- Astro
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- GitHub Pages
-
-## Local Development
+Use Node.js 22.12 or newer:
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-## Build
+Astro prints the local URL when the development server starts.
 
-```bash
-npm run build
-```
+## Stack
+
+- Astro 7 for static pages, content collections, RSS, and sitemap generation.
+- React 18 for the interactive portfolio sections.
+- TypeScript 6 and Tailwind CSS 3.
+- Playwright for desktop and mobile browser checks.
 
 ## Validation
-
-Use the repo's configured checks before publishing changes:
 
 ```bash
 npm run check
 ```
 
+The full check runs linting, Astro type checks, source-level accessibility and navigation guards, image and icon checks, browser tests, a production build, and validation of the generated `dist/` directory.
+
+Run a local production preview with:
+
+```bash
+npm run build
+npm run preview
+```
+
 ## Deployment
 
-The site deploys to GitHub Pages.
+GitHub Actions runs the full check for pull requests and pushes to `main`. A successful `main` build uploads `dist/` to GitHub Pages.
+
+The public domain is served by Cloudflare. GitHub Pages remains a separately deployed rollback, and `public/CNAME` preserves its custom-domain configuration.
