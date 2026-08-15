@@ -9,6 +9,7 @@ const portfolioPath = path.join(root, "src/content/portfolio.ts");
 const projectsSectionPath = path.join(componentsRoot, "ProjectsSection.tsx");
 const aboutMePath = path.join(componentsRoot, "AboutMe.tsx");
 const headerPath = path.join(componentsRoot, "Header.tsx");
+const faviconPath = path.join(root, "public/favicon.svg");
 const portfolioSource = fs.readFileSync(portfolioPath, "utf8");
 const projectsSectionSource = fs.readFileSync(projectsSectionPath, "utf8");
 const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
@@ -29,6 +30,25 @@ const checks = [
 ];
 
 const failures = [];
+
+const faviconSource = fs.readFileSync(faviconPath, "utf8");
+if (!/data-mark="editorial-r-period"/.test(faviconSource)) {
+  failures.push("favicon uses the editorial R period identity");
+}
+
+for (const color of ["#11151b", "#f1eee7", "#8db7df"]) {
+  if (!faviconSource.includes(color)) {
+    failures.push(`favicon includes the ${color} editorial palette token`);
+  }
+}
+
+if (/#0a192f|#66b2ff/i.test(faviconSource)) {
+  failures.push("favicon excludes the retired navy and electric-blue palette");
+}
+
+if (/\bstroke=|M11 13C|noise-to-signal/i.test(faviconSource)) {
+  failures.push("favicon excludes the retired network-node geometry");
+}
 
 const requiredBrandFiles = [
   "favicon.svg",
