@@ -297,14 +297,14 @@ test("exposes about technologies as a semantic list", async ({ page }) => {
   await expect(technologies.getByRole("listitem")).toHaveCount(6);
   await expect(technologies.getByRole("listitem")).toHaveText([
     "Python",
-    "TypeScript",
-    "Next.js",
-    "FastAPI",
     "Go",
+    "TypeScript",
+    "PostgreSQL",
+    "AWS",
     "LangGraph",
   ]);
 
-  for (const technology of ["Python", "TypeScript", "Next.js", "FastAPI", "Go", "LangGraph"]) {
+  for (const technology of ["Python", "Go", "TypeScript", "PostgreSQL", "AWS", "LangGraph"]) {
     await expect(technologies.getByText(technology, { exact: true })).toBeVisible();
   }
 

@@ -83,6 +83,7 @@ const retiredProjectMarkers = [
   "turns security RSS feeds into exploitation-focused threat reports",
   "turns regulatory and security feeds into audit-ready GRC intelligence",
 ];
+const aboutTechnologies = ["Python", "Go", "TypeScript", "PostgreSQL", "AWS", "LangGraph"];
 const sentrySearchCaseStudy = {
   path: join("projects", "sentrysearch", "llm-evaluation", "index.html"),
   url: `${siteUrl}/projects/sentrysearch/llm-evaluation/`,
@@ -412,6 +413,18 @@ if (existsSync(indexPath)) {
     if (index.toLowerCase().includes(marker.toLowerCase())) {
       failures.push(`Built index contains retired project marker: ${marker}`);
     }
+  }
+
+  const aboutTechnologyLists = Array.from(
+    index.matchAll(/<ul[^>]*aria-label="Technologies"[^>]*>([\s\S]*?)<\/ul>/g),
+    (match) => Array.from(
+      match[1].matchAll(/<li[^>]*>[\s\S]*?<span[^>]*>([^<]+)<\/span>[\s\S]*?<\/li>/g),
+      (item) => item[1],
+    ),
+  );
+  if (aboutTechnologyLists.length !== 1
+    || JSON.stringify(aboutTechnologyLists[0]) !== JSON.stringify(aboutTechnologies)) {
+    failures.push("Built index About technologies do not match the current public stack contract");
   }
 }
 

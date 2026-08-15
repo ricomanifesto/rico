@@ -56,7 +56,7 @@ export interface ExperienceItem {
 }
 
 export const aboutContent: AboutContent = {
-  technologies: ["Python", "TypeScript", "Next.js", "FastAPI", "Go", "LangGraph"],
+  technologies: ["Python", "Go", "TypeScript", "PostgreSQL", "AWS", "LangGraph"],
 };
 
 export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
