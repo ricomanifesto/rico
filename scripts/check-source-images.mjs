@@ -69,6 +69,13 @@ const requiredBrandImages = [
   { src: "images/profile-384.webp", width: 384, height: 833 },
 ];
 
+const projectScreenshotAssets = [
+  { src: "images/SentrySearch.jpg", width: 2048, height: 1280, maxBytes: 300 * 1024 },
+  { src: "images/SentryDigest.jpg", width: 2048, height: 1280, maxBytes: 300 * 1024 },
+  { src: "images/SentryInsight.jpg", width: 2048, height: 1280, maxBytes: 300 * 1024 },
+  { src: "images/GRCInsight.jpg", width: 2048, height: 1280, maxBytes: 300 * 1024 },
+];
+
 const rasterAssetBudgets = [
   { src: "images/profile.jpg", type: "jpg", maxBytes: 100 * 1024 },
   { src: "images/profile-384.webp", type: "webp", maxBytes: 25 * 1024 },
@@ -78,7 +85,7 @@ const rasterAssetBudgets = [
   { src: "icons/icon-512-maskable.png", type: "png", maxBytes: 50 * 1024, maxBitDepth: 8 },
   { src: "images/social-card.png", type: "png", maxBytes: 100 * 1024, maxBitDepth: 8 },
   { src: "images/writing/i-thought-i-was-reading-a-repo.png", type: "png", maxBytes: 200 * 1024, maxBitDepth: 8 },
-  { src: "images/SentryInsight.jpg", type: "jpg", maxBytes: 300 * 1024 },
+  ...projectScreenshotAssets.map(({ src, maxBytes }) => ({ src, type: "jpg", maxBytes })),
 ];
 
 for (const brandFile of requiredBrandFiles) {
@@ -98,6 +105,35 @@ for (const brandImage of requiredBrandImages) {
   if (actualDimensions.width !== brandImage.width || actualDimensions.height !== brandImage.height) {
     failures.push(
       `${brandImage.src}: expected ${brandImage.width}x${brandImage.height}, received ${actualDimensions.width}x${actualDimensions.height}`,
+    );
+  }
+}
+
+for (const screenshot of projectScreenshotAssets) {
+  const screenshotPath = path.join(root, "public", screenshot.src);
+  const actualDimensions = await readImageDimensions(screenshotPath);
+
+  if (!actualDimensions) {
+    failures.push(`${screenshot.src}: screenshot dimensions can be read`);
+    continue;
+  }
+
+  if (actualDimensions.width !== screenshot.width || actualDimensions.height !== screenshot.height) {
+    failures.push(
+      `${screenshot.src}: expected ${screenshot.width}x${screenshot.height}, received ${actualDimensions.width}x${actualDimensions.height}`,
+    );
+  }
+
+  const { channels } = await sharp(screenshotPath)
+    .resize(64, 40, { fit: "fill" })
+    .stats();
+  const meanBrightness = channels
+    .slice(0, 3)
+    .reduce((sum, channel) => sum + channel.mean, 0) / 3;
+
+  if (meanBrightness < 180) {
+    failures.push(
+      `${screenshot.src}: expected a light-mode capture, received mean brightness ${meanBrightness.toFixed(1)}`,
     );
   }
 }

@@ -344,9 +344,9 @@
 .project-card-media {
   align-self: start;
   overflow: hidden;
-  border-radius: 0.18rem;
+  padding: clamp(0.3rem, 0.65vw, 0.5rem);
+  border-radius: 0.3rem;
   background: #090c10;
-  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
 }
 
 .project-card-gradient {
@@ -370,7 +370,7 @@
 .project-card-name {
   margin-bottom: 0.65rem;
   color: var(--portfolio-accent);
-  font-size: 0.94rem;
+  font-size: 0.9375rem;
   font-weight: 700;
 }
 
@@ -394,7 +394,7 @@
 .project-card-tech-stack {
   margin-top: 1rem;
   color: var(--portfolio-muted);
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
   line-height: 1.6;
 }
 
@@ -417,7 +417,7 @@
 .project-case-study-link,
 .project-action-link,
 .project-evidence-link {
-  font-size: 0.93rem;
+  font-size: 0.9375rem;
 }
 
 .writing-preview-section {

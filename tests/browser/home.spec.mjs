@@ -320,6 +320,49 @@ test("names main portfolio sections from their visible headings", async ({ page 
   await expect(page.getByRole("region", { name: "Selected work" })).toBeVisible();
 });
 
+test("uses restrained light screenshot mattes and a deliberate project type scale", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/#projects");
+
+  const mediaFrames = page.locator(".project-card-media");
+  await expect(mediaFrames).toHaveCount(4);
+
+  for (const frame of await mediaFrames.all()) {
+    const contract = await frame.evaluate((element) => {
+      const image = element.querySelector(".project-card-image");
+      const frameBox = element.getBoundingClientRect();
+      const imageBox = image?.getBoundingClientRect();
+      const style = getComputedStyle(element);
+
+      return {
+        background: style.backgroundColor,
+        borderWidth: parseFloat(style.borderTopWidth),
+        inset: imageBox ? imageBox.left - frameBox.left : 0,
+        padding: parseFloat(style.paddingTop),
+        shadow: style.boxShadow,
+      };
+    });
+
+    expect(contract.background).toBe("rgb(9, 12, 16)");
+    expect(contract.borderWidth).toBe(0);
+    expect(contract.padding).toBeGreaterThanOrEqual(4);
+    expect(contract.padding).toBeLessThanOrEqual(12);
+    expect(contract.inset).toBeGreaterThanOrEqual(contract.padding);
+    expect(contract.shadow).toBe("none");
+  }
+
+  const projectTypeScale = await page.locator("#projects").evaluate((section) => {
+    const textElements = Array.from(section.querySelectorAll("*"))
+      .filter((element) => element.children.length === 0 && element.textContent?.trim());
+
+    return Array.from(new Set(
+      textElements.map((element) => getComputedStyle(element).fontSize),
+    )).sort((first, second) => parseFloat(first) - parseFloat(second));
+  });
+
+  expect(projectTypeScale).toEqual(["15px", "16px", "38.4px", "64px"]);
+});
+
 test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");

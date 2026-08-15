@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "portfolio:capture": "node scripts/capture-project-screenshots.mjs",
     "brand:icons": "node scripts/generate-brand-icons.mjs",
     "brand:icons:check": "node scripts/generate-brand-icons.mjs --check",
     "build": "astro build",
