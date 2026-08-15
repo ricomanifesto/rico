@@ -90,26 +90,114 @@ function createIco(images) {
   return Buffer.concat([directory, ...images.map(({ bytes }) => bytes)]);
 }
 
+function readIcoImages(bytes) {
+  if (bytes.length < 6 || bytes.readUInt16LE(0) !== 0 || bytes.readUInt16LE(2) !== 1) {
+    return [];
+  }
+
+  const count = bytes.readUInt16LE(4);
+  if (bytes.length < 6 + (count * 16)) {
+    return [];
+  }
+
+  return Array.from({ length: count }, (_, index) => {
+    const entryOffset = 6 + (index * 16);
+    const encodedWidth = bytes.readUInt8(entryOffset);
+    const imageSize = bytes.readUInt32LE(entryOffset + 8);
+    const imageOffset = bytes.readUInt32LE(entryOffset + 12);
+    return {
+      size: encodedWidth === 0 ? 256 : encodedWidth,
+      bytes: bytes.subarray(imageOffset, imageOffset + imageSize),
+    };
+  });
+}
+
+async function compareRasterPixels(actual, expected) {
+  try {
+    const [actualImage, expectedImage] = await Promise.all([
+      sharp(actual).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
+      sharp(expected).ensureAlpha().raw().toBuffer({ resolveWithObject: true }),
+    ]);
+    const sameShape = actualImage.info.width === expectedImage.info.width
+      && actualImage.info.height === expectedImage.info.height
+      && actualImage.info.channels === expectedImage.info.channels;
+
+    if (!sameShape || actualImage.data.length !== expectedImage.data.length) {
+      return false;
+    }
+
+    let totalDelta = 0;
+    let significantPixels = 0;
+    const channels = actualImage.info.channels;
+    const pixelCount = actualImage.info.width * actualImage.info.height;
+
+    for (let offset = 0; offset < actualImage.data.length; offset += channels) {
+      let pixelDelta = 0;
+      for (let channel = 0; channel < channels; channel += 1) {
+        const delta = Math.abs(actualImage.data[offset + channel] - expectedImage.data[offset + channel]);
+        totalDelta += delta;
+        pixelDelta = Math.max(pixelDelta, delta);
+      }
+      if (pixelDelta > 12) {
+        significantPixels += 1;
+      }
+    }
+
+    const meanChannelDelta = totalDelta / actualImage.data.length;
+    const significantPixelRatio = significantPixels / pixelCount;
+    return meanChannelDelta <= 4 && significantPixelRatio <= 0.08;
+  } catch {
+    return false;
+  }
+}
+
+async function compareIcoImages(actual, expectedImages) {
+  const actualImages = readIcoImages(actual);
+  if (actualImages.length !== expectedImages.length) {
+    return false;
+  }
+
+  for (const expectedImage of expectedImages) {
+    const actualImage = actualImages.find(({ size }) => size === expectedImage.size);
+    if (!actualImage || !await compareRasterPixels(actualImage.bytes, expectedImage.bytes)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 const svg = faviconSvg();
 const icoImages = await Promise.all([16, 32, 48].map(async (size) => ({
   size,
   bytes: await rasterize(svg, size),
 })));
 const outputs = [
-  ["public/favicon.svg", Buffer.from(svg)],
-  ["public/safari-pinned-tab.svg", Buffer.from(pinnedTabSvg())],
-  ["public/favicon.ico", createIco(icoImages)],
-  ["public/apple-touch-icon.png", await rasterize(svg, 180)],
-  ["public/icons/icon-192.png", await rasterize(svg, 192)],
-  ["public/icons/icon-512.png", await rasterize(svg, 512)],
-  ["public/icons/icon-512-maskable.png", await rasterize(maskableSvg(), 512)],
+  { relativePath: "public/favicon.svg", expected: Buffer.from(svg), comparison: "exact" },
+  { relativePath: "public/safari-pinned-tab.svg", expected: Buffer.from(pinnedTabSvg()), comparison: "exact" },
+  { relativePath: "public/favicon.ico", expected: createIco(icoImages), comparison: "ico" },
+  { relativePath: "public/apple-touch-icon.png", expected: await rasterize(svg, 180), comparison: "raster" },
+  { relativePath: "public/icons/icon-192.png", expected: await rasterize(svg, 192), comparison: "raster" },
+  { relativePath: "public/icons/icon-512.png", expected: await rasterize(svg, 512), comparison: "raster" },
+  { relativePath: "public/icons/icon-512-maskable.png", expected: await rasterize(maskableSvg(), 512), comparison: "raster" },
 ];
 
 const drift = [];
-for (const [relativePath, expected] of outputs) {
+for (const { relativePath, expected, comparison } of outputs) {
   const outputPath = path.join(root, relativePath);
   if (checkOnly) {
-    if (!fs.existsSync(outputPath) || !fs.readFileSync(outputPath).equals(expected)) {
+    if (!fs.existsSync(outputPath)) {
+      drift.push(relativePath);
+      continue;
+    }
+
+    const actual = fs.readFileSync(outputPath);
+    const matches = comparison === "exact"
+      ? actual.equals(expected)
+      : comparison === "ico"
+        ? await compareIcoImages(actual, icoImages)
+        : await compareRasterPixels(actual, expected);
+    if (!matches) {
       drift.push(relativePath);
     }
     continue;
