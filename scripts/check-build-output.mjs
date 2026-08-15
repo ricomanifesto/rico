@@ -39,7 +39,8 @@ const projectPages = [
     slug: "sentrysearch",
     name: "SentrySearch",
     title: "Threat Intelligence Research Workspace",
-    claim: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
+    claim: "SentrySearch turns scattered threat research into source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status when a section could not be scored.",
+    techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
     repository: "https://github.com/ricomanifesto/SentrySearch",
     evidence: "/projects/sentrysearch/llm-evaluation/",
   },
@@ -48,6 +49,7 @@ const projectPages = [
     name: "SentryDigest",
     title: "Analyst-Ready Security Briefings",
     claim: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
+    techStack: ["Node.js", "RSS", "GitHub Actions"],
     repository: "https://github.com/ricomanifesto/SentryDigest",
     evidence: "https://ricomanifesto.github.io/SentryDigest/archive/",
   },
@@ -56,6 +58,7 @@ const projectPages = [
     name: "SentryInsight",
     title: "Exploitation Intelligence Reports",
     claim: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
+    techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
     repository: "https://github.com/ricomanifesto/SentryInsight",
     evidence: "https://ricomanifesto.github.io/SentryInsight/reports/",
   },
@@ -64,13 +67,17 @@ const projectPages = [
     name: "GRCInsight",
     title: "Audit-Ready GRC Intelligence",
     claim: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
+    techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
     repository: "https://github.com/ricomanifesto/GRCInsight",
     evidence: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
   },
 ];
 const sentrySearchEvidenceRevision = "39c86789bdca5ca0ada2161624c1831f425049c7";
 const sentrySearchEvidenceShortRevision = sentrySearchEvidenceRevision.slice(0, 8);
-const staleProjectClaims = [
+const retiredProjectMarkers = [
+  "Pinecone",
+  "hybrid retrieval",
+  "hybrid search",
   "persistent reports, hybrid search",
   "daily analyst-ready briefing",
   "turns security RSS feeds into exploitation-focused threat reports",
@@ -92,6 +99,14 @@ const failures = [];
 
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function visibleText(html) {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 const localPathPatterns = [
@@ -377,7 +392,9 @@ if (existsSync(indexPath)) {
     }
   }
 
-  for (const { slug, name, claim, evidence } of projectPages) {
+  const indexVisibleText = visibleText(index);
+
+  for (const { slug, name, claim, techStack, evidence } of projectPages) {
     if (!index.includes(`aria-label="Inspect ${name} evidence"`)
       || !index.includes(`href="${evidence}"`)) {
       failures.push(`Built index is missing ${slug} evidence link`);
@@ -385,11 +402,15 @@ if (existsSync(indexPath)) {
     if (!index.includes(claim)) {
       failures.push(`Built index is missing current ${slug} claim`);
     }
+    const expectedStack = `Built with ${techStack.join(", ")}.`;
+    if (!indexVisibleText.includes(expectedStack)) {
+      failures.push(`Built index is missing current ${slug} technology stack: ${expectedStack}`);
+    }
   }
 
-  for (const staleClaim of staleProjectClaims) {
-    if (index.includes(staleClaim)) {
-      failures.push(`Built index contains stale project claim: ${staleClaim}`);
+  for (const marker of retiredProjectMarkers) {
+    if (index.toLowerCase().includes(marker.toLowerCase())) {
+      failures.push(`Built index contains retired project marker: ${marker}`);
     }
   }
 }
@@ -581,7 +602,7 @@ if (existsSync(caseStudyPath)) {
   }
 }
 
-for (const { slug, title, claim, repository, evidence } of projectPages) {
+for (const { slug, title, claim, techStack, repository, evidence } of projectPages) {
   const projectPath = join(dist, "projects", slug, "index.html");
 
   if (!existsSync(projectPath)) {
@@ -602,6 +623,21 @@ for (const { slug, title, claim, repository, evidence } of projectPages) {
   ]) {
     if (!projectPage.includes(expected)) {
       failures.push(`${slug} project page is missing ${label}`);
+    }
+  }
+
+  const projectStackItems = Array.from(
+    projectPage.matchAll(/<ul class="project-detail-tech"[^>]*>([\s\S]*?)<\/ul>/g),
+    (match) => Array.from(match[1].matchAll(/<li>([^<]+)<\/li>/g), (item) => item[1]),
+  );
+  if (projectStackItems.length !== 1
+    || JSON.stringify(projectStackItems[0]) !== JSON.stringify(techStack)) {
+    failures.push(`${slug} project page technology stack does not match its current contract`);
+  }
+
+  for (const marker of retiredProjectMarkers) {
+    if (projectPage.toLowerCase().includes(marker.toLowerCase())) {
+      failures.push(`${slug} project page contains retired project marker: ${marker}`);
     }
   }
 }

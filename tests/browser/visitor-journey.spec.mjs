@@ -5,7 +5,8 @@ const projects = [
     title: "Threat Intelligence Research Workspace",
     name: "SentrySearch",
     slug: "sentrysearch",
-    claim: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
+    claim: "SentrySearch turns scattered threat research into source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status when a section could not be scored.",
+    techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
     evidenceHref: "/projects/sentrysearch/llm-evaluation/",
     evidenceExternal: false,
   },
@@ -14,6 +15,7 @@ const projects = [
     name: "SentryDigest",
     slug: "sentrydigest",
     claim: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
+    techStack: ["Node.js", "RSS", "GitHub Actions"],
     evidenceHref: "https://ricomanifesto.github.io/SentryDigest/archive/",
     evidenceExternal: true,
   },
@@ -22,6 +24,7 @@ const projects = [
     name: "SentryInsight",
     slug: "sentryinsight",
     claim: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
+    techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
     evidenceHref: "https://ricomanifesto.github.io/SentryInsight/reports/",
     evidenceExternal: true,
   },
@@ -30,6 +33,7 @@ const projects = [
     name: "GRCInsight",
     slug: "grcinsight",
     claim: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
+    techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
     evidenceHref: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
     evidenceExternal: true,
   },
@@ -61,6 +65,9 @@ test("shows all project case studies as an editorial desktop sequence", async ({
     });
     await expect(card).toHaveCount(1);
     await expect(card.locator(".project-card-description")).toHaveText(project.claim);
+    await expect(card.locator(".project-card-tech-stack")).toHaveText(
+      `Built with ${project.techStack.join(", ")}.`,
+    );
     await expect(
       card.getByRole("link", { name: `Read ${project.name} case study` }),
     ).toHaveAttribute("href", `/projects/${project.slug}/`);
@@ -236,6 +243,7 @@ for (const project of projects) {
     await expect(page.locator("main#main-content")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: project.title })).toBeVisible();
     await expect(page.locator(".project-detail-description")).toHaveText(project.claim);
+    await expect(page.locator(".project-detail-tech li")).toHaveText(project.techStack);
     const evidenceLink = page.getByRole("link", { name: `Inspect ${project.name} evidence` });
     await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
     if (project.evidenceExternal) {

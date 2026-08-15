@@ -67,8 +67,8 @@ export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
 export const projects: readonly PortfolioProject[] = [
   {
     title: "Threat Intelligence Research Workspace",
-    description: "SentrySearch turns scattered threat research into searchable security profiles with source-backed reports, hybrid retrieval, detection guidance, and explicit evaluation status when a section could not be scored.",
-    techStack: ["Next.js", "TypeScript", "FastAPI", "Pinecone", "Supabase"],
+    description: "SentrySearch turns scattered threat research into source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status when a section could not be scored.",
+    techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
     links: {
       repository: {
         href: "https://github.com/ricomanifesto/SentrySearch",
@@ -89,8 +89,8 @@ export const projects: readonly PortfolioProject[] = [
     page: {
       slug: "sentrysearch",
       name: "SentrySearch",
-      metaDescription: "SentrySearch builds source-backed, searchable threat profiles with hybrid retrieval, detection guidance, and explicit evaluation status.",
-      techStack: ["Next.js", "TypeScript", "FastAPI", "Pinecone", "Supabase"],
+      metaDescription: "SentrySearch builds source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status.",
+      techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
       programmingLanguages: ["TypeScript", "Python"],
       evidence: {
         href: "/projects/sentrysearch/llm-evaluation/",
