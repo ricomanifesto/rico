@@ -10,9 +10,11 @@ const projectsSectionPath = path.join(componentsRoot, "ProjectsSection.tsx");
 const aboutMePath = path.join(componentsRoot, "AboutMe.tsx");
 const headerPath = path.join(componentsRoot, "Header.tsx");
 const faviconPath = path.join(root, "public/favicon.svg");
+const captureScriptPath = path.join(root, "scripts/capture-project-screenshots.mjs");
 const portfolioSource = fs.readFileSync(portfolioPath, "utf8");
 const projectsSectionSource = fs.readFileSync(projectsSectionPath, "utf8");
 const aboutMeSource = fs.readFileSync(aboutMePath, "utf8");
+const captureScriptSource = fs.readFileSync(captureScriptPath, "utf8");
 
 const checks = [
   {
@@ -30,6 +32,15 @@ const checks = [
 ];
 
 const failures = [];
+
+if (!/name: "SentryInsight",[\s\S]*?viewport: \{ width: 1280, height: 1280 \},[\s\S]*?frame: showcaseFrame/.test(captureScriptSource)) {
+  failures.push("SentryInsight capture uses a centered 1280px reading viewport");
+}
+
+if (!/const showcaseFrame = \{ width: 2048, height: 1280 \}/.test(captureScriptSource)
+  || !/extendWith: "copy"/.test(captureScriptSource)) {
+  failures.push("project capture preserves the 2048x1280 showcase canvas with seamless edge framing");
+}
 
 const faviconSource = fs.readFileSync(faviconPath, "utf8");
 if (!/data-mark="editorial-r-period"/.test(faviconSource)) {

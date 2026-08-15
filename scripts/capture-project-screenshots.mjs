@@ -1,8 +1,10 @@
 import path from "node:path";
 import { chromium } from "@playwright/test";
+import sharp from "sharp";
 
 const root = process.cwd();
 const outputRoot = path.join(root, "public/images");
+const showcaseFrame = { width: 2048, height: 1280 };
 
 const captures = [
   {
@@ -33,6 +35,8 @@ const captures = [
     name: "SentryInsight",
     url: "https://ricomanifesto.github.io/SentryInsight/",
     output: "SentryInsight.jpg",
+    viewport: { width: 1280, height: 1280 },
+    frame: showcaseFrame,
     async selectLightTheme(page) {
       const lightThemeButton = page.getByRole("button", { name: "Light theme" });
       if (await lightThemeButton.count()) {
@@ -53,14 +57,28 @@ const captures = [
   },
 ];
 
+const requestedCaptures = new Set(process.argv.slice(2));
+const selectedCaptures = requestedCaptures.size
+  ? captures.filter(({ name }) => requestedCaptures.has(name))
+  : captures;
+
+const unknownCaptures = [...requestedCaptures].filter(
+  (name) => !captures.some((capture) => capture.name === name),
+);
+
+if (unknownCaptures.length) {
+  throw new Error(`Unknown capture name${unknownCaptures.length === 1 ? "" : "s"}: ${unknownCaptures.join(", ")}`);
+}
+
 const browser = await chromium.launch();
 
 try {
-  for (const capture of captures) {
+  for (const capture of selectedCaptures) {
+    const viewport = capture.viewport ?? showcaseFrame;
     const context = await browser.newContext({
       colorScheme: "light",
       deviceScaleFactor: 1,
-      viewport: { width: 2048, height: 1280 },
+      viewport,
     });
     const page = await context.newPage();
 
@@ -75,12 +93,36 @@ try {
     });
 
     const outputPath = path.join(outputRoot, capture.output);
-    await page.screenshot({
-      path: outputPath,
-      type: "jpeg",
-      quality: 82,
-      fullPage: false,
-    });
+    if (capture.frame && capture.frame.width !== viewport.width) {
+      const horizontalGutter = (capture.frame.width - viewport.width) / 2;
+
+      if (!Number.isInteger(horizontalGutter) || capture.frame.height !== viewport.height) {
+        throw new Error(`${capture.name} frame must add equal horizontal gutters only`);
+      }
+
+      const screenshot = await page.screenshot({
+        type: "png",
+        fullPage: false,
+      });
+
+      await sharp(screenshot)
+        .extend({
+          left: horizontalGutter,
+          right: horizontalGutter,
+          top: 0,
+          bottom: 0,
+          extendWith: "copy",
+        })
+        .jpeg({ quality: 82 })
+        .toFile(outputPath);
+    } else {
+      await page.screenshot({
+        path: outputPath,
+        type: "jpeg",
+        quality: 82,
+        fullPage: false,
+      });
+    }
     console.log(`Captured ${capture.name} at ${outputPath}`);
 
     await context.close();
