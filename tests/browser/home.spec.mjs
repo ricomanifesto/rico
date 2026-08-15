@@ -38,16 +38,12 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   }
 
   await mobileNav.getByRole("link", { name: "Home" }).click();
-  const introPositions = await page.evaluate(() => {
-    const header = document.querySelector("header");
-    const introHeading = document.querySelector("#intro h1");
+  await expect.poll(() => page.evaluate(() => {
+    const headerBottom = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+    const headingTop = document.querySelector("#intro h1")?.getBoundingClientRect().top ?? 0;
 
-    return {
-      headerBottom: header?.getBoundingClientRect().bottom ?? 0,
-      headingTop: introHeading?.getBoundingClientRect().top ?? 0,
-    };
-  });
-  expect(introPositions.headingTop).toBeGreaterThanOrEqual(introPositions.headerBottom - 1);
+    return headingTop - headerBottom;
+  })).toBeGreaterThanOrEqual(-1);
 
   for (const { linkName, sectionId } of [
     { linkName: "About", sectionId: "about" },
@@ -56,17 +52,12 @@ test("exposes mobile primary navigation from shared section links", async ({ pag
   ]) {
     await mobileNav.getByRole("link", { name: linkName }).click();
 
-    const positions = await page.evaluate((sectionId) => {
-      const header = document.querySelector("header");
-      const section = document.getElementById(sectionId);
+    await expect.poll(() => page.evaluate((targetSectionId) => {
+      const headerBottom = document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+      const sectionTop = document.getElementById(targetSectionId)?.getBoundingClientRect().top ?? 0;
 
-      return {
-        headerBottom: header?.getBoundingClientRect().bottom ?? 0,
-        sectionTop: section?.getBoundingClientRect().top ?? 0,
-      };
-    }, sectionId);
-
-    expect(positions.sectionTop).toBeGreaterThanOrEqual(positions.headerBottom - 1);
+      return sectionTop - headerBottom;
+    }, sectionId)).toBeGreaterThanOrEqual(-1);
   }
 });
 
