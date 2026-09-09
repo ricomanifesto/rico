@@ -26,7 +26,10 @@ export function checkPublicContent(root) {
   // Bodies and public HTML need the compiled page's CSS context. The mandatory
   // artifact guard verifies those after Astro renders them.
   return contentFiles(join(root, "src/content/writing"), new Set([".md", ".mdx"]))
-    .filter((path) => containsTextMarker(parseFrontmatter(readFileSync(path, "utf8")).frontmatter))
+    .filter((path) => {
+      const { frontmatter } = parseFrontmatter(readFileSync(path, "utf8"));
+      return frontmatter.draft !== true && containsTextMarker(frontmatter);
+    })
     .map((path) => `Public content ${relative(root, path)} contains an excluded virtual-event promotion`);
 }
 

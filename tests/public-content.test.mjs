@@ -204,3 +204,112 @@ test("publication guard checks only displayed form-control text", { timeout: 450
     assert.equal((await checkRenderedArtifacts(root, { browser })).length > 0, blocked, html);
   }
 });
+
+test("source publication guard skips boolean drafts only", (t) => {
+  const root = mkdtempSync(join(tmpdir(), "rico-draft-test-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  mkdirSync(join(root, "src/content/writing"), { recursive: true });
+  for (const [draft, blocked] of [["true", false], ["false", true], ['"true"', true], [null, true]]) {
+    writeFileSync(join(root, "src/content/writing/article.md"),
+      `---\ntitle: "[Virtual Event]"\n${draft === null ? "" : `draft: ${draft}\n`}---\n[Virtual Event]`);
+    const result = spawnSync(process.execPath, ["scripts/check-public-content.mjs"], {
+      encoding: "utf8", env: { ...process.env, CONTENT_ROOT: root },
+    });
+    assert.equal(result.status !== 0, blocked, `draft: ${draft}`);
+  }
+});
+
+test("ordered document projection includes controls at their rendered position", { timeout: 45000 }, async (t) => {
+  const { chromium } = await import("@playwright/test");
+  const { checkRenderedArtifacts } = await import("../scripts/check-rendered-content.mjs");
+  const root = mkdtempSync(join(tmpdir(), "rico-ordered-test-"));
+  const browser = await chromium.launch({ channel: process.env.PUBLIC_CONTENT_BROWSER_CHANNEL || undefined });
+  t.after(async () => { await browser.close(); rmSync(root, { recursive: true, force: true }); });
+  for (const [html, blocked] of [
+    ['[Vir<input value="tual"> Event]', true],
+    ['[Vir<input placeholder="tual"> Event]', true],
+    ['[Vir<textarea>tual</textarea> Event]', true],
+    ['[Vir<input type="button" value="tual"> Event]', true],
+    ['[<input value="Virtual"> <input placeholder="Event">]', true],
+    ['[Vir<input value="decoy" placeholder="tual"> Event]', false],
+    ['[Vir<input type="password" value="tual"> Event]', false],
+    ['[Virtual<input type="password" value="decoy"> Event]', false],
+    ['[Virtual<input type="checkbox" value="decoy"> Event]', false],
+    ['[Vir<input hidden value="decoy">tual Event]', true],
+    ['<style>input{display:block}</style>[Vir<input value="tual"> Event]', false],
+    ['<style>input{text-transform:uppercase}</style>[Vir<input value="tual"> Event]', true],
+    ['<style>span{display:block!important}</style>[Vir<input value="tual"> Event]', true],
+    ['<title>[Virtual</title><p>Event]</p>', false],
+  ]) {
+    writeFileSync(join(root, "index.html"), html);
+    assert.equal((await checkRenderedArtifacts(root, { browser })).length > 0, blocked, html);
+  }
+});
+
+test("document projection traverses bounded visible frames and fails closed", { timeout: 45000 }, async (t) => {
+  const { chromium } = await import("@playwright/test");
+  const { checkRenderedArtifacts } = await import("../scripts/check-rendered-content.mjs");
+  const root = mkdtempSync(join(tmpdir(), "rico-frame-test-"));
+  const browser = await chromium.launch({ channel: process.env.PUBLIC_CONTENT_BROWSER_CHANNEL || undefined });
+  t.after(async () => { await browser.close(); rmSync(root, { recursive: true, force: true }); });
+  const frame = (html, attrs = "") => `<iframe ${attrs} srcdoc="${html.replaceAll("&", "&amp;").replaceAll('"', "&quot;")}"></iframe>`;
+  writeFileSync(join(root, "child.htm"), '[Vir<input value="tual"> Event]');
+  for (const [html, failure] of [
+    [frame("[Virtual Event]"), /virtual-event promotion/],
+    [frame(frame('[Vir<input value="tual"> Event]')), /virtual-event promotion/],
+    ['<iframe src="/child.htm"></iframe>', /virtual-event promotion/],
+    [frame("[Virtual Event]", "hidden"), null],
+    [frame(frame("[Virtual Event]"), 'style="display:none"'), null],
+    [`<style>[hidden]{display:block}</style>${frame("[Virtual Event]", "hidden")}`, /virtual-event promotion/],
+    [frame("Security events"), null],
+    [`[Virtual${frame("Event]")}`, null],
+    [`[Vir${frame("decoy")}tual Event]`, null],
+    [frame('<title>[Virtual</title><p>Event]</p>'), null],
+    [frame('<meta name="description" content="[Virtual Event]"><p>Security events</p>'), /virtual-event promotion/],
+    [frame("Security events", "sandbox"), /unreadable|unsupported/i],
+    ['<iframe src="https://unavailable.invalid/"></iframe>', /unreadable|unsupported/i],
+    ['<object data="/child.htm"></object>', /unsupported/i],
+    ['<embed src="/child.htm">', /unsupported/i],
+    ['<iframe loading="lazy" style="position:absolute;top:100000px" src="/child.htm"></iframe>', /unfinished|unreadable/i],
+    [Array.from({ length: 33 }, () => frame("Security events")).join(""), /limit/i],
+    [Array.from({ length: 7 }).reduce((html) => frame(html), "Security events"), /limit/i],
+  ]) {
+    writeFileSync(join(root, "index.html"), html);
+    const failures = await checkRenderedArtifacts(root, { browser });
+    if (failure) assert.match(failures.join("\n"), failure, html);
+    else assert.deepEqual(failures, [], html);
+  }
+});
+
+test("ordered projection restores controls and frame documents on success and failure", { timeout: 45000 }, async (t) => {
+  const { chromium } = await import("@playwright/test");
+  const { assertRenderedPageAllowed } = await import("../scripts/check-rendered-content.mjs");
+  const browser = await chromium.launch({ channel: process.env.PUBLIC_CONTENT_BROWSER_CHANNEL || undefined });
+  t.after(() => browser.close());
+  const page = await browser.newPage();
+  await page.setContent('<input style="color:red" value="Security events"><textarea>Old value</textarea><iframe srcdoc="Ordinary events"></iframe>');
+  const before = await page.evaluate(() => {
+    const controls = Array.from(document.querySelectorAll("input, textarea, iframe"));
+    controls[1].value = "Current value";
+    window.originalControls = controls;
+    window.originalFrameDocument = controls[2].contentDocument;
+    return document.documentElement.outerHTML;
+  });
+  await assertRenderedPageAllowed(page);
+  assert.deepEqual(await page.evaluate(() => [
+    document.documentElement.outerHTML,
+    window.originalControls.every((node, index) => node === document.querySelectorAll("input, textarea, iframe")[index]),
+    window.originalControls[1].value,
+    document.querySelector("iframe").contentDocument === window.originalFrameDocument,
+  ]), [before, true, "Current value", true]);
+
+  await page.evaluate(() => { document.querySelector("input").value = "[Virtual Event]"; });
+  await assert.rejects(assertRenderedPageAllowed(page), /virtual-event promotion/);
+  assert.equal(await page.evaluate(() => document.documentElement.outerHTML), before);
+
+  await page.evaluate(() => Object.defineProperty(document.body, "innerText", {
+    configurable: true, get() { throw new Error("projection read failure"); },
+  }));
+  await assert.rejects(assertRenderedPageAllowed(page), /projection read failure/);
+  assert.equal(await page.evaluate(() => document.documentElement.outerHTML), before);
+});

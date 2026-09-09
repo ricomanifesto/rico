@@ -7,22 +7,84 @@ import { containsTextMarker, contentFiles } from "./check-public-content.mjs";
 const origin = "http://publication.invalid";
 
 export async function assertRenderedPageAllowed(page) {
-  const text = await page.evaluate(() => [
-    document.body?.innerText ?? "",
-    document.title,
-    // innerText omits native controls. The browser owns visibility and placeholder state.
-    ...Array.from(document.querySelectorAll("input, textarea"), (node) => {
-      if (!node.checkVisibility({ opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) return "";
-      if (node.matches(":placeholder-shown")) return node.placeholder;
-      if (node instanceof HTMLTextAreaElement
-        || ["text", "search", "tel", "url", "email", "number", "button", "submit", "reset"].includes(node.type)) return node.value;
-      return "";
-    }),
-    ...Array.from(document.querySelectorAll("meta[content], [alt], [aria-label], [title]"),
-      (node) => ["content", "alt", "aria-label", "title"].map((name) => node.getAttribute(name))),
-    ...Array.from(document.querySelectorAll('script[type="application/ld+json"]'),
-      (node) => JSON.parse(node.textContent || "null")),
-  ]);
+  const text = await page.evaluate(() => {
+    const records = [];
+    const visibility = { opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true };
+    const textInputTypes = new Set(["text", "search", "tel", "url", "email", "number", "button", "submit", "reset"]);
+    let documents = 0;
+
+    function orderedText(doc) {
+      // Snapshot native styles/state before modifying layout. Opaque controls
+      // and frames supply an object boundary, never their hidden values.
+      const projections = Array.from(doc.querySelectorAll("input, textarea, iframe, frame"), (node) => {
+        let value = "\uFFFC";
+        if (!node.checkVisibility(visibility)) value = "";
+        else if (node.matches("input, textarea")) {
+          if (node.matches(":placeholder-shown")) value = node.placeholder;
+          else if (node.localName === "textarea" || textInputTypes.has(node.type)) value = node.value;
+        }
+        const mirror = doc.createElement("span");
+        const computed = doc.defaultView.getComputedStyle(node);
+        for (const property of computed) mirror.style.setProperty(property, computed.getPropertyValue(property), "important");
+        if (node.matches(":placeholder-shown")) {
+          // Password placeholders use different character rendering than the
+          // masked value. Read that native style without changing the host box.
+          const placeholder = doc.defaultView.getComputedStyle(node, "::placeholder");
+          for (const property of ["-webkit-text-security", "text-transform"]) {
+            mirror.style.setProperty(property, placeholder.getPropertyValue(property), "important");
+          }
+        }
+        mirror.textContent = value;
+        return { node, mirror, style: node.getAttribute("style") };
+      });
+      try {
+        for (const { node, mirror } of projections) {
+          node.before(mirror);
+          // Keep originals connected: removing a frame would unload its document.
+          node.style.setProperty("display", "none", "important");
+        }
+        return doc.body.innerText;
+      } finally {
+        for (const { node, mirror, style } of projections.reverse()) {
+          mirror.remove();
+          // Materialize pending CSSOM changes before restoring attribute absence.
+          node.getAttribute("style");
+          if (style === null) node.removeAttribute("style");
+          else node.setAttribute("style", style);
+        }
+      }
+    }
+
+    function inspect(doc, depth) {
+      if (++documents > 32 || depth > 6) throw new Error("Publication document traversal limit exceeded");
+      if (doc.readyState !== "complete" || !doc.body) throw new Error("Unfinished publication document");
+      if (doc.contentType !== "text/html") throw new Error("Unsupported publication document type");
+      for (const node of doc.querySelectorAll("object, embed")) {
+        if (node.checkVisibility(visibility)) throw new Error("Unsupported embedded publication document");
+      }
+      for (const frame of doc.querySelectorAll("iframe, frame")) {
+        if (!frame.checkVisibility(visibility)) continue;
+        const child = frame.contentDocument;
+        if (!child) throw new Error("Unreadable or unsupported embedded publication document");
+        if ((frame.hasAttribute("srcdoc") && child.URL !== "about:srcdoc")
+          || (!frame.hasAttribute("srcdoc") && frame.src && frame.src !== "about:blank" && child.URL === "about:blank")) {
+          throw new Error("Unfinished embedded publication document");
+        }
+        inspect(child, depth + 1);
+      }
+      // Documents, individual metadata attributes and JSON-LD records are
+      // independent strings/records, never word fragments to concatenate.
+      records.push([
+        orderedText(doc), doc.title,
+        ...Array.from(doc.querySelectorAll("meta[content], [alt], [aria-label], [title]"),
+          (node) => ["content", "alt", "aria-label", "title"].map((name) => node.getAttribute(name))),
+        ...Array.from(doc.querySelectorAll('script[type="application/ld+json"]'),
+          (node) => JSON.parse(node.textContent || "null")),
+      ]);
+    }
+    inspect(document, 0);
+    return records;
+  });
   if (containsTextMarker(text)) throw new Error("Rendered content contains an excluded virtual-event promotion");
 }
 
