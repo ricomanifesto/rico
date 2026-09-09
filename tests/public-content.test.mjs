@@ -22,9 +22,9 @@ const markers = [
   "[Vir<span hidden=\"\"><b>nested decoy</b></span>tual Event]",
 ];
 
-test("normalizes only the bracketed promotion marker", async () => {
-  const { containsVirtualEventMarker } = await import("../scripts/check-public-content.mjs");
-  for (const marker of markers) assert.equal(containsVirtualEventMarker(marker), true, marker);
+test("plain text recognizes bracketed markers without interpreting markup", async () => {
+  const { containsTextMarker } = await import("../scripts/check-public-content.mjs");
+  for (const marker of [markers[0], markers[1], markers[4]]) assert.equal(containsTextMarker(marker), true, marker);
   for (const article of [
     "Security events reveal malware activity.",
     "A virtual event discussed threat detection.",
@@ -34,10 +34,10 @@ test("normalizes only the bracketed promotion marker", async () => {
     "[VirtualEvent]",
     "[Vir<span aria-hidden=\"true\">decoy</span>tual Event]",
     "[Vir<span inert>decoy</span>tual Event]",
-  ]) assert.equal(containsVirtualEventMarker(article), false, article);
+  ]) assert.equal(containsTextMarker(article), false, article);
 });
 
-test("source guard checks writing and public content, not code or fixture markers", (t) => {
+test("source guard checks structured writing metadata and defers rendered bodies", (t) => {
   const root = mkdtempSync(join(tmpdir(), "rico-content-test-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   for (const directory of ["src/content/writing", "public", "tests", "src/lib"]) {
@@ -51,15 +51,15 @@ test("source guard checks writing and public content, not code or fixture marker
     encoding: "utf8", env: { ...process.env, CONTENT_ROOT: root },
   });
   assert.equal(check().status, 0);
-  for (const marker of markers) {
-    writeFileSync(article, `---\ntitle: Briefing\n---\n${marker} Register now`);
+  for (const marker of [markers[0], markers[4]]) {
+    writeFileSync(article, `---\ntitle: ${JSON.stringify(marker)}\n---\nRegister now`);
     const result = check();
     assert.equal(result.status, 1, marker);
     assert.match(result.stderr, /virtual-event promotion/i);
   }
   writeFileSync(article, "Security event analysis");
   writeFileSync(join(root, "public", "promotion.html"), "<p>[Virtual Event] Register now</p>");
-  assert.equal(check().status, 1);
+  assert.equal(check().status, 0, "public HTML must use the mandatory rendered artifact guard");
 });
 
 test("existing build smoke rejects new HTML and encoded RSS promotion records", (t) => {
@@ -88,4 +88,83 @@ test("existing build smoke rejects new HTML and encoded RSS promotion records", 
     assert.equal(result.status, 1, filename);
     assert.match(result.stderr, /virtual-event promotion/i);
   }
+});
+
+test("actual artifact guard preserves CSS overrides and escaped markup", (t) => {
+  const output = mkdtempSync(join(tmpdir(), "rico-representation-test-"));
+  t.after(() => rmSync(output, { recursive: true, force: true }));
+  cpSync("dist", output, { recursive: true });
+  for (const html of [
+    '<style>[hidden] { display:inline }</style>[Vir<span hidden>decoy</span>tual Event]',
+    '[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]',
+    '[Vir&amp;lt;span hidden&amp;gt;decoy&amp;lt;/span&amp;gt;tual Event]',
+  ]) {
+    writeFileSync(join(output, "representation.html"), `${html}<script type="module" src="/analytics.js"></script>`);
+    const result = spawnSync(process.execPath, ["scripts/check-build-output.mjs"], {
+      encoding: "utf8", env: { ...process.env, BUILD_OUTPUT_DIR: output },
+    });
+    assert.equal(result.status, 0, result.stderr);
+  }
+});
+
+test("rendered text is never decoded or reparsed as HTML", async () => {
+  const { containsTextMarker } = await import("../scripts/check-public-content.mjs");
+  assert.equal(containsTextMarker("[Vir<span hidden>decoy</span>tual Event]"), false);
+  assert.equal(containsTextMarker("[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]"), false);
+  assert.equal(containsTextMarker("&#91;Virtual&nbsp;Event&#93;"), false);
+  assert.equal(containsTextMarker("[Virtual\u00a0Event]"), true);
+});
+
+test("publication browser guard respects feed representations and fails closed", { timeout: 45000 }, async (t) => {
+  const { chromium } = await import("@playwright/test");
+  const { checkRenderedArtifacts } = await import("../scripts/check-rendered-content.mjs");
+  const root = mkdtempSync(join(tmpdir(), "rico-rendered-test-"));
+  const browser = await chromium.launch({ channel: process.env.PUBLIC_CONTENT_BROWSER_CHANNEL || undefined });
+  t.after(async () => {
+    await browser.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+  writeFileSync(join(root, "index.html"), "<p>Ordinary security event analysis</p>");
+  const check = () => checkRenderedArtifacts(root, { browser });
+  const feed = join(root, "feed.xml");
+  for (const [html, blocked] of [
+    ['[Vir<span HIDDEN="false">decoy</span>tual Event]', true],
+    ['[Vir<span hidden=""><b>decoy</b></span>tual Event]', true],
+    ['[Vir<span hidden="until-found">decoy</span>tual Event]', false],
+    ['[Vir<span style="display:none">decoy</span>tual Event]', true],
+    ['[Vir<span style="visibility:hidden">decoy</span>tual Event]', true],
+    ['<style>@media(max-width:600px){.decoy{display:none}}</style>[Vir<span class="decoy">decoy</span>tual Event]', true],
+    ['[Vir<span aria-hidden="true">decoy</span>tual Event]', false],
+    ['[Vir<span inert>decoy</span>tual Event]', false],
+    ['[Vir<div>tual</div> Event]', false],
+    ['[Vir<!-- comment -->tual <b>Ev</b>ent]', true],
+  ]) {
+    writeFileSync(join(root, "index.html"), html);
+    assert.equal((await check()).length > 0, blocked, html);
+  }
+  writeFileSync(join(root, "visibility.css"), ".decoy{display:none}");
+  writeFileSync(join(root, "index.html"), '<link rel="stylesheet" href="/visibility.css">[Vir<span class="decoy">decoy</span>tual Event]');
+  assert.match((await check()).join("\n"), /virtual-event promotion/);
+  writeFileSync(join(root, "index.html"), "<p>Ordinary security event analysis</p>");
+  for (const [xml, blocked] of [
+    ['<rss><channel><item><title>[Vir<!-- split -->tual Event]</title></item></channel></rss>', true],
+    ['<rss><channel><item><title>[Vir<![CDATA[tual]]> Event]</title></item></channel></rss>', true],
+    ['<rss><channel><item><description>&lt;p&gt;[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]&lt;/p&gt;</description></item></channel></rss>', true],
+    ['<rss><channel><item><description><![CDATA[<style>[hidden]{display:inline}</style>[Vir<span hidden>decoy</span>tual Event]]]></description></item></channel></rss>', false],
+    ['<rss><channel><item><description>&amp;lt;p&amp;gt;[Vir&amp;lt;span hidden&amp;gt;decoy&amp;lt;/span&amp;gt;tual Event]&amp;lt;/p&amp;gt;</description></item></channel></rss>', false],
+    ['<rss><channel><item><title>[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]</title></item></channel></rss>', false],
+    ['<feed xmlns="http://www.w3.org/2005/Atom"><entry><content type="text">[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]</content></entry></feed>', false],
+    ['<feed xmlns="http://www.w3.org/2005/Atom"><entry><content type="html">[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]</content></entry></feed>', true],
+    ['<rss><channel><item><title>[Virtual&#160;Event]</title></item></channel></rss>', true],
+  ]) {
+    writeFileSync(feed, xml);
+    assert.equal((await check()).length > 0, blocked, xml);
+  }
+  writeFileSync(feed, "<rss><broken></rss>");
+  await assert.rejects(check(), /Invalid or unsupported publication XML/);
+  rmSync(feed);
+  writeFileSync(join(root, "index.html"), '<link rel="stylesheet" href="/missing.css"><p>Security events</p>');
+  assert.match((await check()).join("\n"), /Missing publication resource/);
+  writeFileSync(join(root, "index.html"), "<p>Ordinary security events</p>");
+  await assert.rejects(checkRenderedArtifacts(root, { browser, timeoutMs: 1 }), /Publication verification timed out/);
 });

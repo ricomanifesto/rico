@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, join, relative, sep } from "node:path";
-import { containsVirtualEventMarker } from "./check-public-content.mjs";
+import { join, relative, sep } from "node:path";
+import { checkRenderedArtifacts } from "./check-rendered-content.mjs";
 
 const root = process.cwd();
 const dist = process.env.BUILD_OUTPUT_DIR || join(root, "dist");
@@ -221,11 +221,6 @@ for (const artifactPath of forbiddenArtifacts) {
 for (const artifactPath of walkFiles(dist).filter(isTextArtifact)) {
   const artifact = readFileSync(artifactPath, "utf8");
   const relativePath = artifactPath.replace(`${dist}/`, "");
-
-  if ([".html", ".xml"].includes(extname(artifactPath).toLowerCase())
-    && containsVirtualEventMarker(artifact)) {
-    failures.push(`Public artifact ${relativePath} contains an excluded virtual-event promotion`);
-  }
 
   for (const { label, pattern } of localPathPatterns) {
     if (pattern.test(artifact)) {
@@ -676,6 +671,8 @@ if (existsSync(sourceContentPath)) {
     requireFile(join(dist, imagePath.replace(/^\//, "")), `project image ${imagePath}`);
   }
 }
+
+if (failures.length === 0) failures.push(...await checkRenderedArtifacts(dist));
 
 if (failures.length > 0) {
   console.error(failures.join("\n"));

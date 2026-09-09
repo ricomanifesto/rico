@@ -2,10 +2,10 @@ import { readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
-import { containsVirtualEventMarker } from "../../scripts/check-public-content.mjs";
+import { containsTextMarker } from "../../scripts/check-public-content.mjs";
 
 async function hasRenderedPromotion(page) {
-  return containsVirtualEventMarker(await page.locator("body").innerText());
+  return containsTextMarker(await page.locator("body").innerText());
 }
 
 function htmlFiles(directory) {
@@ -51,6 +51,8 @@ test("rendered text resolves hidden descendants and CSS without an HTML approxim
     '[VirtualEvent]',
     'Security events and virtual event coverage without a bracketed marker',
     '<style>[hidden] { display:inline }</style>[Vir<span hidden>decoy</span>tual Event]',
+    '[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]',
+    '[Vir&amp;lt;span hidden&amp;gt;decoy&amp;lt;/span&amp;gt;tual Event]',
   ];
   for (const html of allowed) {
     await page.setContent(html);
