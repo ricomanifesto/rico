@@ -10,6 +10,14 @@ export async function assertRenderedPageAllowed(page) {
   const text = await page.evaluate(() => [
     document.body?.innerText ?? "",
     document.title,
+    // innerText omits native controls. The browser owns visibility and placeholder state.
+    ...Array.from(document.querySelectorAll("input, textarea"), (node) => {
+      if (!node.checkVisibility({ opacityProperty: true, visibilityProperty: true, contentVisibilityAuto: true })) return "";
+      if (node.matches(":placeholder-shown")) return node.placeholder;
+      if (node instanceof HTMLTextAreaElement
+        || ["text", "search", "tel", "url", "email", "number", "button", "submit", "reset"].includes(node.type)) return node.value;
+      return "";
+    }),
     ...Array.from(document.querySelectorAll("meta[content], [alt], [aria-label], [title]"),
       (node) => ["content", "alt", "aria-label", "title"].map((name) => node.getAttribute(name))),
     ...Array.from(document.querySelectorAll('script[type="application/ld+json"]'),

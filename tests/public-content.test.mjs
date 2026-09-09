@@ -168,3 +168,39 @@ test("publication browser guard respects feed representations and fails closed",
   writeFileSync(join(root, "index.html"), "<p>Ordinary security events</p>");
   await assert.rejects(checkRenderedArtifacts(root, { browser, timeoutMs: 1 }), /Publication verification timed out/);
 });
+
+test("publication guard checks only displayed form-control text", { timeout: 45000 }, async (t) => {
+  const { chromium } = await import("@playwright/test");
+  const { checkRenderedArtifacts } = await import("../scripts/check-rendered-content.mjs");
+  const root = mkdtempSync(join(tmpdir(), "rico-control-test-"));
+  const browser = await chromium.launch({ channel: process.env.PUBLIC_CONTENT_BROWSER_CHANNEL || undefined });
+  t.after(async () => {
+    await browser.close();
+    rmSync(root, { recursive: true, force: true });
+  });
+  for (const [html, blocked] of [
+    ['<input value="[Virtual Event]">', true],
+    ['<input placeholder="[Virtual Event]">', true],
+    ['<textarea placeholder="[Virtual Event]"></textarea>', true],
+    ['<textarea id="review"></textarea><script>document.querySelector("textarea").value="[Virtual Event]"</script>', true],
+    ['<input type="button" value="[Virtual Event]">', true],
+    ['<input type="submit" value="[Virtual Event]">', true],
+    ['<input type="reset" value="[Virtual Event]">', true],
+    ['<input type="password" placeholder="[Virtual Event]">', true],
+    ['<input value="Security events" placeholder="[Virtual Event]">', false],
+    ['<textarea placeholder="[Virtual Event]">Security events</textarea>', false],
+    ['<input type="hidden" value="[Virtual Event]" placeholder="[Virtual Event]">', false],
+    ['<input type="password" value="[Virtual Event]" placeholder="[Virtual Event]">', false],
+    ['<input type="checkbox" value="[Virtual Event]">', false],
+    ['<input type="radio" value="[Virtual Event]">', false],
+    ['<input type="number" value="[Virtual Event]">', false],
+    ['<input hidden value="[Virtual Event]">', false],
+    ['<div style="display:none"><input value="[Virtual Event]"></div>', false],
+    ['<div style="visibility:hidden"><input placeholder="[Virtual Event]"></div>', false],
+    ['<div style="opacity:0"><input value="[Virtual Event]"></div>', false],
+    ['<style>[hidden]{display:inline}</style><input hidden value="[Virtual Event]">', true],
+  ]) {
+    writeFileSync(join(root, "index.html"), html);
+    assert.equal((await checkRenderedArtifacts(root, { browser })).length > 0, blocked, html);
+  }
+});
