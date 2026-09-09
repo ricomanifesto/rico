@@ -17,6 +17,9 @@ const markers = [
   "[Vir<!-- tracking -->tual Ev<!-- tracking -->ent]",
   "[Vir<span>tual</span> Ev<em>ent</em>]",
   "[Virtual<br>Event]",
+  "[Vir<span hidden>decoy</span>tual Event]",
+  "[Vir<span HIDDEN=\"false\">decoy</span>tual Ev<span hidden=\"until-found\">decoy</span>ent]",
+  "[Vir<span hidden=\"\"><b>nested decoy</b></span>tual Event]",
 ];
 
 test("normalizes only the bracketed promotion marker", async () => {
@@ -29,6 +32,8 @@ test("normalizes only the bracketed promotion marker", async () => {
     "[Virtual Events] Threat detection notes",
     "[Vir<div>tual</div> Event]",
     "[VirtualEvent]",
+    "[Vir<span aria-hidden=\"true\">decoy</span>tual Event]",
+    "[Vir<span inert>decoy</span>tual Event]",
   ]) assert.equal(containsVirtualEventMarker(article), false, article);
 });
 
@@ -69,9 +74,11 @@ test("existing build smoke rejects new HTML and encoded RSS promotion records", 
     ["promotion.html", "<p>[Virtual Event] Register now</p>"],
     ["promotion.html", "<p>&#91;Virtual&nbsp;Event&#93; Register now</p>"],
     ["promotion.html", "<p>[Vir<strong>tual</strong> Ev<!-- tracking -->ent] Register now</p>"],
+    ["promotion.html", "<p>[Vir<span hidden>decoy</span>tual Event] Register now</p>"],
     ["promotion.xml", "<rss><channel><item><title><![CDATA[[Virtual Event] Briefing]]></title></item></channel></rss>"],
     ["promotion.xml", "<rss><channel><item><description>&lt;p&gt;&amp;#91;Virtual&amp;nbsp;Event&amp;#93;&lt;/p&gt;</description></item></channel></rss>"],
     ["promotion.xml", "<rss><channel><item><description>&lt;p&gt;[Vir&lt;strong&gt;tual&lt;/strong&gt; Ev&lt;!-- tracking --&gt;ent]&lt;/p&gt;</description></item></channel></rss>"],
+    ["promotion.xml", "<rss><channel><item><description>&lt;p&gt;[Vir&lt;span hidden&gt;decoy&lt;/span&gt;tual Event]&lt;/p&gt;</description></item></channel></rss>"],
   ]) {
     const path = join(output, filename);
     writeFileSync(path, filename.endsWith(".html")

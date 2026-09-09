@@ -14,6 +14,8 @@ const textSeparators = new Set([
 
 function visibleText(node) {
   if (["script", "style", "template"].includes(node.tagName)) return "";
+  // Source checks handle structural hiding; browser checks resolve the CSS cascade.
+  if (node.attrs?.some((attribute) => attribute.name === "hidden")) return "";
   if (node.nodeName === "#text") return node.value;
   const text = (node.childNodes ?? []).map(visibleText).join("");
   return textSeparators.has(node.tagName) ? ` ${text} ` : text;
