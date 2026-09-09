@@ -5,11 +5,18 @@ import { decodeHTML } from "entities";
 import { parseFragment } from "parse5";
 
 const marker = /\[\s*virtual\s+event\s*\]/i;
+const textSeparators = new Set([
+  "address", "article", "aside", "blockquote", "br", "dd", "details", "dialog", "div",
+  "dl", "dt", "fieldset", "figcaption", "figure", "footer", "form", "h1", "h2", "h3",
+  "h4", "h5", "h6", "header", "hgroup", "hr", "li", "main", "menu", "nav", "ol", "p",
+  "pre", "section", "summary", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "ul",
+]);
 
 function visibleText(node) {
   if (["script", "style", "template"].includes(node.tagName)) return "";
   if (node.nodeName === "#text") return node.value;
-  return (node.childNodes ?? []).map(visibleText).join(" ");
+  const text = (node.childNodes ?? []).map(visibleText).join("");
+  return textSeparators.has(node.tagName) ? ` ${text} ` : text;
 }
 
 export function containsVirtualEventMarker(content) {

@@ -13,6 +13,10 @@ const markers = [
   String.raw`\[Virtual Event\]`,
   String.raw`\&#91;Virtual&#160;Event\&#93;`,
   "[<strong>Virtual</strong> <em>Event</em>]",
+  "[Vir<strong>tual</strong> Event]",
+  "[Vir<!-- tracking -->tual Ev<!-- tracking -->ent]",
+  "[Vir<span>tual</span> Ev<em>ent</em>]",
+  "[Virtual<br>Event]",
 ];
 
 test("normalizes only the bracketed promotion marker", async () => {
@@ -23,6 +27,8 @@ test("normalizes only the bracketed promotion marker", async () => {
     "A virtual event discussed threat detection.",
     "[Event] Incident response and threat analysis",
     "[Virtual Events] Threat detection notes",
+    "[Vir<div>tual</div> Event]",
+    "[VirtualEvent]",
   ]) assert.equal(containsVirtualEventMarker(article), false, article);
 });
 
@@ -62,8 +68,10 @@ test("existing build smoke rejects new HTML and encoded RSS promotion records", 
   for (const [filename, content] of [
     ["promotion.html", "<p>[Virtual Event] Register now</p>"],
     ["promotion.html", "<p>&#91;Virtual&nbsp;Event&#93; Register now</p>"],
+    ["promotion.html", "<p>[Vir<strong>tual</strong> Ev<!-- tracking -->ent] Register now</p>"],
     ["promotion.xml", "<rss><channel><item><title><![CDATA[[Virtual Event] Briefing]]></title></item></channel></rss>"],
     ["promotion.xml", "<rss><channel><item><description>&lt;p&gt;&amp;#91;Virtual&amp;nbsp;Event&amp;#93;&lt;/p&gt;</description></item></channel></rss>"],
+    ["promotion.xml", "<rss><channel><item><description>&lt;p&gt;[Vir&lt;strong&gt;tual&lt;/strong&gt; Ev&lt;!-- tracking --&gt;ent]&lt;/p&gt;</description></item></channel></rss>"],
   ]) {
     const path = join(output, filename);
     writeFileSync(path, filename.endsWith(".html")
