@@ -98,44 +98,6 @@ const structuredData = {
           </dl>
         </section>
 
-        <section aria-labelledby="project-decisions-heading" class="project-detail-story project-detail-decisions">
-          <h2 id="project-decisions-heading">The decisions behind it</h2>
-          <dl class="project-story-grid">
-            <div class="project-story-item">
-              <dt>Design decision</dt>
-              <dd>{project.page.story.decision}</dd>
-            </div>
-            <div class="project-story-item">
-              <dt>Tradeoff</dt>
-              <dd>{project.page.story.tradeoff}</dd>
-            </div>
-          </dl>
-        </section>
-
-        <section aria-labelledby="project-result-heading" class="project-detail-result">
-          <div class="project-result-heading">
-            <p>{project.page.story.proof.eyebrow}</p>
-            <h2 id="project-result-heading">One concrete result</h2>
-          </div>
-          <div class="project-result-copy">
-            <h3>{project.page.story.proof.title}</h3>
-            <p>{project.page.story.proof.body}</p>
-            <ul>
-              {project.page.story.proof.facts.map((fact) => <li>{fact}</li>)}
-            </ul>
-            <a
-              href={project.page.story.proof.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="project-result-link"
-            >
-              {project.page.story.proof.linkLabel}
-              <ExternalLink size={17} aria-hidden="true" focusable="false" />
-            </a>
-            <p class="project-result-boundary">{project.page.story.proof.boundary}</p>
-          </div>
-        </section>
-
         {project.image && (
           <div class="project-detail-media">
             <img

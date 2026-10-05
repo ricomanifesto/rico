@@ -1,6 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipLink from "@/components/SkipLink";
@@ -109,14 +109,6 @@ const structuredData = {
           <Content />
         </div>
         <footer class="writing-article-footer">
-          <section aria-label="Continue the conversation" class="writing-article-next-step">
-            <p>Continue the conversation</p>
-            <h2 id="writing-next-step-heading">Working on a system that needs clearer evidence?</h2>
-            <a href="mailto:michaelrico124@gmail.com">
-              <Mail aria-hidden="true" focusable="false" size={17} />
-              Compare notes with me
-            </a>
-          </section>
           <a href="/writing/" class="writing-back-link">
             <ArrowLeft aria-hidden="true" focusable="false" size={17} />
             All writing

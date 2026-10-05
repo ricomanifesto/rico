@@ -15,16 +15,6 @@ const projects = [
       "SentrySearch assembles source-backed profiles with persistent reports, authenticated library search, and detection guidance in one reviewable workspace.",
       "The report keeps source evidence attached and exposes evaluation status when a section could not be scored instead of presenting an unsupported result.",
     ],
-    decision: "Keep evidence admissibility and handoff eligibility in application code. The model can propose sources, claims, and scores; it cannot decide that evidence is safe to reuse.",
-    tradeoff: "A polished report can remain unassessed or blocked until its evidence and analyst disposition are complete. The workflow favors defensible reuse over a higher apparent completion rate.",
-    proofTitle: "A 4.57 score still failed the reuse test.",
-    proofFacts: [
-      "Evaluation: 4.57 and reviewable",
-      "Review finding: one training source supported ten high-risk claims",
-      "Contract response: captured source content, fingerprints, and exact support excerpts",
-    ],
-    proofHref: "https://github.com/ricomanifesto/SentrySearch/blob/8eca6272a18d554484ee9bfa2f5bdcf21e9dd44e/docs/evidence-admissibility-decision-2026-08-15.md",
-    proofBoundary: "This proves the evidence review caught a specific failure and changed the contract. It does not establish production accuracy across reports.",
   },
   {
     title: "Analyst-Ready Security Briefings",
@@ -40,16 +30,6 @@ const projects = [
       "SentryDigest publishes a scheduled three-hour briefing with UTC freshness and retained issues that can move directly into analyst review.",
       "Source health and stable handoff artifacts stay visible, so a reader can inspect the inputs before sharing the briefing.",
     ],
-    decision: "Make the dated issue and stable article identity the contract. Downstream reports link back to the exact digest context instead of depending on a changing homepage.",
-    tradeoff: "The current view is intentionally bounded to four configured feeds and 30 items. It does not claim complete coverage; quiet sources remain visible as a coverage signal.",
-    proofTitle: "A quiet feed stays visible instead of disappearing.",
-    proofFacts: [
-      "Current view: 30 items",
-      "Active contribution: 15 Bleeping Computer, 12 The Hacker News, 3 Dark Reading",
-      "Coverage signal: Krebs on Security was quiet for seven days with no current items",
-    ],
-    proofHref: "https://github.com/ricomanifesto/SentryDigest/blob/323394fa081c32ba3bc04541b15059764310e6d5/feed-info.json",
-    proofBoundary: "This is a dated source-health snapshot, not a claim that four feeds provide complete threat coverage.",
   },
   {
     title: "Exploitation Intelligence Reports",
@@ -65,16 +45,6 @@ const projects = [
       "SentryInsight publishes dated exploitation reports that connect CVE evidence, affected systems, attack context, and response priorities.",
       "Fail-closed publishing prevents an untrustworthy run from replacing the last verified report, while dated archives preserve what changed.",
     ],
-    decision: "Normalize each finding into explicit severity, exploitation status, action, and reporting links, then validate that structure before publishing.",
-    tradeoff: "The report preserves source uncertainty instead of filling gaps. If reporting does not name a CVE or confirm exploitation, the output must say so.",
-    proofTitle: "One report separated active exploitation from patch-only urgency.",
-    proofFacts: [
-      "October 4 report: 10 findings and 2 named CVEs",
-      "FortiMail CVE-2026-104286: active exploitation, patch",
-      "Dell CSM CVE-2026-63688: exploitation not observed, patch",
-    ],
-    proofHref: "https://github.com/ricomanifesto/SentryInsight/blob/ac95f7c5ea5dde3115e5e43e188736ae171e43bb/reports/2026-10-04.md",
-    proofBoundary: "This shows the report structure and a dated generated artifact. It does not measure analyst time saved or guarantee the underlying reporting is complete.",
   },
   {
     title: "Audit-Ready GRC Intelligence",
@@ -90,16 +60,6 @@ const projects = [
       "GRCInsight produces framework-mapped reports with evidence manifests and concise action context for review.",
       "A machine-readable outcome journal records whether each run was published, retained, or refused instead of hiding failed publication states.",
     ],
-    decision: "Treat the publication outcome and evidence-manifest hash as first-class records. A report is published only when source, model, and citation provenance agree.",
-    tradeoff: "Freshness yields to provenance. Provider or model-identity failures retain the last verified report and record the refusal instead of replacing it.",
-    proofTitle: "The publication journal records refusal, not just success.",
-    proofFacts: [
-      "Journal snapshot: 30 terminal events",
-      "Published: 22",
-      "Retained after a refused attempt: 8",
-    ],
-    proofHref: "https://github.com/ricomanifesto/GRCInsight/blob/cfe7ba6056cfa064ede78f045049ee7ace8b6b59/site/publication-history.json",
-    proofBoundary: "The journal proves how publication decisions were recorded. It does not establish report accuracy or business impact.",
   },
 ];
 
@@ -319,31 +279,12 @@ for (const project of projects) {
       "Why it can be trusted",
     ]);
     await expect(caseStudy.getByRole("definition")).toHaveText(project.caseStudy);
-    const decisions = page.getByRole("region", { name: "The decisions behind it" });
-    await expect(decisions.getByRole("term")).toHaveText(["Design decision", "Tradeoff"]);
-    await expect(decisions.getByRole("definition")).toHaveText([
-      project.decision,
-      project.tradeoff,
-    ]);
-    const proof = page.getByRole("region", { name: "One concrete result" });
-    await expect(proof.getByRole("heading", { level: 3 })).toHaveText(project.proofTitle);
-    await expect(proof.getByRole("listitem")).toHaveText(project.proofFacts);
-    await expect(proof.getByRole("link", { name: "Inspect this result" })).toHaveAttribute(
-      "href",
-      project.proofHref,
-    );
-    await expect(proof).toContainText(project.proofBoundary);
     const evidenceLink = page.getByRole("link", { name: `Inspect ${project.name} evidence` });
     await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
     if (project.evidenceExternal) {
       await expect(evidenceLink).toHaveAttribute("target", "_blank");
       await expect(evidenceLink).toHaveAttribute("rel", "noopener noreferrer");
     }
-    const viewportMetrics = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-    }));
-    expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
     await expect(page.getByRole("contentinfo")).toContainText("Rico Manifesto");
   });
 }
