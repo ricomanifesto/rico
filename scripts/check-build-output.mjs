@@ -43,6 +43,8 @@ const projectPages = [
     techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
     repository: "https://github.com/ricomanifesto/SentrySearch",
     evidence: "/projects/sentrysearch/llm-evaluation/",
+    proofTitle: "A 4.57 score still failed the reuse test.",
+    proofHref: "https://github.com/ricomanifesto/SentrySearch/blob/8eca6272a18d554484ee9bfa2f5bdcf21e9dd44e/docs/evidence-admissibility-decision-2026-08-15.md",
   },
   {
     slug: "sentrydigest",
@@ -52,6 +54,8 @@ const projectPages = [
     techStack: ["Node.js", "RSS", "GitHub Actions"],
     repository: "https://github.com/ricomanifesto/SentryDigest",
     evidence: "https://ricomanifesto.github.io/SentryDigest/archive/",
+    proofTitle: "A quiet feed stays visible instead of disappearing.",
+    proofHref: "https://github.com/ricomanifesto/SentryDigest/blob/323394fa081c32ba3bc04541b15059764310e6d5/feed-info.json",
   },
   {
     slug: "sentryinsight",
@@ -61,6 +65,8 @@ const projectPages = [
     techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
     repository: "https://github.com/ricomanifesto/SentryInsight",
     evidence: "https://ricomanifesto.github.io/SentryInsight/reports/",
+    proofTitle: "One report separated active exploitation from patch-only urgency.",
+    proofHref: "https://github.com/ricomanifesto/SentryInsight/blob/ac95f7c5ea5dde3115e5e43e188736ae171e43bb/reports/2026-10-04.md",
   },
   {
     slug: "grcinsight",
@@ -70,6 +76,8 @@ const projectPages = [
     techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
     repository: "https://github.com/ricomanifesto/GRCInsight",
     evidence: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
+    proofTitle: "The publication journal records refusal, not just success.",
+    proofHref: "https://github.com/ricomanifesto/GRCInsight/blob/cfe7ba6056cfa064ede78f045049ee7ace8b6b59/site/publication-history.json",
   },
 ];
 const sentrySearchEvidenceRevision = "39c86789bdca5ca0ada2161624c1831f425049c7";
@@ -492,6 +500,8 @@ if (existsSync(firstWritingPostPath)) {
     ["BlogPosting structured data", '"@type":"BlogPosting"'],
     ["Anthropic source link", 'href="https://www.anthropic.com/research/team/interpretability"'],
     ["Prime Agent source link", 'href="https://github.com/PrimeIntellect-ai/prime-agent"'],
+    ["contextual contact step", "Working on a system that needs clearer evidence?"],
+    ["contextual contact link", 'href="mailto:michaelrico124@gmail.com"'],
   ]) {
     if (!article.includes(expected)) {
       failures.push(`First writing article is missing ${label}`);
@@ -615,7 +625,7 @@ if (existsSync(caseStudyPath)) {
   }
 }
 
-for (const { slug, title, claim, techStack, repository, evidence } of projectPages) {
+for (const { slug, title, claim, techStack, repository, evidence, proofTitle, proofHref } of projectPages) {
   const projectPath = join(dist, "projects", slug, "index.html");
 
   if (!existsSync(projectPath)) {
@@ -632,6 +642,10 @@ for (const { slug, title, claim, techStack, repository, evidence } of projectPag
     ["canonical URL", `rel="canonical" href="${expectedCanonical}"`],
     ["repository link", `href="${repository}"`],
     ["evidence link", `href="${evidence}"`],
+    ["decision section", "The decisions behind it"],
+    ["concrete result section", "One concrete result"],
+    ["concrete result title", proofTitle],
+    ["concrete result evidence", `href="${proofHref}"`],
     ["structured data", 'type="application/ld+json"'],
   ]) {
     if (!projectPage.includes(expected)) {

@@ -744,6 +744,16 @@ test("serves the first writing article with article metadata and source links", 
     "href",
     "https://github.com/PrimeIntellect-ai/prime-agent",
   );
+  const nextStep = page.getByRole("region", { name: "Continue the conversation" });
+  await expect(nextStep.getByRole("heading", {
+    level: 2,
+    name: "Working on a system that needs clearer evidence?",
+  })).toBeVisible();
+  await expect(nextStep.getByRole("link", { name: "Compare notes with me" })).toHaveAttribute(
+    "href",
+    "mailto:michaelrico124@gmail.com",
+  );
+  await expect(page.getByRole("link", { name: "All writing" })).toHaveAttribute("href", "/writing/");
 
   const viewportMetrics = await page.evaluate(() => ({
     clientWidth: document.documentElement.clientWidth,
