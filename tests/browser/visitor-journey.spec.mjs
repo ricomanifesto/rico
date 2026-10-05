@@ -5,37 +5,61 @@ const projects = [
     title: "Threat Intelligence Research Workspace",
     name: "SentrySearch",
     slug: "sentrysearch",
-    claim: "SentrySearch turns scattered threat research into source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status when a section could not be scored.",
+    claim: "For threat analysts who need research they can defend, SentrySearch turns malware, attack tools, and exposed technologies into source-backed reports with detection guidance, a persistent report library, and explicit evaluation status.",
     techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
     evidenceHref: "/projects/sentrysearch/llm-evaluation/",
     evidenceExternal: false,
+    caseStudy: [
+      "Threat analysts and detection engineers who need research they can defend and reuse.",
+      "Research about malware, attack tools, and exposed technologies is scattered across sources, easy to lose, and difficult to translate into detection work.",
+      "SentrySearch assembles source-backed profiles with persistent reports, authenticated library search, and detection guidance in one reviewable workspace.",
+      "The report keeps source evidence attached and exposes evaluation status when a section could not be scored instead of presenting an unsupported result.",
+    ],
   },
   {
     title: "Analyst-Ready Security Briefings",
     name: "SentryDigest",
     slug: "sentrydigest",
-    claim: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
+    claim: "For analysts who need to know what changed without rereading every feed, SentryDigest publishes a scheduled three-hour briefing with source health, UTC freshness, retained history, and stable handoffs for review.",
     techStack: ["Node.js", "RSS", "GitHub Actions"],
     evidenceHref: "https://ricomanifesto.github.io/SentryDigest/archive/",
     evidenceExternal: true,
+    caseStudy: [
+      "Security analysts who need a fast, repeatable view of what changed across monitored feeds.",
+      "Important security updates compete with duplicate stories, stale entries, and unreliable sources, making every review start from scratch.",
+      "SentryDigest publishes a scheduled three-hour briefing with UTC freshness and retained issues that can move directly into analyst review.",
+      "Source health and stable handoff artifacts stay visible, so a reader can inspect the inputs before sharing the briefing.",
+    ],
   },
   {
     title: "Exploitation Intelligence Reports",
     name: "SentryInsight",
     slug: "sentryinsight",
-    claim: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
+    claim: "SentryInsight turns CVE and exploitation evidence into dated reports that connect affected systems, attack context, and response priorities. If a new run is not trustworthy, it preserves the last verified report.",
     techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
     evidenceHref: "https://ricomanifesto.github.io/SentryInsight/reports/",
     evidenceExternal: true,
+    caseStudy: [
+      "Threat analysts and incident responders evaluating active exploitation risk.",
+      "CVE notices often separate vulnerability details from affected systems, exploitation evidence, and the response context needed to prioritize work.",
+      "SentryInsight publishes dated exploitation reports that connect CVE evidence, affected systems, attack context, and response priorities.",
+      "Fail-closed publishing prevents an untrustworthy run from replacing the last verified report, while dated archives preserve what changed.",
+    ],
   },
   {
     title: "Audit-Ready GRC Intelligence",
     name: "GRCInsight",
     slug: "grcinsight",
-    claim: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
+    claim: "GRCInsight turns regulatory and security feeds into framework-mapped reports with evidence manifests and a visible publication history, so reviewers can see what was published, retained, or refused.",
     techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
     evidenceHref: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
     evidenceExternal: true,
+    caseStudy: [
+      "Security and compliance teams that need regulatory updates translated into reviewable control context.",
+      "Regulatory and security feeds are difficult to connect to framework obligations, audit evidence, and a clear publication decision.",
+      "GRCInsight produces framework-mapped reports with evidence manifests and concise action context for review.",
+      "A machine-readable outcome journal records whether each run was published, retained, or refused instead of hiding failed publication states.",
+    ],
   },
 ];
 
@@ -71,6 +95,9 @@ test("shows all project case studies as an editorial desktop sequence", async ({
     await expect(
       card.getByRole("link", { name: `Read ${project.name} case study` }),
     ).toHaveAttribute("href", `/projects/${project.slug}/`);
+    await expect(
+      card.getByRole("link", { name: `Read ${project.name} case study` }),
+    ).toHaveText("See how it works");
     const evidenceLink = card.getByRole("link", {
       name: `Inspect ${project.name} evidence`,
     });
@@ -244,6 +271,14 @@ for (const project of projects) {
     await expect(page.getByRole("heading", { level: 1, name: project.title })).toBeVisible();
     await expect(page.locator(".project-detail-description")).toHaveText(project.claim);
     await expect(page.locator(".project-detail-tech li")).toHaveText(project.techStack);
+    const caseStudy = page.getByRole("region", { name: "What this project changes" });
+    await expect(caseStudy.getByRole("term")).toHaveText([
+      "Built for",
+      "The problem",
+      "The outcome",
+      "Why it can be trusted",
+    ]);
+    await expect(caseStudy.getByRole("definition")).toHaveText(project.caseStudy);
     const evidenceLink = page.getByRole("link", { name: `Inspect ${project.name} evidence` });
     await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
     if (project.evidenceExternal) {

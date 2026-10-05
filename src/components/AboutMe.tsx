@@ -12,7 +12,11 @@ export default function AboutMe() {
         <div className="about-layout">
           <div className="about-copy">
             <p className="about-body-copy about-body-spaced">
-              I am currently a Staff Threat Hunter at SentinelOne, working in ThreatOps on Incident Readiness and Response. My work sits at the intersection of threat hunting, detection engineering, automation, and analyst workflows.
+              I build security systems around a simple idea: a result is only useful when someone can inspect how it was produced. At SentinelOne, my work spans proactive threat hunting, detection engineering, automation, and analyst workflows for incident readiness and response.
+            </p>
+
+            <p className="about-body-copy about-body-spaced">
+              The projects below apply that approach to threat research, security briefings, exploitation intelligence, and GRC reporting. Each one keeps the evidence visible and makes the next decision clearer.
             </p>
 
             <p className="about-body-copy about-body-spaced">

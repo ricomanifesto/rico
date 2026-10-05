@@ -58,7 +58,7 @@ export default function ProjectsSection() {
                     className="project-case-study-link"
                     aria-label={`Read ${project.page.name} case study`}
                   >
-                    Case study
+                    See how it works
                   </a>
 
                   <div className="project-external-actions" aria-label={`${project.page.name} links`}>

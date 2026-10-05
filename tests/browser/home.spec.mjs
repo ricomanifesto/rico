@@ -165,13 +165,34 @@ test("links to Michael Rico's GitHub profile from the About section", async ({ p
   await expect(githubProfileLink).toHaveAttribute("rel", "noopener noreferrer");
 });
 
+test("explains the portfolio value for analysts and leaders", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.getByText(
+    "I'm Michael Rico, a Staff Threat Hunter building tools for threat intelligence, incident readiness, and detection engineering.",
+    { exact: true },
+  )).toBeVisible();
+  await expect(page.getByText(
+    "I turn noisy security data into decisions analysts can verify and leaders can act on, with the sources, evaluation boundaries, and operating history left visible.",
+    { exact: true },
+  )).toBeVisible();
+
+  const about = page.getByRole("region", { name: "About" });
+  await expect(about).toContainText(
+    "I build security systems around a simple idea: a result is only useful when someone can inspect how it was produced.",
+  );
+  await expect(about).toContainText(
+    "The projects below apply that approach to threat research, security briefings, exploitation intelligence, and GRC reporting.",
+  );
+});
+
 test("keeps mobile hero content visible before the next section", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
 
   const heading = page.getByRole("heading", { name: "I build security systems that show their work." });
-  const subtitle = page.getByText("I'm Michael Rico, a Staff Threat Hunter focused on threat intelligence, incident readiness, and detection engineering.");
-  const body = page.getByText("My projects turn noisy signals into clear decisions, with the evidence, failure modes, and history left visible.");
+  const subtitle = page.getByText("I'm Michael Rico, a Staff Threat Hunter building tools for threat intelligence, incident readiness, and detection engineering.");
+  const body = page.getByText("I turn noisy security data into decisions analysts can verify and leaders can act on, with the sources, evaluation boundaries, and operating history left visible.");
   const contactLink = page.getByRole("link", { name: "Email me" });
 
   await expect(heading).toBeVisible();

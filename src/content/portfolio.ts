@@ -21,12 +21,20 @@ export interface ProjectPageLink {
   readonly external: boolean;
 }
 
+export interface ProjectCaseStudy {
+  readonly audience: string;
+  readonly problem: string;
+  readonly outcome: string;
+  readonly trust: string;
+}
+
 export interface ProjectPageDetails {
   readonly slug: string;
   readonly name: string;
   readonly metaDescription: string;
   readonly techStack: readonly string[];
   readonly programmingLanguages: string | readonly string[];
+  readonly caseStudy: ProjectCaseStudy;
   readonly evidence: ProjectPageLink;
 }
 
@@ -67,7 +75,7 @@ export const projectActionLinkBehavior: ProjectActionLinkBehavior = {
 export const projects: readonly PortfolioProject[] = [
   {
     title: "Threat Intelligence Research Workspace",
-    description: "SentrySearch turns scattered threat research into source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status when a section could not be scored.",
+    description: "For threat analysts who need research they can defend, SentrySearch turns malware, attack tools, and exposed technologies into source-backed reports with detection guidance, a persistent report library, and explicit evaluation status.",
     techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
     links: {
       repository: {
@@ -92,6 +100,12 @@ export const projects: readonly PortfolioProject[] = [
       metaDescription: "SentrySearch builds source-backed security profiles with persistent reports, authenticated report-library search, detection guidance, and explicit evaluation status.",
       techStack: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "Supabase", "AWS S3"],
       programmingLanguages: ["TypeScript", "Python"],
+      caseStudy: {
+        audience: "Threat analysts and detection engineers who need research they can defend and reuse.",
+        problem: "Research about malware, attack tools, and exposed technologies is scattered across sources, easy to lose, and difficult to translate into detection work.",
+        outcome: "SentrySearch assembles source-backed profiles with persistent reports, authenticated library search, and detection guidance in one reviewable workspace.",
+        trust: "The report keeps source evidence attached and exposes evaluation status when a section could not be scored instead of presenting an unsupported result.",
+      },
       evidence: {
         href: "/projects/sentrysearch/llm-evaluation/",
         label: "Read the LLM evaluation case study",
@@ -101,7 +115,7 @@ export const projects: readonly PortfolioProject[] = [
   },
   {
     title: "Analyst-Ready Security Briefings",
-    description: "SentryDigest turns noisy security feeds into a scheduled three-hour briefing with UTC freshness, source health, retained issues, and stable handoffs you can inspect before sharing.",
+    description: "For analysts who need to know what changed without rereading every feed, SentryDigest publishes a scheduled three-hour briefing with source health, UTC freshness, retained history, and stable handoffs for review.",
     techStack: ["Node.js", "RSS", "GitHub Actions"],
     links: {
       repository: {
@@ -126,6 +140,12 @@ export const projects: readonly PortfolioProject[] = [
       metaDescription: "SentryDigest publishes scheduled three-hour security briefings with UTC freshness, source health, retained issues, and stable handoffs.",
       techStack: ["Node.js", "RSS", "GitHub Actions"],
       programmingLanguages: "JavaScript",
+      caseStudy: {
+        audience: "Security analysts who need a fast, repeatable view of what changed across monitored feeds.",
+        problem: "Important security updates compete with duplicate stories, stale entries, and unreliable sources, making every review start from scratch.",
+        outcome: "SentryDigest publishes a scheduled three-hour briefing with UTC freshness and retained issues that can move directly into analyst review.",
+        trust: "Source health and stable handoff artifacts stay visible, so a reader can inspect the inputs before sharing the briefing.",
+      },
       evidence: {
         href: "https://ricomanifesto.github.io/SentryDigest/archive/",
         label: "Browse retained digest issues",
@@ -135,7 +155,7 @@ export const projects: readonly PortfolioProject[] = [
   },
   {
     title: "Exploitation Intelligence Reports",
-    description: "SentryInsight publishes exploitation-focused reports with CVE evidence, affected systems, dated archives, and fail-closed retention of the last verified report when a new run is not trustworthy.",
+    description: "SentryInsight turns CVE and exploitation evidence into dated reports that connect affected systems, attack context, and response priorities. If a new run is not trustworthy, it preserves the last verified report.",
     techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
     links: {
       repository: {
@@ -160,6 +180,12 @@ export const projects: readonly PortfolioProject[] = [
       metaDescription: "SentryInsight publishes CVE-backed exploitation reports, dated archives, and fail-closed retention of the last verified report.",
       techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
       programmingLanguages: "Python",
+      caseStudy: {
+        audience: "Threat analysts and incident responders evaluating active exploitation risk.",
+        problem: "CVE notices often separate vulnerability details from affected systems, exploitation evidence, and the response context needed to prioritize work.",
+        outcome: "SentryInsight publishes dated exploitation reports that connect CVE evidence, affected systems, attack context, and response priorities.",
+        trust: "Fail-closed publishing prevents an untrustworthy run from replacing the last verified report, while dated archives preserve what changed.",
+      },
       evidence: {
         href: "https://ricomanifesto.github.io/SentryInsight/reports/",
         label: "Browse dated exploitation reports",
@@ -169,7 +195,7 @@ export const projects: readonly PortfolioProject[] = [
   },
   {
     title: "Audit-Ready GRC Intelligence",
-    description: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and a machine-readable outcome journal for published, retained, and refused runs.",
+    description: "GRCInsight turns regulatory and security feeds into framework-mapped reports with evidence manifests and a visible publication history, so reviewers can see what was published, retained, or refused.",
     techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
     links: {
       repository: {
@@ -194,6 +220,12 @@ export const projects: readonly PortfolioProject[] = [
       metaDescription: "GRCInsight publishes audit-ready reports with framework mapping, evidence manifests, and machine-readable publication outcomes.",
       techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
       programmingLanguages: ["Go", "Python"],
+      caseStudy: {
+        audience: "Security and compliance teams that need regulatory updates translated into reviewable control context.",
+        problem: "Regulatory and security feeds are difficult to connect to framework obligations, audit evidence, and a clear publication decision.",
+        outcome: "GRCInsight produces framework-mapped reports with evidence manifests and concise action context for review.",
+        trust: "A machine-readable outcome journal records whether each run was published, retained, or refused instead of hiding failed publication states.",
+      },
       evidence: {
         href: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
         label: "Inspect the publication outcome journal",
@@ -210,8 +242,8 @@ export const experiences: readonly ExperienceItem[] = [
     title: "Staff Threat Hunter",
     period: "December 2024 — present",
     highlights: [
-      "Lead proactive threat hunting work across incident readiness and response workflows",
-      "Build tooling, detection logic, and analyst-facing systems that make threat activity easier to investigate, validate, and communicate"
+      "Lead proactive threat hunts across incident readiness and response workflows, turning ambiguous signals into investigations teams can validate and communicate",
+      "Build detections and analyst-facing tooling that make supporting evidence and next actions easier to review"
     ]
   },
   {
@@ -220,8 +252,8 @@ export const experiences: readonly ExperienceItem[] = [
     title: "Threat Detection Engineer II",
     period: "October 2023 — July 2024",
     highlights: [
-      "Built and refined threat detections using large-scale data and real-time streaming systems",
-      "Combined multiple detection signals into higher-fidelity alerting patterns for security operations"
+      "Built detections across large-scale event and streaming data to surface high-signal security behavior",
+      "Combined multiple weak signals into higher-confidence alerting patterns for security operations"
     ]
   },
   {
@@ -230,8 +262,8 @@ export const experiences: readonly ExperienceItem[] = [
     title: "Information Security Researcher",
     period: "August 2013 — August 2023",
     highlights: [
-      "Tracked threat actors, analyzed anomalous activity, and identified emerging attack techniques",
-      "Wrote and deployed countermeasures quickly to improve detection and response coverage"
+      "Tracked threat actors and emerging techniques across a decade of security research",
+      "Translated research into deployable countermeasures that strengthened detection and response coverage"
     ]
   }
 ];

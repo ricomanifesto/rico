@@ -76,6 +76,28 @@ const structuredData = {
           </ul>
         </header>
 
+        <section aria-labelledby="project-story-heading" class="project-detail-story">
+          <h2 id="project-story-heading">What this project changes</h2>
+          <dl class="project-story-grid">
+            <div class="project-story-item">
+              <dt>Built for</dt>
+              <dd>{project.page.caseStudy.audience}</dd>
+            </div>
+            <div class="project-story-item">
+              <dt>The problem</dt>
+              <dd>{project.page.caseStudy.problem}</dd>
+            </div>
+            <div class="project-story-item">
+              <dt>The outcome</dt>
+              <dd>{project.page.caseStudy.outcome}</dd>
+            </div>
+            <div class="project-story-item">
+              <dt>Why it can be trusted</dt>
+              <dd>{project.page.caseStudy.trust}</dd>
+            </div>
+          </dl>
+        </section>
+
         {project.image && (
           <div class="project-detail-media">
             <img
