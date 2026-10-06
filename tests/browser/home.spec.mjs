@@ -241,6 +241,24 @@ test("keeps mobile hero content visible before the next section", async ({ page 
   expect(layout.contactLink.bottom).toBeLessThanOrEqual(layout.aboutSection.top);
 });
 
+test("keeps the tablet transition from the hero to About compact", async ({ page }) => {
+  await page.setViewportSize({ width: 888, height: 1280 });
+  await page.goto("/");
+
+  const transition = await page.evaluate(() => {
+    const heroLinks = document.querySelector("#intro .hero-links")?.getBoundingClientRect();
+    const aboutHeading = document.querySelector("#about .section-title")?.getBoundingClientRect();
+
+    return {
+      gap: heroLinks && aboutHeading ? aboutHeading.top - heroLinks.bottom : null,
+    };
+  });
+
+  expect(transition.gap).not.toBeNull();
+  expect(transition.gap).toBeGreaterThanOrEqual(48);
+  expect(transition.gap).toBeLessThanOrEqual(160);
+});
+
 test("uses an authored editorial hero without decorative dashboard motifs", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");

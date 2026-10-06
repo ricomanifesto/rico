@@ -1178,6 +1178,14 @@
   }
 }
 
+@media (max-width: 899px) {
+  .hero-section {
+    min-height: auto;
+    align-items: flex-start;
+    padding-bottom: 0;
+  }
+}
+
 @media (min-width: 900px) {
   .hero-section {
     min-height: 100svh;
@@ -1209,10 +1217,6 @@
 }
 
 @media (max-width: 639px) {
-  .hero-section {
-    align-items: flex-start;
-  }
-
   .hero-links {
     gap: 0 1.25rem;
   }
