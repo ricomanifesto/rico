@@ -83,7 +83,7 @@ export const projects: readonly PortfolioProject[] = [
         external: true,
       },
       demo: {
-        href: "https://sentry-search.vercel.app/",
+        href: "https://sentrysearch.ricomanifesto.com/",
         external: true,
       },
     },
@@ -123,7 +123,7 @@ export const projects: readonly PortfolioProject[] = [
         external: true,
       },
       demo: {
-        href: "https://ricomanifesto.github.io/SentryDigest/",
+        href: "https://sentrydigest.ricomanifesto.com/",
         external: true,
       },
     },
@@ -147,7 +147,7 @@ export const projects: readonly PortfolioProject[] = [
         trust: "Source health and stable handoff artifacts stay visible, so a reader can inspect the inputs before sharing the briefing.",
       },
       evidence: {
-        href: "https://ricomanifesto.github.io/SentryDigest/archive/",
+        href: "https://sentrydigest.ricomanifesto.com/archive/",
         label: "Browse retained digest issues",
         external: true,
       },
@@ -163,7 +163,7 @@ export const projects: readonly PortfolioProject[] = [
         external: true,
       },
       demo: {
-        href: "https://ricomanifesto.github.io/SentryInsight/",
+        href: "https://sentryinsight.ricomanifesto.com/",
         external: true,
       },
     },
@@ -187,7 +187,7 @@ export const projects: readonly PortfolioProject[] = [
         trust: "Fail-closed publishing prevents an untrustworthy run from replacing the last verified report, while dated archives preserve what changed.",
       },
       evidence: {
-        href: "https://ricomanifesto.github.io/SentryInsight/reports/",
+        href: "https://sentryinsight.ricomanifesto.com/reports/",
         label: "Browse dated exploitation reports",
         external: true,
       },
@@ -203,7 +203,7 @@ export const projects: readonly PortfolioProject[] = [
         external: true,
       },
       demo: {
-        href: "https://ricomanifesto.github.io/GRCInsight/",
+        href: "https://grcinsight.ricomanifesto.com/",
         external: true,
       },
     },
@@ -227,7 +227,7 @@ export const projects: readonly PortfolioProject[] = [
         trust: "A machine-readable outcome journal records whether each run was published, retained, or refused instead of hiding failed publication states.",
       },
       evidence: {
-        href: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
+        href: "https://grcinsight.ricomanifesto.com/publication-history/",
         label: "Inspect the publication outcome journal",
         external: true,
       },

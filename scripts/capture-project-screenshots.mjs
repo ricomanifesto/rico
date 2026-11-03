@@ -9,7 +9,7 @@ const showcaseFrame = { width: 2048, height: 1280 };
 const captures = [
   {
     name: "SentrySearch",
-    url: "https://sentry-search.vercel.app/",
+    url: "https://sentrysearch.ricomanifesto.com/",
     output: "SentrySearch.jpg",
     async selectLightTheme(page) {
       const lightThemeButton = page.locator('button[aria-label="Switch to light theme"]:visible');
@@ -20,7 +20,7 @@ const captures = [
   },
   {
     name: "SentryDigest",
-    url: "https://ricomanifesto.github.io/SentryDigest/",
+    url: "https://sentrydigest.ricomanifesto.com/",
     output: "SentryDigest.jpg",
     async selectLightTheme(page) {
       const background = await page.locator("body").evaluate(
@@ -33,7 +33,7 @@ const captures = [
   },
   {
     name: "SentryInsight",
-    url: "https://ricomanifesto.github.io/SentryInsight/",
+    url: "https://sentryinsight.ricomanifesto.com/",
     output: "SentryInsight.jpg",
     viewport: { width: 1280, height: 1280 },
     frame: showcaseFrame,
@@ -46,7 +46,7 @@ const captures = [
   },
   {
     name: "GRCInsight",
-    url: "https://ricomanifesto.github.io/GRCInsight/",
+    url: "https://grcinsight.ricomanifesto.com/",
     output: "GRCInsight.jpg",
     async selectLightTheme(page) {
       const lightThemeButton = page.getByRole("button", { name: "Switch to light theme" });

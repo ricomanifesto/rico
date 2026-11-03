@@ -22,7 +22,7 @@ const projects = [
     slug: "sentrydigest",
     claim: "For analysts who need to know what changed without rereading every feed, SentryDigest publishes a scheduled three-hour briefing with source health, UTC freshness, retained history, and stable handoffs for review.",
     techStack: ["Node.js", "RSS", "GitHub Actions"],
-    evidenceHref: "https://ricomanifesto.github.io/SentryDigest/archive/",
+    evidenceHref: "https://sentrydigest.ricomanifesto.com/archive/",
     evidenceExternal: true,
     caseStudy: [
       "Security analysts who need a fast, repeatable view of what changed across monitored feeds.",
@@ -37,7 +37,7 @@ const projects = [
     slug: "sentryinsight",
     claim: "SentryInsight turns CVE and exploitation evidence into dated reports that connect affected systems, attack context, and response priorities. If a new run is not trustworthy, it preserves the last verified report.",
     techStack: ["Python", "LangGraph", "Pydantic", "OpenRouter"],
-    evidenceHref: "https://ricomanifesto.github.io/SentryInsight/reports/",
+    evidenceHref: "https://sentryinsight.ricomanifesto.com/reports/",
     evidenceExternal: true,
     caseStudy: [
       "Threat analysts and incident responders evaluating active exploitation risk.",
@@ -52,7 +52,7 @@ const projects = [
     slug: "grcinsight",
     claim: "GRCInsight turns regulatory and security feeds into framework-mapped reports with evidence manifests and a visible publication history, so reviewers can see what was published, retained, or refused.",
     techStack: ["Go", "Python", "AWS Lambda", "DynamoDB", "FastAPI"],
-    evidenceHref: "https://ricomanifesto.github.io/GRCInsight/publication-history/",
+    evidenceHref: "https://grcinsight.ricomanifesto.com/publication-history/",
     evidenceExternal: true,
     caseStudy: [
       "Security and compliance teams that need regulatory updates translated into reviewable control context.",

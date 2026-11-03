@@ -8,10 +8,10 @@ This is Michael Rico's public portfolio for security, AI, and systems work.
 
 The home page introduces Michael's work and links to four public projects:
 
-- [SentrySearch](https://github.com/ricomanifesto/SentrySearch): source-backed threat research and saved report review.
-- [SentryDigest](https://github.com/ricomanifesto/SentryDigest): scheduled security-news briefings and dated issues.
-- [SentryInsight](https://github.com/ricomanifesto/SentryInsight): exploitation reports with CVE and source evidence.
-- [GRCInsight](https://github.com/ricomanifesto/GRCInsight): GRC reports with framework mapping and publication history.
+- [SentrySearch](https://github.com/ricomanifesto/SentrySearch) ([Live](https://sentrysearch.ricomanifesto.com/)): source-backed threat research and saved report review.
+- [SentryDigest](https://github.com/ricomanifesto/SentryDigest) ([Live](https://sentrydigest.ricomanifesto.com/)): scheduled security-news briefings and dated issues.
+- [SentryInsight](https://github.com/ricomanifesto/SentryInsight) ([Live](https://sentryinsight.ricomanifesto.com/)): exploitation reports with CVE and source evidence.
+- [GRCInsight](https://github.com/ricomanifesto/GRCInsight) ([Live](https://grcinsight.ricomanifesto.com/)): GRC reports with framework mapping and publication history.
 
 Each project has its own page with a plain-language description, stack, repository, live demo, and evidence link. The shared project data lives in `src/content/portfolio.ts`.
 
