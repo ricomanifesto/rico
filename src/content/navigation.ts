@@ -15,7 +15,7 @@ export interface HeaderNavigationBehavior {
   readonly scrollListenerOptions: AddEventListenerOptions;
 }
 
-export type SocialLinkKind = "email" | "github" | "linkedin" | "medium";
+export type SocialLinkKind = "email" | "github" | "linkedin";
 
 export interface SocialLinkBehavior {
   readonly externalTarget: "_blank";
@@ -75,12 +75,6 @@ export const socialLinks: readonly SocialLink[] = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/ricomanifesto",
     kind: "linkedin",
-    external: true,
-  },
-  {
-    label: "Medium",
-    href: "https://medium.com/@ricomanifesto",
-    kind: "medium",
     external: true,
   },
 ];

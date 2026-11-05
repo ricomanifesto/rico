@@ -398,7 +398,7 @@ test("keeps header social links easy to tap on mobile", async ({ page }) => {
   await page.goto("/");
   const socialNav = page.getByRole("navigation", { name: "Social links" });
 
-  for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
+  for (const linkName of ["Email", "GitHub", "LinkedIn"]) {
     const link = socialNav.getByRole("link", { name: linkName, exact: true });
     const box = await link.boundingBox();
 
@@ -415,7 +415,7 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
   const socialNav = page.getByRole("navigation", { name: "Social links" });
   await expect(socialNav).toBeVisible();
   await expect(socialNav.getByRole("list")).toBeVisible();
-  await expect(socialNav.getByRole("listitem")).toHaveCount(4);
+  await expect(socialNav.getByRole("listitem")).toHaveCount(3);
   await expect(socialNav.getByRole("link", { name: "Email" })).toHaveAttribute(
     "href",
     "mailto:michaelrico124@gmail.com",
@@ -428,17 +428,13 @@ test("exposes header social links as semantic navigation", async ({ page }) => {
     "href",
     "https://www.linkedin.com/in/ricomanifesto",
   );
-  await expect(socialNav.getByRole("link", { name: "Medium" })).toHaveAttribute(
-    "href",
-    "https://medium.com/@ricomanifesto",
-  );
 });
 
 test("opens external portfolio links with safe new-tab attributes", async ({ page }) => {
   await page.goto("/");
   const socialNav = page.getByRole("navigation", { name: "Social links" });
 
-  for (const linkName of ["GitHub", "LinkedIn", "Medium"]) {
+  for (const linkName of ["GitHub", "LinkedIn"]) {
     const link = socialNav.getByRole("link", { name: linkName, exact: true });
 
     await expect(link).toHaveAttribute("target", "_blank");
@@ -480,7 +476,7 @@ test("keeps the mobile header inside narrow viewports", async ({ page }) => {
   expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
   const socialNav = page.getByRole("navigation", { name: "Social links" });
 
-  for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
+  for (const linkName of ["Email", "GitHub", "LinkedIn"]) {
     const box = await socialNav.getByRole("link", { name: linkName, exact: true }).boundingBox();
 
     expect(box).not.toBeNull();
@@ -498,7 +494,7 @@ test("keeps the mobile header through tablet widths", async ({ page }) => {
 
   const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
   const socialNav = page.getByRole("navigation", { name: "Social links" });
-  for (const linkName of ["Email", "GitHub", "LinkedIn", "Medium"]) {
+  for (const linkName of ["Email", "GitHub", "LinkedIn"]) {
     const box = await socialNav.getByRole("link", { name: linkName, exact: true }).boundingBox();
 
     expect(box).not.toBeNull();
