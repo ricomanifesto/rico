@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { checkRenderedArtifacts } from "./check-rendered-content.mjs";
 
 const root = process.cwd();
 const dist = process.env.BUILD_OUTPUT_DIR || join(root, "dist");
@@ -670,6 +671,8 @@ if (existsSync(sourceContentPath)) {
     requireFile(join(dist, imagePath.replace(/^\//, "")), `project image ${imagePath}`);
   }
 }
+
+if (failures.length === 0) failures.push(...await checkRenderedArtifacts(dist));
 
 if (failures.length > 0) {
   console.error(failures.join("\n"));
