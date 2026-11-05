@@ -92,22 +92,11 @@ test("shows all project case studies as an editorial desktop sequence", async ({
     await expect(card.locator(".project-card-tech-stack")).toHaveText(
       `Built with ${project.techStack.join(", ")}.`,
     );
+    await expect(card.getByRole("link", { name: "See how it works" })).toHaveCount(0);
+    await expect(card.getByRole("link", { name: "Inspect the evidence" })).toHaveCount(0);
     await expect(
-      card.getByRole("link", { name: `Read ${project.name} case study` }),
-    ).toHaveAttribute("href", `/projects/${project.slug}/`);
-    await expect(
-      card.getByRole("link", { name: `Read ${project.name} case study` }),
-    ).toHaveText("See how it works");
-    const evidenceLink = card.getByRole("link", {
-      name: `Inspect ${project.name} evidence`,
-    });
-    await expect(evidenceLink).toHaveAttribute("href", project.evidenceHref);
-    if (project.evidenceExternal) {
-      await expect(evidenceLink).toHaveAttribute("target", "_blank");
-      await expect(evidenceLink).toHaveAttribute("rel", "noopener noreferrer");
-    } else {
-      await expect(evidenceLink).not.toHaveAttribute("target", "_blank");
-    }
+      card.getByRole("link", { name: `Repository for ${project.title}` }),
+    ).toBeVisible();
   }
 
   const boxes = await cards.evaluateAll((elements) => elements.map((element) => {
@@ -199,8 +188,7 @@ test("keeps every project action tappable and project copy at readable contrast"
         ".project-card-title",
         ".project-card-description",
         ".project-card-tech-stack",
-        ".project-case-study-link",
-        ".project-evidence-link",
+        ".project-action-link",
       ].join(","))).map((element) => ({
         ratio: contrast(getComputedStyle(element).color, background),
         text: element.textContent?.trim(),
@@ -242,7 +230,7 @@ test("keeps meaningful homepage content available before it enters the viewport"
   expect(hiddenContent).toEqual([]);
 });
 
-test("links every project sitemap route from visible project navigation", async ({ page, request }) => {
+test("keeps project sitemap routes out of homepage project cards", async ({ page, request }) => {
   const sitemapResponse = await request.get("/sitemap.xml");
   expect(sitemapResponse.ok()).toBe(true);
   const sitemap = await sitemapResponse.text();
@@ -256,7 +244,7 @@ test("links every project sitemap route from visible project navigation", async 
   );
 
   expect(projectPaths).toHaveLength(5);
-  expect(new Set(homepagePaths)).toEqual(new Set(projectPaths));
+  expect(homepagePaths).toEqual([]);
 });
 
 for (const project of projects) {
@@ -334,9 +322,6 @@ test("keeps project evidence usable without JavaScript", async ({ browser }) => 
   await expect(page.getByRole("region", { name: "Selected work" })).toBeVisible();
   for (const project of projects) {
     await expect(page.getByText(project.claim, { exact: true })).toBeVisible();
-    await expect(page.getByRole("link", {
-      name: `Inspect ${project.name} evidence`,
-    })).toHaveAttribute("href", project.evidenceHref);
   }
 
   await page.goto("http://127.0.0.1:5173/projects/sentrysearch/llm-evaluation/");

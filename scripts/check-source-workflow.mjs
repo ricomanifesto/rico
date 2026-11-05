@@ -101,8 +101,8 @@ if (projectsSection.includes("setInterval") || projectsSection.includes("project
   failures.push("Project collection still owns timer-driven carousel state");
 }
 
-if (!projectsSection.includes('href={`/projects/${project.page.slug}/`}')) {
-  failures.push("Project cards do not derive first-party routes from their canonical slugs");
+if (projectsSection.includes("/projects/") || projectsSection.includes("project.page.evidence")) {
+  failures.push("Project cards still link to case-study or evidence pages");
 }
 
 const nestedCaseStudy = join(root, "src/pages/projects/sentrysearch/llm-evaluation.astro");

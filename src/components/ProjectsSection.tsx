@@ -53,40 +53,18 @@ export default function ProjectsSection() {
                 <p className="project-card-tech-stack">Built with {project.techStack.join(", ")}.</p>
 
                 <div className="project-card-links">
-                  <a
-                    href={`/projects/${project.page.slug}/`}
-                    className="project-case-study-link"
-                    aria-label={`Read ${project.page.name} case study`}
-                  >
-                    See how it works
-                  </a>
-
-                  <div className="project-external-actions" aria-label={`${project.page.name} links`}>
+                  <ProjectActionLink
+                    kind="repository"
+                    link={project.links.repository}
+                    projectTitle={project.title}
+                  />
+                  {project.links.demo && (
                     <ProjectActionLink
-                      kind="repository"
-                      link={project.links.repository}
+                      kind="demo"
+                      link={project.links.demo}
                       projectTitle={project.title}
                     />
-                    {project.links.demo && (
-                      <ProjectActionLink
-                        kind="demo"
-                        link={project.links.demo}
-                        projectTitle={project.title}
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div className="project-evidence-links">
-                  <a
-                    href={project.page.evidence.href}
-                    target={project.page.evidence.external ? projectActionLinkBehavior.externalTarget : undefined}
-                    rel={project.page.evidence.external ? projectActionLinkBehavior.externalRel : undefined}
-                    aria-label={`Inspect ${project.page.name} evidence`}
-                    className="project-evidence-link"
-                  >
-                    Inspect the evidence
-                  </a>
+                  )}
                 </div>
               </div>
             </article>

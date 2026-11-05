@@ -395,10 +395,10 @@ if (existsSync(indexPath)) {
 
   const indexVisibleText = visibleText(index);
 
-  for (const { slug, name, claim, techStack, evidence } of projectPages) {
-    if (!index.includes(`aria-label="Inspect ${name} evidence"`)
-      || !index.includes(`href="${evidence}"`)) {
-      failures.push(`Built index is missing ${slug} evidence link`);
+  for (const { slug, name, claim, techStack } of projectPages) {
+    if (index.includes(`aria-label="Inspect ${name} evidence"`)
+      || index.includes(`aria-label="Read ${name} case study"`)) {
+      failures.push(`Built index still shows ${slug} case-study or evidence links`);
     }
     if (!index.includes(claim)) {
       failures.push(`Built index is missing current ${slug} claim`);

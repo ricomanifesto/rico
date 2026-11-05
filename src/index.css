@@ -131,7 +131,6 @@
 }
 
 .hero-links a,
-.project-case-study-link,
 .project-action-link,
 .project-evidence-link,
 .writing-view-all-link,
@@ -151,7 +150,6 @@
 }
 
 .hero-links a:hover,
-.project-case-study-link:hover,
 .project-action-link:hover,
 .project-evidence-link:hover,
 .writing-view-all-link:hover,
@@ -165,7 +163,6 @@
 }
 
 .hero-links a:focus-visible,
-.project-case-study-link:focus-visible,
 .project-action-link:focus-visible,
 .project-evidence-link:focus-visible,
 .writing-view-all-link:focus-visible,
@@ -398,31 +395,15 @@
   line-height: 1.6;
 }
 
-.project-card-links,
-.project-external-actions,
-.project-evidence-links {
+.project-card-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.15rem 1.2rem;
-}
-
-.project-card-links {
   margin-top: 1.35rem;
 }
 
-.project-evidence-links {
-  margin-top: 0.1rem;
-}
-
-.project-case-study-link,
-.project-action-link,
-.project-evidence-link {
+.project-action-link {
   font-size: 0.9375rem;
-}
-
-.project-case-study-link {
-  color: var(--portfolio-accent-strong);
-  font-weight: 700;
 }
 
 .writing-preview-section {
@@ -918,6 +899,7 @@
 
 .project-detail-evidence .project-evidence-link {
   margin-top: 0.65rem;
+  font-size: 0.9375rem;
 }
 
 .project-detail-back {

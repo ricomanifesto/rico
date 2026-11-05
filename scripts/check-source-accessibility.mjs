@@ -74,8 +74,6 @@ for (const required of [
 for (const required of [
   "<article",
   'data-testid="project-collection"',
-  'aria-label={`Read ${project.page.name} case study`}',
-  'aria-label={`Inspect ${project.page.name} evidence`}',
   'aria-label={`${label} for ${projectTitle}`}',
   'alt=""',
   'aria-hidden="true"',
@@ -85,10 +83,8 @@ for (const required of [
   }
 }
 
-for (const content of [projects, projectPage]) {
-  if (!content.includes('aria-label={`Inspect ${project.page.name} evidence`}')) {
-    failures.push("Project evidence links do not have project-specific accessible names");
-  }
+if (!projectPage.includes('aria-label={`Inspect ${project.page.name} evidence`}')) {
+  failures.push("Project evidence links do not have project-specific accessible names");
 }
 
 if (!indexCss.includes("@media (prefers-reduced-motion: reduce)")) {

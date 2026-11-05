@@ -579,7 +579,9 @@ test("renders visible focus for keyboard navigation controls", async ({ page }) 
 
   await page.getByRole("link", { name: "Projects" }).click();
   await page.keyboard.press("Tab");
-  const firstProjectLink = page.getByRole("link", { name: "Read SentrySearch case study" });
+  const firstProjectLink = page.getByRole("link", {
+    name: "Repository for Threat Intelligence Research Workspace",
+  });
   await firstProjectLink.focus();
   await expect(firstProjectLink).toBeFocused();
   await expect(firstProjectLink).toHaveCSS("outline-style", "solid");
