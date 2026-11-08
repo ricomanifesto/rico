@@ -1,6 +1,8 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
+import { findExcludedMarkers } from "./public-content-markers.mjs";
+
 const root = process.cwd();
 const dist = process.env.BUILD_OUTPUT_DIR || join(root, "dist");
 const indexPath = join(dist, "index.html");
@@ -231,6 +233,10 @@ for (const artifactPath of walkFiles(dist).filter(isTextArtifact)) {
     if (artifact.includes(removedMarker)) {
       failures.push(`Public artifact ${relativePath} references removed writing post: ${removedMarker}`);
     }
+  }
+
+  for (const label of findExcludedMarkers(artifact)) {
+    failures.push(`Public artifact ${relativePath} contains an excluded ${label}`);
   }
 }
 

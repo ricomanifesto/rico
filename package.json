@@ -21,7 +21,8 @@
     "workflow": "node scripts/check-source-workflow.mjs",
     "browser": "node scripts/clean-test-artifacts.mjs && playwright install chromium && playwright test",
     "smoke": "node scripts/check-build-output.mjs",
-    "check": "npm run lint && npm run typecheck && npm run a11y && npm run images && npm run nav && npm run workflow && npm run browser && npm run build && npm run smoke",
+    "markers": "node --test tests/unit/public-content-markers.test.mjs",
+    "check": "npm run markers && npm run lint && npm run typecheck && npm run a11y && npm run images && npm run nav && npm run workflow && npm run browser && npm run build && npm run smoke",
     "preview": "astro preview"
   },
   "dependencies": {
