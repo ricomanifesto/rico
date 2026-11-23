@@ -7,7 +7,10 @@ export default function Footer() {
         <p className="footer-copy">
           © <time dateTime={String(currentYear)}>{currentYear}</time> Rico Manifesto. All rights reserved.
         </p>
-        <a className="footer-privacy-link" href="/privacy/">Privacy</a>
+        <div className="footer-links">
+          <a className="footer-privacy-link" href="https://newsletter.ricomanifesto.com/">Newsletter</a>
+          <a className="footer-privacy-link" href="/privacy/">Privacy</a>
+        </div>
       </div>
     </footer>
   );

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Sending Out My Security Notes</title>
+  <desc id="description">Calm editorial header card for Sending Out My Security Notes on Rico Manifesto.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#8db7df" stroke-opacity=".045" />
+    </pattern>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#181e26" />
+      <stop offset="1" stop-color="#141920" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#11151b" />
+  <rect width="1200" height="630" fill="url(#grid)" />
+  <rect x="48" y="48" width="1104" height="534" rx="24" fill="url(#panel)" stroke="#303741" stroke-width="2" />
+
+  <g transform="translate(86 82)">
+    <g transform="scale(.92)">
+      <rect width="64" height="64" rx="14" fill="#11151b" stroke="#303741" stroke-width="1.5" />
+      <g data-mark="editorial-r-period">
+        <path fill="#f1eee7" fill-rule="evenodd" d="M10 11H31C41 11 47 17 47 27C47 34 43 39 36 41L47 52H37L29 42H22V47H28V53H10V47H15V17H10ZM22 17V36H30C37 36 40 33 40 27C40 20 37 17 30 17Z" />
+        <circle cx="53" cy="49" r="3.5" fill="#8db7df" />
+      </g>
+    </g>
+    <text x="84" y="38" fill="#8db7df" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="700" letter-spacing="3">RICO MANIFESTO / WRITING</text>
+  </g>
+
+  <text x="86" y="243" fill="#f1eee7" font-family="Georgia, Times New Roman, serif" font-size="68" font-weight="700">Sending Out My</text>
+  <text x="86" y="323" fill="#f1eee7" font-family="Georgia, Times New Roman, serif" font-size="68" font-weight="700">Security Notes</text>
+  <text x="90" y="376" fill="#bac2cc" font-family="Helvetica, Arial, sans-serif" font-size="27">Security &amp; GRC Notes: primary sources</text>
+  <text x="90" y="411" fill="#bac2cc" font-family="Helvetica, Arial, sans-serif" font-size="27">and hand-reviewed reading notes by email.</text>
+
+  <g transform="translate(824 166)">
+    <rect width="270" height="242" rx="18" fill="#11151b" stroke="#303741" stroke-width="1.5" />
+    <circle cx="28" cy="27" r="4.5" fill="#8db7df" opacity=".4" />
+    <circle cx="44" cy="27" r="4.5" fill="#8db7df" opacity=".62" />
+    <circle cx="60" cy="27" r="4.5" fill="#f1eee7" opacity=".78" />
+    <rect x="28" y="48" width="214" height="134" rx="10" fill="#181e26" stroke="#303741" stroke-width="1.25" />
+    <rect x="46" y="66" width="76" height="6" rx="3" fill="#8db7df" />
+    <circle cx="50" cy="96" r="3.5" fill="#8db7df" />
+    <rect x="64" y="93" width="144" height="5" rx="2.5" fill="#f1eee7" opacity=".88" />
+    <rect x="64" y="103" width="102" height="4" rx="2" fill="#8f99a6" opacity=".68" />
+    <circle cx="50" cy="126" r="3.5" fill="#8db7df" />
+    <rect x="64" y="123" width="132" height="5" rx="2.5" fill="#f1eee7" opacity=".88" />
+    <rect x="64" y="133" width="114" height="4" rx="2" fill="#8f99a6" opacity=".68" />
+    <circle cx="50" cy="156" r="3.5" fill="#8db7df" />
+    <rect x="64" y="153" width="150" height="5" rx="2.5" fill="#f1eee7" opacity=".88" />
+    <rect x="64" y="163" width="90" height="4" rx="2" fill="#8f99a6" opacity=".68" />
+    <text x="28" y="213" fill="#bac2cc" font-family="Menlo, Consolas, monospace" font-size="13.5" letter-spacing="1.4">SOURCES · HAND REVIEW</text>
+  </g>
+
+  <line x1="86" y1="452" x2="1114" y2="452" stroke="#303741" />
+  <text x="86" y="510" fill="#8db7df" font-family="Menlo, Consolas, monospace" font-size="21" font-weight="700">CYBERSECURITY  ·  THREAT INTELLIGENCE  ·  NEWSLETTER</text>
+  <text x="86" y="548" fill="#bac2cc" font-family="Helvetica, Arial, sans-serif" font-size="22">Michael Rico  ·  Field note</text>
+</svg>

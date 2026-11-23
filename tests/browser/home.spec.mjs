@@ -598,7 +598,7 @@ test("moves focus to main content when the skip link is activated", async ({ pag
   await expect(page.locator("main#main-content")).toBeFocused();
 });
 
-test("links the homepage to the remaining first-party article", async ({ page }) => {
+test("links the homepage to both first-party articles", async ({ page }) => {
   await page.goto("/");
 
   const writingSection = page.getByRole("region", { name: "Writing" });
@@ -609,18 +609,33 @@ test("links the homepage to the remaining first-party article", async ({ page })
   await expect(
     writingSection.getByRole("link", { name: "Read I Thought I Was Reading a Repo" }),
   ).toHaveAttribute("href", "/writing/i-thought-i-was-reading-a-repo/");
+  await expect(
+    writingSection.getByRole("heading", { level: 3, name: "Sending Out My Security Notes" }),
+  ).toBeVisible();
+  await expect(
+    writingSection.getByRole("link", { name: "Read Sending Out My Security Notes" }),
+  ).toHaveAttribute("href", "/writing/sending-out-my-security-notes/");
 
   const structuredData = JSON.parse(
     await page.locator('script[type="application/ld+json"]').textContent(),
   );
-  const blogPosting = structuredData["@graph"].find(
+  const firstBlogPosting = structuredData["@graph"].find(
     (entry) => entry["@id"] === "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/#article",
   );
-  expect(blogPosting).toMatchObject({
+  expect(firstBlogPosting).toMatchObject({
     url: "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",
     headline: "I Thought I Was Reading a Repo",
     image: "https://ricomanifesto.com/images/writing/i-thought-i-was-reading-a-repo.png",
     datePublished: "2026-08-11",
+  });
+  const newsletterBlogPosting = structuredData["@graph"].find(
+    (entry) => entry["@id"] === "https://ricomanifesto.com/writing/sending-out-my-security-notes/#article",
+  );
+  expect(newsletterBlogPosting).toMatchObject({
+    url: "https://ricomanifesto.com/writing/sending-out-my-security-notes/",
+    headline: "Sending Out My Security Notes",
+    image: "https://ricomanifesto.com/images/writing/sending-out-my-security-notes.png",
+    datePublished: "2026-11-30",
   });
 });
 
@@ -634,6 +649,16 @@ test("serves the writing archive as crawlable HTML", async ({ page }) => {
     "https://ricomanifesto.com/writing/",
   );
   await expect(page.getByRole("link", { name: "Subscribe via RSS" })).toHaveAttribute("href", "/rss.xml");
+  await expect(page.getByRole("link", { name: "Subscribe by email" })).toHaveAttribute(
+    "href",
+    "https://newsletter.ricomanifesto.com/",
+  );
+  await expect(
+    page.getByRole("link", { name: "Read Sending Out My Security Notes" }),
+  ).toHaveAttribute("href", "/writing/sending-out-my-security-notes/");
+  await expect(
+    page.getByRole("link", { name: "Read I Thought I Was Reading a Repo" }),
+  ).toHaveAttribute("href", "/writing/i-thought-i-was-reading-a-repo/");
 
   const desktopNav = page.getByRole("navigation", { name: "Primary" });
   await expect(desktopNav.getByRole("link", { name: "Writing" })).toHaveAttribute(
@@ -648,6 +673,11 @@ test("exposes the Writing hierarchy as visible and structured breadcrumbs", asyn
     {
       href: "/writing/i-thought-i-was-reading-a-repo/",
       currentName: "I Thought I Was Reading a Repo",
+      expectedItems: 3,
+    },
+    {
+      href: "/writing/sending-out-my-security-notes/",
+      currentName: "Sending Out My Security Notes",
       expectedItems: 3,
     },
   ]) {
@@ -671,6 +701,7 @@ test("renders Writing routes without client hydration", async ({ page }) => {
   for (const href of [
     "/writing/",
     "/writing/i-thought-i-was-reading-a-repo/",
+    "/writing/sending-out-my-security-notes/",
   ]) {
     const response = await page.goto(href);
 
@@ -688,6 +719,10 @@ test("keeps Writing content below the tablet header", async ({ page }) => {
     { href: "/writing/", selector: ".writing-eyebrow" },
     {
       href: "/writing/i-thought-i-was-reading-a-repo/",
+      selector: ".writing-article",
+    },
+    {
+      href: "/writing/sending-out-my-security-notes/",
       selector: ".writing-article",
     },
   ]) {
@@ -779,7 +814,140 @@ test("does not publish the removed writing article or its assets", async ({ requ
   }
 });
 
-test("publishes only the remaining article in the writing RSS feed", async ({ request }) => {
+test("serves the newsletter announcement article with metadata and subscribe link", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const response = await page.goto("/writing/sending-out-my-security-notes/");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.locator("astro-island")).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 1, name: "Sending Out My Security Notes" })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/sending-out-my-security-notes/",
+  );
+  await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "article");
+  await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute(
+    "content",
+    "2026-11-30",
+  );
+  await expect(page.locator('meta[property="article:author"]')).toHaveAttribute(
+    "content",
+    "https://ricomanifesto.com/",
+  );
+  await expect(page.locator('meta[property="article:tag"]')).toHaveCount(3);
+  expect(await page.locator('meta[property="article:tag"]').evaluateAll(
+    (elements) => elements.map((element) => element.getAttribute("content")),
+  )).toEqual([
+    "Cybersecurity",
+    "Threat intelligence",
+    "Newsletter",
+  ]);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    "https://ricomanifesto.com/images/writing/sending-out-my-security-notes.png",
+  );
+  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
+    "content",
+    "Calm editorial header card for Sending Out My Security Notes on Rico Manifesto.",
+  );
+  const structuredData = JSON.parse(
+    await page.locator('script[type="application/ld+json"]').textContent(),
+  );
+  const blogPosting = structuredData["@graph"].find((entry) => entry["@type"] === "BlogPosting");
+  expect(blogPosting.image).toBe(
+    "https://ricomanifesto.com/images/writing/sending-out-my-security-notes.png",
+  );
+  await expect(page.getByRole("link", { name: "Michael Rico", exact: true })).toHaveAttribute("href", "/");
+  await expect(page.getByRole("link", { name: "Michael Rico", exact: true })).toHaveAttribute("rel", "author");
+  await expect(page.getByRole("link", { name: "newsletter.ricomanifesto.com" })).toHaveAttribute(
+    "href",
+    "https://newsletter.ricomanifesto.com/",
+  );
+
+  const viewportMetrics = await page.evaluate(() => ({
+    clientWidth: document.documentElement.clientWidth,
+    scrollWidth: document.documentElement.scrollWidth,
+  }));
+  expect(viewportMetrics.scrollWidth).toBe(viewportMetrics.clientWidth);
+});
+
+test("keeps newsletter entry points accessible across writing, footer, and privacy pages", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  const measureContrast = async (locator) => locator.evaluate((element) => {
+    const parseRgb = (color) => {
+      const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+      if (!match) {
+        return null;
+      }
+      return {
+        r: Number(match[1]),
+        g: Number(match[2]),
+        b: Number(match[3]),
+        a: match[4] === undefined ? 1 : Number(match[4]),
+      };
+    };
+    const channelLuminance = (value) => {
+      const srgb = value / 255;
+      return srgb <= 0.03928 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+    };
+    const relativeLuminance = ({ r, g, b }) => (
+      0.2126 * channelLuminance(r)
+      + 0.7152 * channelLuminance(g)
+      + 0.0722 * channelLuminance(b)
+    );
+
+    const foreground = parseRgb(getComputedStyle(element).color);
+    let background = null;
+    let current = element;
+    while (current) {
+      const candidate = parseRgb(getComputedStyle(current).backgroundColor);
+      if (candidate && candidate.a > 0) {
+        background = candidate;
+        break;
+      }
+      current = current.parentElement;
+    }
+
+    const fgLum = relativeLuminance(foreground);
+    const bgLum = relativeLuminance(background);
+    return (Math.max(fgLum, bgLum) + 0.05) / (Math.min(fgLum, bgLum) + 0.05);
+  });
+
+  await page.goto("/writing/");
+  const emailLink = page.getByRole("link", { name: "Subscribe by email" });
+  const rssLink = page.getByRole("link", { name: "Subscribe via RSS" });
+  const footer = page.getByRole("contentinfo");
+  const footerNewsletter = footer.getByRole("link", { name: "Newsletter" });
+  const footerPrivacy = footer.getByRole("link", { name: "Privacy" });
+
+  await expect(emailLink).toHaveAttribute("href", "https://newsletter.ricomanifesto.com/");
+  await expect(footerNewsletter).toHaveAttribute("href", "https://newsletter.ricomanifesto.com/");
+  await expect(footerPrivacy).toHaveAttribute("href", "/privacy/");
+
+  for (const link of [rssLink, emailLink, footerNewsletter, footerPrivacy]) {
+    const box = await link.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box.width).toBeGreaterThanOrEqual(44);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(await measureContrast(link)).toBeGreaterThanOrEqual(4.5);
+  }
+
+  const writingOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(writingOverflow).toBeLessThanOrEqual(1);
+
+  await page.goto("/privacy/");
+  await expect(page.locator("astro-island")).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 2, name: "Newsletter" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "newsletter privacy notice" })).toHaveAttribute(
+    "href",
+    "https://newsletter.ricomanifesto.com/privacy/",
+  );
+});
+
+test("publishes both articles in the writing RSS feed", async ({ request }) => {
   const response = await request.get("/rss.xml");
 
   expect(response.status()).toBe(200);
@@ -788,6 +956,8 @@ test("publishes only the remaining article in the writing RSS feed", async ({ re
   expect(body).toMatch(/<\?xml-stylesheet (?=[^?]*href="\/rss\.xsl")(?=[^?]*type="text\/xsl")[^?]*\?>/);
   expect(body).toContain("I Thought I Was Reading a Repo");
   expect(body).toContain("https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/");
+  expect(body).toContain("Sending Out My Security Notes");
+  expect(body).toContain("https://ricomanifesto.com/writing/sending-out-my-security-notes/");
   expect(body).not.toContain("The Deploy Wasn’t the Proof");
   expect(body).not.toContain("https://ricomanifesto.com/writing/the-deploy-wasnt-the-proof/");
 
@@ -816,8 +986,9 @@ test("publishes content-backed modification dates for Writing routes", async ({ 
   expect(response.headers()["content-type"]).toContain("xml");
   const body = await response.text();
   for (const [url, lastModified] of [
-    ["https://ricomanifesto.com/writing/", "2026-08-11"],
+    ["https://ricomanifesto.com/writing/", "2026-11-30"],
     ["https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/", "2026-08-11"],
+    ["https://ricomanifesto.com/writing/sending-out-my-security-notes/", "2026-11-30"],
   ]) {
     const entry = Array.from(body.matchAll(/<url>[\s\S]*?<\/url>/g), ([match]) => match)
       .find((candidate) => candidate.includes(`<loc>${url}</loc>`));
@@ -831,9 +1002,14 @@ test("renders the RSS feed as an understandable subscription page", async ({ pag
 
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1, name: "Subscribe to Rico Manifesto Writing" })).toBeVisible();
+  await expect(page.getByText("30 Nov 2026", { exact: true })).toBeVisible();
   await expect(page.getByText("11 Aug 2026", { exact: true })).toBeVisible();
   await expect(page.getByText("13 Aug 2026", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "The Deploy Wasn’t the Proof" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Sending Out My Security Notes" })).toHaveAttribute(
+    "href",
+    "https://ricomanifesto.com/writing/sending-out-my-security-notes/",
+  );
   await expect(page.getByRole("link", { name: "I Thought I Was Reading a Repo" })).toHaveAttribute(
     "href",
     "https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/",

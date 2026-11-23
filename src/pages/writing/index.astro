@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { ArrowRight, Rss } from "lucide-react";
+import { ArrowRight, Mail, Rss } from "lucide-react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipLink from "@/components/SkipLink";
@@ -57,10 +57,16 @@ const structuredData = {
         <p>
           Notes on security systems, AI agents, and the evidence that makes complex behavior easier to inspect and reason from.
         </p>
-        <a href="/rss.xml" class="writing-rss-link">
-          <Rss aria-hidden="true" focusable="false" size={17} />
-          Subscribe via RSS
-        </a>
+        <div class="writing-subscribe-links">
+          <a href="/rss.xml" class="writing-rss-link">
+            <Rss aria-hidden="true" focusable="false" size={17} />
+            Subscribe via RSS
+          </a>
+          <a href="https://newsletter.ricomanifesto.com/" class="writing-rss-link">
+            <Mail aria-hidden="true" focusable="false" size={17} />
+            Subscribe by email
+          </a>
+        </div>
       </header>
 
       <section aria-labelledby="writing-archive-heading" class="writing-archive">

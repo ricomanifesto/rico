@@ -17,6 +17,22 @@ const firstWritingPost = {
   imagePath: "/images/writing/i-thought-i-was-reading-a-repo.png",
   imageAlt: "Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.",
 };
+const newsletterWritingPost = {
+  path: join("writing", "sending-out-my-security-notes", "index.html"),
+  url: `${siteUrl}/writing/sending-out-my-security-notes/`,
+  title: "Sending Out My Security Notes",
+  description: "I turned my security and GRC reading notes into Security & GRC Notes, a small, free email newsletter reviewed by hand against primary sources.",
+  publishedAt: "2026-11-30",
+  imagePath: "/images/writing/sending-out-my-security-notes.png",
+  imageAlt: "Calm editorial header card for Sending Out My Security Notes on Rico Manifesto.",
+  newsletterUrl: "https://newsletter.ricomanifesto.com/",
+  newsletterPrivacyUrl: "https://newsletter.ricomanifesto.com/privacy/",
+};
+const forbiddenPublicHostMarkers = [
+  "pages.dev",
+  "workers.dev",
+  "newsletter-preview",
+];
 const removedWritingPost = {
   path: join("writing", "the-deploy-wasnt-the-proof", "index.html"),
   url: `${siteUrl}/writing/the-deploy-wasnt-the-proof/`,
@@ -186,6 +202,11 @@ requireFile(join(dist, "privacy", "index.html"), "privacy page");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
 requireFile(join(dist, firstWritingPost.path), "first writing article");
 requireFile(join(dist, firstWritingPost.imagePath.replace(/^\//, "")), "first writing social image");
+requireFile(join(dist, newsletterWritingPost.path), "newsletter announcement writing article");
+requireFile(
+  join(dist, newsletterWritingPost.imagePath.replace(/^\//, "")),
+  "newsletter announcement social image",
+);
 
 for (const removedArtifactPath of [
   removedWritingPost.path,
@@ -236,6 +257,13 @@ for (const artifactPath of walkFiles(dist).filter(isTextArtifact)) {
   for (const beaconMarker of ["/analytics.js", "cloudflareinsights.com", "data-cf-beacon"]) {
     if (artifact.includes(beaconMarker)) {
       failures.push(`Public artifact ${relativePath} contains the removed analytics beacon: ${beaconMarker}`);
+    }
+  }
+
+  const lowerArtifact = artifact.toLowerCase();
+  for (const forbiddenHost of forbiddenPublicHostMarkers) {
+    if (lowerArtifact.includes(forbiddenHost)) {
+      failures.push(`Public artifact ${relativePath} contains forbidden host marker: ${forbiddenHost}`);
     }
   }
 }
@@ -399,6 +427,15 @@ if (existsSync(indexPath)) {
     || JSON.stringify(aboutTechnologyLists[0]) !== JSON.stringify(aboutTechnologies)) {
     failures.push("Built index About technologies do not match the current public stack contract");
   }
+
+  for (const [label, expected] of [
+    ["footer newsletter link", `href="${newsletterWritingPost.newsletterUrl}"`],
+    ["footer newsletter label", ">Newsletter</a>"],
+  ]) {
+    if (!index.includes(expected)) {
+      failures.push(`Built index is missing ${label}`);
+    }
+  }
 }
 
 const robotsPath = join(dist, "robots.txt");
@@ -420,6 +457,7 @@ if (existsSync(sitemapPath)) {
     `${siteUrl}/privacy/`,
     `${siteUrl}/writing/`,
     firstWritingPost.url,
+    newsletterWritingPost.url,
     ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
     sentrySearchCaseStudy.url,
   ];
@@ -427,6 +465,22 @@ if (existsSync(sitemapPath)) {
   for (const expectedUrl of expectedUrls) {
     if (!sitemap.includes(`<loc>${expectedUrl}</loc>`)) {
       failures.push(`Sitemap is missing URL: ${expectedUrl}`);
+    }
+  }
+}
+
+const privacyPath = join(dist, "privacy", "index.html");
+if (existsSync(privacyPath)) {
+  const privacyPage = readFileSync(privacyPath, "utf8");
+
+  for (const [label, expected] of [
+    ["Newsletter heading", "<h2>Newsletter</h2>"],
+    ["newsletter subscribe link", `href="${newsletterWritingPost.newsletterUrl}"`],
+    ["newsletter privacy link", `href="${newsletterWritingPost.newsletterPrivacyUrl}"`],
+    ["footer newsletter link", ">Newsletter</a>"],
+  ]) {
+    if (!privacyPage.includes(expected)) {
+      failures.push(`Privacy page is missing ${label}`);
     }
   }
 }
@@ -440,7 +494,11 @@ if (existsSync(writingArchivePath)) {
     ["heading", "<h1>Writing</h1>"],
     ["canonical URL", `<link rel="canonical" href="${siteUrl}/writing/">`],
     ["article link", `href="/writing/i-thought-i-was-reading-a-repo/"`],
+    ["newsletter article link", 'href="/writing/sending-out-my-security-notes/"'],
     ["RSS link", 'href="/rss.xml"'],
+    ["email subscribe link", `href="${newsletterWritingPost.newsletterUrl}"`],
+    ["Subscribe by email label", "Subscribe by email"],
+    ["footer newsletter label", ">Newsletter</a>"],
   ]) {
     if (!writingArchive.includes(expected)) {
       failures.push(`Writing archive is missing ${label}`);
@@ -472,6 +530,31 @@ if (existsSync(firstWritingPostPath)) {
   }
 }
 
+const newsletterWritingPostPath = join(dist, newsletterWritingPost.path);
+if (existsSync(newsletterWritingPostPath)) {
+  const article = readFileSync(newsletterWritingPostPath, "utf8");
+
+  for (const [label, expected] of [
+    ["title", `<title>${newsletterWritingPost.title} | Michael Rico</title>`],
+    ["heading", `<h1>${newsletterWritingPost.title}</h1>`],
+    ["description", newsletterWritingPost.description],
+    ["canonical URL", `<link rel="canonical" href="${newsletterWritingPost.url}">`],
+    ["article metadata", '<meta property="og:type" content="article">'],
+    ["publication date", `<meta property="article:published_time" content="${newsletterWritingPost.publishedAt}">`],
+    ["social image", `<meta property="og:image" content="${siteUrl}${newsletterWritingPost.imagePath}">`],
+    ["social image alt", `<meta property="og:image:alt" content="${newsletterWritingPost.imageAlt}">`],
+    ["BlogPosting image", `"image":"${siteUrl}${newsletterWritingPost.imagePath}"`],
+    ["BlogPosting structured data", '"@type":"BlogPosting"'],
+    ["newsletter subscribe link", `href="${newsletterWritingPost.newsletterUrl}"`],
+    ["SentryInsight source link", 'href="https://sentryinsight.ricomanifesto.com/"'],
+    ["GRCInsight source link", 'href="https://grcinsight.ricomanifesto.com/"'],
+  ]) {
+    if (!article.includes(expected)) {
+      failures.push(`Newsletter announcement article is missing ${label}`);
+    }
+  }
+}
+
 const rssPath = join(dist, "rss.xml");
 if (existsSync(rssPath)) {
   const rssFeed = readFileSync(rssPath, "utf8");
@@ -481,6 +564,8 @@ if (existsSync(rssPath)) {
     'href="/rss.xsl"',
     firstWritingPost.title,
     firstWritingPost.url,
+    newsletterWritingPost.title,
+    newsletterWritingPost.url,
     "<rss",
   ]) {
     if (!rssFeed.includes(expected)) {

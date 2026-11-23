@@ -61,6 +61,22 @@ if (/\bstroke=|M11 13C|noise-to-signal/i.test(faviconSource)) {
   failures.push("favicon excludes the retired network-node geometry");
 }
 
+const newsletterSocialCardPath = path.join(root, "public/brand/writing/sending-out-my-security-notes.svg");
+if (fs.existsSync(newsletterSocialCardPath)) {
+  const newsletterSocialCardSource = fs.readFileSync(newsletterSocialCardPath, "utf8");
+  if (!/data-mark="editorial-r-period"/.test(newsletterSocialCardSource)) {
+    failures.push("sending-out-my-security-notes.svg uses the editorial R period identity");
+  }
+  for (const color of ["#11151b", "#f1eee7", "#8db7df"]) {
+    if (!newsletterSocialCardSource.includes(color)) {
+      failures.push(`sending-out-my-security-notes.svg includes the ${color} editorial palette token`);
+    }
+  }
+  if (/#0a192f|#66b2ff/i.test(newsletterSocialCardSource)) {
+    failures.push("sending-out-my-security-notes.svg excludes the retired navy and electric-blue palette");
+  }
+}
+
 const requiredBrandFiles = [
   "favicon.svg",
   "favicon.ico",
@@ -68,6 +84,7 @@ const requiredBrandFiles = [
   "site.webmanifest",
   "brand/social-card.svg",
   "brand/writing/i-thought-i-was-reading-a-repo.svg",
+  "brand/writing/sending-out-my-security-notes.svg",
 ];
 
 const requiredBrandImages = [
@@ -77,6 +94,7 @@ const requiredBrandImages = [
   { src: "icons/icon-512-maskable.png", width: 512, height: 512 },
   { src: "images/social-card.png", width: 1200, height: 630 },
   { src: "images/writing/i-thought-i-was-reading-a-repo.png", width: 1200, height: 630 },
+  { src: "images/writing/sending-out-my-security-notes.png", width: 1200, height: 630 },
   { src: "images/profile-384.webp", width: 384, height: 833 },
 ];
 
@@ -96,6 +114,7 @@ const rasterAssetBudgets = [
   { src: "icons/icon-512-maskable.png", type: "png", maxBytes: 50 * 1024, maxBitDepth: 8 },
   { src: "images/social-card.png", type: "png", maxBytes: 100 * 1024, maxBitDepth: 8 },
   { src: "images/writing/i-thought-i-was-reading-a-repo.png", type: "png", maxBytes: 200 * 1024, maxBitDepth: 8 },
+  { src: "images/writing/sending-out-my-security-notes.png", type: "png", maxBytes: 200 * 1024, maxBitDepth: 8 },
   ...projectScreenshotAssets.map(({ src, maxBytes }) => ({ src, type: "jpg", maxBytes })),
 ];
 
