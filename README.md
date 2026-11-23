@@ -52,6 +52,6 @@ npm run preview
 
 ## Deployment
 
-GitHub Actions runs the full check for pull requests and pushes to `main`. A successful `main` build uploads `dist/` to GitHub Pages.
+GitHub Actions runs the full check for same-repository pull requests, pushes to `main`, and manual runs on `main`. Fork pull requests receive the separate workflow syntax check. Only a successful push or manual run on `main` uploads `dist/` and deploys the GitHub Pages rollback.
 
-The public domain is served by Cloudflare. GitHub Pages remains a separately deployed rollback, and `public/CNAME` preserves its custom-domain configuration.
+The public domain is served by Vercel, with Cloudflare providing authoritative DNS. GitHub Pages remains a separately deployed rollback, and `public/CNAME` preserves its custom-domain configuration.

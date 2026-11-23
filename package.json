@@ -22,7 +22,8 @@
     "browser": "node scripts/clean-test-artifacts.mjs && playwright install chromium && playwright test",
     "smoke": "node scripts/check-build-output.mjs",
     "markers": "node --test tests/unit/public-content-markers.test.mjs",
-    "check": "npm run markers && npm run lint && npm run typecheck && npm run a11y && npm run images && npm run nav && npm run workflow && npm run browser && npm run build && npm run smoke",
+    "content": "node --test tests/unit/content-rendering.test.mjs",
+    "check": "npm run markers && npm run content && npm run lint && npm run typecheck && npm run a11y && npm run images && npm run nav && npm run workflow && npm run browser && npm run build && npm run smoke",
     "preview": "astro preview"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-satteri": "0.3.5",
     "@astrojs/react": "^6.0.2",
     "@astrojs/rss": "^4.0.19",
     "@playwright/test": "^1.61.0",

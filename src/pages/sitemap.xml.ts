@@ -9,6 +9,18 @@ const staticPaths = [
   ...projects.map((project) => `/projects/${project.page.slug}/`),
 ];
 
+function sitemapLocation(path: string): string {
+  const url = new URL("https://ricomanifesto.com");
+  url.pathname = path;
+  return url.href.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&apos;",
+  })[character]!);
+}
+
 export async function GET() {
   const posts = (await getCollection("writing", ({ data }) => !data.draft))
     .sort((left, right) => right.data.publishedAt.valueOf() - left.data.publishedAt.valueOf());
@@ -30,7 +42,7 @@ export async function GET() {
   const urls = entries
     .map(({ path, lastModified }) => [
       "  <url>",
-      `    <loc>https://ricomanifesto.com${path}</loc>`,
+      `    <loc>${sitemapLocation(path)}</loc>`,
       ...(lastModified ? [`    <lastmod>${lastModified.toISOString().slice(0, 10)}</lastmod>`] : []),
       "  </url>",
     ].join("\n"))

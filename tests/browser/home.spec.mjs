@@ -798,10 +798,22 @@ test("publishes only the remaining article in the writing RSS feed", async ({ re
   expect(stylesheet).toContain('select="rss/channel/title"');
 });
 
+for (const width of [1280, 390]) {
+  test(`serves the privacy page without an analytics beacon at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/privacy/");
+    await expect(page.getByRole("heading", { level: 1, name: "Privacy" })).toBeVisible();
+    await expect(page.getByText("This site does not load a visitor analytics beacon.", { exact: true })).toBeVisible();
+    await expect(page.locator('script[src="/analytics.js"], script[src*="cloudflareinsights.com"], script[data-cf-beacon]')).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  });
+}
+
 test("publishes content-backed modification dates for Writing routes", async ({ request }) => {
   const response = await request.get("/sitemap.xml");
 
   expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("xml");
   const body = await response.text();
   for (const [url, lastModified] of [
     ["https://ricomanifesto.com/writing/", "2026-08-11"],

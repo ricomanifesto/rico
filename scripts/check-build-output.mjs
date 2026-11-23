@@ -9,11 +9,6 @@ const indexPath = join(dist, "index.html");
 const sourceContentPath = join(root, "src", "content", "portfolio.ts");
 
 const siteUrl = "https://ricomanifesto.com";
-const analytics = {
-  loaderPath: "/analytics.js",
-  providerScriptUrl: "https://static.cloudflareinsights.com/beacon.min.js",
-  siteToken: "ea10f00f44df4f92a4479cf7b4fe334f",
-};
 const firstWritingPost = {
   path: join("writing", "i-thought-i-was-reading-a-repo", "index.html"),
   url: `${siteUrl}/writing/i-thought-i-was-reading-a-repo/`,
@@ -187,7 +182,6 @@ requireFile(join(dist, "robots.txt"), "robots policy");
 requireFile(join(dist, "sitemap.xml"), "XML sitemap");
 requireFile(join(dist, "rss.xml"), "writing RSS feed");
 requireFile(join(dist, "rss.xsl"), "writing RSS stylesheet");
-requireFile(join(dist, "analytics.js"), "analytics loader");
 requireFile(join(dist, "privacy", "index.html"), "privacy page");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
 requireFile(join(dist, firstWritingPost.path), "first writing article");
@@ -210,6 +204,7 @@ requireFile(join(dist, sentrySearchCaseStudy.path), "SentrySearch LLM evaluation
 
 const forbiddenArtifacts = [
   join(dist, ".github"),
+  join(dist, "analytics.js"),
   ...walkFiles(dist).filter((filePath) => filePath.toLowerCase().endsWith(".heic")),
 ];
 
@@ -238,37 +233,9 @@ for (const artifactPath of walkFiles(dist).filter(isTextArtifact)) {
   for (const label of findExcludedMarkers(artifact)) {
     failures.push(`Public artifact ${relativePath} contains an excluded ${label}`);
   }
-}
-
-const htmlArtifacts = walkFiles(dist).filter((filePath) => filePath.toLowerCase().endsWith(".html"));
-for (const artifactPath of htmlArtifacts) {
-  const artifact = readFileSync(artifactPath, "utf8");
-  const analyticsScriptMatches = artifact.match(/<script\s+type="module"\s+src="\/analytics\.js"><\/script>/g) ?? [];
-
-  if (analyticsScriptMatches.length !== 1) {
-    failures.push(
-      `Public HTML ${relative(dist, artifactPath).split(sep).join("/")} must load analytics exactly once`,
-    );
-  }
-
-  if (artifact.includes(analytics.siteToken)) {
-    failures.push(
-      `Public HTML ${relative(dist, artifactPath).split(sep).join("/")} must not duplicate the analytics token`,
-    );
-  }
-}
-
-const analyticsLoaderPath = join(dist, analytics.loaderPath.replace(/^\//, ""));
-if (existsSync(analyticsLoaderPath)) {
-  const analyticsLoader = readFileSync(analyticsLoaderPath, "utf8");
-
-  for (const [label, expected] of [
-    ["production hostname guard", "window.location.hostname === productionHostname"],
-    ["provider script", analytics.providerScriptUrl],
-    ["site token", analytics.siteToken],
-  ]) {
-    if (!analyticsLoader.includes(expected)) {
-      failures.push(`Analytics loader is missing ${label}`);
+  for (const beaconMarker of ["/analytics.js", "cloudflareinsights.com", "data-cf-beacon"]) {
+    if (artifact.includes(beaconMarker)) {
+      failures.push(`Public artifact ${relativePath} contains the removed analytics beacon: ${beaconMarker}`);
     }
   }
 }

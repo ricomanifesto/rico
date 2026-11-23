@@ -74,7 +74,7 @@ const imageType = imagePath.toLowerCase().match(/\.jpe?g$/) ? "image/jpeg" : "im
 
     <title>{title}</title>
     {structuredData && (
-      <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, "\\u003c")} />
     )}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -85,6 +85,5 @@ const imageType = imagePath.toLowerCase().match(/\.jpe?g$/) ? "image/jpeg" : "im
   </head>
   <body>
     <slot />
-    <script is:inline type="module" src="/analytics.js"></script>
   </body>
 </html>

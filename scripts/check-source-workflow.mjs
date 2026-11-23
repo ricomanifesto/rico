@@ -19,15 +19,39 @@ const failures = [];
 // - Image files and budgets belong to check-source-images.
 // - Route/metadata/public-file outcomes belong to check-build-output.
 // - Interaction, accessibility, contrast, focus, and layout belong to Playwright.
-for (const action of [
-  "actions/checkout@",
-  "actions/setup-node@",
-  "actions/upload-pages-artifact@",
-  "actions/deploy-pages@",
-]) {
-  if (!workflow.includes(action)) {
-    failures.push(`Deployment workflow is missing ${action}`);
+const pinnedActions = new Map([
+  ["actions/checkout", "3d3c42e5aac5ba805825da76410c181273ba90b1"],
+  ["actions/setup-node", "249970729cb0ef3589644e2896645e5dc5ba9c38"],
+  ["actions/upload-pages-artifact", "fc324d3547104276b827a68afc52ff2a11cc49c9"],
+  ["actions/deploy-pages", "368f82528645a54fb793d4d04e342629a3f51346"],
+]);
+for (const [action, revision] of pinnedActions) {
+  if (!workflow.includes(`uses: ${action}@${revision}`)) {
+    failures.push(`Deployment workflow must pin ${action} to its reviewed revision`);
   }
+}
+
+const mainEvent = "(github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'";
+const trustedBuild = `(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (${mainEvent})`;
+const buildJob = workflow.split("  build:\n")[1]?.split("\n  deploy:")[0] ?? "";
+const deployJob = workflow.split("  deploy:\n")[1] ?? "";
+if (!buildJob.includes(`    if: ${trustedBuild}\n`)) {
+  failures.push("Pages build must check only same-repository pull requests or trusted main events");
+}
+const workflowPermissions = workflow.split("\npermissions:\n")[1]?.split("\n\n")[0];
+if (workflowPermissions !== "  contents: read"
+  || !buildJob.includes("    permissions:\n      contents: read\n")
+  || /(?:pages|id-token): write/.test(buildJob)
+  || !deployJob.includes("    permissions:\n      contents: read\n      pages: write\n      id-token: write\n")) {
+  failures.push("Only the deployment job may receive Pages and identity write permissions");
+}
+if (!buildJob.includes("          persist-credentials: false\n")) {
+  failures.push("Checkout must not persist workflow credentials");
+}
+const artifactStep = buildJob.split("      - name: Upload artifact\n")[1] ?? "";
+if (!artifactStep.includes(`        if: ${mainEvent}\n`)
+  || !deployJob.includes(`    if: ${mainEvent}\n`)) {
+  failures.push("Pages artifact upload and deployment must require a trusted main event");
 }
 
 for (const command of [
@@ -45,13 +69,14 @@ if (!minimumNode || !workflow.includes(`node-version: '${minimumNode}'`)) {
   failures.push("Deployment workflow does not use the package minimum Node version");
 }
 
-for (const scriptName of ["lint", "typecheck", "a11y", "images", "nav", "workflow", "browser", "build", "smoke"]) {
+for (const scriptName of ["content", "lint", "typecheck", "a11y", "images", "nav", "workflow", "browser", "build", "smoke"]) {
   if (!packageJson.scripts?.[scriptName]) {
     failures.push(`package.json is missing ${scriptName} script`);
   }
 }
 
 for (const command of [
+  "npm run content",
   "npm run lint",
   "npm run typecheck",
   "npm run a11y",
