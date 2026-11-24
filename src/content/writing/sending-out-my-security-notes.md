@@ -1,6 +1,6 @@
 ---
 title: Sending Out My Security Notes
-description: I turned the daily output of my security and GRC tools into Security & GRC Notes, a small, free email newsletter with links to the primary sources.
+description: I’ve been publishing security and GRC reports since 2025. Now I’m sending a short version by email, with links back to the original sources.
 publishedAt: 2026-11-23
 topics:
   - Cybersecurity
@@ -13,20 +13,12 @@ featured: false
 draft: false
 ---
 
-A lot of the tools on this site started the same way: I wanted a calmer way to keep up with security news without spending my mornings scrolling feeds and trying to remember which advisory actually mattered.
+I started building [SentryInsight](https://sentryinsight.ricomanifesto.com/) in May 2025. I wanted to spend less of my morning scrolling through security feeds. When I read that a vulnerability was being exploited, I wanted the original advisory handy so I could check what had actually been reported.
 
-Over the last few months, [SentryInsight](https://sentryinsight.ricomanifesto.com/) and [GRCInsight](https://grcinsight.ricomanifesto.com/) have been collecting the raw pieces—actively exploited vulnerabilities, notable threat activity, and the governance or regulatory shifts that end up landing on security teams anyway. For a while I was just rolling their output up into a short daily digest for myself.
+That July I started [GRCInsight](https://grcinsight.ricomanifesto.com/) to keep up with the governance and regulatory changes that also land on security teams. Both projects have been open source from the start. Anyone can read the reports, look through the code, or run the tools themselves.
 
-I’ve decided to share it for free as a small email newsletter called **Security & GRC Notes**.
+[Security & GRC Notes](https://newsletter.ricomanifesto.com/) is another way to read those reports. It’s a free email with a handful of new items, a short summary of each, and links to the primary sources. When something is still unclear, the summary calls that out.
 
-It isn’t a breaking-news wire and it isn’t a vendor roundup. Each issue covers a handful of new security and GRC developments, with a short summary, what is still open or uncertain, and direct links to the primary sources behind each item. At launch it goes out by email only, without a public web archive.
+Each evening, the newsletter checks for new items, skips anything it’s already sent, and puts the issue together automatically. It goes out most days. If there’s nothing new, it skips that day. For now, the newsletter itself is email only.
 
-Here is how it is put together: SentryInsight gathers and summarizes items from the feeds it monitors, and each evening the newsletter picks up what is new, drops anything it has already sent, and assembles the issue automatically. I don’t review each issue by hand before it goes out, so treat the summaries as a starting point and the linked sources as the record.
-
-It arrives most days. If nothing new turned up, there is no email that day rather than one padded with filler.
-
-There is no account to create. Only your email address, whether you are subscribed, and basic delivery status like a bounce are stored. I don’t use open-tracking pixels or click tracking, and I don’t share or sell the list. You confirm your address once before receiving anything, and every email lets you leave in one click.
-
-If that sounds useful, you can subscribe at [newsletter.ricomanifesto.com](https://newsletter.ricomanifesto.com/).
-
-If you read an issue and spot something I missed or got wrong, just reply to it; replies come straight to me. Corrections like that are how the tools behind it get better, and keeping it small is what keeps it useful to people doing the work.
+I don’t review each issue before it goes out, so if you’re making a decision based on an item, I’d read the linked source. And if you spot something I missed or got wrong, just reply to the email. It comes straight to me.

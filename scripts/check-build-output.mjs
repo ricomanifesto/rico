@@ -9,19 +9,11 @@ const indexPath = join(dist, "index.html");
 const sourceContentPath = join(root, "src", "content", "portfolio.ts");
 
 const siteUrl = "https://ricomanifesto.com";
-const firstWritingPost = {
-  path: join("writing", "i-thought-i-was-reading-a-repo", "index.html"),
-  url: `${siteUrl}/writing/i-thought-i-was-reading-a-repo/`,
-  title: "I Thought I Was Reading a Repo",
-  description: "How tracing an open-source agent turned a familiar cybersecurity habit into a lesson about observability.",
-  imagePath: "/images/writing/i-thought-i-was-reading-a-repo.png",
-  imageAlt: "Signal paths converging into a clear execution trace for I Thought I Was Reading a Repo.",
-};
 const newsletterWritingPost = {
   path: join("writing", "sending-out-my-security-notes", "index.html"),
   url: `${siteUrl}/writing/sending-out-my-security-notes/`,
   title: "Sending Out My Security Notes",
-  description: "I turned the daily output of my security and GRC tools into Security & GRC Notes, a small, free email newsletter with links to the primary sources.",
+  description: "I’ve been publishing security and GRC reports since 2025. Now I’m sending a short version by email, with links back to the original sources.",
   publishedAt: "2026-11-23",
   imagePath: "/images/writing/sending-out-my-security-notes.png",
   imageAlt: "Calm editorial header card for Sending Out My Security Notes on Rico Manifesto.",
@@ -33,20 +25,30 @@ const forbiddenPublicHostMarkers = [
   "workers.dev",
   "newsletter-preview",
 ];
-const removedWritingPost = {
-  path: join("writing", "the-deploy-wasnt-the-proof", "index.html"),
-  url: `${siteUrl}/writing/the-deploy-wasnt-the-proof/`,
-  title: "The Deploy Wasn’t the Proof",
-  imagePath: "/images/writing/the-deploy-wasnt-the-proof.png",
-  brandPath: "/brand/writing/the-deploy-wasnt-the-proof.svg",
-};
-const removedWritingMarkers = [
-  removedWritingPost.url,
-  "/writing/the-deploy-wasnt-the-proof/",
-  removedWritingPost.title,
-  removedWritingPost.imagePath,
-  removedWritingPost.brandPath,
-];
+const removedWritingPosts = [
+  {
+    slug: "the-deploy-wasnt-the-proof",
+    title: "The Deploy Wasn’t the Proof",
+  },
+  {
+    slug: "i-thought-i-was-reading-a-repo",
+    title: "I Thought I Was Reading a Repo",
+  },
+].map(({ slug, title }) => ({
+  path: join("writing", slug, "index.html"),
+  url: `${siteUrl}/writing/${slug}/`,
+  route: `/writing/${slug}/`,
+  title,
+  imagePath: `/images/writing/${slug}.png`,
+  brandPath: `/brand/writing/${slug}.svg`,
+}));
+const removedWritingMarkers = removedWritingPosts.flatMap((post) => [
+  post.url,
+  post.route,
+  post.title,
+  post.imagePath,
+  post.brandPath,
+]);
 const projectPages = [
   {
     slug: "sentrysearch",
@@ -200,19 +202,17 @@ requireFile(join(dist, "rss.xml"), "writing RSS feed");
 requireFile(join(dist, "rss.xsl"), "writing RSS stylesheet");
 requireFile(join(dist, "privacy", "index.html"), "privacy page");
 requireFile(join(dist, "writing", "index.html"), "writing archive");
-requireFile(join(dist, firstWritingPost.path), "first writing article");
-requireFile(join(dist, firstWritingPost.imagePath.replace(/^\//, "")), "first writing social image");
 requireFile(join(dist, newsletterWritingPost.path), "newsletter announcement writing article");
 requireFile(
   join(dist, newsletterWritingPost.imagePath.replace(/^\//, "")),
   "newsletter announcement social image",
 );
 
-for (const removedArtifactPath of [
-  removedWritingPost.path,
-  removedWritingPost.imagePath.replace(/^\//, ""),
-  removedWritingPost.brandPath.replace(/^\//, ""),
-]) {
+for (const removedArtifactPath of removedWritingPosts.flatMap((post) => [
+  post.path,
+  post.imagePath.replace(/^\//, ""),
+  post.brandPath.replace(/^\//, ""),
+])) {
   if (existsSync(join(dist, removedArtifactPath))) {
     failures.push(`Removed writing artifact is still published: ${removedArtifactPath}`);
   }
@@ -456,7 +456,6 @@ if (existsSync(sitemapPath)) {
     `${siteUrl}/`,
     `${siteUrl}/privacy/`,
     `${siteUrl}/writing/`,
-    firstWritingPost.url,
     newsletterWritingPost.url,
     ...projectPages.map(({ slug }) => `${siteUrl}/projects/${slug}/`),
     sentrySearchCaseStudy.url,
@@ -493,7 +492,6 @@ if (existsSync(writingArchivePath)) {
     ["title", "<title>Writing | Michael Rico</title>"],
     ["heading", "<h1>Writing</h1>"],
     ["canonical URL", `<link rel="canonical" href="${siteUrl}/writing/">`],
-    ["article link", `href="/writing/i-thought-i-was-reading-a-repo/"`],
     ["newsletter article link", 'href="/writing/sending-out-my-security-notes/"'],
     ["RSS link", 'href="/rss.xml"'],
     ["email subscribe link", `href="${newsletterWritingPost.newsletterUrl}"`],
@@ -502,30 +500,6 @@ if (existsSync(writingArchivePath)) {
   ]) {
     if (!writingArchive.includes(expected)) {
       failures.push(`Writing archive is missing ${label}`);
-    }
-  }
-}
-
-const firstWritingPostPath = join(dist, firstWritingPost.path);
-if (existsSync(firstWritingPostPath)) {
-  const article = readFileSync(firstWritingPostPath, "utf8");
-
-  for (const [label, expected] of [
-    ["title", `<title>${firstWritingPost.title} | Michael Rico</title>`],
-    ["heading", `<h1>${firstWritingPost.title}</h1>`],
-    ["description", firstWritingPost.description],
-    ["canonical URL", `<link rel="canonical" href="${firstWritingPost.url}">`],
-    ["article metadata", '<meta property="og:type" content="article">'],
-    ["publication date", '<meta property="article:published_time" content="2026-08-11">'],
-    ["social image", `<meta property="og:image" content="${siteUrl}${firstWritingPost.imagePath}">`],
-    ["social image alt", `<meta property="og:image:alt" content="${firstWritingPost.imageAlt}">`],
-    ["BlogPosting image", `"image":"${siteUrl}${firstWritingPost.imagePath}"`],
-    ["BlogPosting structured data", '"@type":"BlogPosting"'],
-    ["Anthropic source link", 'href="https://www.anthropic.com/research/team/interpretability"'],
-    ["Prime Agent source link", 'href="https://github.com/PrimeIntellect-ai/prime-agent"'],
-  ]) {
-    if (!article.includes(expected)) {
-      failures.push(`First writing article is missing ${label}`);
     }
   }
 }
@@ -562,8 +536,6 @@ if (existsSync(rssPath)) {
   for (const expected of [
     "<?xml-stylesheet",
     'href="/rss.xsl"',
-    firstWritingPost.title,
-    firstWritingPost.url,
     newsletterWritingPost.title,
     newsletterWritingPost.url,
     "<rss",

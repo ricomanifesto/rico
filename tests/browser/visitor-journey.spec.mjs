@@ -339,6 +339,6 @@ test("uses the full Rico Manifesto identity and tighter first-note copy", async 
   await page.goto("/");
   await expect(page.getByRole("contentinfo")).toContainText(/© \d{4} Rico Manifesto\. All rights reserved\./);
 
-  await page.goto("/writing/i-thought-i-was-reading-a-repo/");
+  await page.goto("/writing/sending-out-my-security-notes/");
   await expect(page.locator(".writing-prose")).not.toContainText("i.e.");
 });
