@@ -22,7 +22,7 @@ const newsletterWritingPost = {
   url: `${siteUrl}/writing/sending-out-my-security-notes/`,
   title: "Sending Out My Security Notes",
   description: "I turned the daily output of my security and GRC tools into Security & GRC Notes, a small, free email newsletter with links to the primary sources.",
-  publishedAt: "2026-11-30",
+  publishedAt: "2026-11-23",
   imagePath: "/images/writing/sending-out-my-security-notes.png",
   imageAlt: "Calm editorial header card for Sending Out My Security Notes on Rico Manifesto.",
   newsletterUrl: "https://newsletter.ricomanifesto.com/",

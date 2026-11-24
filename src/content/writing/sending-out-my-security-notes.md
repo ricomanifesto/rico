@@ -1,7 +1,7 @@
 ---
 title: Sending Out My Security Notes
 description: I turned the daily output of my security and GRC tools into Security & GRC Notes, a small, free email newsletter with links to the primary sources.
-publishedAt: 2026-11-30
+publishedAt: 2026-11-23
 topics:
   - Cybersecurity
   - Threat intelligence

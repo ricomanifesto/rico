@@ -635,7 +635,7 @@ test("links the homepage to both first-party articles", async ({ page }) => {
     url: "https://ricomanifesto.com/writing/sending-out-my-security-notes/",
     headline: "Sending Out My Security Notes",
     image: "https://ricomanifesto.com/images/writing/sending-out-my-security-notes.png",
-    datePublished: "2026-11-30",
+    datePublished: "2026-11-23",
   });
 });
 
@@ -828,7 +828,7 @@ test("serves the newsletter announcement article with metadata and subscribe lin
   await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "article");
   await expect(page.locator('meta[property="article:published_time"]')).toHaveAttribute(
     "content",
-    "2026-11-30",
+    "2026-11-23",
   );
   await expect(page.locator('meta[property="article:author"]')).toHaveAttribute(
     "content",
@@ -986,9 +986,9 @@ test("publishes content-backed modification dates for Writing routes", async ({ 
   expect(response.headers()["content-type"]).toContain("xml");
   const body = await response.text();
   for (const [url, lastModified] of [
-    ["https://ricomanifesto.com/writing/", "2026-11-30"],
+    ["https://ricomanifesto.com/writing/", "2026-11-23"],
     ["https://ricomanifesto.com/writing/i-thought-i-was-reading-a-repo/", "2026-08-11"],
-    ["https://ricomanifesto.com/writing/sending-out-my-security-notes/", "2026-11-30"],
+    ["https://ricomanifesto.com/writing/sending-out-my-security-notes/", "2026-11-23"],
   ]) {
     const entry = Array.from(body.matchAll(/<url>[\s\S]*?<\/url>/g), ([match]) => match)
       .find((candidate) => candidate.includes(`<loc>${url}</loc>`));
@@ -1002,7 +1002,7 @@ test("renders the RSS feed as an understandable subscription page", async ({ pag
 
   expect(response?.status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1, name: "Subscribe to Rico Manifesto Writing" })).toBeVisible();
-  await expect(page.getByText("30 Nov 2026", { exact: true })).toBeVisible();
+  await expect(page.getByText("23 Nov 2026", { exact: true })).toBeVisible();
   await expect(page.getByText("11 Aug 2026", { exact: true })).toBeVisible();
   await expect(page.getByText("13 Aug 2026", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "The Deploy Wasn’t the Proof" })).toHaveCount(0);
