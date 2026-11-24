@@ -42,6 +42,7 @@ const imageType = imagePath.toLowerCase().match(/\.jpe?g$/) ? "image/jpeg" : "im
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#8db7df" />
     <link rel="manifest" href="/site.webmanifest" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#11151b" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
@@ -82,8 +83,37 @@ const imageType = imagePath.toLowerCase().match(/\.jpe?g$/) ? "image/jpeg" : "im
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      (() => {
+        let stored = null;
+        try { stored = localStorage.getItem("theme"); } catch {}
+        if (stored === "dark" || stored === "light") {
+          document.documentElement.dataset.theme = stored;
+        }
+        const effective = stored === "dark" || stored === "light"
+          ? stored
+          : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", effective === "light" ? "#f3efe5" : "#11151b");
+      })();
+    </script>
   </head>
   <body>
     <slot />
+    <script is:inline>
+      (() => {
+        document.addEventListener("click", (event) => {
+          const target = event.target instanceof Element ? event.target.closest("#theme-toggle") : null;
+          if (!target) return;
+          const current = document.documentElement.dataset.theme
+            || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          const next = current === "dark" ? "light" : "dark";
+          document.documentElement.dataset.theme = next;
+          try { localStorage.setItem("theme", next); } catch {}
+          const meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", next === "light" ? "#f3efe5" : "#11151b");
+        });
+      })();
+    </script>
   </body>
 </html>

@@ -13,6 +13,8 @@ const about = read("src/components/AboutMe.tsx");
 const experience = read("src/components/Experience.tsx");
 const projects = read("src/components/ProjectsSection.tsx");
 const projectPage = read("src/pages/projects/[slug].astro");
+const header = read("src/components/Header.tsx");
+const themeToggle = read("src/components/ThemeToggle.tsx");
 const footer = read("src/components/Footer.tsx");
 const indexCss = read("src/index.css");
 
@@ -93,6 +95,32 @@ if (!indexCss.includes("@media (prefers-reduced-motion: reduce)")) {
 
 if (!/prefers-reduced-motion:\s*reduce[\s\S]*scroll-behavior:\s*auto/.test(indexCss)) {
   failures.push("Reduced-motion styles do not disable smooth scrolling");
+}
+
+for (const required of [
+  "<button",
+  'id="theme-toggle"',
+  'type="button"',
+  'aria-label="Toggle color theme"',
+]) {
+  if (!themeToggle.includes(required)) {
+    failures.push(`ThemeToggle is missing button semantic: ${required}`);
+  }
+}
+
+if (!header.includes("<ThemeToggle />")) {
+  failures.push("Header does not render the ThemeToggle button");
+}
+
+for (const required of [
+  "@media (prefers-color-scheme: dark)",
+  ':root:not([data-theme="light"])',
+  'html[data-theme="dark"]',
+  'html[data-theme="light"]',
+]) {
+  if (!indexCss.includes(required)) {
+    failures.push(`Global styles do not declare theme rule: ${required}`);
+  }
 }
 
 if (failures.length > 0) {

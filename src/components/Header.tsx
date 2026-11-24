@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import HeaderNavLink from "@/components/HeaderNavLink";
 import SocialLink from "@/components/SocialLink";
+import ThemeToggle from "@/components/ThemeToggle";
 import { headerNavItems, headerNavigationBehavior, siteBrand, socialLinks } from "@/content/navigation";
 
 interface HeaderShellViewState {
@@ -144,15 +145,18 @@ export default function Header({ currentPath = "/", currentNavHref }: HeaderProp
           </nav>
         </div>
         
-        <nav aria-label="Social links">
-          <ul role="list" className="header-social-list">
-            {socialLinks.map((link) => (
-              <li key={link.href} role="listitem">
-                <SocialLink link={link} />
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="header-actions">
+          <nav aria-label="Social links">
+            <ul role="list" className="header-social-list">
+              {socialLinks.map((link) => (
+                <li key={link.href} role="listitem">
+                  <SocialLink link={link} />
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
       <nav
         aria-label="Mobile primary"

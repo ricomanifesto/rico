@@ -25,13 +25,13 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   render() {
     if (this.state.hasError) {
       return (
-        <main className="min-h-screen bg-slate-950 px-6 py-16 text-slate-100">
-          <div className="mx-auto max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-wide text-cyan-300">
+        <main className="error-boundary-shell">
+          <div className="error-boundary-content">
+            <p className="error-boundary-eyebrow">
               Portfolio unavailable
             </p>
-            <h1 className="mt-4 text-3xl font-semibold">Something failed while loading.</h1>
-            <p className="mt-4 text-base leading-7 text-slate-300">
+            <h1 className="error-boundary-heading">Something failed while loading.</h1>
+            <p className="error-boundary-copy">
               Refresh the page. If the issue continues, the project links and contact paths remain
               available from the public repositories.
             </p>

@@ -352,33 +352,40 @@ test("names main portfolio sections from their visible headings", async ({ page 
 
 test("uses restrained light screenshot mattes and a deliberate project type scale", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/#projects");
 
-  const mediaFrames = page.locator(".project-card-media");
-  await expect(mediaFrames).toHaveCount(4);
+  for (const { colorScheme, expectedBackground } of [
+    { colorScheme: "dark", expectedBackground: "rgb(9, 12, 16)" },
+    { colorScheme: "light", expectedBackground: "rgb(223, 215, 200)" },
+  ]) {
+    await page.emulateMedia({ colorScheme });
+    await page.goto("/#projects");
 
-  for (const frame of await mediaFrames.all()) {
-    const contract = await frame.evaluate((element) => {
-      const image = element.querySelector(".project-card-image");
-      const frameBox = element.getBoundingClientRect();
-      const imageBox = image?.getBoundingClientRect();
-      const style = getComputedStyle(element);
+    const mediaFrames = page.locator(".project-card-media");
+    await expect(mediaFrames).toHaveCount(4);
 
-      return {
-        background: style.backgroundColor,
-        borderWidth: parseFloat(style.borderTopWidth),
-        inset: imageBox ? imageBox.left - frameBox.left : 0,
-        padding: parseFloat(style.paddingTop),
-        shadow: style.boxShadow,
-      };
-    });
+    for (const frame of await mediaFrames.all()) {
+      const contract = await frame.evaluate((element) => {
+        const image = element.querySelector(".project-card-image");
+        const frameBox = element.getBoundingClientRect();
+        const imageBox = image?.getBoundingClientRect();
+        const style = getComputedStyle(element);
 
-    expect(contract.background).toBe("rgb(9, 12, 16)");
-    expect(contract.borderWidth).toBe(0);
-    expect(contract.padding).toBeGreaterThanOrEqual(4);
-    expect(contract.padding).toBeLessThanOrEqual(12);
-    expect(contract.inset).toBeGreaterThanOrEqual(contract.padding);
-    expect(contract.shadow).toBe("none");
+        return {
+          background: style.backgroundColor,
+          borderWidth: parseFloat(style.borderTopWidth),
+          inset: imageBox ? imageBox.left - frameBox.left : 0,
+          padding: parseFloat(style.paddingTop),
+          shadow: style.boxShadow,
+        };
+      });
+
+      expect(contract.background).toBe(expectedBackground);
+      expect(contract.borderWidth).toBe(0);
+      expect(contract.padding).toBeGreaterThanOrEqual(4);
+      expect(contract.padding).toBeLessThanOrEqual(12);
+      expect(contract.inset).toBeGreaterThanOrEqual(contract.padding);
+      expect(contract.shadow).toBe("none");
+    }
   }
 
   const projectTypeScale = await page.locator("#projects").evaluate((section) => {
@@ -558,33 +565,46 @@ test("shows the complete chronological experience without interaction", async ({
 });
 
 test("renders visible focus for keyboard navigation controls", async ({ page }) => {
-  await page.goto("/");
+  for (const { colorScheme, expectedOutline } of [
+    { colorScheme: "dark", expectedOutline: "rgb(185, 217, 245)" },
+    { colorScheme: "light", expectedOutline: "rgb(7, 92, 170)" },
+  ]) {
+    await page.emulateMedia({ colorScheme });
+    await page.goto("/");
 
-  await page.keyboard.press("Tab");
-  const skipLink = page.getByRole("link", { name: "Skip to main content" });
-  await expect(skipLink).toBeFocused();
-  await expect(skipLink).toHaveCSS("background-color", "rgb(5, 7, 10)");
-  await expect(skipLink).toHaveCSS("outline-color", "rgb(185, 217, 245)");
-  await expect(skipLink).toHaveCSS("outline-offset", "4px");
+    await page.keyboard.press("Tab");
+    const skipLink = page.getByRole("link", { name: "Skip to main content" });
+    await expect(skipLink).toBeFocused();
+    await expect(skipLink).toHaveCSS("background-color", "rgb(5, 7, 10)");
+    await expect(skipLink).toHaveCSS("outline-color", expectedOutline);
+    await expect(skipLink).toHaveCSS("outline-offset", "4px");
 
-  await page.keyboard.press("Tab");
-  const brandLink = page.getByRole("link", { name: "Rico Manifesto", exact: true });
-  await expect(brandLink).toBeFocused();
-  await expect(brandLink).toHaveCSS("outline-style", "solid");
+    await page.keyboard.press("Tab");
+    const brandLink = page.getByRole("link", { name: "Rico Manifesto", exact: true });
+    await expect(brandLink).toBeFocused();
+    await expect(brandLink).toHaveCSS("outline-style", "solid");
+    await expect(brandLink).toHaveCSS("outline-color", expectedOutline);
 
-  const emailLink = page.getByRole("link", { name: "Email me" });
-  await emailLink.focus();
-  await expect(emailLink).toBeFocused();
-  await expect(emailLink).toHaveCSS("outline-style", "solid");
+    const themeToggle = page.getByRole("button", { name: "Toggle color theme" });
+    await themeToggle.focus();
+    await expect(themeToggle).toBeFocused();
+    await expect(themeToggle).toHaveCSS("outline-style", "solid");
+    await expect(themeToggle).toHaveCSS("outline-color", expectedOutline);
 
-  await page.getByRole("link", { name: "Projects" }).click();
-  await page.keyboard.press("Tab");
-  const firstProjectLink = page.getByRole("link", {
-    name: "Repository for Threat Intelligence Research Workspace",
-  });
-  await firstProjectLink.focus();
-  await expect(firstProjectLink).toBeFocused();
-  await expect(firstProjectLink).toHaveCSS("outline-style", "solid");
+    const emailLink = page.getByRole("link", { name: "Email me" });
+    await emailLink.focus();
+    await expect(emailLink).toBeFocused();
+    await expect(emailLink).toHaveCSS("outline-style", "solid");
+
+    await page.getByRole("link", { name: "Projects" }).click();
+    await page.keyboard.press("Tab");
+    const firstProjectLink = page.getByRole("link", {
+      name: "Repository for Threat Intelligence Research Workspace",
+    });
+    await firstProjectLink.focus();
+    await expect(firstProjectLink).toBeFocused();
+    await expect(firstProjectLink).toHaveCSS("outline-style", "solid");
+  }
 });
 
 test("moves focus to main content when the skip link is activated", async ({ page }) => {
@@ -846,29 +866,32 @@ test("keeps newsletter entry points accessible across writing, footer, and priva
     return (Math.max(fgLum, bgLum) + 0.05) / (Math.min(fgLum, bgLum) + 0.05);
   });
 
-  await page.goto("/writing/");
-  const emailLink = page.getByRole("link", { name: "Subscribe by email" });
-  const rssLink = page.getByRole("link", { name: "Subscribe via RSS" });
-  const footer = page.getByRole("contentinfo");
-  const footerNewsletter = footer.getByRole("link", { name: "Newsletter" });
-  const footerPrivacy = footer.getByRole("link", { name: "Privacy" });
+  for (const colorScheme of ["dark", "light"]) {
+    await page.emulateMedia({ colorScheme });
+    await page.goto("/writing/");
+    const emailLink = page.getByRole("link", { name: "Subscribe by email" });
+    const rssLink = page.getByRole("link", { name: "Subscribe via RSS" });
+    const footer = page.getByRole("contentinfo");
+    const footerNewsletter = footer.getByRole("link", { name: "Newsletter" });
+    const footerPrivacy = footer.getByRole("link", { name: "Privacy" });
 
-  await expect(emailLink).toHaveAttribute("href", "https://newsletter.ricomanifesto.com/");
-  await expect(footerNewsletter).toHaveAttribute("href", "https://newsletter.ricomanifesto.com/");
-  await expect(footerPrivacy).toHaveAttribute("href", "/privacy/");
+    await expect(emailLink).toHaveAttribute("href", "https://newsletter.ricomanifesto.com/");
+    await expect(footerNewsletter).toHaveAttribute("href", "https://newsletter.ricomanifesto.com/");
+    await expect(footerPrivacy).toHaveAttribute("href", "/privacy/");
 
-  for (const link of [rssLink, emailLink, footerNewsletter, footerPrivacy]) {
-    const box = await link.boundingBox();
-    expect(box).not.toBeNull();
-    expect(box.width).toBeGreaterThanOrEqual(44);
-    expect(box.height).toBeGreaterThanOrEqual(44);
-    expect(await measureContrast(link)).toBeGreaterThanOrEqual(4.5);
+    for (const link of [rssLink, emailLink, footerNewsletter, footerPrivacy]) {
+      const box = await link.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(await measureContrast(link)).toBeGreaterThanOrEqual(4.5);
+    }
+
+    const writingOverflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(writingOverflow).toBeLessThanOrEqual(1);
   }
-
-  const writingOverflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(writingOverflow).toBeLessThanOrEqual(1);
 
   await page.goto("/privacy/");
   await expect(page.locator("astro-island")).toHaveCount(0);
@@ -943,6 +966,12 @@ test("renders the RSS feed as an understandable subscription page", async ({ pag
     "https://ricomanifesto.com/writing/sending-out-my-security-notes/",
   );
   await expect(page.getByRole("link", { name: "I Thought I Was Reading a Repo" })).toHaveCount(0);
+  const rssToggle = page.getByRole("button", { name: "Toggle color theme" });
+  await expect(rssToggle).toBeVisible();
+  const rssBox = await rssToggle.boundingBox();
+  expect(rssBox).not.toBeNull();
+  expect(rssBox.width).toBeGreaterThanOrEqual(44);
+  expect(rssBox.height).toBeGreaterThanOrEqual(44);
 });
 
 for (const { slug, heading, repository } of [
@@ -1073,4 +1102,95 @@ test("describes SentryDigest with its scheduled three-hour cadence", async ({ pa
   await expect(page.locator(".project-detail-description")).not.toContainText(
     "daily analyst-ready briefing",
   );
+});
+
+test("supports system theme, explicit toggle persistence, contrast, and 320px layout across pages", async ({ page }) => {
+  const measureElementContrast = async (locator) => locator.evaluate((element) => {
+    const parseRgb = (color) => {
+      const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+      if (!match) return null;
+      return {
+        r: Number(match[1]),
+        g: Number(match[2]),
+        b: Number(match[3]),
+        a: match[4] === undefined ? 1 : Number(match[4]),
+      };
+    };
+    const channel = (v) => {
+      const s = v / 255;
+      return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+    };
+    const lum = ({ r, g, b }) => 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+    const fg = parseRgb(getComputedStyle(element).color);
+    let bg = null;
+    let cur = element;
+    while (cur) {
+      const c = parseRgb(getComputedStyle(cur).backgroundColor);
+      if (c && c.a > 0) {
+        bg = c;
+        break;
+      }
+      cur = cur.parentElement;
+    }
+    const l1 = lum(fg);
+    const l2 = lum(bg);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  });
+
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(17, 21, 27)");
+
+  const toggle = page.getByRole("button", { name: "Toggle color theme" });
+  await expect(toggle).toBeVisible();
+  const box = await toggle.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box.width).toBeGreaterThanOrEqual(44);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  expect(box.x + box.width).toBeLessThanOrEqual(320.5);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+
+  for (const target of [
+    { locator: page.locator(".hero-headline"), min: 4.5 },
+    { locator: page.locator(".hero-body"), min: 4.5 },
+    { locator: page.locator(".hero-links a").first(), min: 4.5 },
+    { locator: page.locator(".footer-copy"), min: 4.5 },
+    { locator: toggle, min: 3.0 },
+  ]) {
+    expect(await measureElementContrast(target.locator)).toBeGreaterThanOrEqual(target.min);
+  }
+
+  await toggle.click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(243, 239, 229)");
+  expect(await page.evaluate(() => localStorage.getItem("theme"))).toBe("light");
+
+  for (const target of [
+    { locator: page.locator(".hero-headline"), min: 4.5 },
+    { locator: page.locator(".hero-body"), min: 4.5 },
+    { locator: page.locator(".hero-links a").first(), min: 4.5 },
+    { locator: page.locator(".footer-copy"), min: 4.5 },
+    { locator: toggle, min: 3.0 },
+  ]) {
+    expect(await measureElementContrast(target.locator)).toBeGreaterThanOrEqual(target.min);
+  }
+
+  for (const route of [
+    "/writing/",
+    "/writing/sending-out-my-security-notes/",
+    "/projects/sentrysearch/",
+    "/projects/sentrysearch/llm-evaluation/",
+    "/privacy/",
+  ]) {
+    await page.goto(route);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(page.locator("body")).toHaveCSS("background-color", "rgb(243, 239, 229)");
+    await expect(page.getByRole("button", { name: "Toggle color theme" })).toBeVisible();
+    await expect(page.locator("astro-island")).toHaveCount(0);
+  }
+
+  await page.getByRole("button", { name: "Toggle color theme" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  expect(await page.evaluate(() => localStorage.getItem("theme"))).toBe("dark");
 });

@@ -701,6 +701,70 @@ if (existsSync(sourceContentPath)) {
   }
 }
 
+const builtHtmlFiles = walkFiles(dist)
+  .filter((filePath) => filePath.toLowerCase().endsWith(".html"))
+  .sort();
+if (builtHtmlFiles.length < 9) {
+  failures.push(`Expected at least 9 built HTML pages, found ${builtHtmlFiles.length}`);
+}
+for (const htmlPath of builtHtmlFiles) {
+  const relPath = relative(dist, htmlPath).split(sep).join("/");
+  const html = readFileSync(htmlPath, "utf8");
+  const head = html.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1] ?? "";
+
+  if (!/<meta\s+name="color-scheme"\s+content="light dark"\s*\/?>/.test(head)) {
+    failures.push(`${relPath} is missing light/dark color-scheme meta`);
+  }
+  if (!head.includes('localStorage.getItem("theme")') || !head.includes("document.documentElement.dataset.theme")) {
+    failures.push(`${relPath} is missing the no-flash inline theme script in <head>`);
+  }
+  if (!/<button\b(?=[^>]*\bid="theme-toggle")(?=[^>]*\btype="button")(?=[^>]*\baria-label="Toggle color theme")[^>]*>/.test(html)) {
+    failures.push(`${relPath} is missing the accessible #theme-toggle button`);
+  }
+  if (!html.includes('localStorage.setItem("theme"')) {
+    failures.push(`${relPath} is missing the theme toggle persistence script`);
+  }
+}
+
+const builtRssStylesheetPath = join(dist, "rss.xsl");
+if (existsSync(builtRssStylesheetPath)) {
+  const rssStylesheet = readFileSync(builtRssStylesheetPath, "utf8");
+  for (const [label, expected] of [
+    ["color-scheme meta", 'name="color-scheme" content="light dark"'],
+    ["no-flash script", 'localStorage.getItem("theme")'],
+    ["toggle button", 'id="theme-toggle"'],
+    ["toggle accessible name", 'aria-label="Toggle color theme"'],
+    ["persistence script", 'localStorage.setItem("theme"'],
+    ["dark media query", "prefers-color-scheme: dark"],
+    ["light palette background", "#f3efe5"],
+  ]) {
+    if (!rssStylesheet.includes(expected)) {
+      failures.push(`Built rss.xsl is missing ${label}`);
+    }
+  }
+}
+
+const builtCss = walkFiles(dist)
+  .filter((filePath) => filePath.toLowerCase().endsWith(".css"))
+  .map((filePath) => readFileSync(filePath, "utf8"))
+  .join("\n");
+for (const [label, pattern] of [
+  ["light page background token", /--portfolio-page-background:\s*#f3efe5/i],
+  ["light foreground token", /--portfolio-page-foreground:\s*#1a2637/i],
+  ["light copy token", /--portfolio-copy:\s*#3c495b/i],
+  ["light muted token", /--portfolio-muted:\s*#546072/i],
+  ["light accent token", /--portfolio-accent:\s*#075caa/i],
+  ["light matte token", /--portfolio-media-matte:\s*#dfd7c8/i],
+  ["dark page background token", /--portfolio-page-background:\s*#11151b/i],
+  ["prefers-color-scheme dark rule", /prefers-color-scheme:\s*dark/i],
+  ["explicit dark theme selector", /\[data-theme=["']?dark["']?\]/i],
+  ["explicit light theme selector", /\[data-theme=["']?light["']?\]/i],
+]) {
+  if (!pattern.test(builtCss)) {
+    failures.push(`Built CSS is missing ${label}`);
+  }
+}
+
 if (failures.length > 0) {
   console.error(failures.join("\n"));
   process.exit(1);
