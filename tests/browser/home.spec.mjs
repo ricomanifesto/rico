@@ -905,7 +905,7 @@ for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/privacy/");
     await expect(page.getByRole("heading", { level: 1, name: "Privacy" })).toBeVisible();
-    await expect(page.getByText("This site does not load a visitor analytics beacon.", { exact: true })).toBeVisible();
+    await expect(page.getByText("I don't run analytics or track visitors on this site.", { exact: true })).toBeVisible();
     await expect(page.locator('script[src="/analytics.js"], script[src*="cloudflareinsights.com"], script[data-cf-beacon]')).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   });
