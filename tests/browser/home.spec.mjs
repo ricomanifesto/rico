@@ -1164,6 +1164,8 @@ test("supports system theme, explicit toggle persistence, contrast, and 320px la
   await toggle.click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.locator("body")).toHaveCSS("background-color", "rgb(243, 239, 229)");
+  // Let the links' short colour transition settle before measuring contrast.
+  await expect(page.locator(".hero-links a").first()).toHaveCSS("color", "rgb(7, 92, 170)");
   expect(await page.evaluate(() => localStorage.getItem("theme"))).toBe("light");
 
   for (const target of [

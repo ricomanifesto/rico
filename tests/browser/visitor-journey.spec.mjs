@@ -181,8 +181,20 @@ test("keeps every project action tappable and project copy at readable contrast"
       return (light + 0.05) / (dark + 0.05);
     };
 
+    const effectiveBackground = (element) => {
+      // Cards are transparent; measure against the first opaque ancestor background.
+      for (let current = element; current; current = current.parentElement) {
+        const color = getComputedStyle(current).backgroundColor;
+        const alpha = color.match(/rgba\([^)]*,\s*([\d.]+)\)/);
+        if (!alpha || Number(alpha[1]) > 0) {
+          return color;
+        }
+      }
+      return "rgb(255, 255, 255)";
+    };
+
     return elements.flatMap((card) => {
-      const background = getComputedStyle(card).backgroundColor;
+      const background = effectiveBackground(card);
       return Array.from(card.querySelectorAll([
         ".project-card-name",
         ".project-card-title",
