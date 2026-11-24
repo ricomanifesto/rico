@@ -21,7 +21,7 @@ const newsletterWritingPost = {
   path: join("writing", "sending-out-my-security-notes", "index.html"),
   url: `${siteUrl}/writing/sending-out-my-security-notes/`,
   title: "Sending Out My Security Notes",
-  description: "I turned my security and GRC reading notes into Security & GRC Notes, a small, free email newsletter reviewed by hand against primary sources.",
+  description: "I turned the daily output of my security and GRC tools into Security & GRC Notes, a small, free email newsletter with links to the primary sources.",
   publishedAt: "2026-11-30",
   imagePath: "/images/writing/sending-out-my-security-notes.png",
   imageAlt: "Calm editorial header card for Sending Out My Security Notes on Rico Manifesto.",
