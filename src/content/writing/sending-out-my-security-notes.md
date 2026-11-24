@@ -21,7 +21,7 @@ I’ve decided to share it for free as a small email newsletter called **Securit
 
 It isn’t a breaking-news wire and it isn’t a vendor roundup. Each issue covers a handful of new security and GRC developments, with a short summary, what is still open or uncertain, and direct links to the primary sources behind each item. At launch it goes out by email only, without a public web archive.
 
-Here is how it is put together: SentryInsight and GRCInsight gather and summarize items from the feeds they monitor, and each evening the newsletter picks up what is new, drops anything it has already sent, and assembles the issue automatically. I don’t review each issue by hand before it goes out, so treat the summaries as a starting point and the linked sources as the record.
+Here is how it is put together: SentryInsight gathers and summarizes items from the feeds it monitors, and each evening the newsletter picks up what is new, drops anything it has already sent, and assembles the issue automatically. I don’t review each issue by hand before it goes out, so treat the summaries as a starting point and the linked sources as the record.
 
 It arrives most days. If nothing new turned up, there is no email that day rather than one padded with filler.
 
